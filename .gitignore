@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+citation-csv
+imprint
+_book
+_book.zip
+_bookdown_files
+all_journals_word_list.RData
+lda-bookdown.Rproj
+lda-summary.tex
+topic_summary.R

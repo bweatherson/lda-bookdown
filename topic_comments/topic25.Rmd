@@ -1,0 +1,58 @@
+```{r t25a}
+jjj <- 25
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t25b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t25c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t25d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t25e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+I've called this Moral Conscience, though there are any number of other terms I could have used. Along with [Value](#topic16), [Virtues](#topic49) and [Duties](#topic53) it forms the core of normative ethics. The division among these four topics is somewhat arbitrary, and it isn't wrong to see them as really forming one large topic.
+
+Not that this topic needs any extra size - it's already either the 3rd or 11th largest, depending on how you measure things. Despite the rise in attention to ethics in recent years, it actually peaks in the 1950s, and declines a lot after the 1980s. I think this is due to changes in terminological fashion rather than a change in the topics being considered, but that's a very contentious take on the literature.
+
+It's notable that we see some small overlap with [Idealism](#topic02) here. Usually the model is clear about which articles are, and are not, idealist. But the discontinuous array of dots to the left of the graph is driven by this generalisation breaking down. We can see this in, for instance, this article by (future Prime Minister) Arthur Balfour.
+
+```{r balfour-ethics}
+individual_article("10.2307_2246618")
+```
+
+This topic also features some important work by Michigan faculty, such as these papers. (I'm sure I'm mising a few here as well.)
+
+```{r michigan-ethics-articles}  
+michigan_ethics <- relabeled_articles[grep("Frankena|Darwall|Brandt|Railton", relabeled_articles$authall),] %>%
+  as_tibble() %>%
+  filter(topic == 25) %>%
+  arrange(year)
+for (jj in 1:nrow(michigan_ethics)){
+  cat("- ", michigan_ethics$citation[jj], " \n", sep="")
+}
+```
+
+As I mentioned [earlier](#topic16), a lot of Frankena's most important work is not included in this study because it wasn't in journals. So it's nice that it gets included, by proxy at least, via Darwall's remembrance.

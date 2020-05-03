@@ -1,0 +1,41 @@
+```{r t50a}
+jjj <- 50
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t50b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t50c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t50d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t50e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This differs from the earlier topic on [Classical Space and Time](#topic20) in two respects.
+
+1. It is primarily about relativistic, as opposed to classical, physics.
+2. It is very much philosophy of science, as opposed to metaphysics. This shows up in the characteristic articles, which are all in philosophy of science journals.
+
+Much to my surprise, this topic featured some of the articles the model was most confident about. There are 6 articles that the model gives a probability greater than 0.9 of being in this topic. No other topic features more than 4 such articles; and only four other topics feature more than 2. This was surprising given how much overlap this topic has with [Classical Space and Time](#topic20). But it turns out that the language philosophers of physics use to talk about space and time is (or more importantly was) rather different from the language metaphysicians use. And that was enough for the model to tell them apart.

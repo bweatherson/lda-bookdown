@@ -1,0 +1,40 @@
+```{r t73a}
+jjj <- 73
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t73b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t73c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t73d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t73e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The story of philosophy of science over the past several decades was one of increasing specialisation. First we saw work on philosophy of science as a general category replaced by work in the separate sciences, especially physics and biology. As we'll see in chapter \@ref(sortingchapter), the model thinks of work in philosophy of physics and philosophy of biology as having less in common with each other than they have with other areas of philosophy.
+
+The existence of this topic is a sign that in recent years we're starting to carve things up even further. The model sees work on thermodynamics as separate from other work in philosophy of physics. And this is separate from work on space and time, and from work on quantum mechanics.
+
+It also is the first topic we've seen that has a fairly unambiguous upward trajectory through 2013. A lot of topics we've seen recently, and indeed several we'll see in what follows, felt like they had reached a plateau that they were still holding into 2013. But this looks to me like it's going up. It will be interesting to look back in a few years and see if that's still the case.

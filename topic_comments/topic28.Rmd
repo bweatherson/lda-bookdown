@@ -1,0 +1,38 @@
+```{r t28a}
+jjj <- 28
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t28b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t28c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t28d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t28e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is an important topic, but one that's a little hard to classify. A lot of the papers here are early psychology papers, which seem like Philosophy of Mind papers. A rather large part of what they cared about was the nature of emotions. In recent years it has been as much a topic in Ethics as anything else. You can even see a little bump in _Ethics_ in the 1990s. And that's where the three highest cited papers come from. In between it also ends up as Mind topic, but more connected to Rylean behaviourism than to traditional psychology. If we extended the study through the 2010s and into the 2020s, it would start to blend into recent Social and Political philosophy via work on the role of anger.
+
+The effect is that the chronological ordering that I've been using for this breaks down a fair bit. It's not like this topic should be centered on the time just after ordinary language philosophy. Rather, it draws on a bunch of somewhat connected papers from across the 138 years, and so it ends up centered around the center of those years.

@@ -1,0 +1,38 @@
+```{r t36a}
+jjj <- 36
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t36b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t36c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t36d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t36e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The bulk of this topic is issues about punishment. And it's striking just how little coverage this gets in the 'generalist' journals. This particular gap wasn't the reason that I included _Ethics_ and _Philosophy and Public Affairs_ in the study, but it would have done just as well as a reason. Punishment is a really important philosophical topic, and most philosophy journals simply don't talk about it.
+
+This topic also picks up some recent topics that are not, or at least not entirely, about laws and institutions. Instead they are about the role of mercy and forgiveness in personal interactions. These were best classed as ethics papers rather than social and political papers. A binary sort was able to find these papers as a separate category, so I was able to sort those papers into ethics. But the vast bulk of the papers are about legal punishment (and legal forgiveness and legal mercy), and those are put into social and political.

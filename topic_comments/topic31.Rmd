@@ -1,0 +1,38 @@
+```{r t31a}
+jjj <- 31
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t31b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t31c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t31d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t31e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+One of the first courses I ever taught was on the history of social contract theory. It was an easy enough class to teach, because there are so many versions of the Hobbes, Locke, Rousseau course around to use as a basis. And this is basically the Hobbes, Locke, Rousseau topic.
+
+As you can see, _Ethics_ used to include a lot more papers on history, but now they do very little. And _Philosophy and Public Affairs_ has never done much history. So this becomes a rather small topic, relative to its historical importance. But since none of these articles ever troubled the citation indices enough to appear here, maybe the journal editors are just reacting correctly to the signals they are getting from the market.

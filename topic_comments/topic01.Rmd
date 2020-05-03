@@ -1,0 +1,42 @@
+```{r t01a}
+jjj <- 1
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t01b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t01c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t01d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t01e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+Several philosophy journals started their lives as combined journals of philosophy and psychology. Most notably for our purposes, _Mind_ is as much a psychology journal as a philosophy journal for several years. And this topic collects those articles.
+
+It isn't entirely what we'd call psychology. [George Dawes Hicks](https://philpapers.org/rec/KEEGDH) was an important philosopher, and long time President of the Aristotelian Soduociety. He read a lot of papers to the society, and it wasn't uncommon when I was building these models to have a run produce a topic that was largely centered on his work. But he ends up being relatively peripheral to the story this model tells, for better or worse.
+
+Perhaps relatedly, we shouldn't think of the boundary between philosophy and psychology in the pre-war years being as strict as it was for much of the twentieth century. As Omar W. Nasim notes in his introduction to the Aristotelian Society's [Virtual Issue on the Emergence of Analytic Philosophy](http://www.aristoteliansociety.org.uk/the-virtual-issue/the-virtual-issue-no-2/), even an issue like the existence of the external world was often viewed by philosophers at the time as a psychological issue.
+
+One thing that surprised me a little was that the model didn't take the recent empirical turn in philosophy of mind as a reason to put more articles into this topic. I would not have been surprised if some recent work on attention, for example, had turned up. But the model seems to have figured out that this topic is pretty much dead as far as the philosophy journals are concerned.

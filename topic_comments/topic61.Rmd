@@ -1,0 +1,40 @@
+```{r t61a}
+jjj <- 61
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t61b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t61c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t61d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t61e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+I've called this _Explanation_, but that's potentially misleading. It's really focussed on non-causal approaches to explanation. I suspect that's less because non-causal theories of explanation are distictive, and more because there are so many other topics that discuss causation.
+
+This topic ends up being somewhat squeezed, so the numbers here understate the importance of Explanation as a topic. Some papers you might intuitively classify as being about explanation end up in [Causation](#topic55). Others end up in [Laws](#topic46). Yet others end up in [Theories and Realism](#topic67). So the numbers here are more of a lower bound for the importance of explanation than anything else.
+
+That said, the upwards trend here is a bit interesting to me. I wouldn't have expected that just from the topic. Part of the story is that this topic also includes papers on reduction (at least if they didn't get classified in Laws or in Theories and Realism), and there was a bit of a regrowth of interest in that in the 2000s and early 2010s.

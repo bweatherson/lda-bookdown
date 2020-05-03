@@ -1,0 +1,54 @@
+```{r t53a}
+jjj <- 53
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t53b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t53c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t53d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t53e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+I needed to take the model up to 90 topics to make the needed distinctions in a bunch of subdisciplines. But I fear that the model would be more enlightening with respect to ethics with a smaller number of topics. Some of the ethics topics end up being distinguished by which near synonym the author decided to use. And this feels like one of them.
+
+The formula I used for the 'characteristic articles' weights length as well as probability. If you just look at the articles that have the highest probability of being in this topic you get the feeling that this is all about very in house debates.
+
+```{r duties-high-probability}
+t <- relabeled_articles %>%
+  filter(topic == 53) %>%
+  arrange(-gamma) %>%
+  slice(1:10) %>%
+  select(citation)
+
+for (jj in 1:10){
+  cat(jj,". ", t$citation[jj], " \n", sep="")
+}
+```
+
+And this makes sense. In terms of subject matter, this topic overlaps considerably with other topics. What distinguishes it is not subject matter, but word choice. And discussion notes tend to mirror the language of the articles they are discussing.
+
+We get a better sense of what's happening by looking not here but at the larger Ethics category that I'll discuss in later chapters.

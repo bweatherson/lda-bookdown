@@ -1,0 +1,40 @@
+```{r t12a}
+jjj <- 12
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t12b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t12c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t12d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t12e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is a strange topic. It peaks in the early part of the timeline, and a lot of the articles in it feel very continuous with the other early topics. But unlike [Idealism](#topic02) and the topics connected to pragmatism, it keeps picking up articles to the present day. I think this is something of a coincidence; the fact that there is more lexical overlap between philosophy of mind circa 1912 and philosophy of mind circa 2012 than there is in, say, ethics or metaphysics across the 100 years doesn't show that there is much overlap in content.
+
+The top characteristic article here, G. W. Cunningham's [Self-Consciousness and Consciosusness of Self](https://philpapers.org/rec/CUNSAC) is useful for thinking about this. On the one hand, the example Cunningham starts with, of a young boy doing public speaking for the first time, is the kind of thing you'd find in more contemporary work. And the distinction Cunningham draws, between the way the boy feels about himself in contrast to the wider world, and the sum total of the boy's stream of consciousness, also feels contemporary enough. On the other hand, Cunningham explicitly rejects the equation of these contrastive feelings (such as embarrassment at being the centre of attention) with self-consciousness. That's consciousness of self for him. And within a few pages we're in a discussion of whether the Absolute (capitals very much in original) could have a consciousness of self if there is no Other to contrast with. And this feels like it could just be an Idealism paper.
+
+Still, it's a bit helpful that the model teased out these Philosophy of Mind papers from the general run of Idealism papers. It gives us a bit better sense of what's going on in these early days.

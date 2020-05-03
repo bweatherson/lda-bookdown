@@ -1,0 +1,119 @@
+```{r t55a}
+jjj <- 55
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t55b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t55c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t55d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t55e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+So this is a slightly unfortunate choice that the model made. It notices that there are papers that are about arguments, focussing on things like question begging and circularity. Then it identifies this as a topic, and everywhere someone talks about arguments, it says that maybe that paper should be in this topic. But a lot of philosophy papers talk about arguments! 
+
+If all papers talked about arguments to the same extent, then the model would zero it all out. But that's not what happened. It doesn't even happen to equal amounts over years. We can see this just by looking at word frequency graphs.
+
+```{r t55-frequency-graphs}
+word_frequency_graphs(c("argument", "arguments","premise", "conclusion"))
+```
+
+It's interesting that 'premise' and 'conclusion' don't change their frequency over time. But there is a rapid acceleration in how often the word 'argument' is used. And, though I'm not sure the graph makes this clear, 'arguments' also increases too. And you'll note that the word frequency of 'argument' tracks really closely the weighted sum of the topic.
+
+The 122 articles that are primarily in the topic are a somewhat odd group. There are some, as you can see from the top of the charactistic articles list, that are really about things like circularity. Further down, there are articles that are particularly about arguments for incompatibilism, and, especially, arguments for dualism.
+
+This topic has, by a lot, the biggest gap between it's raw sum and weighted sum. This is because there are so many articles where the model gives a small, but far from negligible, probability to the article being in the topic. Here's one way to see that. For each topic, we can ask for how many articles is it the _n_-th most probable topic. We've done that already for _n_ = 1; that's what the raw count reports. But for this topic the values for _n_ between 2 and 10 are a little eye popping
+
+<br>
+```{r rank-of-arguments-topic}
+t <- relabeled_gamma %>%
+  group_by(document) %>%
+  mutate(r = rank(-gamma)) %>%
+  filter(topic == 55) %>%
+  ungroup() %>%
+  group_by(r) %>%
+  tally() %>%
+  mutate(r = round(r,0)) %>%
+  slice(1:10)
+
+kable(t, 
+      col.names = c("Rank", "Number of Articles"), 
+      align=c("c", "c"),
+      caption = "How many articles have Arguments as the n-th highest ranked topic"
+      )
+```
+<br>
+
+For comparison, here's what that table looks like for [Causation](#topic54.)
+
+<br>
+```{r rank-of-causation-topic}
+t <- relabeled_gamma %>%
+  group_by(document) %>%
+  mutate(r = rank(-gamma)) %>%
+  filter(topic == 54) %>%
+  ungroup() %>%
+  group_by(r) %>%
+  tally() %>%
+  mutate(r = round(r,0)) %>%
+  slice(1:10)
+
+kable(t, 
+      col.names = c("Rank", "Number of Articles"), 
+      align=c("c", "c"),
+      caption = "How many articles have Causation as the n-th highest ranked topic"
+      )
+```
+
+Here are some of these articles that the model thinks are second-most-likely to be in Arguments. (I've restricted this list to articles at least 20 pages long.)
+
+```{r rank-of-arguments-topic-second-best}
+t <- relabeled_gamma %>%
+  group_by(document) %>%
+  mutate(r = rank(-gamma)) %>%
+  filter(topic == 55, r == 2) %>%
+  ungroup() %>%
+  arrange(-gamma) %>%
+  select(-year) %>%
+  inner_join(relabeled_articles, by = "document") %>%
+  filter(length.x > 19) %>%
+  select(citation, year, gamma.x)
+
+datatable(t,           
+          colnames = c("Article", "Year", "Probability"), 
+          rownames = FALSE,
+          options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2)),
+                         pageLength = 10
+                         ),
+          caption = htmltools::tags$caption(paste0("Articles that have Arguments as Second Most Likely Topic"), style = "font-weight: bold")
+    )%>%
+      formatSignif('gamma.x',4) %>%
+      formatStyle(1:3,`text-align` = 'left')
+```
+
+Probably if the model hadn't landed on this topic, it would have been even clearer that some articles were philosophy of religion articles, or ancient philosophy articles.
+
+And this is why this topic is ultimately one I regret having. If I did this whole project over again, I would steer away from models that select these tools-y topic, and towards ones that focus more centrally on particular philosophical subject matters.

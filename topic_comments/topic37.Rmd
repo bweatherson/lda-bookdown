@@ -1,0 +1,157 @@
+```{r t37a}
+jjj <- 37
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t37b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t37c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t37d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t37e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is just about the paradigm example of the model finding a disjunctive topic. It knew that it wanted to put the articles on set theory in one place. And it knew that it wanted to put the articles on the grue paradox in one place. And it didn't have enough places to put them all, so it put both of them here.
+
+The two topics aren't wholly unconnected; they are both problems for the kind of philosophical world view that Nelson Goodman wanted to endorse. And, of course, Goodman himself had important views on how to solve each of them. But we shouldn't go overboard trying to figure out why the model put them in one place. Most model runs had these topics separated.
+
+You can see from the highly cited articles list that the model also put some articles on puzzles about verisimilitude in here. That makes more sense. Like the grue paradox, that's a puzzle about how to manage ampliative reasoning using just the tools of formal logic.
+
+Because the topic is so disjunctive, it lends itself reasonably well to a binary sort. So I took the 555 articles the model found, and generated a 2-topic LDA from just those articles. 
+
+```{r binary-grue}
+load("../binary_lda/lda_37.RData")
+grue_gamma <- tidy(binary_lda, matrix = "gamma") %>%
+  left_join(relabeled_articles, by = "document") %>%
+  mutate(gamma.z = gamma.x * gamma.y)
+
+grue_years <- grue_gamma %>%
+  group_by(year, topic.x) %>%
+  dplyr::summarise(g = sum(gamma.x)) %>%
+  filter(year > 1929)
+```
+
+Here are the top 50 articles in what it called Topic 1.
+
+```{r binary-grue-table-one}
+grue_gamma_table_one <- grue_gamma %>%
+  filter(topic.x == 1) %>%
+  arrange(-gamma.x) %>%
+  slice(1:50) %>%
+  select(citation, gamma.x)
+
+datatable(grue_gamma_table_one,           
+          colnames = c("Article", "Probability"), 
+          rownames = FALSE,
+          options = list(columnDefs = list(list(className = 'dt-left', targets = 0:1)),
+                         pageLength = 5
+                         ),
+          caption = htmltools::tags$caption("Articles in Sub-Topic 1", style = "font-weight: bold")
+    )%>%
+      formatSignif('gamma.x',6) %>%
+      formatStyle(1:2,`text-align` = 'left')
+```
+
+It's very confident about its binary sort, as you can see. (I've normally been doing these to four significant figures, but I needed 6 here just to get any distinctions.) But some of these are articles that it was not confident were in the category in the first place. Let's instead sort articles by the product of their probability of being in topic 37 (i.e., Sets and Grue) and their probability of being in subtopic 1 (which is starting to look like Grue).
+
+```{r binary-grue-table-two}
+grue_gamma_table_two <- grue_gamma %>%
+  filter(topic.x == 1) %>%
+  arrange(-gamma.z) %>%
+  slice(1:50) %>%
+  select(citation, gamma.z)
+
+datatable(grue_gamma_table_two,           
+          colnames = c("Article", "Probability"), 
+          rownames = FALSE,
+          options = list(columnDefs = list(list(className = 'dt-left', targets = 0:1)),
+                         pageLength = 5
+                         ),
+          caption = htmltools::tags$caption("Articles in Sub-Topic 1", style = "font-weight: bold")
+    )%>%
+      formatSignif('gamma.z',4) %>%
+      formatStyle(1:2,`text-align` = 'left')
+```
+
+The first page here leads to things downstream of the grue paradox that I wasn't particularly familiar with: work on the proper formalisation of scientific theories, and on the foundations of learning algorithms. If you click onto page 2 you get more articles by Ullian and by Zabludowski, so we're in the mainstream of grue articles. Let's do the same thing for articles in sub-topic 2.
+
+```{r binary-grue-table-three}
+grue_gamma_table_one <- grue_gamma %>%
+  filter(topic.x == 2) %>%
+  arrange(-gamma.x) %>%
+  slice(1:50) %>%
+  select(citation, gamma.x)
+
+datatable(grue_gamma_table_one,           
+          colnames = c("Article", "Probability"), 
+          rownames = FALSE,
+          options = list(columnDefs = list(list(className = 'dt-left', targets = 0:1)),
+                         pageLength = 5
+                         ),
+          caption = htmltools::tags$caption("Articles in Sub-Topic 2", style = "font-weight: bold")
+    )%>%
+      formatSignif('gamma.x',6) %>%
+      formatStyle(1:2,`text-align` = 'left')
+```
+
+These aren't a million miles from set theory, but in some cases they are a little bit distinct. Let's have a look at what happens if we cross the probability of being in sub-topic 2 with the probability of being in topic 37.
+
+```{r binary-grue-table-four}
+grue_gamma_table_two <- grue_gamma %>%
+  filter(topic.x == 2) %>%
+  arrange(-gamma.z) %>%
+  slice(1:50) %>%
+  select(citation, gamma.z)
+
+datatable(grue_gamma_table_two,           
+          colnames = c("Article", "Probability"), 
+          rownames = FALSE,
+          options = list(columnDefs = list(list(className = 'dt-left', targets = 0:1)),
+                         pageLength = 5
+                         ),
+          caption = htmltools::tags$caption("Articles in Sub-Topic 2", style = "font-weight: bold")
+    )%>%
+      formatSignif('gamma.z',4) %>%
+      formatStyle(1:2,`text-align` = 'left')
+```
+
+And here we are looking at something very much like set theory.
+
+The point of all this was to demonstrate something of the power of this method of analysis. Even when the model does something that seems wrong - like smushing together two topics that don't really belong - we can use the very same tools to undo the mistake. Now that we've separated out the topics, we can look at their frequency over time.
+
+This is a graph of the distribution of those 552 articles into the two buckets (grue and sets) over time.
+
+```{r grue-binary-graph}
+grue_years <- grue_years %>%
+  mutate(topic.x = as.factor(topic.x))
+ggplot(grue_years, aes(x = year, y = g, group = topic.x, color = topic.x)) + 
+  geom_point() + 
+  labs(x = "Year", y = "Weighted Proportion of Articles", title = "Articles in Each Sub-Topic") +
+  theme(legend.title = element_blank())
+
+```
+
+You can see that both of the topics peak in the late 1960s and early 1970s. And set theory doesn't fall away quite as quickly as grue. But I had expected the difference between the two topics to get rather dramatic after 2000, and it doesn't really. The model, somewhat sensibly, puts other work on formal learning in with grue, and this means the topic doesn't crash away.
+

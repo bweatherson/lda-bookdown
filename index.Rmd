@@ -1,0 +1,732 @@
+--- 
+title: "Text Mining Philosophy Journals"
+author: "Brian Weatherson"
+date: "`r Sys.Date()`"
+documentclass: book
+link-citations: yes
+site: bookdown::bookdown_site
+description: Building models of the trends in philosophy journals using LDA.
+---
+
+# Introduction {-}
+
+```{r packages, echo=FALSE, message = FALSE, warning = FALSE, cache=FALSE}
+knitr::opts_chunk$set(dpi=288)
+knitr::opts_chunk$set(echo=FALSE)
+knitr::opts_chunk$set(cache=TRUE)
+knitr::opts_chunk$set(message=FALSE)
+knitr::opts_chunk$set(warning=TRUE)
+knitr::opts_chunk$set(fig.height = 8.2)
+knitr::opts_chunk$set(fig.width = 7.5)
+knitr::opts_chunk$set(results='asis')
+require(tidyverse)
+require(tidytext)
+require(topicmodels)
+require(knitr)
+require(kableExtra)
+require(corrr)
+library(ggplot2); theme_set(theme_light())
+require(DT)
+# Note to self: Add 'view' followed by github directory to _bookdown.yml
+
+
+```
+
+```{r loader}
+journal_short_names <- c(
+  "Analysis" = "Analysis",
+  "British Journal for the Philosophy of Science" = "BJPS",
+  "Ethics" = "Ethics",
+  "Journal of Philosophy" = "Journal of Philosophy",
+  "Mind" = "Mind",
+  "Noûs" = "Noûs",
+  "Philosophical Review" = "Philosophical Review",
+  "Philosophy and Phenomenological Research" = "PPR",
+  "Philosophy and Public Affairs" = "P&PA",
+  "Philosophy of Science" = "Philosophy of Science",
+  "Proceedings of the Aristotelian Society" = "Aristotelian Society",
+  "The Philosophical Quarterly" = "Philosophical Quarterly"
+)
+
+# The list of articles
+load("fixed_articles.RData")
+
+# The list of highly cited articles
+load("highly_cited_articles.RData")
+
+# The list of commonly used words (could calculate this from below)
+load("common_words.RData")
+source("short_words.R")
+
+# How many topics we are using
+cats <- 90
+
+# The big LDA we're using
+load("t90t15.RData")
+
+# Rename it to the name I primarily use (and so it isn't overridden by other loads)
+thelda <- refinedlda
+
+# The application of the LDA to the 2019 Imprint articles
+load("imprint_lda.RData")
+```
+
+```{r word_list_loader}
+# The full word list
+# This isn't on github because it might be proprietary
+# It's in a different module because (a) it isn't on github and (b) it is really slow
+load("all_journals_word_list.RData")
+```
+
+```{r gamma_setup}
+# Gamma is the probability of article being in a topic
+# This retrieves it, and rearranges the topics chronologically
+all_journals_gamma <- tidy(thelda, matrix = "gamma")
+
+all_journals_classifications <- all_journals_gamma %>%
+  group_by(document) %>%
+  top_n(1, gamma) %>%
+  ungroup()
+
+all_journals_titles_and_topics <- merge(all_journals_classifications, articles, by.x="document", by.y="file")
+
+year_topic_mean <- all_journals_titles_and_topics %>% ungroup() %>% 
+  group_by(topic)  %>% 
+  dplyr::summarize(date = mean(year)) %>% 
+  mutate(rank = rank(date))
+
+relabeled_articles <- merge(all_journals_titles_and_topics, year_topic_mean) %>% 
+  select(-topic) %>% 
+  dplyr::rename(topic = rank)
+
+relabeled_gamma <- merge(all_journals_gamma, year_topic_mean) %>%
+  as_tibble() %>%
+  select(-topic) %>%
+  dplyr::rename(topic = rank)
+
+relabeled_gamma <- merge(relabeled_gamma, articles, by.x="document", by.y="file") %>%
+  select(document, gamma, topic, year, journal, length) %>%
+  mutate(length = case_when(
+                            is.na(length) ~ 1,
+                            TRUE ~ length
+                            ))
+```
+
+```{r import_categories, cache=FALSE}
+# The big category csv
+# Could type this in from R, but easier to edit as CSV
+require(readr)
+the_categories <- read_csv("category-summary-22031848-90-r15.csv")
+```
+
+```{r graphsetup}
+# All the data for the big graphs in chapter 3
+# Gotta build them first because some of them get drawn on for the individual topics in chapter 2
+  article_demonimator <-  relabeled_articles  %>%
+    group_by(year) %>%
+    dplyr::summarise(d = n_distinct(document))
+
+  page_demonimator <- relabeled_articles %>%
+    group_by(year) %>%
+    dplyr::summarise(d = sum(length, na.rm = TRUE))
+  
+  count_numerator <- relabeled_articles  %>%
+    group_by(year, topic) %>%
+    dplyr::summarise(y = n_distinct(document)) %>%
+    ungroup() %>%
+    complete(year, topic, fill = list(y = 0))
+
+  count_ratio <- merge(count_numerator, article_demonimator) %>%
+    mutate(y = y/d)
+  
+  page_count_numerator <- relabeled_articles %>%
+    group_by(year, topic) %>%
+    dplyr::summarise(y = sum(length, na.rm=TRUE)) %>%
+    ungroup() %>%
+    complete(year, topic, fill = list(y = 0))
+
+  page_count_ratio <- merge(page_count_numerator, page_demonimator) %>%
+    mutate(y = y/d)
+  
+  weight_numerator <- relabeled_gamma %>%    
+    group_by(year, topic) %>%
+    dplyr::summarise(y = sum(gamma)) %>%
+    ungroup() %>%
+    complete(year, topic, fill = list(y = 0))
+
+  weight_ratio <- merge(weight_numerator, article_demonimator) %>%
+    as_tibble() %>%
+    mutate(y = y/d)
+  
+  page_weight_numerator <- relabeled_gamma %>%    
+    group_by(year, topic) %>%
+    mutate(gl = gamma * length) %>%
+    dplyr::summarise(y = sum(gl, na.rm = TRUE)) %>%
+    ungroup() %>%
+    complete(year, topic, fill = list(y = 0))
+
+  page_weight_ratio <- merge(page_weight_numerator, page_demonimator) %>%
+    mutate(y = y/d)
+  
+  journalgamma <- relabeled_gamma  %>%
+    group_by(year, topic, journal) %>%
+    dplyr::summarise(gamsum = sum(gamma)) %>%
+    ungroup() %>%
+    complete(year, topic, journal, fill = list(gamsum = NA))
+  
+  yearjournalcount <- relabeled_articles %>%
+    group_by(journal, year) %>%
+    dplyr::summarise(annual = n_distinct(document))
+  
+  journalgamma_frequency <- merge(journalgamma, yearjournalcount) %>%
+    mutate(gamfre = gamsum / annual) %>%
+    complete(year, journal, topic, fill = list(gamfre = NA))  
+```
+
+```{r astopic, cache=FALSE}
+# The topics are naturally numbers so they get continuous colors
+# Turning them into factors makes the automatic coloring work
+# I also use this to relabel and rearrange the journal titles
+# Burp
+  count_numerator$topic <- as.factor(count_numerator$topic)
+  page_count_numerator$topic <- as.factor(page_count_numerator$topic)
+  weight_numerator$topic <- as.factor(weight_numerator$topic)
+  page_weight_numerator$topic <- as.factor(page_weight_numerator$topic)
+  count_ratio$topic <- as.factor(count_ratio$topic)
+  page_count_ratio$topic <- as.factor(page_count_ratio$topic)
+  weight_ratio$topic <- as.factor(weight_ratio$topic)
+  page_weight_ratio$topic <- as.factor(page_weight_ratio$topic)
+  journalgamma_frequency$topic <- as.factor(journalgamma_frequency$topic)
+  
+journal_order <- c("Mind", "Proceedings of the Aristotelian Society", "Ethics", "Philosophical Review",  "Analysis","Philosophy and Public Affairs", "Journal of Philosophy", "Philosophy and Phenomenological Research", "Philosophy of Science", "Noûs",  "The Philosophical Quarterly", "British Journal for the Philosophy of Science")
+
+journalgamma_frequency$journal <- factor(journalgamma_frequency$journal, levels = journal_order)
+```
+
+```{r keywordsetup}
+# Generate two things for the topic summaries in chapter 2
+# First, the keywords, which are a complicated thing to make, since the beta matrix is huge
+# Second, the highly cited list, which is actually fairly easy -though have to check it is up to date
+  phil_topics <- tidy(thelda, matrix = "beta")
+
+  relabeled_topics <- merge(phil_topics, year_topic_mean) %>%
+    as_tibble() %>%
+    select(-topic) %>%
+    dplyr::rename(topic = rank)
+
+  word_score <- relabeled_topics %>%
+    group_by(term) %>%
+    dplyr::summarise(sumbeta = sum(beta)) %>%
+    arrange(desc(sumbeta))
+
+ busy_topics <- merge(relabeled_topics, word_score) %>%
+   filter(sumbeta > 0.00005 * cats) %>%
+   mutate(score = beta/sumbeta) %>%
+   arrange(desc(score))
+
+ distinctive_topics <- busy_topics %>%
+   group_by(topic) %>%
+   top_n(15, score) %>%
+   ungroup() %>%
+   arrange(desc(-topic))
+
+ short_keywords <- c()
+
+ short_keywords <- tribble(
+   ~topic, ~distinctive_words)
+  
+  high_cite_gamma <- merge(highly_cited, relabeled_articles, by.x = "file", by.y = "document") %>% arrange(desc(Cites))
+
+```
+
+```{r overall_stats}
+# Put all the stats for chapter 2 into one table that I can draw out
+overall_stats <- tibble(
+  the_topic = 1:90,
+  r_count = 0,
+  w_count = 0,
+)
+
+
+for (i in 1:90){
+  overall_stats$r_count[i] <- nrow(relabeled_articles %>% filter(topic == i))
+  overall_stats$w_count[i] <- round(sum(filter(relabeled_gamma, topic == i)$gamma), 1)
+}
+
+overall_stats <- overall_stats %>%
+  mutate(r_percent = round(r_count / nrow(relabeled_articles), 3)) %>%
+  mutate(r_rank = order(order(r_count, decreasing=TRUE))) %>%
+  mutate(w_percent = round(w_count / nrow(relabeled_articles), 3)) %>%
+  mutate(w_rank = order(order(w_count, decreasing=TRUE))) %>%
+  mutate(w_over_r = w_count - r_count) %>%
+  mutate(gap_rank = order(order(w_over_r, decreasing=TRUE))) %>%
+  mutate(wy = 0)
+
+temp_years <- relabeled_gamma %>%
+  select(topic, gamma, year) %>%
+  mutate(yg = gamma * year)
+
+for (i in 1:90){
+  overall_stats$wy[i] = round(sum(filter(temp_years, topic == i)$yg)/overall_stats$w_count[i], 1)
+}
+
+overall_stats <- overall_stats %>%
+  add_column(mean_y = 0, median_y = 0, modal_y = 0)
+
+for (i in 1:90){
+  temp_years <- relabeled_articles %>% filter(topic == i)
+  overall_stats$mean_y[i] = round(mean(temp_years$year), 1)
+  overall_stats$median_y[i] = round(median(temp_years$year), 0)
+  overall_stats$modal_y[i] = as.numeric(names(sort(-table(temp_years$year)))[1])
+}
+```
+
+```{r cross-topic}
+# Average gamma in topic y for articles in topic x
+# Useful quick-and-dirty overlap between topics measure
+cross_topic <- function(x, y){
+  t <- relabeled_articles %>% filter(topic == x)
+  s <- relabeled_gamma %>% filter(topic == y, document %in% t$document)
+  sum(s$gamma)
+}
+```
+
+```{r cross-topic-two}
+# Create tables from the cross-topic function
+short_articles <- relabeled_articles %>%
+  select(document, hometopic = topic)
+
+cross_topic_tibble <- relabeled_gamma %>%
+  inner_join(short_articles, by = "document") %>%
+  group_by(topic, hometopic) %>%
+  dplyr::summarise(g = mean(gamma)) %>%
+  filter(!topic == hometopic) %>%
+  select(topic = hometopic, othertopic = topic, g) %>%
+  arrange(topic, othertopic)
+
+closest_neighbour <- cross_topic_tibble %>%
+  group_by(topic) %>%
+  top_n(1, g)
+
+closest_neighbour_inverse <- cross_topic_tibble %>%
+  group_by(othertopic) %>%
+  top_n(1, g) %>%
+  arrange(othertopic)
+
+furthest_neighbour <- cross_topic_tibble %>%
+  group_by(topic) %>%
+  top_n(1, -g)
+
+furthest_neighbour_inverse <- cross_topic_tibble %>%
+  group_by(othertopic) %>%
+  top_n(1, -g) %>%
+  arrange(othertopic)
+
+```
+
+
+```{r kable-for-article-probabilities}
+# A function for making a quick table of an article's distribution over the 90 topics
+# This is first used in chapter 2
+individual_article <- function(x){
+  temp_article <- relabeled_articles %>%
+  filter(document == x)
+
+temp_gamma <- relabeled_gamma %>%
+  filter(document == x, gamma > 0.02) %>%
+  select(topic, gamma) %>%
+  inner_join(the_categories, by = "topic") %>%
+  select(subject, gamma) %>%
+  arrange(-gamma)
+
+kable(temp_gamma, 
+      col.names = c("Subject", "Probability"), 
+      caption = temp_article$citation[1],
+      digits = c(0, 4)) %>% 
+  kable_styling(full_width = F)
+}
+```
+
+```{r dt-for-author-articles}
+author_dt <- function(x, y){
+datatable(relabeled_articles %>%
+          filter(auth1 %in% x | auth2 %in% x | auth3 %in% x) %>%
+          arrange(topic) %>%
+         inner_join(the_categories, by = "topic") %>%
+          select(year, citation, subject, gamma),           
+          colnames = c("Year", "Article", "Subject", "Probability"), 
+          rownames = FALSE,
+          options = list(columnDefs = list(list(className = 'dt-left', targets = 0:3)),
+                         pageLength = 10
+                         ),
+          caption = htmltools::tags$caption(paste0("Articles with Author ",y), style = "font-weight: bold")
+    )%>%
+      formatSignif('gamma',4) %>%
+      formatStyle(1:4,`text-align` = 'left')  
+} 
+```
+
+```{r words-by-year}
+# Use this to get words to graph
+# This gets used in chapter 7
+
+article_year_tibble <- articles %>%
+  select(filename = file, year)
+
+word_year_count <- all_journals_tibble %>%
+  inner_join(article_year_tibble, by = "filename") %>%
+  group_by(year) %>%
+  dplyr::summarise(a = sum(wordcount))
+
+```
+
+```{r word-frequency-graphs}
+# A pair of functions that turn a string of words into a graph of each of their frequencies over time
+# Have to generate the data first, because would be enormous table to have it all stored
+# These get used in chapter 7
+word_year_frequency <- function(x){
+  left_join(word_year_count, all_journals_tibble %>%
+    filter(word == x) %>%
+    left_join(article_year_tibble, by = "filename") %>%
+    group_by(year) %>%
+    dplyr::summarise(c = sum(wordcount)),
+    by = "year") %>%
+    replace_na(list(c = 0)) %>%
+    mutate(f = c / a) %>%
+    mutate(term = x)
+}
+
+
+word_frequency_graphs <- function(x){
+  t <- lapply(x, word_year_frequency) %>% bind_rows()
+  ggplot(t, aes(x = year, y = f, color = term, group = term)) +
+  geom_point(size = 0.6, alpha = 0.8) +
+  scale_y_continuous(labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
+#  scale_y_continuous(labels = scale_inverter) +
+  labs(x = "Year", y = "Word Frequency") +
+  theme(legend.title = element_blank())
+}
+```
+
+```{r word-era-graphs}
+word_era_graphs <- function(x, y){
+  word_freq_data <- era_words %>%
+    filter(word %in% slice(common_words, 1:x)$word) %>%
+    filter(epoch == y) %>%
+    arrange(-f) %>%
+    ungroup() %>%
+    slice(1:5)
+  print(word_frequency_graphs(word_freq_data$word))
+}
+```
+
+```{r imprint-setup}
+# Extract the gammas from imprint_lda and renumber chronologically
+imprint_gamma<- as_tibble(imprint_lda$topics, rownames = NA) %>%
+  rownames_to_column(var = "document") %>%
+  pivot_longer(-document) %>%
+  select(document, topic = name, gamma = value) %>%
+  mutate(topic = as.integer(topic)) %>%
+  inner_join(year_topic_mean, by = "topic") %>%
+  select(document, topic = rank, gamma) %>%
+  arrange(document, gamma)
+
+# Sum gammas over the 54 Imprint articles
+imprint_summary <- imprint_gamma %>%
+  group_by(topic) %>%
+  dplyr::summarise(g = sum(gamma))
+
+# Top gamma for each article 
+imprint_top_gamma <- imprint_gamma %>%
+  group_by(document) %>%
+  top_n(1, gamma)
+```
+
+```{r load-bad-lda}
+# The LDA I use for the buzzwords section right at the end
+load("~/Dropbox/journals-lda/t90t100.RData")
+```
+
+```{r setup-bad-lda}
+
+bad_gamma <- tidy(refinedlda, matrix = "gamma") %>%
+  filter(topic == 6) %>%
+  inner_join(articles, by = c("document" = "file")) %>%
+  select(citation, gamma, journal, year) %>%
+  arrange(-gamma)
+
+bad_gamma_year <- bad_gamma %>%
+  group_by(year) %>%
+  summarise(g = sum(gamma))%>%
+  inner_join(article_demonimator, by = "year") %>%
+  mutate(y = g / d)
+  
+# Graph absolute and ratio
+
+bad_gamma_year_journal <- bad_gamma %>%
+  group_by(year, journal) %>%
+  summarise(g = sum(gamma)) %>%
+  inner_join(yearjournalcount, by = c("year", "journal")) %>%
+  mutate(y = g / annual)
+
+bad_gamma_year_journal$journal <- factor(bad_gamma_year_journal$journal, levels = journal_order)
+
+# Graph absolute and ratio
+
+bad_beta <- tidy(refinedlda, matrix = "beta") %>%
+  filter(topic == 6) %>%
+  filter(term %in% all_word_count$word) %>%
+  select(word = term, beta) %>%
+  inner_join(all_word_count, by = "word") %>%
+  mutate(y = beta/total * sum(all_word_count$total)) %>%
+  arrange(-y)
+```
+
+```{r comparison-beta-tables}
+good_beta <- relabeled_topics %>%
+  filter(topic == 90) %>%
+  filter(term %in% all_word_count$word) %>%
+  select(word = term, beta) %>%
+  inner_join(all_word_count, by = "word") %>%
+  mutate(y = beta/total * sum(all_word_count$total)) %>%
+  arrange(-y)
+
+kant_beta <- relabeled_topics %>%
+  filter(topic == 32) %>%
+  filter(term %in% all_word_count$word) %>%
+  select(word = term, beta) %>%
+  inner_join(all_word_count, by = "word") %>%
+  mutate(y = beta/total * sum(all_word_count$total)) %>%
+  arrange(-y)
+
+olp_beta <- relabeled_topics %>%
+  filter(topic == 24) %>%
+  filter(term %in% all_word_count$word) %>%
+  select(word = term, beta) %>%
+  inner_join(all_word_count, by = "word") %>%
+  mutate(y = beta/total * sum(all_word_count$total)) %>%
+  arrange(-y)
+```
+
+```{r category_gamma_setup}
+# I recreate category_gamma from inside the script
+# Need to build all_dtm because gotta assign probabilities from within the binary sorts to all articles
+word_list <- all_journals_tibble %>%
+  filter(wordcount > 3) %>%
+  filter(!word %in% short_words) %>%
+  filter(filename %in% articles$file)
+
+
+all_dtm <- cast_dtm(word_list, filename, word, wordcount)
+```
+
+```{r category_gamma_derive}
+split_check <- filter(the_categories, cat_num == 13)$topic
+
+category_gamma <- relabeled_gamma %>%
+  select(document, topic, gamma)
+
+for (i in split_check){
+  load(paste0("binary_lda/lda_",i,".RData"))
+  temp_lda <- posterior(binary_lda, all_dtm)
+  temp_gamma<- as_tibble(temp_lda$topics, rownames = NA) %>%
+    rownames_to_column(var = "document") %>%
+    pivot_longer(-document) %>%
+    select(document, btopic = name, bgamma = value)
+  temp_old_gamma <- category_gamma %>%
+    filter(topic == i) %>%
+    inner_join(temp_gamma, by = "document") %>%
+    mutate(topic = as.numeric(topic)) %>%
+    mutate(btopic = as.numeric(btopic)) %>%
+    mutate(topic = 100*topic + btopic) %>%
+    mutate(gamma = gamma*bgamma) %>%
+    select(-btopic, -bgamma)
+ category_gamma <- category_gamma %>%
+   filter(!topic == i) %>%
+   bind_rows(temp_old_gamma)
+}
+
+category_gamma <- category_gamma %>%
+  inner_join(the_categories, by = "topic")
+
+articles_by_category <- category_gamma %>%
+  group_by(document) %>%
+  top_n(1, gamma) 
+```
+
+```{r category_setup}
+category_gamma_graph <- category_gamma %>%
+  inner_join(articles, by = c("document" = "file")) %>%
+  select(journal, year, category = cat_name, gamma) %>%
+  group_by(journal, year, category) %>%
+  dplyr::summarise(g = sum(gamma)) %>%
+  ungroup() %>%
+  complete(journal, year, category, fill = list(g = NA))
+
+category_year <- category_gamma_graph %>%
+  group_by(category, year) %>%
+  dplyr::summarise(y = sum(g, na.rm=TRUE))
+
+year_denominator <- category_gamma_graph %>%
+  group_by(year) %>%
+  dplyr::summarise(d = sum(g, na.rm = TRUE))
+
+category_frequency <- inner_join(category_year, year_denominator, by = "year") %>%
+  mutate(f = y / d)
+```
+
+Anglophone philosophy in the twentieth century was centred, to an unprecedented extent, around journals: periodical publications that aimed to present (one vision of) the best philosophical work of the moment. By looking at the trends across these journals, we can see important trends in philosophy itself.
+
+But looking at the journals is easier said than done. Most major journals have published thousands of articles. If we want to get a guide to philosophy as a whole, and not just to one particular vision of it, we need to look at several different journals. And now we're needing to look at tens of thousands of articles. This is impossible for any human to do.
+
+Fortunately, we don't just have to rely on humans. Two technological developments have made it practical to use computers to do at least some of the reading for us.
+
+The first development was that JSTOR used optical character recognition (OCR) software to create text versions of many archived journals. They combined this with the original electronic versions of recent issues to create a full library of the text of many leading journals. And, crucially, they made this library avaialble to the general public.
+
+The second development was that personal computers have gotten fast enough that it is (just barely) practical to run text mining algorithms over libraries as large as the ones JSTOR provides on personal computers.^['Practical' here is a relative term; the models I primarily use here took 8-10 hours to complete on pretty good computers. But that's fine if you can leave a computer running overnight.] So even without having to use tools beyond what's available in a typical university office, we can use these algorithms to see trends in the journal data. 
+
+This study focusses on the following twelve journals.
+
+<br>
+```{r journal-table}
+journals_summary <- articles %>%
+  dplyr::group_by(journal) %>%
+  dplyr::summarise(fyear = min(year), art = n_distinct(file))
+  kable(journals_summary, 
+        col.names = c("Journal", "First Year", "Number of Articles"), 
+        align=c("l", "c", "c"),
+        caption = "The twelve journals that this book talks about"
+  )
+    
+```
+<br>
+
+That table shows which twelve journals I'm using, the year they started publication, and how many articles from each journal I'm analysing. That doesn't include everything the journal published, since I'm only looking at the research articles they published in English. So I'm not looking at book reviews, but also not at editorials, introductions, corrections and the like. Because the text mining algorithms really require a single language, I'm also excluding everything that was published in languages other than English.^[I had no idea how many articles in French, German and Spanish were published in these journals over the years.] But even still, there are a lot of articles to look at, and they include many of the most important works in philosophy over that time periid.
+
+The data comes from JSTOR's [Data For Researchers](https://jstor.org/dfr/), which provides for each article in these journals a file with a list of the words in the article and the number of times those words appear. Though as will become important in what follows, this data separates hyphenated words, excludes various common words like 'and' and 'the', and also excludes all one and two letter words.
+
+I used this data to build a Latent Dirichlet Allocation (LDA) model of the journals using the [topicmodels](https://cran.r-project.org/package=topicmodels) package written by [Bettina Grün](http://ifas.jku.at/gruen/) and [Kurt Hornik](http://statmath.wu.ac.at/~hornik/).
+
+An LDA model takes the distribution of words in articles and comes up with a probabilistic assignment of each paper to one of a number of topics. The number of topics has to be set manually, and after some experimentation it seemed that the best results came from dividing the articles up into `r cats` topics. And a lot of this book discusses the characteristics of these `r cats` topics. But to give you a more accessible sense of what the data looks like, I'll start with a graph that groups those topics together into familiar contemporary philosophical subdisciplines, and displays their distributions in the 20th and 21st century journals.^[I'm leaving the 19th century off this graph because it is odd in various ways, and best treated separately. I'll say much more about it as we proceed.]
+
+```{r initial-graph-style, cache = FALSE}
+facetstyle <-   theme_minimal() +
+  theme(plot.title = element_text(size = rel(1), 
+                                  face = "bold",
+                                  margin = margin(0, 0, 8, 0)),
+        strip.text = element_blank(),
+        panel.spacing.x = unit(-0.05, "lines"),
+        panel.background = element_blank(),
+        panel.spacing.y = unit(1, "lines"),
+        axis.title.x = element_text(size = rel(1)),
+        axis.title.y = element_text(size = rel(1)),
+        panel.grid.major = element_line(color = "grey90", size = 0.05),
+        panel.grid.minor = element_blank(),
+        legend.position="none")
+spaghettistyle <- facetstyle +
+  theme(panel.grid.major = element_line(color = "grey80", size = 0.1),
+        panel.grid.minor = element_line(color = "grey85", size = 0.05),
+        legend.text = element_text(size = rel(0.5))
+        )
+chap_two_facet_labels <- tribble(
+  ~journal, ~short_name,
+  "Mind", "Mind",
+  "Philosophical Review", "Philosophical Review",
+  "Journal of Philosophy", "Journal of Philosophy",
+  "Noûs", "Noûs",
+  "Proceedings of the Aristotelian Society", "Aristotelian Society",
+  "Analysis", "Analysis",
+  "Philosophy and Phenomenological Research", "PPR",
+  "The Philosophical Quarterly", "Philosophical Quarterly",
+  "Ethics", "Ethics",
+  "Philosophy and Public Affairs", "Philosophy & Public Affairs",
+  "Philosophy of Science", "Philosophy of Science",
+  "British Journal for the Philosophy of Science", "BJPS"
+)
+```
+
+```{r first_-facet-graph, fig.cap = "Proportion of Articles in Each Category"}
+tt <- filter(category_frequency, year > 1899)
+category_graph_labels <- tt %>%
+  group_by(category) %>%
+  summarise(year = median(year)) %>%
+  mutate(f = max(tt$f) * 1.2)
+ggplot(tt, 
+       aes(x = year, y = f, color=category, group=category)) +
+  geom_text(data = category_graph_labels,
+            mapping = aes(label = category),
+            vjust = "inward", 
+            hjust = "inward",
+            fontface = "bold", 
+            size = 3) +
+  labs(x = "Year", y = "Proportion of Articles", title = "Proportion of Articles in Each Category Per Year") +
+  geom_point(size = 0.15) + 
+  facet_wrap(~category, ncol=3) +  
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.05))) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03))) +
+  facetstyle
+```
+
+These graphs aren't smoothed - this is just a scatterplot of how prevalent each category is over time. The contintuity in the graphs comes from continuity in the underlying subject matter. Although philosophy changes over time, the changes tend to be small and smooth - at least at this level of resolution. 
+
+There are however a few big trends that are visible even at this resolution. 
+
+Ethics and Philosophy of Science have fairly steady rises over the graphs. What primarily drives that is that journals we think of as specialist journals, like _Ethics_ and _Philosophy of Science_, became more and more specialised over time. There is much more topic overlap between these journals and so-called generalist journals in the 1940s and 1950s than in the 1990s and 2000s. 
+
+For much of the history of these journals, they publish approximately zero articles that look anything like contemporary epistemology. Edmund Gettier's famous article [Is Justified True Belief Knowledge?](https://philpapers.org/rec/GETIJT-4) doesn't advance an existing debate; it starts a debate. But that debate doesn't really get going for another decade or more.
+
+On the other hand, in the middle of that graph above is a chart that does not reflect anything in contemporary philosophy: Idealism. The extent to which Idealism dominated philosophy before world war I, and continued to be a huge presence between the wars, quite astounded me. And the model is using a fairly narrow definition of Idealism here. Idealist influenced works on social and political philosophy, such as work that engages heavily with Bergson and Santayana, is another huge field, but it's included in Social and Political Philosophy above.
+
+The anecdote I'd always been told about the state of British philosophy in the early part of the century was that you could get a good sense of things by just looking at the issue of _Mind_ that included [On Denoting](https://philpapers.org/rec/RUSOD). It's wedged between two big articles on Idealism. Indeed, the model classifies the articles just [before](https://philpapers.org/rec/RFAPVA-2) and just [after](https://philpapers.org/rec/GIBPAP) Russell's in the Idealism category. But I, at least, had no idea how dominated British philosophy was by Idealism, or how long this dominance lasted.
+
+This was far from the only thing that surprised me about the data. Some of these surprises probably reflect my ignorance, but some of them may be of wider interest.
+
+As you might have gathered from the quantity of work on Idealism, there just isn't much space for the work that we now think is most significant in late-nineteenth or early-twentieth century philosophy. Frege, Moore, Russell and even Wittgenstein have virtually zero impact on the journals at the time they publish. They do have an impact later, with the starting times of their influence being in more or less in reverse chronological order to when they actually wrote. But they are invisible in real time. This is especially striking for Moore, who does not seem to have used his influence as editor of _Mind_ to steer the journal particularly in the direction of his work. The contrast with the generation of editors who came after him, on either side of the Atlantic, will be striking.
+
+As well as Idealism, two other broadly anti-realist schools make a major impact on the journals in the first half of the twentieth century: Pragmatism and Positivism. But the impacts differ greatly in size. Idealism has a much bigger impact that Pragmatism, and Pragmatism has a much bigger impact that Positivism. Indeed, the main way that Positivism is visible is that it has a very prominent decline phase. The 'one patch per puncture' period of attempts to save the verification principle is big enough that it is basically one of the `r cats` topics the model finds. But this model doesn't find a ton of work defending positivism turning up as a distinctive topic, nor does it find a notable falling away in the fields (like Metaphysics and Mind) that positivists railed against. It's possible that the focus on journals that primarily publish in English explains why I didn't see a 'rise of positivism' period, but its absence was striking.
+
+If there is no early analytic/logical atomism visible, and positivism is a small presence that shows up mainly as it is dying, what fields that are part of the standard story of the history of analytic philosophy do show up? Well, the first big one is [Ordinary Language Philosophy](#topic24). This is so big, especially in Britain, that it almost breaks the model. The big assumption that drives the kind of model I'm building is that there is a one-one mapping between classes of articles with a distinctive vocabulary, and classes of articles with a distinctive subject matter. That often holds true, but it breaks quite spectacularly in 1950s Britain. A new language, shorn of pomp and circumstance, takes over. And my poor model thinks that all the philosophers have moved on to a wholly new subject matter. But they largely have not - they are just discussing the old subjects using new words.
+
+There is one notable exception to this though. During the Ordinary Language phase we do see a lot of articles that are about language itself. This is a new thing - we don't see any such articles before then. That's an exaggeration of course - "On Denoting" really was published - but it's true as a generalisation. But all of a sudden in the middle of the century there is a spike in interest in [Wittgensteinian philosophy of language](#topic22). That spike falls away almost as quickly as it came, but it changes the field. The space that was taken up by Wittgensteinian philosophy of language is replaced by other work in philosophy of language, influenced in the first place by either Frege, Russell, Quine or Austin. 
+
+There is something about this story that we see repeated across the subjects. When one particular topic falls out of fashion, it is usually replaced by one from the same sub-discipline. That's how we get the very stable lines on the graphs above, although mostcategories are made up of topics that see sharp rises and falls in the amount of attention they are getting. But Philosophy of Language is a bit of an exception. Before the Wittgensteinian boom it was invisible in the journal; afterwards it routinely accounted for 10% of the published articles. And that 10% figure stayed stable across huge shifts in what philosophers of language were talking about. What surprised me was that the stability here was the norm - the sudden appearance of a new field taking up 10% of the journal space was what was unusual.
+
+But what interests me as much as these big picture trends are the little trends underlying them. What particular topics do philosophers talk about, and when do they talk about them? The answer to the latter question is almost always several years later than I had expected. To take one dramatic example, I associate work on [Wide Content](#topic85) with Kripke and Putnam's work from the early 1970s, and hence with the 1970s as a whole. But it turns out this work is practically invisible in the 1970s journals. [Meaning and Reference](https://philpapers.org/rec/PUTMAR-2) shows up, but almost nothing else does until a decade or more later. And that's the general patten; if you associate a topic with its most famous papers, you'll be misled about when it primarily shows up in the journals.
+
+So I'll spend some time in what follows looking at when familiar topics show up. But I'll also be looking at what shows up that isn't part of contemporary philosophy. I've spent a bit of time talking about Idealism, but it isn't the only thing missing from current journals. There used to be much more work on, broadly construed, [philosophy of history and of sociology](#topic10) than there is now. This has one particular impact that intersects with my other interests. Anglophone philosophers nowadays do spend a bit of time on philosophically significant work from the late eighteenth century. But not much of of the work that they look at comes from Philadelphia, or Paris, or even Cap-Haïtien. Now it's not like mid-century philosophers paid any attention to Cap-Haïtien either, but they did think a bit more about the philosophical importance of what happened, and what was written, in Philadelphia and Paris. And that seems like a good idea. And hopefully one of the benefits of the kind of retrospective I'm writing is it encourages people to look back and see what else we used to spend more time on, and could profitably spend more time on in the future.
+
+## Plan {-}
+
+To be written, once I write the book and figure out what the plan was.
+
+## Acknowledgements {-}
+
+I have a lot of people to thank.
+
+## GitHub {-}
+
+The data for this, at least the parts that are not proprietary, will be placed on GitHub. And there will be instructions on how to download the rest.
+
+## Status {-}
+
+This is a **draft**. Don't circulate it yet. I had been hoping to have a finished draft by the end of March 2020, but the virus got in the way. This is subject to very frequent change, and I'll be updating it as often as I can. This message will change substantially when the draft is complete.
+
+```{r articles-with-word}
+articles_with_word <- function(x){
+t <- all_journals_tibble %>%
+  filter(word == x) %>%
+  inner_join(relabeled_articles, by = c("filename" = "document")) %>%
+  arrange(-wordcount) %>%
+  top_n(10, wordcount) %>%
+  inner_join(the_categories, by = "topic") %>%
+  select(citation, subject, wordcount)
+kable(t, 
+      col.names = c("Article", "Subject", "Word Count"), 
+      caption = paste0("Articles in which the word \'",x,"\' appears most often")
+)
+}
+```
+
+```{r empty-block-end-of-index}
+# I love placeholders
+```

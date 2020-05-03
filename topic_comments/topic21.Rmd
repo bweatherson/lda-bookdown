@@ -1,0 +1,40 @@
+```{r t21a}
+jjj <- 21
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t21b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t21c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t21d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t21e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is the main topic the model finds on Early Modern M&E. It is a little bit centered on the rationalists; the characteristic articles are all on broadly rationalist figures. But largely because the model wants to hedge its bets on articles about Locke. Topic 31 will be on social contract theory, and Locke will play a major role in that obviously. So while this topic has 28 articles with "Locke" in the title, all on his M&E, the model is a little nervous about whether it should be putting those in with the other Locke articles in social contract theory. So that's why the characteristic articles are so rationalist.
+
+The big story here is the collapse in this category when Ryle takes over _Mind_ in 1947. According to [D. M. Hamlyn](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents), Ryle thought the only history worth publishing was Greek philosophy. And so once he took over a relatively thriving tradition of Early Modern articles in _Mind_ came to a complete halt. Apart from _Philosophical Review_, and to a smaller extent PPR, that put an end to articles in Early Modern turning up in these journals.
+
+The method I used for generating the list of highly cited articles only individuated articles by title, journal and publication year. I thought that would be enough, but it turns out journals used to publish two part articles without individuating the parts. So we get results like this one; I don't really know which of them is really cited the most. It's possible that neither part on its own is cited enough to deserve a spot here, but merging the citations got it into the list. In future work I hope to look more closely at citation data, and then I'll have to be more careful about cases like this one.

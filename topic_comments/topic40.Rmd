@@ -1,0 +1,40 @@
+```{r t40a}
+jjj <- 40
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t40b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t40c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t40d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t40e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+Just like [the previous topic](#topic39), Colour shows a very constant pattern over time. There are some outlier measures in the early years, when we have some papers that are probably just as much psychology papers as philosophy papers (by 20th century standards). But otherwise it stays at around 0.5-1% per year.
+
+When I was building a lot of models to see what patterns turned up repeatedly, a topic on colour turned up reliably, but not uniformly. This model is about as paradigm an instance of the topic as you might hope to see. It has articles from the 19th Century through the 21st Century, and multiple articles near the top of the characteristic articles table by Edward Wilson Averill and Mark Eli Kalderon. That feels right to me, but not all of the models agreed. It isn't too hard to build a model were some of the early papers get rolled in with the other psychology papers, other papers get lumped into the broader [Perception](#topic37) topic, and yet others get put in with metaphysics. But that seemed wrong, this is a distinctive and important topic.
+
+It is useful to see how much it has (and has not) changed over time. The model gives the highest probability of being in this topic to [this discussion note](https://www.jstor.org/stable/2246673) by Grant Allen. It's a speculative piece about what recent experimental results might tell us about the structure of cones and their arrangement inside the eye. This kind of piece doesn't feel out of place in _Mind_ circa 1879, and it wouldn't feel out of place in present day philosophy, but it would very much feel out of place for much of the 20th century.

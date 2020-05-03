@@ -1,0 +1,40 @@
+```{r t26a}
+jjj <- 26
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t26b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t26c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t26d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t26e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+A more accurate, if less pithy, name for this category would be _Mid-Century General Philosophy of Science_. It isn't all mid-century; if you scroll down the list of articles in the topic you see several from recent years. But there is something mid-century about the spirit of it; it's philosophy of science that is very much not philosophy of one or other science in particular. And as that has gone out of fashion, this topic has declined.
+
+The statistics for this topic were very surprising. The years make sense; mid-century philosophy peaks in the mid-century. But the numbers show how misleading the graphs can be. Eyeballing the graphs makes it look like this was just bubbling along; but the numbers say it is the 5th or 6th biggest topic of the 90. The story here, I think, is that there was much less specialisation in the 1950s and 1960s, and so individual topics get a chance to grow a lot.
+
+And the topic overlaps were surprising enough to make me recheck the code. It isn't completely surprising that philosophy of science would intersect somewhat with Marx. "Scientific Socialism" was a thing, and plenty of philosophers of science had Marxist sympathies. And there is a lot of time sensitivity to these analyses, and Marx was a big topic at the same time that this topic was bit. But that it would be the highest overlap was a surprise. And it shows you how much philosophy of science has changed that Formal Epistemology is literally the lowest overlap.

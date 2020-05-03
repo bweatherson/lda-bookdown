@@ -1,0 +1,57 @@
+```{r t72a}
+jjj <- 72
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t72b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t72c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t72d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t72e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The model is carving things very finely at this point. We already have a topic on [Denoting](#topic43) and another on [Sense and Reference](#topic64). We are going to soon get one on [Wide Content](#topic85). And now we get a whole topic on belief reports. And this is interesting because belief reports are interesting to philosophers primarily because of how they relate to names, descriptions, indexicals and natural kind terms.
+
+One funny thing to notice here is how little overlap there is between the extensive work on belief ascriptions, set out in this topic, and the work on knowledge ascriptions, which will come up [very soon](#topic74). To measure how much overlap between the topics there is, for each article, I calculated the minimum of the probability they are in this topic, and the probability that they are in the topic on [Knowledge](#topic74) ascriptions. Here are the five articles that score highest by this measure.
+
+```{r belief-knowledge overlap}
+reports <- relabeled_gamma %>%
+  filter(topic == 72 | topic == 74) %>%
+  group_by(document) %>%
+  dplyr::summarise(m = min(gamma)) %>%
+  arrange(-m) %>%
+  slice(1:10)
+
+individual_article(reports$document[1])
+individual_article(reports$document[2])
+individual_article(reports$document[3])
+individual_article(reports$document[4])
+individual_article(reports$document[5])
+```
+
+Except perhaps the Dretske, none of them really feel like they fit in this topic. Or, to put things more provocatively, I don't see that (this kind of) work on belief ascriptions really had much impact even on work on other propositional attitudes.
+
+Since 2013 there has been, to my eyes, less work on topics like Puzzling Pierre and Cicero/Tully. But its notable that the last keyword in the list at the top, and the last of the five articles I just displayed, both concern lying. That has been a big topic since 2013, and if we extended the study in time, perhaps we would see this turn into a topic more centered around lies, and less around puzzles about belief ascription.

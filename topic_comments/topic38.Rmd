@@ -1,0 +1,38 @@
+```{r t38a}
+jjj <- 38
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t38b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t38c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t38d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t38e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+A tiny topic, but still one that seemed to need breaking up in order to categorise. The papers are mostly about origins and ends, which make sense as a unified category. But then it bifurcates into debates within metaphysics, primarily about essentialism and identity over time, and in philosophy of science, about the role of teleological reasoning. 
+
+There are only 90 articles here, so there isn't a ton to say about them collectively. It was a little surprising to me that we don't see a Kripke/Parfit related bump in the 1970s for work on personal identity, especially since so much of the work is on origin essentialism. Part of the story is that there is a bit of work in the British journals on personal identity before the Kripke/Parfit boom, some of it inspired by Wiggins. And the topic is small enough that that's enough to stop there being a huge rise once Kripkean and Parfittian theories of personal identity become prominent.

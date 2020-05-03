@@ -1,0 +1,52 @@
+```{r t59a}
+jjj <- 59
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t59b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t59c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t59d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t59e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The graphs by journal do not make this look like a particularly big topic, but as you can see from the numbers at the top, it's the 8th biggest by weighted count. And that's not surprising - I would have guessed that theories of truth would be a big deal. And so they are, except they aren't a particularly big part of any journal in any year except for _Mind_ in the early 2000s.
+
+The spike in the late 1900s and early 1910s is due to an interest in theories of truth in pragmatist and voluntarist philosophical theories. Some of these papers involved early contributions from Susan Stebbing, who would go on to contribute many papers to the British journals we're looking at.
+
+```{r stebbing}
+author_dt(c("L. Susan Stebbing", "L. S. Stebbing"), "L. Susan Stebbing")
+```
+
+The only one of these 27 articles that is actually in this topic is the earliest of them, a two page note critical of Schiller's defences of pragmatism. But an interest in how different theories think about truth runs through a lot of her work. And the model picks this up; a lot of these articles are as much about truth as anything else. For instance, her Aristotelian Society article on Bergson (which was extracted from her MA thesis!) cuts across a number of the topics in this model.
+
+```{r stebbing-bergson}
+individual_article("10.2307_4543842")
+```
+
+Unlike almost every other topic with a notable presence in pre-war philosophy, Truth was undergoing a resurgence towards the end of the period I'm looking at. It's moved from being a metaphysical (or perhaps epistemological) concern to a more distinctively logical one. That is, most of those articles on the right of the graph are about paradoxes, and about how and whether classical logic should be revised to handle them. That's a somewhat different subject matter to what, say, Stebbing and Schiller were debating, but I think the model got it right in linking them together. 
+
+And between them we see a lot of articles on Tarskian and Davidsonian theories of truth. A perhaps surprising result of this is that 'snow' is a keyword for the topic. I'm a little surprised that 'white' doesn't come with it.

@@ -1,0 +1,74 @@
+```{r t46a}
+jjj <- 46
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t46b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t46c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t46d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t46e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This looks like a small topic, but that's largely because it gets squeezed between so many other topics. It ends up as a natural Philosophy of Science topic, though most of the topics around it are in Metaphysics. The weighted number of articles is so much higher than the raw number because so many papers in other topics are also in large part about laws.
+
+For instance, papers about explanation in a broadly Hempelian tradition are often classified as being about [Explanation](#topic61), even if they are in no small part about laws as well. See, for example, this paper which is very squarely in the Hempelian tradition.
+
+```{r hempel-history}
+individual_article("10.2307_2017635")
+```
+
+And some papers about the necessity of laws get classified as either papers about [Modality](#topic80) or, less commonly, [Chemistry](#topic30).
+
+```{r bird-necessity-laws}
+individual_article("10.2307_3329211")
+```
+
+Some papers that are largely about laws are also largely about [Chances](#topic44) and get put there.
+
+```{r lange-chance}
+individual_article("10.2307_3873472")
+```
+
+Many papers that are about laws are also about causation and other topics.
+
+```{r bvf-laws}
+individual_article("10.2307_2107781")
+```
+
+And, of course, there are plenty of papers about laws in the topics on the special science.
+
+```{r brandon-biology-laws}
+individual_article("10.2307_188424")
+```
+
+The same does happen in the other direction. Some papers that are about several of these topics do get classified (barely) in the laws of nature topic.
+
+```{r times-arrow}
+individual_article("10.2307_2215339")
+```
+
+But mostly it's the other way around. And that makes sense. As interesting as laws of nature are as a topic in their own right, a huge part of their philosophical interest comes from the role they play in clarifying other things we care about. And that's what the model reflects.

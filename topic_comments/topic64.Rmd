@@ -1,0 +1,51 @@
+```{r t64a}
+jjj <- 64
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t64b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t64c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t64d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t64e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The model is carving things up a little more finely than may be ideal here, so let's put some stuff back together. This topic obviously has a lot to do with [Denoting](#topic43) and [Belief Ascriptions](#topic72). And it's useful to see all three of these on a single graph.
+
+```{r three-language-topics}
+frb <- weight_ratio %>%
+  filter(topic == 43 | topic == 64 | topic == 72) 
+
+ggplot(frb, mapping = aes(x = year, y = y, color = topic)) + 
+  geom_point(alpha = 0.5) + 
+  geom_smooth(se = F, size = 0.5) +
+  labs(x = "Year", y = "Weighted Proportion of Articles") +
+  scale_color_discrete(name = "Topics", labels = c("Denoting", "Sense and Reference", "Belief Ascriptions"))
+```
+
+As you can see, there is a tiny amount of discussion of these three, mostly focussed on descriptions, up until World War Two. Then they all start to take off. But descriptions as such starts to fade quite early, with its peak being the late 1970s. Some of that is just substitution - there is obviously a lot of discussion of how descriptions work in articles on Sense and Reference, and articles on Belief Ascriptions. But the sum seems to be headed a little downwards as we move into the 21st century, and I'd expect that gentle trend continues through 2020.
+
+Even at their peak, these topics don't take up as much space in the journals as they take up in philosophers' self-representation. At most these topics are coming to about 3-4% of the discussion over any sustained period of time. But during that time they were routinely taking up more than 3-4% of space in graduate education. (For instance, it was not unusual to have compulsory first year seminars largely about these topics.) My feeling is that the journals got this right and the departments got this wrong, and 3-4% was a sensible proportion of space to devote to these topics. That said, it was surprising to me that this never went much higher than that; it certainly felt at times like more than 3-4% of the discussion was devoted to denotation, sense, reference and opaque contexts.

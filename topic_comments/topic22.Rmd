@@ -1,0 +1,52 @@
+```{r t22a}
+jjj <- 22
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t22b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t22c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t22d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t22e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This topic is mid-century philosophy of language, especially influenced by Wittgenstein's later work. It's tempting to say that it's influenced by _Philosophical Investigations_, though as you can see some of this work takes place well before the Investigations are published. Still, a lot of this work turns out to have had a Wittgensteinian influence. 
+
+For example, those high points in the graph for pre-war _Analysis_ are largely driven by a few exchanges. One of those is between Margaret MacDonald, A. M. MacIver on how to understand the type/token distinction. The exchange includes at least the following. (I think this is complete, though I may have missed some.)
+
+- [Language and Reference, by Margaret MacDonald](https://academic-oup-com./analysis/article/4/2-3/33/175389), Analysis, 4 (2/3): 33–41 (1936).
+- [Token, Type and Meaning, by A. M. MacIver](https://philpapers.org/rec/MACTTA-2), Analysis 4 (4):58 - 64 (1936).
+- [Reply to Mr. MacIver, by Margaret MacDonald](https://philpapers.org/rec/MACRTM-4) Analysis 4 (5):77 - 80 (1937).
+- [Rejoinder to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACRTM-3), Analysis 4 (6):81 - 88 (1937).
+- [Further Reply to Mr. MacIver, by Margaret MacDonald](https://philpapers.org/rec/MACFRT-2), Analysis 5 (1):12 - 16 (1937).
+- [Last Words to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACLWT), Analysis 5 (2):28 - 31 (1937).
+- [Erratum: Last Words to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACELW),  Analysis 5 (3/4):64 (1938).
+
+On the one hand, I'm on MacIver's side of the philosophical dispute here. On the other hand, you could put his articles in a museum as an exemplar of mansplaining. So it's an interesting exchange.
+
+MacDonald is notable for several reasons, this exchange not really being one of them. She was one of the founders of _Analysis_, and then edited it from 1948 until her tragically early death in 1956. She wrote a very important paper on natural rights; it is the only highly cited paper back in [Topic 3](#topic03). And it was her notes, along with those of Alice Ambrose, that got turned into Wittgenstein's _Lectures on Ethics_. So there is a Wittgensteinian influence to these pre-war papers too.
+
+I was surprised that this topic didn't feature more papers in _Philosophical Review_. I thought Norman Malcolm's move to Cornell in 1947 would have led to more Wittgensteinian articles here. But it turns out these mostly ended up in Topic 24.

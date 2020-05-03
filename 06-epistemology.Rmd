@@ -1,0 +1,543 @@
+# Epistemology {#episetmologychapter}
+
+```{r epistemology_setup}
+load("epistemology.RData")
+
+
+
+epistemology_all_journals_gamma <- tidy(epistemology_lda, matrix = "gamma")
+
+epistemology_all_journals_classifications <- epistemology_all_journals_gamma %>%
+  group_by(document) %>%
+  top_n(1, gamma) %>%
+  ungroup()
+
+epistemology_all_journals_titles_and_topics <- merge(
+  epistemology_all_journals_classifications, 
+  articles, 
+  by.x="document", by.y="file")
+
+epistemology_year_topic_mean <- epistemology_all_journals_titles_and_topics %>% ungroup() %>% 
+  group_by(topic)  %>% 
+  dplyr::summarize(date = mean(year)) %>% 
+  mutate(rank = rank(date))
+
+epistemology_relabeled_articles <- merge(epistemology_all_journals_titles_and_topics, epistemology_year_topic_mean) %>% 
+  select(-topic) %>% 
+  dplyr::rename(topic = rank)
+
+epistemology_yearcount <-  epistemology_relabeled_articles  %>%
+  group_by(year) %>%
+  dplyr::summarise(n = n_distinct(document))
+
+epistemology_yeartopics <- epistemology_relabeled_articles  %>%
+  group_by(year, topic) %>%
+  dplyr::summarise(tn = n_distinct(document)) %>%
+  ungroup() #%>%
+  #complete(year, topic, fill = list(tn = 0))
+
+epistemology_yeargraphs <- merge(epistemology_yearcount, epistemology_yeartopics) %>%
+  mutate(frequency = round(tn/n,3))
+
+epistemology_yeargraphs$topic <- as.factor(epistemology_yeargraphs$topic)
+
+epistemology_relabeled_gamma <- merge(epistemology_all_journals_gamma, epistemology_year_topic_mean) %>%
+  as_tibble() %>%
+  select(-topic) %>%
+  dplyr::rename(topic = rank)
+
+epistemology_relabeled_gamma <- merge(epistemology_relabeled_gamma, articles, by.x="document", by.y="file") %>%
+  select(document, gamma, topic, year, journal, length) %>%
+  mutate(length = case_when(
+    is.na(length) ~ 1,
+    TRUE ~ length
+  ))
+
+epistemology_high_cite_gamma <- merge(highly_cited, epistemology_relabeled_articles, by.x = "file", by.y = "document") %>% 
+  arrange(desc(Cites))
+
+epistemology_yeargamma <- epistemology_relabeled_gamma  %>%
+  group_by(year, topic) %>%
+  dplyr::summarise(gamsum = sum(gamma)) %>%
+  ungroup() %>%
+  complete(year, topic, fill = list(gamsum = 0))
+
+epistemology_yeargamma$topic <- as.factor(epistemology_yeargamma$topic)
+
+epistemology_article_count <- epistemology_yeartopics %>%
+  group_by(topic) %>%
+  dplyr::summarise(n = sum(tn))
+
+epistemology_article_gamma <- epistemology_yeargamma %>%
+  group_by(topic) %>%
+  dplyr::summarise(g = sum(gamsum))
+```
+
+This chapter is a detailed case study of epistemology articles in the 12 journals. I'm including this partially for self-interested reasons: I work in epistemology and I wanted to see what the field looked like. But I'm also including it because the data here makes a striking point.
+
+Main Thesis
+:    The Gettier Problem literature is not that big.
+
+Now I don't mean to say it's small. There is a plausible case that it is (or at least was circa 2013), the largest sub-literature within epistemology. And for a while it was a huge proportion of what goes on in epistemology. But that time has passed, and I suspect a lot of people haven't updated their view of the field.
+
+Within these 12 journals, the literature on the Gettier Problem is round about 100 articles. That's a third of a percent of all the articles in those journals. And given the importance of the question it addresses, _What is Knowledge?_, a third of a percent seems fine to me. I think it's a widespread view in philosophy that the Gettier Problem literature was much bigger than it should have been. And I think that's false; a third of a percent is a perfectly reasonable proportion of the available journal space.
+
+To analyse the epistemology literature, it would help to know what the epistemology articles are. Since I've already said that I'm treating 55.1 - Arguments, 74 - Knowledge, 76- Justification, and 84 - Formal Epistemology, as the epistemology topics, you might think the thing to do would be to just take articles from those topics. But this doesn't work for a couple of reasons. In theory, which topic has the highest probability isn't that significant. Whether an article's highest probability is in one of the epistemology topics depends on just how the model carves up the space of non-epistemology topics, and that seems wrong. In practice, this method declares that [Is Knowledge Justified True Belief?](https://philpapers.org/rec/GETIJT-4) is not an epistemology article, and that isn't something we can live with.
+
+A better approach is to sum the probabilities that the model gives to an article being in one of the four epistemology topics, call that its epistemology probability, and then say that an article is an epistemology article if its epistemology probability is above a threshold. But where should the threshold go? Since I want to convince you that the Gettier Problem literature isn't that big, I want to have a very inclusive definition of epistemology, so I capture all the articles in that literature. So that militates in favour of a low threshold.
+
+There is also the fact that epistemology articles tend to naturall slide into a lot of different topics. If they discuss scepticism at all, the model thinks they might be talking about Hume. If there is any probability talk, the model thinks they might be doing theory of confirmation or theory of chance. If they talk about which propositions a subject does or doesn't know, the model thinks they might be talking about propositions. If they talk about values, or norms, or obligations, or permissions, the model thinks they might be doing ethics. And the house style of Anglophone epistemology is close enough to the style of the ordinary language philosophers that the model constantly thinks they might be just ordinary language philosophers.
+
+Which is all to say that the cut-off ended up being much lower than I expected. I ended up setting it at just 0.2. This seems absurd, but rather than doing the pure theory, let's look at what this looks like in practice. Here are the last eight articles that are classified as epistemology under this measure - i.e., the 8 articles with a probability of being epistemology just above 0.2.
+
+```{r epistemology_last}
+epistemology_gamma <- category_gamma %>%
+  filter(topic == 5501 | topic == 74 | topic == 76 | topic == 84) %>%
+  group_by(document) %>%
+  dplyr::summarise(g = sum(gamma)) %>%
+  filter(g > 0.2) %>%
+  arrange(g) %>%
+  inner_join(articles, by = c("document"="file")) %>%
+  select(document, g, authall, title, citation)
+
+epistemology_cuts <- category_gamma %>%
+  filter(topic == 5501 | topic == 74 | topic == 76 | topic == 84) %>%
+  group_by(document) %>%
+  dplyr::summarise(g = sum(gamma)) %>%
+  filter(g < 0.2) %>%
+  arrange(-g) %>%
+  top_n(8, g) %>%
+  inner_join(articles, by = c("document"="file")) %>%
+  select(citation)
+
+epistemology_last_in <- epistemology_gamma %>%
+  top_n(8, -g) %>%
+  select(citation)
+
+  for (jj in 1:8){
+    cat(jj,". ", epistemology_last_in$citation[jj], "\n", sep="")
+  }
+```
+
+Those aren't all epistemology articles, but some of them are. The Shope clearly is, and the Nathan, and plausibly several others. What about the 8 that just missed the cut, i.e., the 10 with a probability of being in epistemology just below 0.2.
+
+```{r epistemology_first}
+
+  for (jj in 1:8){
+    cat(jj,". ", epistemology_cuts$citation[jj], "\n", sep="")
+  }
+```
+
+That's pretty good - we don't seem to be excluding any articles that should be included. So the threshold is at 0.2.
+
+The result of all this is that we get `r nrow(epistemology_gamma)` articles to work with. They are not distributed evenly across the years, to put it mildly. Here is how many articles there are in each year.
+
+```{r epistemology_how_many}
+ggplot(data = epistemology_yearcount, aes(x = year, y = n)) +
+  geom_point(size = 0.5) +
+  theme(legend.position="none") +
+  labs(x = "Year", y = "Number of Articles")
+
+epistemology_prewar <- nrow(filter(epistemology_yearcount, year < 1946))
+```
+
+The gaps are for the cases where there are 0 papers. Through 1945, there are only `r epistemology_prewar` papers. So from now on I'm going to start graphs after WWII. And I'm not going to divide things up into journals; you don't need a graph to know that _Philosophy and Public Affairs_ doesn't publish much epistemology. But those `r epistemology_prewar` papers will stay in the analysis; I just won't present them on graphs.
+
+So the next step was to take the `r nrow(epistemology_gamma)` articles and, as you might have guessed, build an LDA model for them. After a little bit of trial and error, I decided to set the number of topics to 40. I wanted to get the number to be as small as possible, while still having a topic that in some plausible sense had only Gettier Problem papers.
+
+```{r epistemology_set_up_graphs}
+year_articles <- articles %>%
+  group_by(year) %>%
+  dplyr::summarise(n = n_distinct(file)) %>%
+  mutate(cs = cumsum(n))
+
+epistemology_yearcount_postwar <- epistemology_yearcount %>%
+  filter(year > 1945) 
+epistemology_yeartopics_postwar <- epistemology_yeartopics %>%
+  filter(year > 1945) %>%
+  complete(year, topic, fill = list(tn = 0))
+epistemology_yeargamma_postwar <- epistemology_yeargamma %>%
+  filter(year > 1945) %>%
+  inner_join(year_articles, by= "year") %>%
+  select(year, topic, gamsum, all_n = n) %>%
+  inner_join(epistemology_yearcount_postwar, by = "year") %>%
+  mutate(gamrat_all = gamsum / all_n) %>%
+  mutate(gamrat_local = gamsum / n)
+```
+
+```{r epistemology_set_up_words}
+  epistemology_topics <- tidy(epistemology_lda, matrix = "beta")
+
+  epistemology_relabeled_topics <- merge(epistemology_topics, epistemology_year_topic_mean) %>%
+    as_tibble() %>%
+    select(-topic) %>%
+    dplyr::rename(topic = rank)
+
+  epistemology_word_score <- epistemology_relabeled_topics %>%
+    group_by(term) %>%
+    dplyr::summarise(sumbeta = sum(beta)) %>%
+    arrange(desc(sumbeta))
+
+ epistemology_busy_topics <- merge(epistemology_relabeled_topics, epistemology_word_score) %>%
+   filter(sumbeta > 0.0002 * 40) %>%
+   mutate(score = beta/sumbeta) %>%
+   arrange(desc(score))
+
+ epistemology_distinctive_topics <- epistemology_busy_topics %>%
+   group_by(topic) %>%
+   top_n(15, score) %>%
+   ungroup() %>%
+   arrange(desc(-topic))
+```
+
+It divided the `r nrow(epistemology_gamma)` papers up into the following 40 subjects. The subject column is my subjective description of what area the papers there seem to be about. The 'count' column is how many articles are in that subject; i.e., the model gives more probability to them being in that subject than it gives to any other subject. The 'weighted count' is the expected number of articles in that subject; i.e., the sum across all articles of the probability of the article being in that subject. And the 'year' column is the average publication date of the papers that are 'in' the subject. As you can see, I've renumbered the topics so they are arranged by year.
+
+<br>
+```{r epistemology_subject_table}
+epistemology_subjects <- tribble(
+  ~topic, ~subject,
+  1, "Knowledge of Mind",
+2, "Ordinary Language",
+3, "Statistics",
+4, "Surprise Exam",
+5, "Belief",
+6, "Gettier",
+7, "Conditionals",
+8, "Scepticism",
+9, "Evidence",
+10, "Know How",
+11, "Rationality",
+12, "Degree of Belief",
+13, "Logic and Paradoxes",
+14, "Assertion",
+15, "Virtue",
+16, "Experts",
+17, "Infinity and Regresses",
+18, "Skepticism",
+19, "Perception",
+20, "Conditionalisation",
+21, "Deception",
+22, "Ethics of Belief",
+23, "Semantic Externalism",
+24, "Processes",
+25, "Preferences",
+26, "Decision Theory",
+27, "Triviality Results",
+28, "Desires",
+29, "Aim of Belief",
+30, "Epistemic Value",
+31, "Transmission",
+32, "Testimony",
+33, "Luck",
+34, "Bootstrapping",
+35, "Epistemic Modals",
+36, "Contextualism",
+37, "Sleeping Beauty",
+38, "Assertion",
+39, "Disagreement",
+40, "Accuracy"
+)
+
+epistemology_year_topic_mean$topic <- as.numeric(epistemology_year_topic_mean$topic)
+epistemology_article_gamma$topic <- as.numeric(epistemology_article_gamma$topic)
+
+epistemology_subjects <- epistemology_subjects %>%
+  inner_join(epistemology_article_count, by = "topic") %>%
+  inner_join(epistemology_article_gamma, by = "topic") %>%
+  inner_join(epistemology_year_topic_mean, by = c("topic" = "rank")) %>%
+  select(-topic.y) %>%
+  mutate(g = round(g, 2), date= round(date, 1))
+
+kable(epistemology_subjects, 
+      col.names = c("Topic", "Subject", "Count", "Weighted Count", "Year"), 
+      align = c('l', 'l', 'c', 'c', 'c'), 
+      sep = "")
+```
+<br>
+
+There are several weirdnesses here that are worth listing. (I don't think this eliminates the usefulness of the model, but we should be up front about the shortcomings.)
+
+- The larger LDA had put epistemic modals in with epistemology (reasonably enough), then followed that up by putting indicative conditionals in as well. Indicative conditionals are a tricky subject to classify, and different models treated them differently. But given their links to work on probability, and to epistemic modals, it isn't surprising they end up in epistemology. Still, it means topic 7, and topic 36, are more philosophy of language topics than epistemology.
+- Similarly you could easily put topic 19 (Perception), and even topic 1 (Knowledge of Minds), in philosophy of mind. As you can see, I'm working in this chapter with a fairly broad conception of epistemology.
+- I don't know why this model split topics 14 and 38, which both look like norms of assertion. I think what's going on is topic 14 is pre-Williamsonian and topic 38 is Williamsonian. But it does look a bit like a pretty arbitrary split.
+- I do know what's going on with topics 8 and 18, and it's a little hilarious. The model just does string recognition, so it doesn't know that 'sceptic' and 'skeptic' are stylistic variants. But it does know they are super important words. So each of them gets its own topic.
+- Splitting off Topic 16 (Experts) from Topic 32 (Testimony) was a bit weird.
+- Topic 24 includes both process reliabilism work, and work from recent cognitive science on mental processes. This isn't terrible, but it's not how I would have carved things up.
+- I've called Topic 4 the Surprise Exam, but there is also a lot of work here on the Sly Pete example. I'm not entirely sure what the model saw that put these puzzles together.
+
+In the remaining sections of this chapter I include (automatically generated) statistics, graphs, keywords and key papers from these topics, so you can investigate them more at leisure. For now I want to talk about the broad trends, some highlights, and then especially Topic 6 (Gettier).
+
+First the overall graphs of the raw count and the weighted count. I've included trend lines for the raw count because otherwise there are a lot of overlapping dots. And I've capped the graph at 6 to make everything clear.
+
+```{r epistemology_main_count_graph, fig.height=9, fig.width=7.5}
+epistemology_yeartopics_postwar$topic = as.factor(epistemology_yeartopics_postwar$topic)
+ggplot(epistemology_yeartopics_postwar %>% drop_na(), aes(x = year, y = tn, color=topic, group=topic)) +
+  geom_point(size = 0.5, alpha = 0.5) + 
+  geom_smooth(se = F, method = "loess", size  = 0.3, alpha = 0.3, formula = "y ~ x") +
+  coord_cartesian(ylim=c(0,6))+
+  labs(x = "Year", y = "Number of Articles") +
+  scale_colour_discrete(labels = epistemology_subjects$subject) + 
+  theme(legend.title = element_blank(), legend.position = "bottom")
+epistemology_yeartopics_postwar$topic = as.numeric(epistemology_yeartopics_postwar$topic)
+
+```
+
+The 'missing' data points are:
+
+<br>
+```{r epistemology_missing_data}
+epistemology_missing <- epistemology_yeartopics_postwar %>%
+  filter(tn > 6) %>%
+  inner_join(epistemology_subjects, by = "topic") %>%
+  select(year, subject, count = tn)
+
+kable(epistemology_missing, col.names = c("Year", "Subject", "Count")) %>% kable_styling(full_width = F)
+```
+<br>
+
+These points are not shown, but they are influencing the curves.
+
+The graph is a lot of stuff, but the basic picture is fairly straightforward.
+
+The Gettier Problem was a big deal through the late-1970s and early-1980s. It's perhaps worth noting here that the model treats work on Nozick's theory of knowledge as part of the Gettier Problem literature, which is fair enough, and explains a bit of its longievity. Then there is a bunch of work on conditionals. Then a lot of modern topics become significant, and several of them seem to be as significant to the philosophical literature in the 2010s as the Gettier Problem was in the 1970s.
+
+The picture doesn't change enough if we use weighted counts rather than counts, though this does let us remove the trendlines.
+
+```{r epistemology_weighted_count_graph, fig.height=9, fig.width=7.5}
+epistemology_yeargamma_postwar$topic = as.factor(epistemology_yeargamma_postwar$topic)
+ggplot(epistemology_yeargamma_postwar, aes(x = year, y = gamsum, color=topic, group=topic)) +
+  geom_point(size = 0.5, alpha = 0.5) + 
+#  geom_smooth(se = F, method = "loess", size  = 0.3, alpha = 0.3) +
+  coord_cartesian(ylim=c(0,6.02)) + 
+  labs(x = "Year", y = "Number of Articles", title = "Number of Articles in Each Subject Per Year") +
+  scale_colour_discrete(labels = epistemology_subjects$subject) + 
+  theme(legend.title = element_blank(), legend.position = "bottom")
+epistemology_yeargamma_postwar$topic = as.numeric(epistemology_yeargamma_postwar$topic)
+```
+
+In this case there are just two missing data points.
+
+<br>
+```{r epistemology_gamma_missing_data}
+epistemology_gamma_missing <- epistemology_yeargamma_postwar %>%
+  filter(gamsum > 6.02) %>%
+  inner_join(epistemology_subjects, by = "topic") %>%
+  select(year, subject, count = gamsum)
+
+kable(epistemology_gamma_missing, col.names = c("Year", "Subject", "Weighted Count")) %>% kable_styling(full_width = F)
+```
+<br>
+
+It's much easier to see what's happening here with the subjects separated out. Again, I've left off those two data points so they don't throw off the scale of the whole graph.
+
+```{r epistemology_fact_graph, fig.height=15.2, fig.width=7}
+epistemology_yeargamma_postwar$topic = as.factor(epistemology_yeargamma_postwar$topic)
+topic.labs <- epistemology_subjects$subject
+names(topic.labs) <- 1:40
+ggplot(epistemology_yeargamma_postwar, aes(x = year, y = gamsum, color=topic, group=topic)) +
+  geom_point(size = 0.15, alpha = 1) + 
+  facet_wrap(~topic, ncol = 4, labeller = labeller(topic = topic.labs)) +  
+  theme(legend.position="none") +
+  coord_cartesian(ylim=c(0,6.02)) +
+  labs(x = "Year", y = "Number of Articles")
+epistemology_yeargamma_postwar$topic = as.numeric(epistemology_yeargamma_postwar$topic)
+```
+
+The model makes these three weird divisions: splitting experts from testimony, having two assertion categories, and dividing scepticism and scepticism. Let's put those together, alongside the two big topics from theory of knowledge, contextualism and Gettier.
+
+```{r epistemology_category_graph, fig.height=6}
+epistemology_wide <- pivot_wider(epistemology_relabeled_gamma, id_col = document, names_from = topic, values_from = gamma)
+epistemology_categories <- epistemology_wide %>%
+  mutate(v.Gettier = `6`, 
+         v.Testimony = `16` + `32`, 
+         v.Assertion = `14` + `38`, 
+         v.Scepticism = `8` + `18`, 
+         v.Contextualism = `36`) %>%
+  pivot_longer(cols = starts_with("v."),
+               names_to = "category", 
+               names_prefix = "v.") %>%
+  select(document, category, gamma = value) %>%
+  inner_join(articles, by = c("document"="file")) %>%
+  select(document, category, gamma, year) %>%
+  filter(year > 1945) %>%
+  group_by(category, year) %>%
+  dplyr::summarise(y = sum(gamma))
+
+ggplot(epistemology_categories, aes(x = year, y = y, color = category)) + 
+  labs(x = "Year", y = "Number of Articles") +
+  geom_point(size = 0.5, alpha = 0.5) + 
+  geom_smooth(se = F, size = 0.2, method = "loess", formula = 'y ~ x') +  
+  theme(legend.title = element_blank())
+```
+
+I think that gives you a pretty good sense of what the central parts of epistemology have looked like over the last fifty or so years. The Gettier Problem was the central question, for a while by far the central question. (Note that the loess curve here is well under some of the dots, so it understates the trend.) But scepticism keeps being taken more and more seriously, even if still as something haunting the land. But issues about language, and about social epistemology, are now as important as the Gettier Problem ever was.
+
+So why was the Gettier Problem so widely thought to be dominating epistemology? The following four graphs might help explain this perception. I'll eventually do these for each of the 40 topics, though I won't include any commentary on any of them other than these. First, here's the graph (with trendline) of the raw number of articles about the Gettier Problem each year.
+
+```{r gettier_first, fig.height=5, out.width = '100%'}
+# First Gettier Graph for real
+jjj <- 6
+
+cate_nam <- epistemology_subjects$subject[jjj]
+
+ggplot(data = filter(epistemology_yeartopics_postwar, topic == jjj), aes(x = year, y = tn)) +
+  geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  theme(legend.position="none") +
+  labs(x = "Year", y = "Number of Articles")
+```
+
+There were a few articles, especially in the late 1970s and early 1980s, but it doesn't look so huge. It's even less dramatic if we use weighted counts.
+
+```{r gettier_second, fig.height=5, out.width = '100%'}
+jjj <- 6
+
+cate_nam <- epistemology_subjects$subject[jjj]
+
+ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), aes(x = year, y = gamsum, color = topic)) +
+  geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 50)) +
+  geom_smooth(se = F, 
+              formula = "y ~ x", 
+              size = 0.5, 
+              method = "loess", 
+              colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100),) +
+  labs(x = "Year", 
+       y = "Weighted Number of Articles")
+```
+
+We can also look at that as a percentage of all philosophy articles published in that year.
+
+```{r gettier_third, fig.height=5, out.width = '100%'}
+jjj <- 6
+
+cate_nam <- epistemology_subjects$subject[jjj]
+
+ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), aes(x = year, y = gamrat_all)) +
+  geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  theme(legend.position="none") +
+  labs(x = "Year", y = "Proportion of Philosophy Articles") +
+  scale_y_continuous(labels = scales::percent)
+```
+
+At its height, it's about 1.3% of all the philosophy being done in a year. That's not a small number, but there are only four years where it is above 1%, and only four more between 0.75% and 1%. So why is it remembered as taking over everything. This graph I think is part of the explanation. Now we'll express these articles as a percentage of all epistemology being published.
+
+```{r gettier_fourth, fig.height=5, out.width = '100%'}
+jjj <- 6
+
+cate_nam <- epistemology_subjects$subject[jjj]
+
+ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), aes(x = year, y = gamrat_local)) +
+  geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  theme(legend.position="none") +
+  labs(x = "Year", y = "Proportion of Epistemology Articles") +
+  scale_y_continuous(labels = scales::percent)
+```
+
+For several years it was 15-20% of all epistemology that was being published. And remember that we have a very inclusive conception of epistemology, so there's a decent case that these numbers are on the low side, and it's really more like 20-25%. And that does seem excessive. So there's a reasonable case that for a while the Gettier Problem literature was a rather excessive proportion of the epistemology literature. And maybe that's why it looms so large in a lot of people's impression of what happens in epistemology.
+
+The rest of this chapter is automatically generated. Every section covers 1 of these 40 topics. It displays:
+
+- The keywords for each topic.
+- The raw and weighted counts of articles in that topic.
+- The four graphs I just showed.
+- The 10 articles that have the highest probability of being in that category. (These aren't weighted by length, because so many of the significant articles are short.)
+- If there are any of the 600 highly cited articles, it includes those as well.
+
+```{r epistemology_article_list}
+epistemology_the_articles <- epistemology_relabeled_articles %>%
+  group_by(topic) %>%
+  top_n(10, gamma) %>%
+  ungroup() %>%
+  select(gamma, topic, citation) %>%
+  arrange(topic, gamma)
+```
+
+```{r epistemology_giant_loop, fig.height=5, out.width = '100%'}
+for (jjj in (1:40)){
+  cate_nam <- epistemology_subjects$subject[jjj]
+
+  cat(" \n")
+  cat("## Topic ", jjj, " - ", cate_nam, " {#e",jjj,"}\n\n", sep="")
+
+  keyword_list <- epistemology_distinctive_topics %>% filter(topic == jjj)
+  keyword_paste <- paste(keyword_list$term, sep = ", ", collapse = ", ")
+
+  cat("**Keywords**: ", keyword_paste, " \n \n")
+
+  raw_count <- epistemology_article_count$n[jjj]
+  weighted_count <- epistemology_article_gamma$g[jjj]
+    
+  cat("**Number of Articles**: ", raw_count, "<br> \n")
+  cat("**Weighted Number of Articles**: ", weighted_count, " \n \n")
+  
+  print(
+  ggplot(data = filter(epistemology_yeartopics_postwar, topic == jjj), aes(x = year, y = tn)) +
+    geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+    geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+    theme(legend.position="none") +
+    labs(x = "Year", 
+         y = "Number of Articles")
+  )
+  
+  print(
+    ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), aes(x = year, y = gamsum)) +
+    geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+    geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+    theme(legend.position="none") +
+    labs(x = "Year", 
+         y = "Weighted Number of Articles")
+  )
+  
+  print(
+    ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), aes(x = year, y = gamrat_all)) +
+    geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+    geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+    theme(legend.position="none") +
+    labs(x = "Year", 
+         y = "Proportion of Philosophy Articles") +
+    scale_y_continuous(labels = scales::percent)
+  )
+  
+  print(
+    ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), aes(x = year, y = gamrat_local)) +
+    geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+    geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+    theme(legend.position="none") +
+    labs(x = "Year", 
+         y = "Proportion of Epistemology Articles") +
+    scale_y_continuous(labels = scales::percent)
+  )
+  
+  cat("\n\n**Characteristic Articles** \n \n")
+  for (jj in 1:10){
+    cat(jj,". ", epistemology_the_articles$citation[jjj*10 + jj - 10], " \n", sep="")
+  }
+
+  these_cites <- epistemology_high_cite_gamma %>% 
+    as_tibble() %>%
+    filter(topic == jjj) %>%
+    arrange(desc(Cites))
+  
+  if (nrow(these_cites) > 0){
+  cat(" \n")
+  cat("**Highly Cited Articles** \n \n")
+    for (jj in 1:nrow(these_cites)){
+       cat(jj,". ", these_cites$citation.x[[jj]], " (", these_cites$gamma[[jj]], ")\n", sep="")   
+    }
+  }
+}
+
+
+
+# Then weighted
+# Then as percentage of all epistemology
+# Then as percentage of all philosophy
+# Then loop it
+# Then add paradigm articles
+# Then add stats
+# Then add keywords - that will be work
+
+```
+

@@ -1,0 +1,59 @@
+```{r t85a}
+jjj <- 85
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t85b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t85c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t85d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t85e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+Contemporary debates about semantic externalism were kicked off by Saul Kripke's [Naming and Necessity](https://philpapers.org/rec/KRINAN) and Hilary Putnam's [Meaning and Reference](https://philpapers.org/rec/PUTMAR-2). _Naming and Necessity_ isn't in this study, though its impacts are felt in several places. But _Meaning and Reference_ is, and it is even in this category. Here is the model's views on where to place _Meaning and Reference_.
+
+<br>
+```{r meaning-and-reference}
+individual_article("10.2307_2025079")
+```
+<br>
+
+It's largest topic is this one, but the model also notes it is about definitions and modality, which makes sense. But the probability that it is in this topic is comfortably largest. And it's an incredibly influential paper, so I would have guessed that it would have been quickly followed by a flood of similar papers.
+
+But that's not remotely what happened. The model sees very little work on this topic for another decade. There is a bit of discussion in the mid-1980s, then it is Michael McKinsey's 1991 paper [Anti-Individualism and Privileged Access](https://philpapers.org/rec/MCKAAPhttps://philpapers.org/rec/MCKAAP), that really starts the discussion going. Just to make this vivid, let's focus on the last 40 years of those graphs above, starting from Putnam's original paper.
+
+```{r wide-content-recent-graph}
+jjj <- 85
+indiv_journal_graphs <- ggplot(data = filter(journalgamma_frequency, topic == jjj) %>% drop_na(), aes(x = year, y = gamfre))  +
+      geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
+      theme(legend.position="none") +
+      coord_cartesian(ylim=c(0, 0.09), xlim=c(1973,2013), expand = TRUE) +
+      labs(x = "Year", y = "Weighted Number of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
+      facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names))
+indiv_journal_graphs
+```
+
+The lack of life in this topic through the 1970s and much of the 1980s was one of the biggest surprises to me of the whole project. In recent years it feels like topics can catch fire immediately after the publication of a high profile paper. But that is realy not what happened in debates about wide content. Putnam's paper is one of the most influential of its time, and its time is the most important few years in the history of philosophy, but that influence was not felt for many years after its publication.

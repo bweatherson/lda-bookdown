@@ -1,0 +1,40 @@
+```{r t27a}
+jjj <- 27
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t27b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t27c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t27d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t27e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+In earlier iterations of this project I ran through a few different journals. And one of the effects of doing this was that I'd occasionally see topics that weren't really that big in philosophy in general, but were a big deal in that journal. And some of them were very distinctive to the interests of one or other journal editor. This iteration of the project mostly didn't have this; very few topics are held up by a single journal.
+
+This is arguably an exception. The graph for _Philosophy and Phenomenological Research_ obviously looks very different to the graphs for the rest of the journals. But I don't think this means that that we're seeing something unrepresentative here. Rather, what we're seeing is something like a blindspot (or deliberate oversight) in the other eleven journals which is counter-balanced by _Philosophy and Phenomenological Research_. This does mean that when PPR changes its focus in the 1980s, this topic seems to fall away very quickly. Thats not right; it just moves elsewhere.
+
+I'm calling this a history topic because most of the papers feel historical; they are looking back at work done in the glory days of phenomenology. But those 1940s papers that make up a chunk of the topics weren't intended as being papers in history of philosophy; they were just doing philosophy. This is a systematic challenge with a study this long. If I extended the study even further - say by putting works by Berkeley or Hume into it - we'd see even more dramatic versions of this effect. They didn't think they were writing histories of early modern philosophy, but that's how the model would classify them.

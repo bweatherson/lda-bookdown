@@ -1,0 +1,42 @@
+```{r t33a}
+jjj <- 33
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t33b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t33c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t33d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t33e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This, like a few other Ethics topics, is a little strange. There is enough unity in Ethics that the model had a slightly hard time finding natural joints to carve at.
+
+Looking at the graph over time, this looks like a very temporally specific graph. That peak in the early-to-mid-1960s followed by a dramatic fall looks like a topic that simply burned out. But look more closely, and you see that it doesn't fall nearly to zero. And several of the characteristic articles are from recent years.
+
+What's happened here, I think, is that the model has stumbled on to a somewhat disjunctive topic. This topic makes more sense if you think of it as one part deontic logic, and one part promises. The deontic logic part has a really sharp peak; there isn't much work on that either before or after that peak around 1966 and 1967. This is just about the last topic to become fashionable before the boom in the late-1960s where lots of things became fashionable and stayed so more or less ever since. But the promises part is not nearly as uneven, and most of the recent work is on promises. I suspect that in the long run that work will end up being more relevant to the citations than the deontic logic work, but it's hard for new articles to have huge citation counts.
+
+Did it make sense for the model to throw together deontic logic and promises? Not really; it had to make some arbitrary choices and it made this one. We're about to get a run of topics where the model seems to have settled for disjunctive topics. In this one at least it picked two disjuncts from the same sub-discipline. We won't be so lucky the next few topics.

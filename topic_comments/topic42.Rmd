@@ -1,0 +1,48 @@
+```{r t42a}
+jjj <- 42
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t42b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t42c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t42d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t42e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is a bit of a grab-bag of papers, loosely connected to the idea of depiction. I've classified it as Aesthetics because it includes papers like
+
+- [Analysis of the Poetic Similie](https://philpapers.org/rec/RIEAOT) by Max Reiser.
+- [On What A Painting Represents](https://philpapers.org/rec/ZIFOWA) by Paul Ziff.
+- [The Aesthetics Of Photographic Transparency](https://philpapers.org/rec/LOPTAO) by Dominic MacIver Lopes.
+
+But it also includes papers that seem less neatly classed as Aesthetics, like
+
+- [You Can Call Me 'Stupid', ... Just Don't Call Me Stupid](https://philpapers.org/rec/FARYCC) by Delia Graff Fara.
+- [Self To Self](https://philpapers.org/rec/VELSTS) by David Velleman.
+- [On the New Riddle of Induction](https://philpapers.org/rec/BAROTN-2) by S. F. Barker and Peter Achinstein.
+
+Still, the aesthetics papers predominate, so that's the category I've gone with. Very often these models would locate the Aesthetics papers quite neatly and put them in a category. But this model has separated out these papers on depiction from the larger category of papers on beauty. And the result is that the topic is fairly small.

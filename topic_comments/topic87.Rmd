@@ -1,0 +1,42 @@
+```{r t87a}
+jjj <- 87
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t87b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t87c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t87d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t87e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The common theme to most of these articles is that they live at the overlap between philosophy and cognitive science. There is a big focus on the nature of computation, and this occasionally means the model gets confused and pulls in articles that aren't really about cognitive science, like Nick Bostrom's [Are We Living in a Computer Simulation?](https://philpapers.org/rec/BOSAWL-4). But most of them, tracing back to Kitcher's discussion of Marr's theory of vision, are safely inside cognitive science.
+
+As someone who is involved with the [Weinberg Institute for Cognitive Science](https://lsa.umich.edu/weinberginstitute) at UM, I'm pleased to see this work get this level of attention from the model.
+
+I was a bit surprised it wasn't larger. I suspect if we ran the model forward in time it would get a bit bigger. Though it's possible that my decision to not include _Mind and Language_ in the study puts a cap on how big it will get.
+
+I'm not surprised to see Andy Clark be so central to the subject. He turns up on the keywords, the characteristic articles and (separately) the most cited articles. Given his important recent work on predictive processing, I do not think that would change if we extend the model forward in time.

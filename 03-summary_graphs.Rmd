@@ -1,0 +1,322 @@
+# Summary Graphs
+
+In the previous [chapter](includelinkhere) I discussed the 90 topics one at a time. The aim of this chapter is to find some way to graph them all at once. The short version of the chapter is that it's an impossible task, and there is too much data to really show all of the trends on one graph. The longer version is that there are a few graphs that are flawed in different ways, and between them they might help give some sense to what the trends where in the philosophy journals over this time.
+
+In the first [section](#main-summary-graph) I'll present the (pair of) graphs that do the best job of showing what the trends were. In the second [section](includelinkhere) I'll go over the three binary choices that we have in thinking about how to present the data, leading to eight possible graphs. One of these is the one presented in the first section, but there are cases to be made for each of the other 7 as well. So in the remaining sections, I'll go over each of those seven possible graphs.
+
+<!-- Weight vs Raw -->
+<!-- Sum vs Frequency -->
+<!-- Articles vs Pages -->
+
+## Main Summary Graph {#main-summary-graph}
+
+The first graph shows the expected number of articles in each topic each year. I'll call the expected value the weighted sum, since the probabilities from the model are better thought of as weights. So for each topic-year pair, it looks at all the articles published that year, and sums the probability they are in that topic. The result is a point on this graph.
+
+```{r setuptopiclabels, cache = FALSE}
+# Labels for the Facet Graphs
+subtopic.labs <- the_categories$subject
+names(subtopic.labs) <- the_categories$topic
+
+# Code for the Spaghetti graphs
+spaghettigraph <- function(datainput, ylabel, titlelabel){
+  ggplot(datainput, aes(x = year, y = y, color=topic, group=topic)) + 
+    scale_colour_discrete(labels = the_categories$subject[1:90]) + 
+    spaghettistyle +
+    theme(legend.title = element_blank(), 
+          legend.position = "bottom",
+          legend.key.height = unit(6, 'pt'),
+          legend.spacing.x = unit(0.2, 'pt')) +
+    geom_point(size = 0.5, alpha = 0.5) +
+    labs(x = "Year", y = ylabel, title = titlelabel) +
+    scale_x_continuous(minor_breaks = 10 * 188:201,
+                       expand = expansion(mult = c(0.01, 0.01))) +
+    scale_y_continuous(expand = expansion(mult = c(0.01, .03)))
+}
+
+# Code for the Facet Graphs
+facetgraph <- function(datainput, ylabel, titlelabel){
+  # Data for generating the backgrounds
+  bg <- datainput %>%
+    mutate(topic = as.numeric(topic)) %>%
+    inner_join(the_categories, by = "topic") %>%
+    select(-topic)
+  
+  # Data for generating the labels - note we have to bounce data style of 'topic' or bad errors happen
+  facet_labels <- the_categories %>%
+    filter(topic < 91) %>%
+    mutate(year = mean(datainput$year), y = 1.25 * max(datainput$y)) %>% # Change Mean to Min to move labels to left - these are centred
+    mutate(topic = as.factor(topic))
+  
+  # Now the graph
+  ggplot(datainput, aes(x = year, y = y, color=topic, group=topic))  +
+# Use loess curves to create 90 background lines
+    geom_smooth(data = bg, 
+                aes(group=subject), 
+                size = 0.1, 
+                color = "grey85", 
+                method = "loess", 
+                alpha = 0.2,
+                se = F,
+                formula = "y ~ x") +
+ # Draw each of the points in this graph
+     geom_point(size = 0.15) +
+  # Put them in 5 columns
+    facet_wrap(~topic, ncol = 5) +
+  # Add labels inside the graph for each of the subjects
+    geom_text(data = facet_labels,
+            mapping = aes(label = subject),
+            vjust = "inward", 
+            hjust = "inward",
+            fontface = "bold", 
+            size = 2) +
+  # Add the style that I generated back in the index
+      facetstyle +
+  # Notate everything
+      labs(x = "Year", y = ylabel, title = titlelabel)
+}
+```
+
+```{r graph1a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Sum of Articles"}
+# Burp
+spaghettigraph(weight_numerator, "Weighted Number of Articles", "Weighted Sum of Articles in Each Topic Per Year")  
+```
+
+Now there is too much data there to take all of it in. And if your eyes can correlate the colours on key with colours on the graph, they are keener than mine. But still there are some things we can take away from the graph. And I want to stress that these things are really very resilient. I ran a lot of these models to find one that best reflects the trends in the journals, and all of the following features were stably true across the model runs.
+
+First, the colors change over the course of the graph. The topics that are big deals in the early years are very different to the topics that are big deals in the later years.
+
+Second, there are a lot more articles being published in recent years than in earlier years. This is in part because the universe of journals has grown, and in part because I focussed on journals that are alive today. But it's significant, and a point that I'll have cause to return to several times this chapter.
+
+Third, there is nothing like the dominance of Ordinary Language philosophy in the mid-century. If you cut down the number of topics to under 30, then something like Idealism becomes a single topic that is similarly large in the early years. (It basically collapses Idealism and Life and Value here, and adds a bunch of pragmatism too.) And if you keep the number of topics under about 50 (or even 60), then sometimes the model will put all of Epistemology into a single topic, and its size in the 2000s is as big as ordinary language philosophy in the 1950s. But in this model - and in the vast majority of other models I looked at - Ordinary Language philosophy after the war is bigger than any other model at any time.
+
+But the fourth result is the one that surprised me most of all, and one that I don't really have a simple story about. There is a white triangle toward the bottom right corner of the graph, starting around 1960, peaking around 1980, and ending around 2000. This is again a very resilient result - almost all the model runs I did had something similar. Around 1980, the model sees all the topics being at least somewhat represented in the journals. But the further from 1980 you get, in either direction, the less likely it is to think that all the topics are there. 
+
+I'm going to [come back to this much later in the book](#the-bump), because I think it's fascinating. But apart from making this rise in the minimal values visible, this graph is otherwise something of a mess. Things are a bit clearer if we view the individual topics separately.
+
+```{r graph1b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Sum of Articles (Faceted)"}
+facetgraph(weight_numerator, "Weighted Number of Articles", "Weighted Sum of Articles in Each Topic Per Year")
+```
+
+This is a bit clearer on the relative scale of the different topics over time. There are four notable shapes of graph here.
+
+One is the graph with a high peak, but a rapid rise and fall either side of it. Some of these are predictable, like Verification, or Meaning and Use. Others are more surprising, like Promises and Imperatives. I expected Ordinary Language to be like this, but it isn't. The stylistic changes that were brought about didn't totally stick - the graph does go down a little bit - but they don't totally go away eityher.
+
+A second is the graph with a sudden rise to a new equilibria. There are a few of these in this model, such as Explanations, Population Ethics and Personal Identity. Other models had a much larger number of these graphs, but maybe once we've gone as high as 90 topics they start to get less common.
+
+A third is the graph that just rises and rises as the years go along. That's almost all of the last 15 graphs here.
+
+A fourth, which is almost non-existent, is the graph that is such a mess that you need to fit a curve to it to see any trends. I'll do some graphs with trendlines in a bit, but for now I want to note how little need we have for them. Although the model wasn't told about the age of different articles, and was just trying to classify them as best it could, it mostly came up with totals for each topic per year that were approximately continuous. That's interesting, and tells us something about the way in which debates in journals really do seem to follow trends.
+
+## Graph Choices {#graph-choices}
+
+In the previous [section](#main-summary-graph) I presented one way of graphing the trends in these 90 topics. In making that graph I made three major choices, each of which I can see good arguments either way. In this section I'm going to say what these choices are, and in the subsequent sections I'll show you what the graphs look like with the other choices. This is getting particularly deep in the weeds, and you wouldn't lose a lot by jumping ahead to the next chapter rather than going over these three questions.
+
+First, should the y-axis be a probability sum, or a count? That is, for each topic-year pair, do work out the expected number of articles in that topic from that year (given the LDA-generated probability function), or do we count the number of articles from that year whose probability of being in this topic is maximal? I'll call these options the weighted count and raw count respectively.
+
+Second, do we present the result as a sum, or do we normalise the result by presenting it as a ratio of the total number of articles from that year? I'll call these the sum and frequency options.
+
+Third, do we take articles or pages to be the basic unit? In practice, that means do we simply add up how many articles are in a topic, or do we weight the articles by their page length. (And, if we're using frequencies, suitably increase the denominator we're using for normalisation.)
+
+These three choices totally cross-cut each other, so we get eight possible things to go on the y-axis.
+
+| Number | Short Description | Long Description |
+| -----: | :---------------- | :----------------|
+|  1     | Weighted sum of articles | What we already saw, the expected number of articles in a topic in a year |
+|  2     | Raw sum of articles | How many articles in each topic each year, where 'in' is defined as having a higher probability of being in that topic than any other |
+| 3      | Weighted frequency of articles | The value in 1, divided by the number of articles in that year |
+|  4     | Raw frequency of articles | The value in 2, divided by the number of articles in that year |
+|  5     | Weighted number of pages | For each article in a year, the probability of being in that topic, times its length in pages |
+|   6    | Raw number of pages  | The sum of the pages of the articles in a topic (in the sense of 2) in a given year |
+| 7      | Weighted frequency of pages | The value in 5, divided by the total number of pages in that year |
+|  8     | Raw frequency of pages | The value in 6, divided by the total number of pages in that year |
+
+Table: (\#tab:eight-types) Eight Types of Graph
+
+<br>So why did I go with option 1? Well, all of the other options have flaws that made me want to try something different.
+
+The raw counts are too uneven, and require trendlines to be added to the graph. And they are fairly arbitrary. If the model says that something has probability 0.21 of being in topic X, and 0.18 of being in topic Y, and 0.16 of being in topic Z, and so on for several other topics, it feels like throwing away information to simply classify it in X. This is especially true if Y and Z are very similar topics, and the model could easily have merged them, while X is fairly different.
+
+Given the variation in the number of articles and pages being published each year, it makes sense to express trends as a proportion of the annual whole, rather than as a count. The problem is that there is too much of a mono-culture (or perhaps bi-culture) in the early years of the data. Idealism and 19th Century Psych routinely account for more than 30% of the articles (or pages) in a year. So any graph we have would have to have a y-axis that stretches that high. But post-1970, the difference between the prominent and less prominent topics is the difference between being 1% and 3% of the total. There is no natural way to represent those things on a single graph.
+
+There are a few ways around this, and the proportion based measures make so much sense that I'll use most of the following tricks somewhere in the book.
+
+- We can present the different topics on different charts, and hope that a combination of labelling the axes carefully and putting reminders about the axis labels in the text will make the differences apparent. I did that in the previous [chapter](#include-link).
+- We can separate out the journals, so prominent modern topics are a reasonable percentage of a particular journal. I did that in the previous [chapter](#include-link) too.
+- We can leave off the early years of the data set, so the outliers go away. That works, but it literally involves removing data, and by the time we're done, the quantity of articles and pages has stabilised enough that it's less important to normalise.
+- We can literally leave off some data points, setting the limit to the y-axis below where outlier points are, and just list the outlier points in the text. For the purposes of these eight graphs there are too many points for that to be feasible, but I will use this trick from time to time later in the book.
+
+While all of these work, none of them seem perfect, especially if we want a single graph to show everything. So I think it's best, at least for this chapter, to use sums not frequencies.
+
+Third, it is much simpler to use article counts, but there is some value to using pages as well. If one topic is frequently the subject of very short articles, especially in _Analysis_, and another topic is never discussed in short articles, then the difference between the article count and the page count will be substantial. And there is a sense in which the page count more reflects what is going on in the journal as a whole.
+
+To give you a sense of how this can happen, here are the weighted article counts and page counts for two topics just restricting attention to the 2000s (i.e., 2000-2009).
+
+<br>
+```{r pages-and-articles}
+page_ratio <- inner_join(weight_numerator, page_weight_numerator, by = c("year", "topic")) %>%
+  filter(year > 1999, year < 2010) %>%
+  mutate(pages = y.y/y.x) %>%
+  arrange(-pages)
+
+page_ratio_summary <- page_ratio %>%
+  group_by(topic) %>%
+  dplyr::summarise(a = sum(y.x), p = sum(y.y)) %>%
+  mutate(r = p/a) %>%
+  arrange(topic) %>%
+  mutate(topic = as.numeric(topic)) %>%
+  inner_join(the_categories, by = "topic") %>%
+  mutate(a = round(a, 2), p = round(p, 2)) %>%
+  select(Subject = subject, Articles = a, Pages = p)
+
+kable(slice(page_ratio_summary, c(52, 59)), caption = "Article and Page Counts") %>% kable_styling(full_width = F)
+```
+<br>
+
+The articles on Truth were largely (though not exclusively) in _Analysis_. The articles on Liberal Democracy were largely (though again not exclusively) in _Philosophy and Public Affairs_. And as you can see, which of these two has a bigger presence in the journals in the 2000s is very much a function of whether you count by articles or pages. If you have a strong view about the journals in the 2000s, you might be able to use this to test which of the two is a more accurate measure.
+
+For my money, both seem like reasonably interesting facts about the journals. There were more articles about Truth, and more pages about Liberal Democracy, and that's all there is to say. If you worked on one but not the other, you would probably feel like it was a bigger deal, because both of them were very important in the 2000s. But otherwise it seems to me like both measures are useful.
+
+I've usually used articles not pages though for a few reasons. 
+
+One is that the LDA assigns probabilities to articles, not individual pages, and it seems potentially misleading to use these article-based measures to implicitly say that there were, say, 1369 journal pages on Liberal Democracy in the 2000s. If my data included not just words in articles, but words on pages, I could have set the LDA up to assign topics to each page, and then it would have made more sense to count the pages. But that's not the data available.
+
+Another is that the number of journal pages has been growing more rapidly than the number of journal articles. So if you measure by pages, the case for normalising, i.e., showing frequencies not counts, is even stronger. But the problems with normalising remain.
+
+These aren't super conclusive reasons, but they were enough that I'm mostly using article-based, rather than page-based, measures in this book.
+
+But that said, I think all eight graphs are interesting, and in the rest of this chapter I'll show what they look like.
+
+## Raw Sum of Articles {#graph-rsa}
+
+Here is what it looks like if we just count how many articles are in each topic each year.
+
+```{r graph2a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Sum of Articles"}
+spaghettigraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Each Topic Per Year")
+```
+
+There are so many overlapping dots that it isn't that helpful a graph. It's a bit clearer when the topics are broken out.
+
+```{r graph2b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Sum of Articles (Faceted)"}
+facetgraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Each Topic Per Year")
+```
+
+Note a couple of things about this as compared to the graphs back in section \@ref(main-summary-graph). One is that the y-axis is much higher. The raw count measure tends to amplify trends. Another is that the graphs are much noisier. There are still enough trends that I don't think it would really help to add trend-lines, but there are a lot more graphs that look just like scattered points, especially over ten-twenty year patches. I think this is basically a flaw in the underlying measure being amplified.
+
+## Weighted Frequency of Articles {#graph-wfa}
+
+```{r graph3a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Frequency of Articles"}
+#Burper
+spaghettigraph(weight_ratio, "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
+```
+
+There are some dots in the upper-left quadrant, and then a bunch of dots bouncing along the bottom tenth of the graph. It isn't very informative, and breaking it out by topic doesn't help a lot.
+
+```{r graph3b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Frequency of Articles (Faceted)"}
+facetgraph(weight_ratio, "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
+```
+
+## Raw Frequency of Articles {#graph-rfa}
+
+The problems of the previous section are just exacerbated if we go to raw frequencies.
+
+```{r graph4a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Frequency of Articles"}
+spaghettigraph(count_ratio, "Raw Frequency of Articles", "Raw Frequencyof Articles in Each Topic Per Year")
+```
+
+```{r graph4b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Frequency of Articles (Faceted)"}
+facetgraph(count_ratio, "Raw Frequency of Articles", "Raw Frequencyof Articles in Each Topic Per Year")
+```
+
+All this tells us is that there is a lot more diversity, and a lot more specialisation, in journals in the last 30 years than there was 120 years ago. Everything else gets lost in the noise.
+
+## Weighted Sum of Pages {#graph-wsp}
+
+This is probably the second best graph. Even the graph with 90 dots on it shows some trends.
+
+```{r graph5a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Sum of Pages"}
+spaghettigraph(page_weight_ratio, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
+```
+
+Interestingly, the growing length of articles takes away the bump that is visible in figure \@ref(fig:graph1a); now it seems like all topics get 10-15 weighted pages (at least) every year. The increase length is itself quite remarkable. Here's the average article length over years. And that same effect means that some of the big 21st century topics are now outpacing Ordinary Language philosophy. I'll come back to this article length increase in a bit, but first let's see what this graph looks like with every topic having its own facet.
+
+```{r graph5b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Sum of Pages (Faceted)"}
+facetgraph(page_weight_ratio, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
+```
+
+The acceleration in thelast fifteen topics is much more pronounced. And Ordinary Language doesn't look like it has a rise and fall any more - it has a rise that it holds on to. Norms looks like it is about to eat everything, and maybe it is.
+
+It's worth pausing for a minute about what's driving this. Page lengths increased substantially over the last few decades of the data set. Here is what they look like over time.
+
+```{r page-average, fig.cap = "Average Article Length", fig.height=6, fig.width=7.5, out.width = '80%'}
+page_average <- inner_join(page_demonimator, article_demonimator, by = "year") %>%
+  mutate(y = d.x/d.y) %>%
+  select(year, y)
+
+ggplot(page_average, aes(x = year, y = y)) + 
+  geom_point(size = 0.5, colour = hcl(h = 15, l = 65, c = 100)) + 
+  labs(x = "Year", y = "Average Number of Pages in Articles", title = "Average Article Length")
+```
+
+It's fairly noisy at first, then a sharp dip takes us to a minimum in the early 1960s, and from then it is a steep rise. (One that is not, in my experience, abating any time soon.) But an average covers up a lot of things. For instance, _Noûs_ used to publish absracts of APA presentations as research papers. These were often one page, and could really pull down averages. Here is a slightly more instructive way of looking at the data. The following graph shows various deciles of lengths over time. So the bottom line is the length such that 10% of articles are shorter than (or equal to) its length, the top line is the length such that 90% of articles are short than (or equal to) its lengths, and so on for the in between lines.
+
+```{r length-distribution, fig.cap = "Distribution of Article Lengths", fig.height=6, fig.width=7.5, out.width = '80%'}
+p <- ((1:5)/5) - 0.1
+p_names <- map_chr(p, ~paste0("d.", .x*100, "%"))
+p_funs <- map(p, ~partial(quantile, probs = .x, na.rm = TRUE)) %>% 
+  set_names(nm = p_names)
+length_deciles <- articles %>% 
+  group_by(year) %>% 
+  summarize_at(vars(length), p_funs) %>%
+  pivot_longer(cols = starts_with("d."), names_to = "decile", names_prefix = "d.", values_to = "length")
+ggplot(length_deciles, aes(x = year, y = length, color = decile)) + 
+  geom_point(size = 0.5, alpha = 0.2) +
+  geom_smooth(se = F, method = "loess", size = 0.2) +
+  theme(legend.title = element_blank(), legend.position = "bottom") +
+  labs(x = "Year", y = "Number of Pages", title = "Distribution of Article Lengths")
+```
+
+Some of this could be explained by having a bunch of one page notes, but not all of it. For much of the 1950s and 1960s, fewer than 10% of papers were over 20 pages. Now 20 pages is the median article length, in a universe of journals that includes _Analysis_. For that to be explained by having a bunch of very short articles, the olive line (at 30%) would have to be hugging the bottom of the graph, and clearly it isn't. 
+
+Articles are getting much much longer.
+
+## Raw Sum of Pages {#graph-rsp}
+
+```{r graph6a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Sum of Pages"}
+spaghettigraph(page_count_ratio, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
+```
+
+As always, moving from the weighted count to the raw count just exacerbates the trends. Let's see that broken out into topics.
+
+```{r graph6b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Sum of Pages (faceted)"}
+facetgraph(page_count_ratio, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
+```
+
+Now Ordinary Language philosophy has a boom and bust pattern again. There are a few topics, of which it is the most prominent, where the model sees them never quite going away, but not being the centre of attention once their peak passes. Oddly it also sees this pattern for Wide Content (which I sort of get), and Causation (which I don't). None of these see a fall in the weighted graphs, but they do in the raw graphs. I guess I think the weighted graphs are more aptly reflecting the real trends here.
+
+## Weighted Frequency of Pages {#graph-wfp}
+
+Again, the frequency graphs are dominated by the topics popular with _Mind_ in its early years.
+
+```{r graph7a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Frequency of Pages"}
+spaghettigraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
+```
+
+There is 19th Century Psych, then Idealism dominates, then there is Ordinary Language philosophy, and the rest is almost all just noise. (Except for a burst of interest in Norms at the end.) It's a bit clearer if we graph the 90 topics distinctly, but not a lot.
+
+```{r graph7b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Frequency of Pages (Faceted)"}
+facetgraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
+```
+
+These graphs aren't particularly informative, but we'll end with some graphs that may if anything be less informative.
+
+## Raw Frequency of Pages {#graph-rfp}
+
+```{r graph8a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Frequency of Pages"}
+spaghettigraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
+```
+
+As always, moving from the weighted count to the raw count just exacerbates the trends. Let's end with looking at the individual topics, though there are a lot of low lines here.
+
+```{r graph8b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Frequency of Pages (Faceted)"}
+facetgraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
+```

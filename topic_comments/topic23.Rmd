@@ -1,0 +1,38 @@
+```{r t23a}
+jjj <- 23
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t23b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t23c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t23d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t23e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is a fairly easy topic to summarise - at its centre, it's Marxism. And the trends are fairly easy to describe as well. There isn't much in the generalist journals really at any time. Then unsurprisingly, the moral and political journals discuss it a lot at their founding. And, more to my surprise, so do the philosophy of science journals at their founding. In all four cases there is a fairly quick drop-off, so this is now a fairly niche topic.
+
+The upturn towards the end, in both _Philosophy of Science_ and _Aristotelian Society_ is because the model puts two other kinds of articles in here as well. First, the model thinks that anything broadly about economics might be here. We see that in the fact that some articles by famous economists, such as Sen and Arrow, are here. (Though the model is really uncertain about the Sen article.) Second, the model thinks that anything that talks about structures might be here as well. So papers on structural realism occasionally get put here - especially if the focus is more on the structures than on the realism. Both these kinds of articles, roughly meaning non-Marxist economics and issues about structures, are getting more important, and possibly would be separated out if our data ran through the present day.

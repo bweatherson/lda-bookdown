@@ -1,0 +1,38 @@
+```{r t89a}
+jjj <- 89
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t89b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t89c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t89d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t89e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is the central topic of late 20th and early 21st century metaphysics, and unsurprisingly it has a huge number of highly cited articles. Eventually the interest in composition and constitution turned meta, and subsequent work often focussed on what was at stake in debates about composition and constitution, and then about whether there was a more general notion of grounding that could subsume these concepts and, perhaps, several others.
+
+Some of the work here could plausibly be counted in philosophy of mind, since some of the papers are about the relationship between mind and body. This is in keeping with a common trend in late twentieth/early twenty-first century philosophy - when there is work that crosses between the big disciplines in philosophy, it usually involves philosophy of mind. That stops in the 2010s; more work crosses between disciplines other than philosophy of mind. Butfor a while philosophy of mind is the glue that holds the other subjects together. Deontology and mereology don't have much in common, but deontology is linked to moral psychology, and mereology to the mind-body problem, and so they are connected via philosophy of mind.

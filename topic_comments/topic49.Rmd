@@ -1,0 +1,69 @@
+```{r t49a}
+jjj <- 49
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t49b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t49c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t49d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t49e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+Given that this topic covers virtue ethics, and discussions of individual virtues, and emotivism, I was surprised to see how low it came in. It's spread out so much across journals that it helps to zoom in on the graph of individual journals.
+
+```{r virtue-zoomed-graph}
+yupper <- 0.06
+ggplot(data = filter(journalgamma_frequency, topic == jjj) %>% drop_na(), aes(x = year, y = gamfre))  +
+  geom_point(size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
+  theme(legend.position="none") +
+  coord_cartesian(ylim=c(0, yupper), expand = TRUE) +
+  labs(x = "Year", y = "Weighted Proportion of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
+  facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names))
+```
+
+The philosophy of science journals are still low, unsurprisingly. But I was a bit surprised to see so little life in the _Journal of Philosophy_ graph, and not even much in the _Philosophy and Public Affairs_ graph. You really do see here a split between ethics and political philosophy.
+
+A slight surprise here is that "Stevenson" turns up as a keyword. It isn't surprising that this is a keyword at all; [Charles Leslie Stevenson](https://plato.stanford.edu/entries/stevenson/) is one of the most important figures in mid-century philosophy. It's rather that it isn't entirely clear why the model put the work that engages with Stevenson here rather than somewhere else.
+
+Part of what makes this odd is that the model only puts one of Stevenson's own journal articles in this topic.
+
+```{r stevenson-articles}
+author_dt(c("Charles L. Stevenson", "Charles Leslie Stevenson"), "Charles Leslie Stevenson")
+```
+
+
+Stevenson's own most important work, the book _Ethics and Language_, is not part of this study. But we can look at the works that engage with that book. But it's good to look directly at the raw data. Which articles use the word 'Stevenson' most often? And do those articles mean to refer to Charles Leslie Stevenson?
+
+<br>
+```{r articles-about-stevenson}
+articles_with_word("stevenson")
+```
+<br>
+
+The two articles by Brown are about _Adlai_ Stevenson, and the exchange between Leslie Stevenson and Ralph Walker is about Leslie Stevenson, but the rest I believe are about Charles Leslie Stevenson. And they naturally spread across a range of topics.
+
+I think that part of what's happening here is that Stevenson's work is so wide ranging that the model doesn't feel comfortable putting it into any one topic. Look, for instance, at how low the numbers are in the table of Stevenson's work. It somehow left the word 'stevenson' in this model, but that's balanced out by the fact that the words Stevenson himself used are mostly in other topics.

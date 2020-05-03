@@ -1,0 +1,43 @@
+```{r t34a}
+jjj <- 34
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t34b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t34c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t34d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t34e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+A very small topic on the analytic/synthetic distinction. It's small because so many of the papers that you might have thought would end up in here are instead in [Topic 60](#topic60), which is all about Quinean philosophy of language. So what we get here is a combination of four overlapping discussion threads.
+
+- A handful of early, Kant-influenced works.
+- A much larger number of works in or about positivism, with Carnap as the primary figure.
+- The distinction between two kinds of analyticity introduced by Boghossian.
+- Works in or about the Canberra plan, with Jackson and especially Chalmers as the central figures.
+
+The second of those is the largest, which is why this topic is turning up so early in our story. But the latter two are sizable as well, which is why this is turning up much later than the discussions of definitions or of verification.

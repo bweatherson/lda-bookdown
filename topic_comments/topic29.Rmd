@@ -1,0 +1,36 @@
+```{r t29a}
+jjj <- 29
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t29b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t29c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t29d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t29e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+In almost every model I ran, philosophy of religion was a single topic. But here, possibly because I was using so many topics, it split off ontological arguments from [the rest of philosophy of religion](#topic11). There are a few other articles in here on the general topic of arguments for God's existence, but they mostly are ontological argument papers. I didn't really realise that there were so many of them. There are, for example, about twice as many articles in the twelve journals on the ontological argument as on the Gettier Problem, which is really not what I had realised.

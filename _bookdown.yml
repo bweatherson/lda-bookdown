@@ -1,0 +1,19 @@
+book_filename: "lda-bookdown"
+delete_merged_file: true
+keep_md: yes
+language:
+  label:
+    tab: "Table "
+  ui:
+    chapter_name: ""
+rmd_files: ["index.Rmd", 
+            "01-methodology.Rmd", 
+            "02-topics.Rmd",
+            "03-summary_graphs.Rmd",
+            "04-categories.Rmd",
+            "05-category_methodology.Rmd",
+            "06-epistemology.Rmd",
+            "07-eras.Rmd",
+            "08-outliers.Rmd",
+            "09-buzzwords.Rmd"
+]

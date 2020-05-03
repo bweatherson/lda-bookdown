@@ -1,0 +1,50 @@
+```{r t16a}
+jjj <- 16
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t16b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t16c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t16d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t16e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The model divides up the Ethics topics more finely than I would like, but this one is reasonably clear. It's about axiology, i.e., the theory of value, fairly broadly construed. Happiness is often taken to be central to what's valuable, so there are articles about happiness in here. I worried that the model might confuse moral value with values of variables, but it seemed to understand that difference. It did end up thinking this topic had more to do with Aesthetics than with the rest of ethics, but that's one spot where I feel free to override the model.
+
+One of the most important articles in this topic is [The Naturalistic Fallacy](https://philpapers.org/rec/FRATNF) by [William Frankena](https://lsa.umich.edu/philosophy/undergraduates/prizes/william-k--frankena.html). Frankena studied at Oxford, and this paper is from his doctoral thesis. He moved to the University of Michigan and stayed for all his career, serving as chair for 14 years, and as President of the (then) Western Division of the APA. Much of Frankena's influence comes from his books, but he has twelve articles in the journals I'm investigating, and five of them are in this topic. 
+
+The model isn't entirely sure what to say about "The Naturalistic Fallacy", but I think it ultimately makes the right call on it.
+
+<br>
+```{r frankena-naturalistic-fallacy}
+individual_article("10.2307_2250706")
+```
+<br>
+
+All of the top four topics there make sense. The paper is about Moorean conceptions of goodness, so naturally it's about value. It's about the definability of 'good', and which principles in that definition might be analytic, so naturally those two topics turn up as well. And a crucial conclusion of the paper is that what Mooreans should say is that their opponents lack a certain kind of moral insight, something continuous wth the discussions of moral conscience. So I think the model did a reasonable job at classifying Frankena's important early paper.
+
+I'll come back later in the book to Frankena's esteemed colleagues at Michigan, especially Charles Stevenson and Richard Brandt.

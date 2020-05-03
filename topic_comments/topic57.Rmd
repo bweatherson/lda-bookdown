@@ -1,0 +1,52 @@
+```{r t57a}
+jjj <- 57
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t57b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t57c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t57d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t57e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+I'm going to say a bit more in Chapter \@ref(#sortingchapter) about why this is in Ethics, because it turned out to be one of the hardest topics to classify. Note for now that the keywords suggest that the focus of this topic is on the utility end of the probability-and-utility model of choice, and that suggests it naturally fits with value theory.
+
+The per journal frequencies are so low that it is probably worth zooming in on them a little bit.
+
+```{r decision-theory-zoomed-graph}
+yupper <- 0.06
+ggplot(data = filter(journalgamma_frequency, topic == jjj) %>% drop_na(), aes(x = year, y = gamfre))  +
+  geom_point(size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
+  theme(legend.position="none") +
+  coord_cartesian(ylim=c(0, yupper), expand = TRUE) +
+  labs(x = "Year", y = "Weighted Proportion of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
+  facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names))
+```
+
+There is more in _Ethics_ than any other journal, which is consistent with classifying the topic in Ethics. _Journal of Philosophy_ started taking an interest in the late 1970s, but it's hard to see a trend after this. Some years there is a lot of decision theory work in _Analysis_, but some years there is not. And there was a flood of work, mostly centered around the [Pasadena Game](https://philpapers.org/rec/NOVVE) in _Mind_ in the 2000s. 
+
+But mostly there is a little less here than I expected. I think part of what's happened is that some work I was mentally classifying as Decision Theory the model instead treated as [Formal Epistemology](#topic84). And that's why this is mostly sitting at or even under 1% frequency.

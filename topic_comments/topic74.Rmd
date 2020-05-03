@@ -1,0 +1,46 @@
+```{r t74a}
+jjj <- 74
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t74b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t74c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t74d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t74e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+It's perhaps a bit surprising that theory of knowledge - everything from scepticism to Gettier cases to testimony to closure principles to Williamsonian knowledge first epistemology - is in just one topic. And that it's just 1.3% of all the articles.
+
+In part this is because of how new a topic it is. There just isn't very much that feels like contemporary epistemology from before World War II. Of the 426 articles in this topic, only 6 of them are between World War II. And five of those feel like fairly borderline cases, where the model couldn't really make up its mind. There is one notable exception.
+
+```{r testimony-article}
+individual_article("10.2307_2249544")
+```
+
+I couldn't find any other references to **Dhirendon** Mohon Datta, but I suspect that's a typo. (Or a non-standard transliteration.) **Dhirendra** Mohan Datta wrote a book on [The Philosophy of Mahatma Ghandi](https://www.amazon.com/Philosophy-Mahatma-Gandhi-Dhirendra-Mohan/dp/0299010147), and a book on [The Six Ways of Knowing](https://archive.org/details/TheSixWaysOfKnowing1960D.M.Datta/mode/2up). And I think it's the same person. Unlike most of the other papers in the early years of epistemology, it reads quite a bit like a contemporary epistemology article.
+
+I've written much more on epistemology in chapter \@ref(episetmologychapter), so I'll leave it at this. The main takeaway from the longer chapter is that work on "Gettier cases" makes up a surprisingly small amount of the work in epistemology. It does make up a large percentage of the work in epistemology in the early years. (And for epistemology, the early years extend into the 1980s.) But it's never as big a percentage of work done in philosophy as I suspect a lot of people believe.

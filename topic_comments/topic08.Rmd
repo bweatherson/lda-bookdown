@@ -1,0 +1,46 @@
+```{r t08a}
+jjj <- 8
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t08b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t08c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t08d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t08e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The main striking thing about this topic is how confident the model is that articles from both ends of the timeline belong together. 
+
+```{r bosanquet-aesthetics}
+individual_article("10.2307_4543553")
+```
+
+```{r dom-aesthetics}
+individual_article("10.2307_23012980")
+```
+
+It knows that Bosanquet is an idealist, and McIver Lopes is not. But it also knows that despite that, they have a subject matter in common. This isn't something you see for many other topics. The same thing happens with the [Temporal Paradoxes](#topic19) and, to a lesser extent, with [Colour](#topic40). But it is particularly marked here.

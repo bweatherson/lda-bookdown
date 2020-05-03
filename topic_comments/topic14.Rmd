@@ -1,0 +1,59 @@
+```{r t14a}
+jjj <- 14
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t14b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t14c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t14d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t14e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is a large and long-lasting topic. And it is somewhat disjunctive.
+
+It includes some metaphysics. Indeed some of the things I'd think of as paradigmatic to early analytic metaphysics, such as Russell's [On the Relations of Universals and Particulars](https://philpapers.org/rec/RUSOTR-3) and Ramsey's [Universals](https://philpapers.org/rec/RAMU). And it includes their contemporary successors, such as Fraser MacBride's [Could Armstrong Have Been a Universal?](https://philpapers.org/rec/MACCAH).
+
+It includes some philosophy of language, though surprisingly less than I would have guessed from the keywords. But it includes, for example, Wilfrid Sellars's [Naming and Saying](https://philpapers.org/rec/SELNAS), and David Liebesman's (https://philpapers.org/rec/LIESG).
+
+It includes a large amount of Peircean pragmatics. Here is a list just of the articles in the topic with "Peirce" in the title.
+
+```{r peirce-universals}
+peirce_universals <- relabeled_articles[grep("Peirce", relabeled_articles$title),] %>%
+  as_tibble() %>%
+  filter(topic == 14) %>%
+  arrange(year) %>%
+  select(citation)
+for (jj in 1:nrow(peirce_universals)){
+  cat(jj,". ", peirce_universals$citation[jj], " \n", sep="")
+}
+```
+
+And there are other articles too that are about Peirce, or Peircean thought, without including the string 'Peirce' in the title.
+
+But ultimately it is largely a topic about logic. It starts off with articles about Aristotelian logic, then moves into discussions of the role of subject and predicate in contemporary (broadly Fregean) logic. And that's where the model places it.
+
+And it's not surprising, given the importance of debates about universals to philosophy from Plato, through Abelard and Ockham, through the present day, that it is one of the largest (and hardest to place) topics. 

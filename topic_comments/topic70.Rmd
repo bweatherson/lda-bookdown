@@ -1,0 +1,46 @@
+```{r t70a}
+jjj <- 70
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t70b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t70c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t70d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t70e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is a small, and yet fairly disjunctive, topic. Most of the articles are on medical ethics, broadly construed. But there are two other topics that are lumped in here somewhat randomly.
+
+One is that papers on trust ended up here. It's a little hard to know precisely what things trust should go with. It has connection to work on cooperation, and hence (via Bratman), to work on intention.  It has connection to work on emotions.. It has connection to work on special obligations, e.g., to friends and family. What it doesn't really have is a particularly strong connection to medical ethics. Yet that's where the model decided to put some trust papers. And while they are a very small part of the topic, they make up a large part of its highly cited articles.
+
+The other is that some of the Freud papers ended up here. The normal thing that happened with Freud papers in different models is that they would be semi-randomly attached to some other topic. In this model they got split up, and then semi-randomly attached to different topics. So some of them are in with [Intention](#topic48), and some of them are here.
+
+That's to say, this topic is a bit of a mess. For a lot of purposes, 90 topics worked reasonably well. Right here the model is saying it could have used a few more. There will always be bumps under the carpet in this kind of exercise.
+
+
+
+

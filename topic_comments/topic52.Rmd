@@ -1,0 +1,42 @@
+```{r t52a}
+jjj <- 52
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t52b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t52c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t52d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t52e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+Some models came up with a topic that was straightforwardly Rawls-studies. This model didn't quite do that. It has this topic on liberalism and democracy, and a later topic on [Egalitarianism](#topic65). And narrowly focussed Rawls work ends up split across both of those topics.
+
+But both topics also include a lot more besides Rawls. This is clear just from the time distribution of the articles. Those handful of papers around 1920, followed by sustained engagement in the early 1940s, can't be about Rawls. Some of them are articles you might easily count as history of philosophy, such as papers on Aristotle, on Mill, or on the Federalist papers. 
+
+As this suggests, there was traditionally more work in this topic that was at least a little applied; as the century progressed it moved more into the realm of high theory. The applied work here (which isn't applied by anything other than philosophical standards) is very focussed on Anglophone countries. Papers on other countries tend to end up in the [History and Culture](#topic10) topic. So when you see a paper called [The Miracle of 1789](https://philpapers.org/rec/SEATMO-2), it's about the wonders of the US Constitution, not the overthrow of European feudalism.
+
+A lot of the papers here get picked up in the political theory literature, and from there they get huge citation counts. So this ends up being one of the highest cited topics in the whole study.

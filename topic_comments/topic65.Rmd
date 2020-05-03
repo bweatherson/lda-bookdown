@@ -1,0 +1,38 @@
+```{r t65a}
+jjj <- 65
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t65b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t65c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t65d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t65e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+In the early 1970s two things happened almost simultaneously. One was that Rawls published _A Theory of Justice_. The other was that _Philosophy and Public Affairs_ launched. The effect of these two things was to push questions about distributive justice onto the pages of philosophy journals in ways that they had never been before. There are a lot of topics that really take off in the early 1970s, but none have as steep a rise as this one.
+
+Note also how widely cited the articles in this topic are. The topic has only 1.2% of the articles, but nearly 4% of the 600 articles I've called 'highly cited'. There are a few reasons for this. One is that some of these are genuinely great articles, and they fully deserve the attention they've received. Another is that citation practices have been changing over time, and the result is that topics with more recent articles in them are going to get more citations. And a third is that philosophers tend to be relatively stingy with citations, so articles that get picked up outside philosophy tend to do very well on citation counts. We see this in cases where philosophy articles cross over into psychology/cognitive science, or into linguistics, or, as here, into political science.

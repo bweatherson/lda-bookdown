@@ -1,0 +1,38 @@
+```{r t68a}
+jjj <- 68
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t68b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t68c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t68d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t68e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The smallest of our topics, and a sign that at least in philosophy of biology, the model had to carve things really finely to come up with 90 topics. One of the big challenges with setting the number of topics is that a choice that ends up with a relatively natural division in some fields can leave you with a very coarse grained, or, as in this case, a very fine grained division in other fields. This probably could have been put together with work on [Mechanisms](#topic18) without a great deal of loss.
+
+The thing that jumps out to me about this topic is how much impact it had on the citation measures. There are only 84 articles in the topic, so you'd expect only 1-2 to show up in the highly cited articles, but instead we get 5. This is a measure of the influence of Millikan on philosophy, since so much of this topic is organised around her work.

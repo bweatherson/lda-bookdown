@@ -1,0 +1,42 @@
+```{r t18a}
+jjj <- 18
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t18b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t18c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t18d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t18e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This one really surprised me. 
+
+It isn't a surprise that there is a topic on mechanisms. [Thinking About Mechanisms](https://philpapers.org/rec/MACTAM) is one of the most cited philosophy papers of the last few decades, and it makes sense that it would give rise to a topic.
+
+No, what really surprised me was that there are so many articles in here from so long ago. I thought this would be a very modern topic, really taking off after 2000.
+
+Part of what happens is that there is a series of articles on, broadly speaking, behaviourist psychology that end up here. These start out looking like straightforwardly philosophy of mind articles, but they move into being something more like psychology or philosophy of psychology articles, and from there it isn't too hard to get to philosophy of biology. And that's basically where we end up. (And how I've classified the set.) So we have papers like [A Tentative Analysis of the Primary Data of Psychology](https://philpapers.org/rec/KANATA), which is an attempt to separate out what we mean by stimulus, response and behaviour. This is taken to be the crucial foundational question, because these constitute our core psychological data. It's a fairly interesting bit of history, and one that I wasn't at all aware played out in philosophy journals.

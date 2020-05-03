@@ -1,0 +1,40 @@
+```{r t56a}
+jjj <- 56
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t56b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t56c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t56d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t56e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is largely about theory testing and measures of confirmation. It's striking that Deborah Mayo's articles, mostly written from a non-Bayesian perspective, are the most characteristic articles, although the topic as a whole is extremely Bayesian. I think what's happening is that there are a lot of parts of philosophy where Bayesian tools are used and discussed. So when the model sees Bayesian discussions going on, it gets nervous about exactly where it should be placing the articles. But non-Bayesian mathematical accounts of evidence and confirmation smoothly slot into this topic.
+
+This topic is really concentrated in the philosophy of science journals. From a contemporary perspective, this seems surprising. Questions about evidence, observation and confirmation seem central to epistemology in general. But the powers that be who ran the generalist journals over the twentieth century did not agree. Even _Analysis_, which is not averse to publishing articles on probability, barely shows up here.
+
+Finally, note the shape of the overall graph. After being very low through 1940, it seems to be on a steady upwards trajectory. The modal publication year is the last year of the study, 2013. We are about to see a lot of topics that take off around (or just after) the middle of the twentieth century. But most of them are going to level off by the 1980s, and that's not what we seem to see here.

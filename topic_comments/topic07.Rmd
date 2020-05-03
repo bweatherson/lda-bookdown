@@ -1,0 +1,44 @@
+```{r t07a}
+jjj <- 7
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t07b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t07c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t07d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t07e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This overlaps a lot with [Deduction](#topic17). Indeed, it is possibly best to simply regard them as part of the same topic. Fortunately if you want to do that, you don't have to do much more than change the scales on the graphs, because their distribution over time, and over journals, is pretty similar.
+
+This topic gets 'implication' rather than 'validity' (which is moved to deduction). And so the logical works in it are a touch earlier. But it also gets 'proposition', so it picks up a bit more weight from more contemporary work on propositions. Here, for instance, is the table for Jeff King's paper "Designating Propositions".
+
+```{r king-designating}
+individual_article("10.2307_3182547")
+```
+
+It mostly goes with Sense and Reference. That topic, despite its Fregean name, appears much later in our story. But note that the model can't quite shake the idea that it should be placed in this topic. It's this kind of assessment that keeps the graphs for this topic from really collapsing.

@@ -1,0 +1,38 @@
+```{r t11a}
+jjj <- 11
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t11b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t11c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t11d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t11e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+This is largely traditional philosophy of religion, with the exception of work on the ontological argument, which is [Topic 28](#topic28). It isn't a huge part of the journals over the years. There is a bit of interest in idealism and Christianity in the later parts of the Idealism boom. Several of the papers that make up those dots around 1920 are about Royce or Bosanquet, for example. Then there is more sustained attention to something like analytic philosophy of religion in the middle of the century, but that slowly peters out. Partially what's happening here is that the journals are losing interest in philosophy of religion, and what little interest they have is taken up with the ontological argument.
+
+I don't have a way of sorting articles by author sex that I'm happy with, so this is very impressionistic, but this feels like a very male set of authors. Just eyeballing the data, I'm not sure there are any articles in this topic by women in any of the American journals. There are a few recent articles by women in _Proceedings of the Aristotelian Society_, and some in _Philosophical Quarterly_, but after that it gets very thin.

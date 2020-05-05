@@ -75,7 +75,8 @@ epistemology_article_gamma <- epistemology_yeargamma %>%
 
 ```{r epistemology-graph-style}
 epistemologystyle  <- spaghettistyle +
-    theme(legend.text = element_text(size = rel(0.75)))
+    theme(legend.text = element_text(size = rel(0.75)),
+          panel.grid.major = element_line(color = "grey85", size = 0.08))
 ```
 
 This chapter is a detailed case study of epistemology articles in the 12 journals. I'm including this partially for self-interested reasons: I work in epistemology and I wanted to see what the field looked like. But I'm also including it because the data here makes a striking point.
@@ -392,7 +393,7 @@ epistemology_yeargamma_postwar$topic = as.numeric(epistemology_yeargamma_postwar
 
 The model makes these three weird divisions: splitting experts from testimony, having two assertion categories, and dividing scepticism and scepticism. Let's put those together, alongside the two big topics from theory of knowledge, contextualism and Gettier.
 
-```{r epistemology_category_graph, fig.height=6, fig.cap = "Five epistemology categories"}
+```{r epistemology-category-graph, fig.height=6, fig.cap = "Five epistemology categories"}
 epistemology_wide <- pivot_wider(epistemology_relabeled_gamma, id_col = document, names_from = topic, values_from = gamma)
 epistemology_categories <- epistemology_wide %>%
   mutate(v.Gettier = `6`, 
@@ -411,6 +412,7 @@ epistemology_categories <- epistemology_wide %>%
   dplyr::summarise(y = sum(gamma))
 
 ggplot(epistemology_categories, aes(x = year, y = y, color = category)) + 
+  epistemologystyle +
   labs(x = "Year", y = "Number of Articles") +
   geom_point(size = 0.5, alpha = 0.5) + 
   geom_smooth(se = F, size = 0.2, method = "loess", formula = 'y ~ x') +  
@@ -447,13 +449,13 @@ ggplot(data = filter(epistemology_yeartopics_postwar, topic == jjj),
   theme(legend.position="none") +
   labs(x = "Year", 
        y = "Raw Number of Articles",
-       title = paste0("Raw Number of Articles in topic ",jjj)) +
+       title = paste0("Raw Number of Articles in topic ",jjj, " - ", cate_nam)) +
   geom_smooth(data = epistemology_yeartopics_postwar, 
                 aes(group=topic), 
                 size = 0.1, 
                 color = "grey85", 
                 method = "loess", 
-                alpha = 0.2,
+                alpha = 0.3,
                 se = F,
                 formula = "y ~ x")
 ```
@@ -485,13 +487,13 @@ ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
   theme(legend.position="none") +
   labs(x = "Year", 
        y = "Weighted Number of Articles",
-       title = paste0("Weighted Number of Articles in topic ",jjj)) +
+       title = paste0("Weighted Number of Articles in topic ",jjj, " - ", cate_nam)) +
   geom_smooth(data = epistemology_yeargamma_postwar, 
                 aes(group=topic), 
                 size = 0.1, 
                 color = "grey85", 
                 method = "loess", 
-                alpha = 0.2,
+                alpha = 0.3,
                 se = F,
                 formula = "y ~ x")
 ```
@@ -523,13 +525,13 @@ ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
   theme(legend.position="none") +
   labs(x = "Year", 
        y = "Weighted Number of Articles",
-       title = paste0("Proportion of philosophy articles in topic ",jjj)) +
+       title = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam)) +
   geom_smooth(data = epistemology_yeargamma_postwar, 
                 aes(group=topic), 
                 size = 0.1, 
                 color = "grey85", 
                 method = "loess", 
-                alpha = 0.2,
+                alpha = 0.3,
                 se = F,
                 formula = "y ~ x")
 ```
@@ -561,13 +563,13 @@ ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
   theme(legend.position="none") +
   labs(x = "Year", 
        y = "Weighted Number of Articles",
-       title = paste0("Proportion of epistemology articles in topic ",jjj)) +
+       title = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam)) +
   geom_smooth(data = epistemology_yeargamma_postwar, 
                 aes(group=topic), 
                 size = 0.1, 
                 color = "grey85", 
                 method = "loess", 
-                alpha = 0.2,
+                alpha = 0.3,
                 se = F,
                 formula = "y ~ x")
 ```
@@ -591,7 +593,7 @@ epistemology_the_articles <- epistemology_relabeled_articles %>%
   arrange(topic, gamma)
 ```
 
-```{r epistemology_giant_loop, fig.height=5, out.width = '100%'}
+```{r epistemology_giant_loop, fig.height=5}
 for (jjj in (1:40)){
   cate_nam <- epistemology_subjects$subject[jjj]
 
@@ -609,43 +611,127 @@ for (jjj in (1:40)){
   cat("**Number of Articles**: ", raw_count, "<br> \n")
   cat("**Weighted Number of Articles**: ", weighted_count, " \n \n")
   
-  print(
-  ggplot(data = filter(epistemology_yeartopics_postwar, topic == jjj), aes(x = year, y = tn)) +
-    geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-    geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-    theme(legend.position="none") +
-    labs(x = "Year", 
-         y = "Number of Articles")
-  )
+ bg <- epistemology_yeartopics_postwar %>%
+    mutate(topic = as.numeric(topic)) %>%
+    inner_join(the_categories, by = "topic") %>%
+    select(-topic)
+
+print(
+  ggplot(data = filter(epistemology_yeartopics_postwar, topic == jjj), 
+       aes(x = year, y = tn)) +
+  scale_x_continuous(minor_breaks = 5 * 1:402,
+                   expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
+  epistemologystyle +
+  geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  geom_smooth(se = F, 
+              formula = "y ~ x", 
+              size = 0.5, 
+              method = "loess",
+              colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  theme(legend.position="none") +
+  labs(x = "Year", 
+       y = "Raw Number of Articles",
+       title = paste0("Raw Number of Articles in topic ",jjj, " - ", cate_nam)) +
+  geom_smooth(data = epistemology_yeartopics_postwar, 
+                aes(group=topic), 
+                size = 0.1, 
+                color = "grey85", 
+                method = "loess", 
+                alpha = 0.3,
+                se = F,
+                formula = "y ~ x")
+)
+
+bg <- epistemology_yeargamma_postwar %>%
+    mutate(topic = as.numeric(topic)) %>%
+    inner_join(the_categories, by = "topic") %>%
+    select(-topic)
+
+print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), 
+       aes(x = year, y = gamsum)) +
+  scale_x_continuous(minor_breaks = 5 * 1:402,
+                   expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
+  epistemologystyle +
+  geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  geom_smooth(se = F, 
+              formula = "y ~ x", 
+              size = 0.5, 
+              method = "loess",
+              colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  theme(legend.position="none") +
+  labs(x = "Year", 
+       y = "Weighted Number of Articles",
+       title = paste0("Weighted Number of Articles in topic ",jjj, " - ", cate_nam)) +
+  geom_smooth(data = epistemology_yeargamma_postwar, 
+                aes(group=topic), 
+                size = 0.1, 
+                color = "grey85", 
+                method = "loess", 
+                alpha = 0.3,
+                se = F,
+                formula = "y ~ x"))
   
-  print(
-    ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), aes(x = year, y = gamsum)) +
-    geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-    geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-    theme(legend.position="none") +
-    labs(x = "Year", 
-         y = "Weighted Number of Articles")
-  )
+bg <- epistemology_yeargamma_postwar %>%
+    mutate(topic = as.numeric(topic)) %>%
+    inner_join(the_categories, by = "topic") %>%
+    select(-topic)
+
+print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), 
+       aes(x = year, y = gamrat_all)) +
+  scale_x_continuous(minor_breaks = 5 * 1:402,
+                   expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
+  epistemologystyle +
+  geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  geom_smooth(se = F, 
+              formula = "y ~ x", 
+              size = 0.5, 
+              method = "loess",
+              colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  theme(legend.position="none") +
+  labs(x = "Year", 
+       y = "Weighted Number of Articles",
+       title = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam)) +
+  geom_smooth(data = epistemology_yeargamma_postwar, 
+                aes(group=topic), 
+                size = 0.1, 
+                color = "grey85", 
+                method = "loess", 
+                alpha = 0.3,
+                se = F,
+                formula = "y ~ x"))
   
-  print(
-    ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), aes(x = year, y = gamrat_all)) +
-    geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-    geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-    theme(legend.position="none") +
-    labs(x = "Year", 
-         y = "Proportion of Philosophy Articles") +
-    scale_y_continuous(labels = scales::percent)
-  )
-  
-  print(
-    ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), aes(x = year, y = gamrat_local)) +
-    geom_point(size = 1.5, alpha = 1, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-    geom_smooth(se = F, formula = "y ~ x", size = 0.5, method = "loess", colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-    theme(legend.position="none") +
-    labs(x = "Year", 
-         y = "Proportion of Epistemology Articles") +
-    scale_y_continuous(labels = scales::percent)
-  )
+bg <- epistemology_yeargamma_postwar %>%
+    mutate(topic = as.numeric(topic)) %>%
+    inner_join(the_categories, by = "topic") %>%
+    select(-topic)
+
+print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), 
+       aes(x = year, y = gamrat_local)) +
+  scale_x_continuous(minor_breaks = 5 * 1:402,
+                   expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
+  epistemologystyle +
+  geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  geom_smooth(se = F, 
+              formula = "y ~ x", 
+              size = 0.5, 
+              method = "loess",
+              colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
+  theme(legend.position="none") +
+  labs(x = "Year", 
+       y = "Weighted Number of Articles",
+       title = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam)) +
+  geom_smooth(data = epistemology_yeargamma_postwar, 
+                aes(group=topic), 
+                size = 0.1, 
+                color = "grey85", 
+                method = "loess", 
+                alpha = 0.3,
+                se = F,
+                formula = "y ~ x"))
   
   cat("\n\n**Characteristic Articles** \n \n")
   for (jj in 1:10){

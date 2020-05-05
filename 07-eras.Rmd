@@ -438,7 +438,7 @@ The first thing that jumps out is how prominent Idealism is in pre-1945 philosop
 
 It's easy from a current perspective to think of Ethics as being central to philosophy, but before 1945 it just wasn't. Now this is somewhat an issue of classification. There is some Hegelian work that the model counts as Idealism but which we could call Ethics. It wouldn't be implausible to classify a lot of the papers that the model classified as Life and Value as in Ethics rather than Social and Political. But still, Ethics in anything like the sense we understand it in contemporary philosophy was something of a niche topic before 1945.
 
-But none of that compares to how little attention there was to Epistemology. Now again, you can argue that some of the Idealism had to do with epistemology. Certainly a lot of it had epistemological motivations. But work that looks at all like contemporary epistemology literally doesn't exist before 1945. At least, it doesn't exist in the journals. The discussion of knowledge in Russell's [The Problems of Philosophy](https://www.gutenberg.org/files/5827/5827-h/5827-h.htm) is more like modern epistemology than literally any article published in these journals around that time.
+But none of that compares to how little attention there was to Epistemology. Now again, you can argue that some of the Idealism had to do with epistemology. Certainly a lot of it had epistemological motivations. But work that looks at all like contemporary epistemology virtually doesn't exist before 1945. (As I noted in the discussion of the [Knowledge](#topic74) topic, the one exception is a paper from Calcutta.)
 
 At the other end of the timeline, I was surprised that Epistemology wasn't higher in 1999-2013. I certainly didn't remember that time period as being one in which Logic and Mathematics was a bigger presence in the journal than Epistemology. So I went back and looked to see if the model was making a mistake here, or I had misremembered. And the mistake was mostly on my part.
 
@@ -502,12 +502,12 @@ Is 'jones' at the top of 1966-1981 because of Sellars, or Gettier, or Frankfurt?
 
 We can look at the graphs of how frequently these words appeared over time to get a sense of what it means for them to be the distinctive words of an era. I'll just graph the top 5 for each era, because otherwise the graphs get too cluttered.
 
-```{r eragraphs1000}
+```{r eragraphs1000a, fig.height=5, fig.cap = "Most distinctive words in era 1 (among 1000 most common words)"}
 word_era_graphs(1000, 1)
-word_era_graphs(1000, 2)
-word_era_graphs(1000, 3)
-word_era_graphs(1000, 4)
-word_era_graphs(1000, 5)
+#word_era_graphs(1000, 2)
+#word_era_graphs(1000, 3)
+#word_era_graphs(1000, 4)
+#word_era_graphs(1000, 5)
 ```
 
 You can confirm that the words in question really do peak in the era in question.

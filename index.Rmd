@@ -400,8 +400,14 @@ word_year_frequency <- function(x){
 word_frequency_graphs <- function(x){
   t <- lapply(x, word_year_frequency) %>% bind_rows()
   ggplot(t, aes(x = year, y = f, color = term, group = term)) +
-  geom_point(size = 0.6, alpha = 0.8) +
-  scale_y_continuous(labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
+    freqstyle +
+    geom_point(size = 0.6, alpha = 0.8) +
+    scale_x_continuous(minor_breaks = 10 * 1:201,
+                       expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
+                     minor_breaks = scales::pretty_breaks(n = 12),
+                     breaks = scales::pretty_breaks(n = 3),
+                     labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
 #  scale_y_continuous(labels = scale_inverter) +
   labs(x = "Year", y = "Word Frequency") +
   theme(legend.title = element_blank())
@@ -628,6 +634,10 @@ spaghettistyle <- facetstyle +
         panel.grid.minor = element_line(color = "grey85", size = 0.05),
         legend.text = element_text(size = rel(0.5))
         )
+freqstyle <-   spaghettistyle +
+  theme(legend.text = element_text(size = rel(0.75)),
+          panel.grid.major = element_line(color = "grey85", size = 0.08),
+        legend.position = "right")
 chap_two_facet_labels <- tribble(
   ~journal, ~short_name,
   "Mind", "Mind",

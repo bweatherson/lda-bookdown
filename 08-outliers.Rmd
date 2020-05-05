@@ -113,14 +113,18 @@ Again, normative an political philosophy cover the very top.
 
 The articles here are also mostly fairly recent, but that doesn't tell us much about the model. Rather, it is a sign that long articles are a relatively recent phenomenon. 
 
-```{r long-art-histogram}
+```{r long-art-histogram, fig.height= 4, fig.cap = "Number of articles each decade that are at least 40 pages long"}
 long_articles <- articles %>%
   filter(length > 39)
 
 ggplot(long_articles) +
-  geom_bar(aes(year)) + 
+  geom_bar(aes(year), color = "grey40", fill = "grey40", width = 0.5) + 
   scale_x_binned() +
-  labs(x = "Decade", y = "Number of articles at least 40 pages long")
+  labs(x = "Decade", y = "Number of articles at least 40 pages long", title = "Articles are getting longer") +
+  freqstyle +
+    scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
+                     minor_breaks = scales::pretty_breaks(n = 15),
+                     breaks = scales::pretty_breaks(n = 3))
 ```
 
 I'll come back to this point in section \@ref(article-length-section)
@@ -189,7 +193,7 @@ I mentioned in section \@ref(high-confidence-articles) that there were several t
 
 This graph looks at the 50 articles the model is most confident about, and asks how many of them are in the various different topics.
 
-```{r high-confidence-function}
+```{r high-confidence-function, fig.cap = "Topic distribution for the 50 articles the model is most certain about"}
 cols <- tibble(x = 1:90) %>%
   mutate(col = hcl(h = (x-1)*(360/90)+15, l = 65, c = 100)) %>%
   deframe()
@@ -205,7 +209,8 @@ graph_high_prob_page_limit <- function(x){
   ylab <- paste0("Number of articles with topic probability at least ", round(min(c$gamma), 3), ", length at least ",x," pages")
 
   ggplot(c, aes(reorder(subject, -topic), fill = topicfactor, drop = TRUE)) + 
-  geom_bar() +
+    freqstyle +
+  geom_bar(width = 0.8) +
   coord_flip() +
   theme(legend.position = "none") +
   labs(y = ylab, x = NULL) +
@@ -224,7 +229,8 @@ ylab = paste0("Number of articles with topic probability at least ", round(min(c
 ggplot(confident_articles_no_page_limit, 
        aes(reorder(subject, -topic), 
            fill = topicfactor)) + 
-  geom_bar() +
+  freqstyle +
+  geom_bar(width = 0.8) +
   coord_flip() +
   theme(legend.position = "none") +
   labs(y = ylab, x = NULL) +
@@ -234,25 +240,25 @@ ggplot(confident_articles_no_page_limit,
 
 As I noted back when talking about [Space and Time](#topic50), it has a surprising large number of articles the model is very confident about. But as we saw above, a lot of the articles the model is confident about are very short. Let's focus instead on the articles that are at least 10 pages long, and again look at the distribution of the 50 articles the model is most confident about.
 
-```{r high-conf-10-pages}
+```{r high-conf-10-pages, fig.cap = "Topic distribution for the 50 articles the model is most certain about (min 10 pages" }
 graph_high_prob_page_limit(10)
 ```
 
 And this isn't surprising; the model gets really confident that [Evolutionary Biology](#topic82) articles are proerly placed. The same thing happens when we increase the length to 20 pages.
 
-```{r high-conf-20-pages}
+```{r high-conf-20-pages, fig.cap = "Topic distribution for the 50 articles the model is most certain about (min 20 pages" }
 graph_high_prob_page_limit(20)
 ```
 
 There are still 10 Evolutionary Biology articles, though mostly not the same 10. And there are fewer categories here. Just 18 categories are represented in these 50 articles. And the purples and reds indicate that the articles are getting much later. These trends extend when we raise the floor to 30 pages, though now the topics start to shift.
 
-```{r high-conf-30-pages}
+```{r high-conf-30-pages, fig.cap = "Topic distribution for the 50 articles the model is most certain about (min 30 pages" }
 graph_high_prob_page_limit(30)
 ```
 
 There is more Quantum Physics, and more political philosophy. And when we move to 40 pages, which means we're just looking at the longest 2% of articles, these trends really accelerate.
 
-```{r high-conf-40-pages}
+```{r high-conf-40-pages, fig.cap = "Topic distribution for the 50 articles the model is most certain about (min 40 pages" }
 graph_high_prob_page_limit(40)
 ```
 
@@ -474,7 +480,7 @@ There are some exceptions to this. The Truth topic has a lot of short-ish articl
 
 This isn't specifically to do with the model I built, but it's an interesting finding. Articles have been getting longer, much longer, over time. Some of this is to do with the journals getting rid of things like abstracts of APA or PSA papers. But it's also just a fact that articles have been getting longer. Here is a helpful graph that shows the patterns.
 
-```{r article-length-graph}
+```{r article-length-graph, fig.height = 5, fig.cap = "Measures of article length in each year"}
 p <- ((1:5)/5) - 0.1
 p_names <- map_chr(p, ~paste0("d.", .x*100, "%"))
 p_funs <- map(p, ~partial(quantile, probs = .x, na.rm = TRUE)) %>% 
@@ -485,9 +491,10 @@ length_deciles <- articles %>%
   pivot_longer(cols = starts_with("d."), names_to = "decile", names_prefix = "d.", values_to = "length")
 ggplot(length_deciles, aes(x = year, y = length, color = decile)) + 
   geom_point(size = 0.5, alpha = 0.2) +
-  geom_smooth(se = F, method = "loess", size = 0.2) +
+  geom_smooth(se = F, method = "loess", formula = 'y ~ x', size = 0.2) +
   theme(legend.title = element_blank()) +
-  labs(x = "Year", y = "Number of Pages")
+  freqstyle +
+  labs(x = "Year", y = "Number of Pages", title = "The Articles are Getting Longer (Again)")
 ```
 
 For each year, I've sorted the articles by length, then plotted the lengths of the articles at five decile markers. So the red curve is the length of the article that is 10% of the way up the length table, the olive line is the article that is 30% of the way up the length chart, the green line is the length of the median article (by length) and so on. 
@@ -506,7 +513,7 @@ To get to the bump, start with a slightly different graph. One useful measure of
 
 Now one thing you can do with the model I've build is for each year, work out for each topic the average probability that an article in that year will be in that topic. Since this the average of a bunch of probability functions, it is a probability function. And we can then ask how informative this function is by measuring its distance from this flat probability distribution. Or, more or less equivalently, we can ask how 'normal' it is by taking the inverse of this informativeness measure. And if we plot that over time, we get the following graph.
 
-```{r normality-graph}
+```{r normality-graph, fig.height = 4, fig.cap="How similar the average probability distribution is to the flat distribution"}
 year_normality <- weight_ratio %>%
   group_by(year) %>%
   summarise(inform = sum((y - 1/90)^2)) %>%
@@ -514,14 +521,15 @@ year_normality <- weight_ratio %>%
 
 ggplot(year_normality, aes(x = year, y = normality)) + 
   geom_point(size = 0.5) +
-  labs(x = "Year", y = "Normality (i.e., inverse informativeness)")
+  freqstyle +
+  labs(x = "Year", y = "Normality (i.e., inverse informativeness)", title = "Everything happened in the 1980s")
 ```
 
 I don't know quite what I expected this to look like, but it wasn't *that*. The distribution gets flatter and flatter, at an accelerating rate, until about 1982, when it turns around and gets more informative in a hurry.
 
 There are other ways of looking at the model that tell us similar things. Rather than looking at each topic one at a time, we can ask for each year, what's the lowest number of (expected) articles in any topic that year. That can be thrown off by random topics, so we'll also look at the third lowest and fifth lowest number of (expected) articles in each topic in each year.
 
-```{r bump-graph}
+```{r bump-graph, fig.height = 6, fig.cap = "Lowest, third lowest, and fifth lowest average topic probability by year"}
 bump_tibble <- weight_ratio %>%
   group_by(year) %>%
   top_n(5, -y) %>%
@@ -533,10 +541,11 @@ bump_tibble <- weight_ratio %>%
 
 ggplot(bump_tibble, aes(x = year, y = y, color = name, group = name)) + 
   geom_point(size = 0.5, alpha = 0.2) +
-  geom_smooth(se = F, method = "loess", size = 0.2) +
+  freqstyle +
+  geom_smooth(se = F, method = "loess", size = 0.2, formula = 'y ~ x') +
   scale_color_discrete(labels = c("Lowest", "Third Lowest", "Fifth Lowest")) +
   theme(legend.title = element_blank()) +
-  labs(x = "Year", y = "Weighted Number of Articles")
+  labs(x = "Year", y = "Weighted Number of Articles", title = "No one stayed home in the 1980s")
 ```
 
 And we see something very similar to the previous graph. Around the early 1980s, every topic is getting at least some attention from the model. But that changes the further you get away from 1980.
@@ -596,9 +605,10 @@ cols <- tibble(x = 1:90) %>%
   deframe()
 ```
 
-```{r mid-century-graph-by-topic, fig.height = 12.2}
+```{r mid-century-graph-by-topic, fig.height = 12.2, fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1924-1973"}
 ggplot(atlantic_mid_century_gamma, aes(x = reorder(subject, -topic), y = rat, fill = topicfactor)) +
-  geom_col() +
+  geom_col(width = 0.8) +
+  freqstyle +
   coord_flip() +
   theme(legend.position = "none") +
   labs(y = "Proportion of Articles in UK journals", x = NULL) +
@@ -608,9 +618,10 @@ ggplot(atlantic_mid_century_gamma, aes(x = reorder(subject, -topic), y = rat, fi
 
 As you can see, there's quite a bit of variation there. Let's reorder the bars so the extremes are more visible.
 
-```{r mid-century-graph-by-ratio, fig.height = 12.2}
+```{r mid-century-graph-by-ratio, fig.height = 12.2, fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1924-1973"}
 ggplot(atlantic_mid_century_gamma, aes(x = reorder(subject, -rat), y = rat, fill = topicfactor)) +
-  geom_col() +
+  geom_col(width = 0.8) +
+  freqstyle +
   coord_flip() +
   theme(legend.position = "none") +
   labs(y = "Proportion of Articles in UK journals", x = NULL) +
@@ -657,9 +668,10 @@ cols <- tibble(x = 1:90) %>%
   deframe()
 ```
 
-```{r late-century-atlantic-graph-topic, fig.height = 12.2}
+```{r late-century-atlantic-graph-topic, fig.height = 12.2,  fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1974-2013"}
 ggplot(atlantic_late_century_gamma, aes(x = reorder(subject, -topic), y = rat, fill = topicfactor)) +
-  geom_col() +
+  geom_col(width = 0.8) +
+  freqstyle +
   coord_flip() +
   theme(legend.position = "none") +
   labs(y = "Proportion of Articles in UK journals", x = NULL) +
@@ -669,9 +681,10 @@ ggplot(atlantic_late_century_gamma, aes(x = reorder(subject, -topic), y = rat, f
 
 Again, there is substantial variation. I think this is telling us more about the journals than the philosophical scenes in the different countries, but I think there are some signals here. Let's reorder that graph to make the outliers more explicit.
 
-```{r late-century-atlantic-graph-ratio, fig.height = 12.2}
+```{r late-century-atlantic-graph-ratio, fig.height = 12.2, fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1974-2013"}
 ggplot(atlantic_late_century_gamma, aes(x = reorder(subject, -rat), y = rat, fill = topicfactor)) +
   geom_col() +
+  freqstyle +
   coord_flip() +
   theme(legend.position = "none") +
   labs(y = "Proportion of Articles in UK journals", x = NULL) +

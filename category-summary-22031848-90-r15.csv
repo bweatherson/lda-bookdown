@@ -1,0 +1,111 @@
+topic,cat_num,cat_name,subject
+1,9,Philosophy of Mind,19th Century Psych
+2,5,Idealism,Idealism
+3,12,Social and Political,Life and Value
+4,4,History of Philosophy,Other History
+5,4,History of Philosophy,Dewey and Pragmatism
+6,6,Logic and Mathematics,Definitions
+7,6,Logic and Mathematics,Propositions and Implications
+8,1,Aesthetics,Beauty
+9,9,Philosophy of Mind,Physicalism
+10,12,Social and Political,History and Culture
+11,10,Philosophy of Religion,Faith and Theism
+12,9,Philosophy of Mind,Self-Consciousness
+13,4,History of Philosophy,Ancient
+14,6,Logic and Mathematics,Universals and Particulars
+15,6,Logic and Mathematics,Verification
+16,3,Ethics,Value
+17,6,Logic and Mathematics,Deduction
+18,11,Philosophy of Science,Mechanisms
+19,7,Metaphysics,Temporal Paradoxes
+20,7,Metaphysics,Classical Space and Time
+21,4,History of Philosophy,Early Modern
+22,8,Philosophy of Language,Meaning and Use
+23,12,Social and Political,Marx
+24,13,Split,Ordinary Language
+25,3,Ethics,Moral Conscience
+26,11,Philosophy of Science,Methodology of Science
+27,4,History of Philosophy,Heidegger and Husserl
+28,9,Philosophy of Mind,Emotions
+29,10,Philosophy of Religion,Ontological Argument
+30,11,Philosophy of Science,Chemistry
+31,4,History of Philosophy,Social Contract Theory
+32,4,History of Philosophy,Kant
+33,3,Ethics,Promises and Imperatives
+34,6,Logic and Mathematics,Analytic/Synthetic
+35,13,Split,Freedom and Free Will
+36,13,Split,Crime and Punishment
+37,13,Split,Sets and Grue
+38,13,Split,Origins and Purposes
+39,7,Metaphysics,Time
+40,9,Philosophy of Mind,Color
+41,12,Social and Political,War
+42,1,Aesthetics,Depiction
+43,8,Philosophy of Language,Denoting
+44,11,Philosophy of Science,Chance
+45,4,History of Philosophy,Hume
+46,11,Philosophy of Science,Laws
+47,9,Philosophy of Mind,Perception
+48,9,Philosophy of Mind,Intention
+49,3,Ethics,Virtues
+50,11,Philosophy of Science,Space and Time
+51,6,Logic and Mathematics,Mathematics
+52,12,Social and Political,Liberal Democracy
+53,3,Ethics,Duties
+54,7,Metaphysics,Causation
+55,13,Split,Arguments
+56,11,Philosophy of Science,Theory Testing
+57,3,Ethics,Decision Theory
+58,9,Philosophy of Mind,Minds and Machines
+59,6,Logic and Mathematics,Truth
+60,8,Philosophy of Language,Radical Translation
+61,11,Philosophy of Science,Explanation
+62,7,Metaphysics,Personal Identity
+63,8,Philosophy of Language,Speech Acts
+64,8,Philosophy of Language,Sense and Reference
+65,12,Social and Political,Egalitarianism
+66,11,Philosophy of Science,Quantum Physics
+67,11,Philosophy of Science,Theories and Realism
+68,11,Philosophy of Science,Functions
+69,12,Social and Political,Feminism
+70,13,Split,Medical Ethics and Freud
+71,3,Ethics,Abortion and Self-Defence
+72,8,Philosophy of Language,Belief Ascriptions
+73,11,Philosophy of Science,Thermodynamics
+74,2,Epistemology,Knowledge
+75,11,Philosophy of Science,Game Theory
+76,2,Epistemology,Justification
+77,13,Split,Frankfurt Cases
+78,9,Philosophy of Mind,Concepts
+79,13,Split,Races and DNA
+80,7,Metaphysics,Modality
+81,3,Ethics,Reasons
+82,11,Philosophy of Science,Evolutionary Biology
+83,3,Ethics,Population Ethics
+84,2,Epistemology,Formal Epistemology
+85,9,Philosophy of Mind,Wide Content
+86,6,Logic and Mathematics,Vagueness
+87,9,Philosophy of Mind,Cognitive Science
+88,11,Philosophy of Science,Models
+89,7,Metaphysics,Composition and Constitution
+90,13,Split,Norms
+2401,3,Ethics,OLP Ethics
+2402,9,Philosophy of Mind,OLP Mind
+3501,12,Social and Political,Political Freedom
+3502,3,Ethics,Free Will
+3601,3,Ethics,Forgiveness
+3602,12,Social and Political,Law
+3701,11,Philosophy of Science,Grue
+3702,6,Logic and Mathematics,Sets
+3801,11,Philosophy of Science,Teleology
+3802,7,Metaphysics,Origin Essentialism
+5501,9,Philosophy of Mind,Conceivability Arguments
+5502,2,Epistemology,Arguments
+7001,3,Ethics,Medical Ethics
+7002,9,Philosophy of Mind,Freud
+7701,3,Ethics,Frankfurt Cases
+7702,1,Aesthetics,Fiction
+7901,11,Philosophy of Science,DNA
+7902,12,Social and Political,Race
+9001,8,Philosophy of Language,Language Norms
+9002,3,Ethics,Moral Norms

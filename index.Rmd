@@ -701,11 +701,33 @@ To be written, once I write the book and figure out what the plan was.
 
 ## Acknowledgements {-}
 
-I have a lot of people to thank.
+This book relies on resources that a lot of people have made available, usually for free.
+
+The raw data comes from JSTOR's [Data for Research](https://www.jstor.org/dfr/) program. It wouldn't really be possible without the work they did to make that set available.
+
+I initially transformed the JSTOR Data into something that could be read in R via some scripts from John Bernau. His paper [Text Analysis with JSTOR Archives](https://doi.org/10.1177%2F2378023118809264) describes some techniques for modelling trends in sociology journals using the JSTOR archives.
+
+Once I had the data in R, I analysed it using the **topicmodels** [package](https://cran.r-project.org/web/packages/topicmodels/index.html) by Bettina Grün and Kurt Hornik.
+
+The idea for analysing this data using topicmodels to analyse the data in this way comes from [What Is This Thing Called Philosophy of Science? A Computational Topic-Modeling Perspective, 1934–2015](https://doi.org/10.1086/704372), by Christophe Malaterre, Jean-François Chartier, and Davide Pulizzotto.
+
+As well as those sources, I learned a lot about how to use **topicmodels** from [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com) by Julia Silge and David Robinson, and from some articles in Towards Data Science, including those by [Shashank Kapadia](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0) and by [Farren tang](https://towardsdatascience.com/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25).
+
+Most of the graphics in this book are based on things I learned from Kieran Healy, either from his book [Data Visualization: A Practical Introduction](https://kieranhealy.org/publications/dataviz/) or from his [blog](https://kieranhealy.org/blog/).
+
+The whole book was put together using the **bookdown** package, primarily built by Yihui Xie. This in turn is built on the **Pandoc** language, which was originally built by John MacFarlane. And the code uses tools from the **tidyverse** package throughout, which was originally built by Hadley Wickham.
 
 ## GitHub {-}
 
-The data for this, at least the parts that are not proprietary, will be placed on GitHub. And there will be instructions on how to download the rest.
+I've created a GitHub repository for this book. It's at
+
+```https://github.com/bweatherson/lda-bookdown```
+
+Most of the code and data you need to recreate this book is there. The exception is that the data files that I downloaded from JSTOR are not there. That's for two reasons. One is that it wasn't 100% clear that the licence for them would allow redistribution. The other was that they would have been too big to put on GitHub anyway. So to recreate everything I'm doing here, you'll need to download them directly. 
+
+In the ```notes``` directory of the GitHub repository there are some R scripts for converting downloaded JSTOR files into things that can be managed in R. And there are also the scripts I used for originally building the model this book is based around. A lot of the things I'm doing here are based on code that's in the code for the book. But it takes about 24-32 hours (on a reasonably fast personal computer) to build the model, so I don't build it anew each time I compile the book.
+
+If you want to go directly to the code for a particular page, the eye icon in the top bar will take you there.
 
 ## Status {-}
 

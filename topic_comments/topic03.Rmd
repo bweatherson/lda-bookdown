@@ -39,9 +39,11 @@ MacDonald is an important figure in the story of these twelve journals. Her note
 
 But note that while MacDonald is no idealist, and her paper is in this topic, it isn't particularly firmly in the topic. The model only gives it a probability of being in this topic of about 19.6%. So let's see where else it thinks MacDonald's paper might go. I'm going to present tables like the following for a number of papers in what follows. Although the model gives a non-zero chance to every paper being in each of the topics, the tables are going to be cut off at 2%. Sometimes that will make for a short table, especially when the model is quite confident in its assessment. Other times, we'll see a much longer list of topics.
 
+<br>
 ```{r macdonald-natural-rights}
 individual_article("10.2307_4544427")
 ```
+<br>
 
 And that's a sign that the model doesn't really know what to do with the paper. It's obviously a paper on normative philosophy, broadly construed. And MacDonald is sympathetic to both Ordinary Language Philosophy and Verificationism, so both of those topics turn up. But the model is really rather unsure which normative topic to place the paper in. That's fine; 90 topics is a lot, but it's still too few to capture all the nuances of philosophy.
 

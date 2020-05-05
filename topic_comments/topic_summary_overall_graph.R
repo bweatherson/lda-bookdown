@@ -15,6 +15,6 @@ indiv_topic_graphs <- ggplot(data = filter(weight_ratio, topic == jjj), aes(x = 
   labs(x = "Year", y = "Weighted Proportion of Articles", title = the_categories$subject[jjj]) +
   scale_x_continuous(minor_breaks = 10 * 188:201,
                      expand = expansion(mult = c(0.01, 0.01))) +
-  scale_y_continuous(minor_breaks = 0.005 * 1:10,
+  scale_y_continuous(minor_breaks = 0.005 * 1:100,
                      expand = expansion(mult = c(0.01, .03)))
 print(indiv_topic_graphs)

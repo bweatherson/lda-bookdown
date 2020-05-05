@@ -1,4 +1,5 @@
 book_filename: "lda-bookdown"
+view: https://github.com/bweatherson/lda-bookdown/blob/master/%s
 delete_merged_file: true
 keep_md: yes
 language:

@@ -607,7 +607,7 @@ cols <- tibble(x = 1:90) %>%
 
 ```{r mid-century-graph-by-topic, fig.height = 12.2, fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1924-1973"}
 ggplot(atlantic_mid_century_gamma, aes(x = reorder(subject, -topic), y = rat, fill = topicfactor)) +
-  geom_col(width = 0.8) +
+  geom_col(width = 0.7) +
   freqstyle +
   coord_flip() +
   theme(legend.position = "none") +
@@ -620,7 +620,7 @@ As you can see, there's quite a bit of variation there. Let's reorder the bars s
 
 ```{r mid-century-graph-by-ratio, fig.height = 12.2, fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1924-1973"}
 ggplot(atlantic_mid_century_gamma, aes(x = reorder(subject, -rat), y = rat, fill = topicfactor)) +
-  geom_col(width = 0.8) +
+  geom_col(width = 0.7) +
   freqstyle +
   coord_flip() +
   theme(legend.position = "none") +
@@ -670,7 +670,7 @@ cols <- tibble(x = 1:90) %>%
 
 ```{r late-century-atlantic-graph-topic, fig.height = 12.2,  fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1974-2013"}
 ggplot(atlantic_late_century_gamma, aes(x = reorder(subject, -topic), y = rat, fill = topicfactor)) +
-  geom_col(width = 0.8) +
+  geom_col(width = 0.7) +
   freqstyle +
   coord_flip() +
   theme(legend.position = "none") +
@@ -683,7 +683,7 @@ Again, there is substantial variation. I think this is telling us more about the
 
 ```{r late-century-atlantic-graph-ratio, fig.height = 12.2, fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1974-2013"}
 ggplot(atlantic_late_century_gamma, aes(x = reorder(subject, -rat), y = rat, fill = topicfactor)) +
-  geom_col() +
+  geom_col(width = 0.7) +
   freqstyle +
   coord_flip() +
   theme(legend.position = "none") +
@@ -699,10 +699,6 @@ The UK side is a bit more interesting. Logic, language and mind are very heavily
 It would be useful to have more matching pairs of journals to confirm this, but I think this is some evidence of a fairly substantial split in interests between the two sides of the Atlantic.
 
 ## Raw Counts and Weighted Counts {#raw-weight-count}
-
-I've been going back and forth a lot between two ways of measuring topic size: raw count and weighted count. The raw count is the number of articles such that the probability of being in that topic is higher than the probability of being in any other topic. The weighted count is the sum, across all articles, of the probability of being in that topic. Mathematically, it is the expected number of articles in the topic, though I'm not sure that the notion of expectation makes much sense here.
-
-How do these notions relate? This section is about looking at that question from a few angles, and asking whether we can use the relationship between them to get something like a measure of how specialised different topics are.
 
 ```{r counting-tibble-creation}
 counting_tibble <- tibble(
@@ -723,7 +719,7 @@ counting_tibble$w_in_r[i] <- sum(filter(relabeled_gamma, topic == i, document %i
 counting_tibble <- inner_join(counting_tibble, weight_count, by = "topic")
 
 counting_tibble <- counting_tibble %>%
-  mutate(x = w_in_r/r_c, y = w_c/r_c, z = (w_c - w_in_r)/w_c)
+  mutate(x = w_in_r/r_c, y = w_c/r_c, z = w_in_r/w_c)
 
 # ggplot(counting_tibble, aes(x = x, y = z)) + geom_point()
 
@@ -735,39 +731,21 @@ counting_tibble <- counting_tibble %>%
 
 m <- counting_tibble$r_c[80]
 mw <- counting_tibble$w_c[80]
+mw <- round(mw, 2)
 ```
 
-I'm going to focus on topic 80, [Modality](#topic80). It's raw count is `r m`. That is, there are 370 articles that have a higher probability of being in Modality than being in any other topic. And its weighted count is `r round(mw,3)`. The ratio between them is `r round(m/mw,3)`. They're almost the same. But as you saw through chapter \@ref(all-90-topics), those numbers could come apart quite a bit for some topics. Here is a graph of this ratio for all 90 topics.
+This section has two aims.
 
-```{r counting-tibble-y-topic, fig.height=12.2}
-# Graph for Measuring Ratio of Weighted Count to Raw Count
+The first aim is to see if we can find a measure of how specialised a topic is. Intuitively, some topics are extremely specialised - only people working in quantum physics talk about [Quantum Physics](#topic66). But other topics cut across philosophy - you don't have to be writing about arguments to talk about [Arguments](#topic55). Is there some way internal to the model to capture that notion?
 
-ggplot(counting_tibble, aes(x = reorder(subject, -topic), y = 1/y, fill = topicfactor)) +
-  geom_col() +
-  coord_flip() +
-  theme(legend.position = "none") +
-  labs(y = "Ratio of Raw Count to Weighted Count", x = NULL) +
-  scale_y_continuous(expand = expansion(mult = c(0, .03)))
-```
+The second is to cast some light on the relationship between the two ways of measuring topic size I've been using: raw count and weighted count. The raw count is the number of articles such that the probability of being in that topic is higher than the probability of being in any other topic. The weighted count is the sum, across all articles, of the probability of being in that topic. Mathematically, it is the expected number of articles in the topic.
 
-There is an enormous outlier here: [Arguments](#topic55). (Though [Self-Consciousness](#topic12) and Concepts are also fairly low.) This makes sense - at least once the model decides that this will be a topic. There aren't that many articles that are about arguments as such, but there are plenty of discussions of arguments in papers, so there are lots of ways to talk the model into thinking there's a 2 or 3 percent chance that that's the right topic for you.
+I'll start by looking at the relationship between the raw count and the weighted count for a single topic: [Modality](#topic80). And then I'll turn to see what happens when the focus expands to the other 89 topics. Start with two variables:
 
-To get a sense of how big the outliers are, it is useful to sort this graph by the ratio it represents.
+- $r$, the raw count of articles in the topic. For Modality, this is `r m`. That is, there are `r m` articles that the model thinks are more probably in Modality than in any other topic.
+- $w$, the weighted count of articles in the topic. For Modality, this is `r mw`. That is, across all the articles, the sum of the probabilities that they are in Modality is `r mw`.
 
-```{r counting-tibble-y-ratio, fig.height=12.2}
-# Graph for Measuring Ratio of Weighted Count to Raw Count
-
-ggplot(counting_tibble, aes(x = reorder(subject, -y), y = 1/y, fill = topicfactor)) +
-  geom_col() +
-  coord_flip() +
-  theme(legend.position = "none") +
-  labs(y = "Ratio of Raw Count to Weighted Count", x = NULL) +
-  scale_y_continuous(expand = expansion(mult = c(0, .03)))
-```
-
-I don't quite understand why [Beauty](#topic08) and [Crime and Punishment](#topic36) are at the top of this graph. Let's come back to those.
-
-Instead we'll look at the relationship between raw count and weighted count from another direction. Go back to Modality, and think about the `r m` articles that make up its raw count. These articles have very different probabilities of being in Modality. Here are two articles from the `r m`.
+So these are fairly close, though as we'll see, that's not typical. There is a third variable I'm going to spend a bit of time on. Focus on those `r m` articles that are 'in' Modality. The model gives them very different probabilities of being in Modality. Here are two articles from the `r m`.
 
 ```{r modality-gamma-high-low}
 modality_tibble <- relabeled_articles %>%
@@ -787,15 +765,71 @@ individual_article(modality_tibble$document[370])
 
 These were not picked at random. The Bird article is the one the model is most confident is in Modality, and the Keyt article is the one of the `r m` that it is least confident about. (Honestly I think the model got this one wrong, and is confused by 'Lewis'.) There is a range of probabilities between those though.
 
-Among the `r m` articles that make up the raw count for Modality, the average probability the model gives to them being in the topic is `r counting_tibble$x[80]`. (That's a little under the midpoint between the Bird and the Keyt articles, but not absurdly so.)
+Among the `r m` articles that make up the raw count for Modality, the average probability the model gives to them being in the topic is `r counting_tibble$x[80]`. (That's a little under the midpoint between the Bird and the Keyt articles, but not absurdly so.) This is the value for Modality of the third variable I'm interested in:
 
-How typical is that? Is the average maximal topic probability always around 0.4, or does it vary by topic? It turns out we can do this same calculation for each topic. Here are the results. (Note that the scale does not start at 0.)
+- $p$, the average probability of being in the topic among articles that are more probably in that topic than any other.
 
-```{r counting-tibble-x-topic, fig.height=12.2}
+Between $r$, $w$ and $p$, there are three things that look like plausible specialisation measures.
+
+Measure One
+:    Ratio of raw count to weighted count, i.e., $\frac{r}{w}$.
+
+Measure Two
+:    Average probability of being in the topic among articles that have maximal probability of being in the topic, i.e.,$p$.
+
+Measure Three
+:    What proportion of the weighted count comes from articles that are 'in' the topic, i.e., $\frac{rp}{w}$.
+
+The first measure is intuitive because (as we'll see) it places Arguments right at the bottom of the scale. And that's intuitively our least specialised topic.
+
+The second measure is intuitive because it measures how confident the model is in its placement for articles that get maximal probability of being in a topic. And specialised topics should, in general, do well on this. You won't find the model thinking that this article is most probably a Quantum Physics article, but maybe jusy maybe it's a [Social Contract Theory](#topic31) article, and maybe it's a [Depiction](#topic42) article, so we should spread the probability around between those.
+
+The third measure is intuitive for a similar reason. If a topic is specialised, it won't pick up an extra 3% there or 5% there to its weighted count from articles in other topics. Most of $w$ will come from articles 'in' the topic, i.e., from the part of $w$ that $rp$ measures.
+
+The second and third are obviously related, since $p = \frac{rp}{r}$. In some sense, they are just different ways of normalising $rp$ to the size of the topic.
+
+But intuitively all three should be related, since they all feel like measures of specialisation. It turns out this isn't quite right.
+
+Let's start with measure one, the ratio of raw to weighted count. This is something I talked a bit about back in chapter \@ref(all-90-topics) when discussing two ways of measuring topic size. 
+
+```{r counting-tibble-y-topic, fig.height=12.2, fig.cap = "Ratio of raw count to weighted count by topic"}
+# Graph for Measuring Ratio of Weighted Count to Raw Count
+
+ggplot(counting_tibble, aes(x = reorder(subject, -topic), y = 1/y, fill = topicfactor)) +
+  geom_col(width = 0.7) +
+  freqstyle +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = "Ratio of Raw Count to Weighted Count", x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03)))
+```
+
+There is an enormous outlier here: [Arguments](#topic55). (Though [Self-Consciousness](#topic12) and [Concepts](#topic78) are also fairly low.) This makes sense - at least once the model decides that this will be a topic. There aren't that many articles that are about arguments as such, but there are plenty of discussions of arguments in papers, so there are lots of ways to talk the model into thinking there's a 2 or 3 percent chance that that's the right topic for you.
+
+To get a sense of how big the outliers are, it is useful to sort this graph by the ratio it represents.
+
+```{r counting-tibble-y-ratio, fig.height=12.2, fig.cap = "Ratio of raw count to weighted count by topic (sorted)"}
+# Graph for Measuring Ratio of Weighted Count to Raw Count
+
+ggplot(counting_tibble, aes(x = reorder(subject, -y), y = 1/y, fill = topicfactor)) +
+  geom_col(width = 0.7) +
+  freqstyle +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = "Ratio of Raw Count to Weighted Count", x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03)))
+```
+
+I don't quite understand why [Beauty](#topic08) and [Crime and Punishment](#topic36) are at the top of this graph. I'll come back to Beauty, because it's an interesting case.
+
+Now we'll look at the second measure, i.e., $p$. For Modality, the value of $p$ is `r counting_tibble$x[80]`. How typical is that? Is the average maximal topic probability always around 0.4, or does it vary by topic? It turns out we can do this same calculation for each topic. Here are the results. (Note that the scale does not start at 0.)
+
+```{r counting-tibble-x-topic, fig.height=12.2, fig.cap = "Average maximal probability by topic"}
 # Graph for Measuring average gamma of articles in a topic
 
 ggplot(counting_tibble, aes(x = reorder(subject, -topic), y = x, fill = topicfactor)) +
-  geom_col() +
+  geom_col(width = 0.7) +
+  freqstyle +
   coord_flip(ylim = c(0.2, 0.6)) +
   theme(legend.position = "none") +
   labs(y = "Average Topic Probability of Articles in Topic", x = NULL)
@@ -803,19 +837,18 @@ ggplot(counting_tibble, aes(x = reorder(subject, -topic), y = x, fill = topicfac
 
 So it turns out Modality is reasonably typical, though there is a lot of variation here. Let's look at the same graph but sorted by probability rather than topic number.
 
-```{r counting-tibble-x-prob, fig.height=12.2}
+```{r counting-tibble-x-prob, fig.height=12.2, fig.cap = "Average maximal probability by topic (sorted)"}
 ggplot(counting_tibble, aes(x = reorder(subject, x), y = x, fill = topicfactor)) +
-  geom_col() +
+  geom_col(width = 0.7) +
+  freqstyle +
   coord_flip(ylim = c(0.2, 0.6)) +
   theme(legend.position = "none") +
   labs(y = "Average Topic Probability of Articles in Topic", x = NULL)
 ```
 
-Intuitively, what's going on here is that we have a rough measure of specialisation. If you're talking about [Quantum Physics](#topic66) or [Evolutionary Biology](#topic82), then you're probably really talking about quantum physics or evolutionary biology. But lots of people use [Ordinary Language](#topic24) and discuss [Concepts](#topic78). So lots of articles that are about lots of different topics can end up looking like Ordinary Language or Concepts articles.
+This does look like a measure of specialisation. If you're talking about [Quantum Physics](#topic66) or [Evolutionary Biology](#topic82), then you're probably really talking about quantum physics or evolutionary biology. But lots of people use [Ordinary Language](#topic24) and discuss [Concepts](#topic78). So lots of articles that are about lots of different topics can end up looking like Ordinary Language or Concepts articles.
 
-There is another way we can think about specialisation. The `r m` articles that make up the raw count of Modality contributed, on average, `r round(counting_tibble$x[80],3)` to its weighted count. So collectively, they contributed `r round(counting_tibble$w_in_r[80],3)`. Since the raw count was `r round(mw, 3)`, that left `r round(mw - counting_tibble$w_in_r[80],3)`. Or, put another way, `r round(counting_tibble$z[80],3)` of the weighted count was made up by articles that aren't included in the raw count. 
-
-This contribution, though large, was built up out of many small pieces. The largest single contribution comes from this article.
+Let's turn to our last measure of specialisation, $\frac{rp}{w}$. One way to think about how big that is, is to think about the average probability of being in Modality for the articles whose maximal probability is in one of the other 89 topics. Some of these probabilities are quite large, such as for this article.
 
 <br>
 ```{r modal-find-highest-second-best}
@@ -828,35 +861,41 @@ individual_article(mm$document[1])
 ```
 <br>
 
-But most contributions aren't that big. In fact, the average is under 1%. But there are nearly 32,000 of them, so they add up. In fact, they add up to about 61% of the weighted count for Modality. Is that 61% typical? Well, we can again look at the graph for all 90 topics.
+But most contributions aren't that big. In fact, the average is under 1%. But there are nearly 32,000 of them, so they add up. In fact, they add up to about 61% of the weighted count for Modality. So the value of $\frac{rp}{w}$ for Modality is about 39%, since that's what is left once you take out the 61% that comes from the rest of the articles. Is that 39% typical? Well, we can again look at the graph for all 90 topics.
 
-```{r counting-tibble-z-topic, fig.height=12.2}
+```{r counting-tibble-z-topic, fig.height=12.2, fig.cap = "Proportion of weighted count that's from non-topic articles"}
 ggplot(counting_tibble, aes(x = reorder(subject, -topic), y = z, fill = topicfactor)) +
-  geom_col() +
+  geom_col(width = 0.7) +
+  freqstyle +
   coord_flip(ylim = c(0.2, 1)) +
   theme(legend.position = "none") +
   labs(y = "Proportion of Weighted Count that's From Outside Topic", x = NULL)
 ```
 
-And 61% is somewhat middling, though there's so much variation that I'm not sure what I'd say is typical. Let's look at that one arranged by order.
+And 39% is somewhat middling, though there's so much variation that I'm not sure what I'd say is typical. Let's look at that one arranged by order.
 
-```{r counting-tibble-z-ratio, fig.height=12.2}
+```{r counting-tibble-z-ratio, fig.height=12.2, fig.cap = "Proportion of weighted count that's from non-topic articles (sorted)"}
 ggplot(counting_tibble, aes(x = reorder(subject, z), y = z, fill = topicfactor)) +
-  geom_col() +
+  geom_col(width = 0.7) +
+  freqstyle +
   coord_flip(ylim = c(0.2, 1)) +
   theme(legend.position = "none") +
   labs(y = "Proportion of Weighted Count that's From Outside Topic", x = NULL)
 ```
 
-And again, it's sort of a measure of specialisation. (Though this time I've put the specialised articles at the top of the graph.) The model doesn't give Quantum Physics much credit for articles that aren't squarely about quantum physics. But it gives Arguments lots of credit for articles that are not primarily about arguments.
+And again, it looks like a measure of specialisation. The model doesn't give Quantum Physics much credit for articles that aren't squarely about quantum physics. But it gives Arguments lots of credit for articles that are not primarily about arguments.
 
-Those last two measures feel like they are sort of measures of specialisation, so they should be correlated. And indeed they are.
+If these three things are all sort of measures of specialisation, they should correlate reasonably well. And it turns out that two pairs of them do. Here is what it looks like if you graph the second and third (i.e., $p$ and $\frac{rp}{w}) against each other.
 
-```{r compare-specialisation-measures}
+```{r compare-specialisation-measures-a, fig.height = 6, fig.cap = "Correlation between second and third specialisation measures"}
 # Comparing Second and Third
+# First specialisation measure - Raw count/Weighted Count
+# Second specialisation measure - Average in-topic topic probability
+# Third specialisation measure - Weighted count that's outside topic
 
 ggplot(counting_tibble, aes(x = x, y = z, color = topicfactor)) + 
   geom_point() +
+  freqstyle +
   labs(x = "Average Topic Probability of Articles in Topic", y = "Proportion of Weighted Count that's From Outside Topic") +
   geom_text(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),'')),hjust=0.3,vjust=-1) +
   theme(legend.position = "none") +
@@ -868,13 +907,17 @@ And our two measures of specialisation do sort of line up. There are some outlie
 
 It isn't mathematically impossible to get dots well away from this trend-line, though you need some serious discontinuities in the model to get it. If we deleted a few of the articles where Arguments is just barely the most probable topic, we'd move its light blue dot further towards the top right corner. It's a little harder to get a sensible result where Beauty (or anything else) goes to the bottom left, but it would be possible if a lot of articles where it was the second or third most likely topic were deleted.
 
-I had originally thought that the ratio of raw count to weighted count would be a kind of specialisation measure as well - after all Arguments is an outlier and its the least specialised topic there is. If you think these other two measures are specialisation measures, then it turns out you get a mixed verdict on whether this ratio is a specialisation measure too. Here is how it correlates with one of them.
+But while these two are in fact quite well correlated, the first measure $\frac{r}{w}$, is not rreally correlated with either. Here is the graph of it against $p$.
 
-```{r compare-specialisation-measures-fail}
+```{r compare-specialisation-measures-b, fig.height = 6, fig.cap = "Correlation between first and second specialisation measures"}
 # Comparing Second and Third
+# First specialisation measure - Raw count/Weighted Count
+# Second specialisation measure - Average in-topic topic probability
+# Third specialisation measure - Weighted count that's outside topic
 
 ggplot(counting_tibble, aes(x = 1/y, y = x, color = topicfactor)) + 
   geom_point() +
+  freqstyle +
   labs(x = "Ratio of Raw Count to Weighted Count", y = "Average Topic Probability of Articles in Topic") +
   geom_text(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),'')),hjust=0.3,vjust=-1) +
   theme(legend.position = "none") +
@@ -882,13 +925,17 @@ ggplot(counting_tibble, aes(x = 1/y, y = x, color = topicfactor)) +
   scale_y_continuous(expand = expansion(mult = c(0.1, .1)))
 ```
 
-There is a trend there, but it's not a strong one. But the relationship to the third graph is really strong.
+There is a trend there, but it's not a strong one. But the relationship to $\frac{rp}{w}$ is really strong.
 
-```{r compare-specialisation-measures-succeed}
-# Comparing Second and Third
+```{r compare-specialisation-measures-c, fig.height = 6, fig.cap = "Correlation between first and third specialisation measures"}
+# Comparing First and Third
+# First specialisation measure - Raw count/Weighted Count
+# Second specialisation measure - Average in-topic topic probability
+# Third specialisation measure - Weighted count that's outside topic
 
 ggplot(counting_tibble, aes(x = 1/y, y = z, color = topicfactor)) + 
   geom_point() +
+  freqstyle +
   labs(x = "Ratio of Raw Count to Weighted Count", y = "Proportion of Weighted Count that's From Outside Topic") +
   geom_text(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),'')),hjust=0.2,vjust=1.7) +
   theme(legend.position = "none") +
@@ -898,4 +945,9 @@ ggplot(counting_tibble, aes(x = 1/y, y = z, color = topicfactor)) +
 
 On the one hand, there's a tight correlation here. But I think this is an artifact of the mathematics; it isn't measuring anything real. A theory that puts Evolutionary Biology and Functions at opposite ends of the spectrum isn't really measuring specialisation. And Beauty isn't the most specialised topic in the model.
 
-I think the better thing to say is that we did have two measures of specialisation, and they were a little different, but not that different. But ratio of raw count to weighted count is something else; it's measuring how much something gets talked about when it's not the centre of attention. As we see in Beauty, that value can be low even when articles that are about Beauty often get confused by the model for something else.
+I think the better thing to say is that we did have two measures of specialisation:
+
+- Average topic probability of articles in the topic, i.e., $p$.
+- Proportion of weighted count that is from articles in the topic, i.e., $\frac{rp}{w}$
+
+These don't quite measure the same thing, but they aren't that different. But ratio of raw count to weighted count is something else; it's measuring how much something gets talked about when it's not the centre of attention. As we see in Beauty, that value can be low even when articles that are about Beauty often get confused by the model for something else.

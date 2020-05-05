@@ -1,13 +1,5 @@
 # Eras And Decades
 
-To be done
-
-- Clear cache to get new names in
-- Chance 'Consequentialism' to 'Population Ethics' so it fits
-- Check everything really does fit
-- Add spaces before various tables
-- Add two tables to category/decade (distinctive)
-
 All of the analysis so far has been done by year. But sometimes it is helpful to look at a number of years at once. In this chapter I do this twice over. 
 
 First, I'm separating the times in the data set into five eras. My idea was to have eras that correspond to natural time periods in philosophy, but which are also roughly equal in terms of the number of articles in each era. This suggested the following five-way division.
@@ -502,12 +494,24 @@ Is 'jones' at the top of 1966-1981 because of Sellars, or Gettier, or Frankfurt?
 
 We can look at the graphs of how frequently these words appeared over time to get a sense of what it means for them to be the distinctive words of an era. I'll just graph the top 5 for each era, because otherwise the graphs get too cluttered.
 
-```{r eragraphs1000a, fig.height=5, fig.cap = "Most distinctive words in era 1 (among 1000 most common words)"}
+```{r eragraphs1000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among 1000 most common words)"}
 word_era_graphs(1000, 1)
-#word_era_graphs(1000, 2)
-#word_era_graphs(1000, 3)
-#word_era_graphs(1000, 4)
-#word_era_graphs(1000, 5)
+```
+
+```{r eragraphs1000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among 1000 most common words)"}
+word_era_graphs(1000, 2)
+```
+
+```{r eragraphs1000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among 1000 most common words)"}
+word_era_graphs(1000, 3)
+```
+
+```{r eragraphs1000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among 1000 most common words)"}
+word_era_graphs(1000, 4)
+```
+
+```{r eragraphs1000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among 1000 most common words)"}
+word_era_graphs(1000, 5)
 ```
 
 You can confirm that the words in question really do peak in the era in question.
@@ -528,11 +532,23 @@ Both 'marx' and 'davidson' turn up one era later than I would have guessed. And 
 
 Here are the graphs for the first five words in each column.
 
-```{r eragraphs2000}
+```{r eragraphs2000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among 2000 most common words)"}
 word_era_graphs(2000, 1)
+```
+
+```{r eragraphs2000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among 2000 most common words)"}
 word_era_graphs(2000, 2)
+```
+
+```{r eragraphs2000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among 2000 most common words)"}
 word_era_graphs(2000, 3)
+```
+
+```{r eragraphs2000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among 2000 most common words)"}
 word_era_graphs(2000, 4)
+```
+
+```{r eragraphs2000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among 2000 most common words)"}
 word_era_graphs(2000, 5)
 ```
 
@@ -544,11 +560,23 @@ words_by_limit(3000)
 
 Apart from in the earliest era, we're starting to see the majority of the list here be names of famous (male) philosophers. And we get a pretty good sense of when they were being most commonly discussed. The graphs show this in slightly more detail. (The fourth graph is a little busted because one of one year when 'nuclear' went nuclear.)
 
-```{r eragraphs3000}
+```{r eragraphs3000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among 3000 most common words)"}
 word_era_graphs(3000, 1)
+```
+
+```{r eragraphs3000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among 3000 most common words)"}
 word_era_graphs(3000, 2)
+```
+
+```{r eragraphs3000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among 3000 most common words)"}
 word_era_graphs(3000, 3)
+```
+
+```{r eragraphs3000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among 3000 most common words)"}
 word_era_graphs(3000, 4)
+```
+
+```{r eragraphs3000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among 3000 most common words)"}
 word_era_graphs(3000, 5)
 ```
 
@@ -570,17 +598,29 @@ words_by_limit(5000)
 
 And finally we get that not all the names are of men. Korsgaard is here, and the model doesn't discriminate between the Churchlands, so at least part of the reason for 'churchland' in 1982-1998 is Patricia Churchland.
 
-Apart from the names, the words in the final era are all fairly much as expected. I'll come back in the last chapter to 'credence', because I don't think everyone realises how new a term it is. And I guess I thought 'egalitarianism' would have been used enough in 1982-1998 to not appear here, but I guess not.
+Apart from the names, the words in the final era are all fairly much as expected. I'll come back in [the last chapter]({#buzzwords-section) to 'credence', because I don't think everyone realises how new a term it is. And I guess I thought 'egalitarianism' would have been used enough in 1982-1998 to not appear here, but I guess not.
 
 I have no idea why 'muscular' is such a common term in the first era. I suspect I wouldn't be happy to find out. 
 
 Here are the graphs for the five most distinctive words in each of the eras.
 
-```{r eragraphs5000}
+```{r eragraphs5000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among 5000 most common words)"}
 word_era_graphs(5000, 1)
+```
+
+```{r eragraphs5000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among 5000 most common words)"}
 word_era_graphs(5000, 2)
+```
+
+```{r eragraphs5000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among 5000 most common words)"}
 word_era_graphs(5000, 3)
+```
+
+```{r eragraphs5000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among 5000 most common words)"}
 word_era_graphs(5000, 4)
+```
+
+```{r eragraphs5000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among 5000 most common words)"}
 word_era_graphs(5000, 5)
 ```
 
@@ -715,7 +755,7 @@ And I'm also surprised at the low rank in the 2000s of Aesthetics, Philosophy of
 
 I'm not going to start with the list of most common words each decade, because it just looks like what we found back in section \@ref(words-eras). Some words are really common, and they stay that way through the data set. What's more interesting is to look at words that are more common in a particular decade than they are in general. And this in turn requires picking a domain of words. 
 
-I'll start with the 1000 most common words (stop words excluded) from the data set. (I'm not going to do the graphs that I did in section \@ref(#words-eras), because they would just be repetitive; it's very often just the same words.)
+I'll start with the 1000 most common words (stop words excluded) from the data set. (I'm not going to do the graphs that I did in section \@ref(words-eras), because they would just be repetitive; it's very often just the same words.)
 
 <br>
 ```{r decadewords1000}
@@ -740,6 +780,7 @@ late_decade_words_by_limit(3000)
 The main auditorium at Monash University is the Alexander Hall. Graduations are there, but it isn't otherwise a major part of student life. I think I went there more often as a high school student than as a university student. But still, it was nice to know that a big part of the university was named after a philosopher, Samuel Alexander. We also had a nice sketch of him on the wall of one of the seminar rooms in the philosophy department while I was there. That didn't mean that we actually talked about Alexander's work; I don't remember ever being assigned one of his papers in a class or seminar. That was perhaps a bit too bad, since he's argaubly the second most important Australian philosopher for the first half of the 20th century. And he's the first Australian to turn up on this list as well.
 
 Let's expand this list to the 5000 most common words.
+
 <br>
 ```{r decadewords5000}
 early_decade_words_by_limit(5000)
@@ -751,5 +792,3 @@ late_decade_words_by_limit(5000)
 When I was cleaning out the data I thought that 'sensa' was some kind of OCR error. But it's a really common word in 1920s and 1930s discussions of sense-data. In later years, the distinctive words get to be more and more to do with names.
 
 That said, we also see here a word that I should have filtered out: 'Basil'. Some uses of it are legitimate, but most are because 'Basil Blackwell' turns up in bibliographies. I wish I'd caught that one.
-
-## Summary

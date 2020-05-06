@@ -37,7 +37,7 @@ Some of the topics just look disjunctive, no matter [how hard I tried](#methodol
 
 Consider, for instance the [Sets and Grue](#topic37) topic. This just looks like it is made up of two parts - discussion of set theory, and discussion of the grue paradox. And while both of these are connected to Nelson Goodman, and more generally involve technical challenges facing a certain kind of mid-century empiricist, they aren't really connected to each other. The set theory discussion looks like it should go in either Metaphysics or Logic; the grue discussion looks like it should go in Epistemology or Philosophy of Science. But putting the whole topic in any one of these four seemed mistaken.
 
-Fortunately, there is a nice technique to resolve this problem. And it involves yet more applications of the LDA model. Take the articles that are in this topic (i.e., have a higher probability of being in this topic than in any other), and use the LDA technique to sort them into a two-topic model. I'll call this a **binary sort** in what follows. So instead of taking all `r nrow(articles)` and sorting them into 90 (or more) topics, just take the `r nrow(filter(relabeled_articles, topic == 37))` articles and sort them into 2 topics. If we're lucky, one side of the sort will be the set theory articles, and the other side will be the grue articles.^[One advantage of doing things this way rather than looking for a more and more fine-grained model of the whole universe is speed. It would be somewhat interesting to see what happened if we sorted the `r nrow(articles)` into 120 topics. But that would take something like 12 hours on a good personal computer. The binary sort I described in the text takes well under 12 seconds.]
+Fortunately, there is a nice technique to resolve this problem. And it involves yet more applications of the LDA model. Take the articles that are in this topic (i.e., have a higher probability of being in this topic than in any other), and use the LDA technique to sort them into a two-topic model. I'll call this a **binary sort** in what follows. So instead of taking all `r nrow(articles)` articles and sorting them into 90 (or more) topics, just take the `r nrow(filter(relabeled_articles, topic == 37))` articles and sort them into 2 topics. If we're lucky, one side of the sort will be the set theory articles, and the other side will be the grue articles.^[One advantage of doing things this way rather than looking for a more and more fine-grained model of the whole universe is speed. It would be somewhat interesting to see what happened if we sorted the `r nrow(articles)` into 120 topics. But that would take something like 12 hours on a good personal computer. The binary sort I described in the text takes well under 12 seconds.]
 
 And it turns out we are more or less lucky in just that way. Here are the keywords and paradigm articles for topic 1 in this binary sort.^[An embarrassing admission: Due to a coding error, I ended up using 1954 for the seed for these binary sorts, not 22031848 like I've used for everything else. I only realised this after I'd done so much work building on them that it would have been too much to go back and change it - especially since the value of a random seed shouldn't matter too much. But it was annoying to have had this change slip in.]
 
@@ -120,7 +120,7 @@ The first subtopic isn't exclusively articles about grue, but the keywords sugge
 
 So now instead of asking how the articles in this topic should be classified, we can ask the two questions of how the articles in these subtopics should be classified.^[Just to be clear, I'm using 'topic' for the elements of the 90-way partition that the original model generated, and 'subtopic' for elements of the 2-way partition that these new binary sorts generate.] And while neither question is trivial, they seem at least a bit more tractable. Ultimately, I ended up putting set theory in Logic and Mathematics, and grue in Philosophy of Science. Just why I made those choices is for later sections, but for now I just wanted to show how the subtopics were generated.
 
-There is one more thing we can note about this binary sort - the model is very confident in its answers. In the original 90 topic model, there is precisely 1 article that the model gives a probability greater than 0.99 to being in a particular topic. In the binary sort I just described, `r scales::percent(temp_confidence)` of the articles are such that the model gives them a probability at least 0.99 of being in one particular topic. Now obviously it's easier to be more confident in a two-way sort than a ninety-way sort. But this gives us a check of how disjunctive the model itself things the topic is. And I'll use that to check whether it really makes sense to split a topic up in this way.
+There is one more thing we can note about this binary sort - the model is very confident in its answers. In the original 90 topic model, there is precisely 1 article that the model gives a probability greater than 0.99 to being in a particular topic.^[It's [Contextualism, Hawthorne's invariantism and third-person cases](https://philpapers.org/rec/BRUCHI) by Anthony Brueckner.] In the binary sort I just described, `r scales::percent(temp_confidence)` of the articles are such that the model gives them a probability at least 0.99 of being in one particular topic. Now obviously it's easier to be more confident in a two-way sort than a ninety-way sort. But this gives us a check of how disjunctive the model itself things the topic is. And I'll use that to check whether it really makes sense to split a topic up in this way.
 
 ## Summarising the 90 Binary Sorts
 
@@ -177,13 +177,17 @@ binary_summary <- function(i)
 binary_split_table <- lapply(1:90, binary_summary) %>% bind_rows()
 ```
 
+<br>
 ```{r binary-split-dt}
-datatable(binary_split_table, rownames = FALSE) %>%
+datatable(binary_split_table, 
+          rownames = FALSE,
+          caption = "Characteristics of the 90 Binary Sorts") %>%
       formatSignif('Confidence',3) %>%
       formatStyle(1:5,`text-align` = 'left') 
 ```
+<br>
 
-The first column is the topic number, to help line up with the discussion in [Chapter 2](#all-90-topics). The second is the name I gave to the topic. The third is how proportion of articles in the topic that the binary sort put in one or other subtopic with probability at least 0.99. As you can see if you scroll down, or if you sort by that column, these binary sorts are often very decisive. (For comparison, the big 90 topic model only made a classification with probability over 0.99 on one occasion, out of over 32000 attempts.)
+The first column is the topic number, to help line up with the discussion in [Chapter 2](#all-90-topics). The second is the name I gave to the topic. The third is how proportion of articles in the topic that the binary sort put in one or other subtopic with probability at least 0.99. As you can see if you scroll down, or if you sort by that column, these binary sorts are often very decisive.
 
 The next two columns are the keywords for the two subtopics. That is, they are the (relatively common) words with the highest ratio of their probability of being in one subtopic to the probability of being in another. This is enough to get a sense of what division the subtopic is making.
 
@@ -211,14 +215,17 @@ In fact of the `r nrow(dualism_temp_gamma)/2` articles, `r nrow(arguments_clear_
 
 Let's look at the rest of the topics that I decided to split up into subtopics
 
+<br>
 ```{r binary-split-dt-part-two}
-datatable(binary_split_table %>% slice(c(24, 35,36,37,77,79, 90)), rownames = FALSE) %>%
+datatable(binary_split_table %>% slice(c(24, 35,36,37,77,79, 90)), 
+          rownames = FALSE,
+          caption = "Seven Disjunctive Topics") %>%
       formatSignif('Confidence',3) %>%
       formatStyle(1:5,`text-align` = 'left') 
 ```
+<br>
 
-
-[Ordinary Language](#topic24) is a mess, and the Confidence measure isn't as high as I'd like to make a division, but the subtopics look pretty clearly disjoint. The first is about Ethics, the second is about Mind. And since we already have a separate topic for [contemporanous British philosophy of language](#topic22), splitting this into Ethics and Mind seems like a sensible plan.
+[Ordinary Language](#topic24) is a mess, and the Confidence measure isn't as high as I'd like to make a division, but the subtopics look pretty clearly disjoint. The first is about Ethics, the second is about Mind. And since we already have a separate topic for [contemporanous British philosophy of language](#topic22), splitting this topic into Ethics and Mind seems like a sensible plan.
 
 [Freedom and Free Will](#topic35) is really the one case where the model got thrown by the fact that two different philosophical debates use a common word. But the subtopics bail us out here, splitting it into debates about free will and debates about political freedom.
 
@@ -263,7 +270,7 @@ Happily there is a way to handle this. The topicmodels package lets you apply an
 
 ## Classifying the 100 Topics and SubTopics
 
-So now there are 100 things to be classified: 80 topics and 20 subtopics. The subtopics are individually easier to see where they should slot in, so that's nice. On the other hand, I started with a hard task of classifying 90 things, and now I have the hard task of classifying 100 things, and you might suspect this isn't progress.
+So now there are 100 things to be classified: 80 topics and 20 subtopics. The subtopics are individually easier to classify, so that's nice. On the other hand, I started with a hard task of classifying 90 things, and now I have the hard task of classifying 100 things, and you might suspect this isn't progress.
 
 So it's time to introduce the tool that I primarily used as a guide to classification. It's another kind of binary sort, like I used in the last section. Except now instead of applying it to all the articles in one topic, I apply it to all the articles in two categories. The intuition here is that if I've really got a good categorisation, all the topics/subtopics within each of the categories should cluster together. If the topics/subtopics are not clustering, then that is a reason to be sceptical of the categorisation.
 
@@ -285,7 +292,7 @@ articles_by_category <- category_gamma %>%
 cat_check <- function(x, y){
 # First a line break because Kable needs it
 cat("\n\n")
-cat("## ",cat_names$cat_name[x]," - ",cat_names$cat_name[y], " {#catbound", x, y, "}", sep="")
+cat("### ",cat_names$cat_name[x]," - ",cat_names$cat_name[y], " {#catbound", x, y, "}", sep="")
 cat("\n\n <br> \n")
   
 # Retrieve the two category LDA
@@ -385,7 +392,7 @@ Third, this is just a tool. There are going to be cases it gets wrong, and I'll 
 
 Fourth, I didn't just find these categories lying around and used this tool to confirm them. There was a lot of juggling around to get it to a point where most of these automatic classifications worked agreed with my classifications, and the ones that didn't were easy enough to explain. And the nature of LDAs is that any change somewhere creates changes everywhere. So the methodology here involves a fair bit of trial and error. But some of the methodology is clear enough. Look back at that table. If I'd put Frankfurt Cases in Metaphysics, the very same test would tell me to move them into Ethics. So this method doesn't just confirm that a classification gets things broadly right, it can say where a classification is going wrong. To be sure, it's basically an equilibrium method, and it doesn't rule out other equilibria. But it's interesting to have found even one.
 
-Fifth, I'm not applying this to three categories: Idealism, Aesthetics and Philosophy of Religion. Both Aesthetics and Philosophy of Religion really don't have borderline cases. And the technique I'm using doesn't work so well when the categories are of very uneven size. So it is often gives wonky results for those two categories. (It also on occasion gives some of the cleanest splits - but it feels random when it does.) Still, I wasn't worried about those two categories. And Idealism is a special case that I'll come back to in the next section.
+Fifth, I'm not applying this to three categories: Idealism, Aesthetics and Philosophy of Religion. Both Aesthetics and Philosophy of Religion really don't have borderline cases. And the technique I'm using doesn't work so well when the categories are of very uneven size. So it is often gives wonky results for those two categories. (It also on occasion gives some of the cleanest splits - but it feels random when it does.) Still, I wasn't worried about those two categories. And Idealism is a special case that I'll come back to at the end of the chapter.
 
 So I'm looking at 9 categories to check that the boundaries between them are drawn roughly correctly. And that means there are 9 choose 2, i.e., 36, boundaries to look at. Let's get to it.
 
@@ -397,7 +404,7 @@ I'm doing these in alphabetical order, and that means the first cab off the rank
 
 One is [Arguments](#topic55). Why should this go with Epistemology? Everyone uses arguments. I've put it in Epistemology for three reasons. First, as you can see, the model puts it there. (And we'll keep seeing that as we look through the comparisons between Epistemology and other categories.) Second, once you extract the dualism arguments from the topic, what's left are primarily papers about what we can learn from arguments. And those feel like Epistemology papers to me. And third, there are a few other close calls where I put something that could go in Epistemology elsewhere, and getting the overall shape of the graphs right felt like I needed to have one close call go this way.
 
-The other strange one is [Decision Theory](#topic57). You might have thought that would simply go with the other probability papers in Epistemology or maybe Philosophy of Science. But it's ended up in Ethics for two reasons. One is that, as you can see from the table, that's where the automatic sorter put it. But the other comes from thinking about what articles are left in that topic. Given that Formal Epistemology exists as a topic, and that [Theory Testing](#topic56) also exists, there isn't as much directly about probability in this topic. What is left is in no small part thinking about value functions. They are very technical questions about value functions, to be sure, but the papers actually in this topic on the whole are more about the 'value' part of expected value than the 'expected' part. And that isn't absurd to group in with Ethics.
+The other strange one is [Decision Theory](#topic57). You might have thought that would simply go with the other probability papers in Epistemology or maybe Philosophy of Science. But it's ended up in Ethics for two reasons. One is that, as you can see from the table, that's where the automatic sorter put it. But the other comes from thinking about what articles are left in that topic. Given that Formal Epistemology exists as a topic, and that [Theory Testing](#topic56) also exists, there isn't as much directly about probability in this topic. What is left is primarily papers about value functions. They are very technical questions about value functions, to be sure, but the papers actually in this topic on the whole are more about the 'value' part of expected value than the 'expected' part. And that isn't absurd to group in with Ethics. Put another way, what we really have in this topic is _Formal Ethics_, and it makes sense that goes with Ethics.
 
 ```{r cat-sort-02}
 cat_check(2, 4)
@@ -421,7 +428,7 @@ A lot of philosophers use the phrase 'Metaphysics-and-Epistemology' almost as if
 cat_check(2, 8)
 ```
 
-Here is the first occasion I've had to over-rule the model. It wants to put [Language Norms](#topic90) in with Epistemology not Philosophy of Language. And it could go either way. But I've put it with Philosophy of Language for a couple of reasons. One is that the paradigm articles in this subtopic, which are often by or about Brandom's _Making it Explicit_, feel more like Language articles than Epistemology articles to me. And the other is that when I ran the models with this shifted to Epistemology, a lot of the neat divisions we've already seen got less neat. Still, this is one of the trickier classifications, and I suspect with another few years of data, the model would have found a Norms topic that was properly divided into Ethics and Epistemology.
+Here is the first occasion I've had to over-rule the model. It wants to put [Language Norms](#topic90) in with Epistemology not Philosophy of Language. And it could go either way. But I've put it with Philosophy of Language for a couple of reasons. One is that the paradigm articles in this subtopic, which are often by or about Brandom, feel more like Language articles than Epistemology articles to me. And the other is that when I ran the models with this shifted to Epistemology, a lot of the neat divisions we've already seen got less neat. Still, this is one of the trickier classifications, and I suspect with another few years of data, the model would have found a Norms topic that was properly divided into Ethics and Epistemology.
 
 ```{r cat-sort-06}
 cat_check(2, 9)
@@ -439,13 +446,13 @@ cat_check(2,11)
 
 As someone whose earliest philosophical work sat right on the boundary between Epistemology and Philosophy of Science, I thought that there would be more borderline cases here. But the model wasn't budging. It's really certain it wants to put the four Epistemology subjcts at one end. And the closest subject to them, [Game Theory](#topic75), is one that I would have over-ruled and put back in Philosophy of Science if it hadn't got it right. So this looks like a clear split.
 
-I've mentioned this before, but I can't help but repeat how surprised I am at what a good job the model does at separating [Theory Testing](#topic56) from [Formal Epistemology](#topic84). These have a lot of overlap, and the model does think Theory Testing is closer to Epistemology than most things in Philosophy of Science. But ultimately it knows how to sort articles into one or the other. I find that remarkable.
+I've mentioned this before, but I keep being surprised at how well the model separated [Theory Testing](#topic56) from [Formal Epistemology](#topic84). These have a lot of overlap, and the model does think Theory Testing is closer to Epistemology than most things in Philosophy of Science. But ultimately it knows how to sort articles into one or the other. I find that remarkable.
 
 ```{r cat-sort-08}
 cat_check(2,12)
 ```
 
-Maybe if we ran the tape forward to 2020 there would be more papers on the boundary between Epistemology and Social and Political. But restricting attention to these twelve journals, up to 2013, this wasn't a heavily populated frontier.
+Maybe if we ran the tape forward to 2020 there would be more papers on the boundary between Epistemology and Social and Political. Social Epistemology has, after all, become a thing. But restricting attention to these twelve journals, up to 2013, this frontier wasn't heavily populated.
 
 ```{r cat-sort-09}
 cat_check(3,4)
@@ -485,9 +492,9 @@ cat_check(3,11)
 
 I didn't think of the Ethics/Philosophy of Science boundary as being a particularly hard one to identify. But this ended up being trickier than I expected. 
 
-One issue is that [Teleology](#topic38) has enough language that goes with action theory that it confusing the model. 
+One issue is that [Teleology](#topic38) has enough language that goes with action theory that it ends up confusing the model. 
 
-But the other thing is what to do with [Decision Theory](#topic57) and [Game Theory](#topic75). The model clearly doesn't like breaking them up. But the material on Game Theory that is here is primarily Evolutionary Game Theory as used in Philosophy of Biology; that's clearly Philosophy of Science. But it would be a stretch to say that Decision Theory, which is well under 0.5, is a Philosophy of Science topic on this basis. So I think the overall best thing to do is what I actually did do - though I can see why others might prefer something else.
+But the other thing is what to do with [Decision Theory](#topic57) and [Game Theory](#topic75). The model clearly doesn't like breaking them up. But the material on Game Theory that is here is primarily Evolutionary Game Theory as used in Philosophy of Biology; that's clearly Philosophy of Science. And it would be a stretch to say that Decision Theory, which is well under 0.5, is a Philosophy of Science topic on this basis. So I think the overall best thing to do is what I actually did do - though I can see why others might prefer something else.
 
 ```{r cat-sort-15}
 cat_check(3,12)
@@ -495,9 +502,9 @@ cat_check(3,12)
 
 Here is where I really appreciated having a mdoel to work with. I still didn't entirely go along with what the model suggested, but it helped see what were the easy cases and what were the hard cases.
 
-If I had to guess I would have put [Abortion and Self-Defence](#topic71) in with Ethics and [Feminism](#topic78) in with Social and Political. But I'm very glad to have something to back up my instincts. And I would have made the same division with the two topics closely connected to Parfit's work: [Population Ethics](#topic83) and [Egalitarianism](#topic65). But again, I would have been cautious about it, and it was nice to see the model agree.
+If I had to guess I would have put [Abortion and Self-Defence](#topic71) in with Ethics and [Feminism](#topic78) in with Social and Political. But I'm very glad to have a model, not just a guess, to rely on here. And I would have made the same division with the two topics closely connected to Parfit's work: [Population Ethics](#topic83) and [Egalitarianism](#topic65). But again, I would have been nervous about relying on guesswork, and it was nice to see the model agree.
 
-So what to say about the two subtopics in the middle: [Political Freedom](#topic35) and [Forgiveness](#topic36). I think these are in practice reasonably clear cases. If political freedom isn't a topic in Social and Political philosophy I don't know what is. And while there are some papers about social and structural matters in Forgiveness, it is enough about individual relations that I think it should go in Ethics.
+So what to say about the two subtopics in the middle: [Political Freedom](#topic35) and [Forgiveness](#topic36)? I think these are in practice reasonably clear cases. If political freedom isn't a topic in Social and Political philosophy I don't know what is. And while there are some papers about social and structural matters in Forgiveness, it is enough about individual relations that I think it should go in Ethics.
 
 I suspect what's happened with both of these is that the subtopics aren't as cleanly separated as they appear. There are enough papers about Law in the Forgiveness subtopic that the model won't quite push it all the way into Ethics. And there are enough papers about Free Will in the Political Freedom subtopic that it won't push that topic the other way.
 
@@ -513,7 +520,7 @@ This one shouldn't have been hard, and it wasn't.
 cat_check(4, 7)
 ```
 
-This one could have been harder, but clearly wasn't either. Note that the model is sure that neither Heidegger nor Dewey are doing metaphysics. That's what I would have said as well, but I was worried it was a biased take on what metaphysics is.
+This one could have been harder, but clearly wasn't either. Note that the model is sure that neither Heidegger nor Dewey are usefully classified with contemporary Metaphysics. That's what I would have said as well, but I was worried it was a biased take on what metaphysics is.
 
 ```{r cat-sort-18}
 cat_check(4, 8)
@@ -549,13 +556,13 @@ The big gap is between [Hume](#topic45) and [Marx](#topic23). So the default sho
 
 [History and Culture](#topic10) really doesn't feature that many articles about the history of _philosophy_. It does feature a fair few papers about history, and about the philosophy of history, and I think that's what confused the model. It's an easy case, even if the model disagrees.
 
-[Life and Value](#topic03) is harder. It's not that it should be in history; there aren't that many particularly historical papers in it. Remember this topic is something like Idealist Moral and Political Philosophy. Now there are some references back to Hegel, and that feels historical. But there are more references in [Idealism](#topic02). And most of the papers here are trying to put forward first-order philosophical claims, not doing scholarly or exegetical work. So I don't know why this ended up where it did, but it doesn't feel like a History category.
+[Life and Value](#topic03) is harder. It's not that it should be in history; there aren't that many particularly historical papers in it. Remember this topic is something like Idealist Moral and Political Philosophy. Now there are some references back to Hegel, and that feels historical. But there are more references to Hegel in [Idealism](#topic02). And most of the papers here are trying to put forward first-order philosophical claims, not doing scholarly or exegetical work. So I don't know why this ended up where it did, but it doesn't feel like a History category.
 
 [Marx](#topic23) could have easily been a History topic. But most of the papers here are Marxist analysis of politics and society, not Marx exegesis. I could have gone either way on whether it counted as History or Social and Political, but I would have tentatively guessed the latter, and it seems the model agrees.
 
 On the other hand, the vast bulk of the papers in [Social Contract Theory](#topic31) are clearly history papers. They are history of Social and Political philosophy, which probably confused the model.
 
-So while this is a bit of a mess, the only one that's really problematic is Life and Value. And I suspect the issue is whether that should be in either of these categories. I'll come back to that in the next section.
+So while this is a bit of a mess, the only one that's really problematic is Life and Value. And I suspect the issue is whether that should be in either of these categories.
 
 ```{r cat-sort-22}
 cat_check(6, 7)

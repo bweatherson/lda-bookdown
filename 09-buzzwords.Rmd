@@ -149,9 +149,11 @@ kable(gg_revised %>%
 }
 ```
 
+<br>
 ```{r russell-chap-five}
 gtt("The Problems of Philosophy", 5)
 ```
+<br>
 
 There are three things to note about this table.
 
@@ -178,51 +180,67 @@ gbb <- function(x){
 }
 ```
 
+<br>
 ```{r democracy-and-education}
 gbb("Democracy and Education")
 ```
+<br>
 
 It's a bit surprising that the model doesn't identify this with [Pragmatism](#topic05), and even more surprising that [Feminism](#topic70) turns up here. But otherwise this broadly makes sense.
 
+<br>
 ```{r keynes-book}
 gbb("The Economic Consequences of the Peace")
 ```
+<br>
 
 This, on the other hand, doesn't look quite right. It's about WWI, so I guess it looks like war. But it isn't really a history book. And it's certainly not a Marx book. This does look like it pushed the model way past its comfort level.
 
+<br>
 ```{r on-liberty}
 gbb("On Liberty")
 ```
+<br>
 
 Putting this in with [Other History](#topic04) does make some sense because a few of the papers in that topic are about Mill. But it's striking to me that the model thinks of this book as going with social work of its time, even more than it sees it as going with topics on liberalism, or freedom. This is bringing up a limit of this approach that we've seen a few times before. Literary styles change over time, and the model doesn't do well with that kind of change.
 
+<br>
 ```{r principia}
 gbb("Principia Ethica")
 ```
+<br>
 
 One way to look at this data is that it's bringing out the extent to which the Ordinary Language movement wasn't a repudiation of the philosophy that had gone before them, but a return to the way of doing philosophy exemplified by Moore and Russell. The model does not typically think papers from 1903 are Ordinary Language papers, but it does think that Principia Ethica is Ordinary Language.
 
+<br>
 ```{r external-world}
 gbb("Our Knowledge of the External World as a Field for Scientific Method in Philosophy")
 ```
+<br>
 
 The model really doesn't identify _Our Knowledge of the External World_ with any of the contemporary topics. The closest is [Mathematics](#topic51), but this book seems surprisingly dated.
 
+<br>
 ```{r analysis-of-mind}
 gbb("The Analysis of Mind")
 ```
+<br>
 
 This is part of why I was happy to include [19th Century Psych](#topic01) as a philosophy of mind topic. It is a bit different to how we now do philosophy of mind. But it includes a lot of what Russell does in _The Analysis of Mind_. And that's definition a philosophy of mind book.
 
+<br>
 ```{r problems-philosophy}
 gbb("The Problems of Philosophy")
 ```
+<br>
 
 Again, we see that Moore and Russell were precursors as much as opponents of Ordinary Language philosophy. And between [Perception](#topic48), [Denoting](#topic63), [Knowledge](#topic74) and [Justification](#topic76), we see flickers of contemporary philosophy entering into the picture.
 
+<br>
 ```{r methods-ethics}
 gbb("The Methods of Ethics")
 ```
+<br>
 
 This, on the other hand, is a bit disappointing. I would have thought it would have done a better job of identifying _The Methods of Ethics_ as, well, a work of ethics. And you do see a few topics from Ethics here, but also a lot of others.
 
@@ -236,6 +254,7 @@ gg_high_gamma <- gg_revised %>%
   mutate(book_name = replace(book_name, book_name == "Our Knowledge of the External World as a Field for Scientific Method in Philosophy", "Our Knowledge of the External World"))
 ```
 
+<br>
 ```{r gutenberg-highest-a}
 kable(gg_high_gamma %>%
         select(book_name, chap_num, subject, gamma) %>%
@@ -244,9 +263,11 @@ kable(gg_high_gamma %>%
       digits = c(0, 0, 0, 4),
       caption = "10 chapters with highest topic probabilities")
 ```
+<br>
 
 It really is confident about Russellian works, relatively speaking. Let's see what happens if we leave off 19th Century Psych.
 
+<br>
 ```{r gutenberg-highest-b}
 kable(gg_high_gamma %>%
         filter(topic > 1) %>%
@@ -256,9 +277,11 @@ kable(gg_high_gamma %>%
       digits = c(0, 0, 0, 4),
       caption = "10 chapters with highest topic probabilities (excluding 19th Century Psych)")
 ```
+<br>
 
 And pushing further forward, let's see what happens if we leave off all of topics 1-30.
 
+<br>
 ```{r gutenberg-highest-c}
 kable(gg_high_gamma %>%
         filter(topic > 30) %>%
@@ -268,9 +291,11 @@ kable(gg_high_gamma %>%
       digits = c(0, 0, 0, 4),
       caption = "10 chapters with highest topic probabilities (excluding first 30 topics)")
 ```
+<br>
 
 This doesn't look like the model is doing too bad a job. Russell does talk about philosophy of mathematics, Keynes about war, and Mill about liberal democracy. And remember that Egalitarianism is largely about Parfit, and hence about consequentialism, so it isn't surprising Sidgwick ends up there. What if we restrict things to topics from 61-90?
 
+<br>
 ```{r gutenberg-highest-d}
 kable(gg_high_gamma %>%
         filter(topic > 60) %>%
@@ -280,6 +305,7 @@ kable(gg_high_gamma %>%
       digits = c(0, 0, 0, 4),
       caption = "10 chapters with highest topic probabilities (excluding first 60 topics)")
 ```
+<br>
 
 And while the numbers are low, Russell on epistemology reminds the model much more of contemporary philosophy than most of the other books. This makes sense, I think.
 
@@ -371,7 +397,7 @@ ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jh, y  = bh, 
   geom_text(aes(label=ifelse(topic == 40 | topic == 51 ,as.character(subject),'')),hjust=1.1,vjust=-0.1) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.25, 0.02))) +
-  scale_y_continuous(expand = expansion(mult = c(0.06, 2.5)))
+  scale_y_continuous(expand = expansion(mult = c(0.06, 0.1)))
 ```
 
 The maximum probabilities are, as always, higher for the journals than for the book chapters. And there are some articles that are really about Color, or about Philosophy of Mathematics. There is, as I've already mentioned, one book chapter that's also about Philosophy of Mathematics. Onto the last 30.
@@ -733,23 +759,23 @@ So this is why I just used 15 refinements of the model rather than 100. The lang
 
 But didn't we have this already back in [ordinary language philosophy](#topic 24)? We did, though fortunately the binary sort helped find a couple of natural topics within it. Still, it would be nice to confirm that these words really were being used more frequently in mid-century. So let's look at the same graphs for the keywords from ordinary language philosophy.
 
-```{r olpwords-graphs-a, fig.height = 5, fig.cap = "Words about speech acts"}}
+```{r olpwords-graphs-a, fig.height = 5, fig.cap = "Words about speech acts"}
 word_frequency_graphs(c("ask", "answer", "question", "said"))
 ```
 
-```{r olpwords-graphs-b, fig.height = 5, fig.cap = "Words about epistemic modality}}
+```{r olpwords-graphs-b, fig.height = 5, fig.cap = "Words about epistemic modality"}
 word_frequency_graphs(c("really", "perhaps", "course", "certainly"))
 ```
 
-```{r olpwords-graphs-c, fig.height = 5, fig.cap = "Words about quantity"}}
+```{r olpwords-graphs-c, fig.height = 5, fig.cap = "Words about quantity"}
 word_frequency_graphs(c("quite", "sort", "seem", "much"))
 ```
 
-```{r olpwords-graphs-d, fig.height = 5, fig.cap = "Words about mental state attribution"}}
+```{r olpwords-graphs-d, fig.height = 5, fig.cap = "Words about mental state attribution"}
 word_frequency_graphs(c("think", "want", "get"))
 ```
 
-```{r olpwords-graphs-e, fig.height = 5, fig.cap = "Words about quantification"}}
+```{r olpwords-graphs-e, fig.height = 5, fig.cap = "Words about quantification"}
 word_frequency_graphs(c("anything", "something", "things"))
 ```
 

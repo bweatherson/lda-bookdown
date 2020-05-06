@@ -31,7 +31,7 @@ The aim here is not to match some Platonic ideal of correct classification. The 
 
 In sporting terms, this is a case where you really need to have 'make-up calls'. If we want to track how well Philosophy of Science, say, was represented in these journals, then about 1/2 the close calls involving whether to put a topic in the Philosophy of Science category should be resolved in favour of saying it is in that category. That principle is something I'll come back to a few times in what follows.
 
-## Splitting Up Topics
+## Splitting Up Topics {#subtopics-section}
 
 Some of the topics just look disjunctive, no matter [how hard I tried](#methodology-chapter) to get rid of disjunctiveness. And this affects the categorisation. 
 

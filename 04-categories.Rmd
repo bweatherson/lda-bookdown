@@ -1,9 +1,5 @@
 # Categories {#categorychapter}
 
-Some stuff here.
-
-## Summary {#categorysummary}
-
 The 90 topics we've looked at so far are informative, but they are arguably too detailed to provide a useful big picture view of what's happening in philosophy. To do that I divided up the 90 topics into 12 categories. Or, to be more precise, I divided 80 of them up into categories, and the other 10 were split between two categories. I'll return in the next chapter to how this division was made, and in particular how the splitting was done. For now, let's look at the categories, and then look at their representation in the literature over time.
 
 <br>
@@ -47,7 +43,7 @@ kable(category_table,  col.names = c("Topic", "Category", "Subject", "Keywords")
 
 ## Graphs
 
-Next, we'll look at how many articles are in each category in each year. I'll say an article is 'in' a category if the probability the model gives to the article being from that category is greater than the probability it gives to the article being from any other category. And the probability an article is from a category is just the sum of the probability that it is from one of the topics (or subtopics) that make up the category. (What's a subtopic? I'll get to that in the next chapter.)
+First, let's look at how many articles are in each category in each year. I'll say an article is 'in' a category if the probability the model gives to the article being from that category is greater than the probability it gives to the article being from any other category. And the probability an article is from a category is just the sum of the probability that it is from one of the topics (or subtopics) that make up the category. (What's a subtopic? I'll get to that in [the next chapter](#subtopics-section.)
 
 ```{r category_count}
 category_count <- category_gamma %>%
@@ -64,11 +60,21 @@ category_count <- category_gamma %>%
   complete(year, category, fill = list(n= 0))
 
 category_count_graph <- ggplot(category_count, aes(x = year, y = n, color=category, group=category)) +
-    labs(x = "Year", y = "Number of Articles", title = "Number of Articles in Each Category Per Year")
+    labs(x = "Year", y = "Number of Articles") +
+    scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
+#                     minor_breaks = scales::pretty_breaks(n = 15),
+                      minor_breaks = 10 * 1:20,
+#                     breaks = scales::pretty_breaks(n = 3)) +
+                      breaks = 50 * 1:3) +
+    scale_x_continuous(expand = expansion(mult = c(0.01, .03)),
+                     minor_breaks = 10 * 1:201,
+                     breaks = 40 * 1:50) +
+    spaghettistyle +
+    theme(legend.title = element_blank())  
   
-category_count_graph +     
-  geom_point(size = 0.5, alpha = 0.5) +
-  theme(legend.title = element_blank())
+category_count_graph +  
+  geom_point(size = 0.5, alpha = 0.5)
+
 ```
 
 That's a lot of dots, and I'm not sure it's easy to see a trendline in there. Let's add some automatic trendlines to see if it's any clearer.

@@ -220,11 +220,11 @@ facetgraph(weight_ratio, "Weighted Frequency of Articles", "Weighted Frequency o
 The problems of the previous section are just exacerbated if we go to raw frequencies.
 
 ```{r graph4a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Frequency of Articles"}
-spaghettigraph(count_ratio, "Raw Frequency of Articles", "Raw Frequencyof Articles in Each Topic Per Year")
+spaghettigraph(count_ratio, "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
 ```
 
 ```{r graph4b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Frequency of Articles (Faceted)"}
-facetgraph(count_ratio, "Raw Frequency of Articles", "Raw Frequencyof Articles in Each Topic Per Year")
+facetgraph(count_ratio, "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
 ```
 
 All this tells us is that there is a lot more diversity, and a lot more specialisation, in journals in the last 30 years than there was 120 years ago. Everything else gets lost in the noise.

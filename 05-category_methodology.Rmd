@@ -394,7 +394,44 @@ Fourth, I didn't just find these categories lying around and used this tool to c
 
 Fifth, I'm not applying this to three categories: Idealism, Aesthetics and Philosophy of Religion. Both Aesthetics and Philosophy of Religion really don't have borderline cases. And the technique I'm using doesn't work so well when the categories are of very uneven size. So it is often gives wonky results for those two categories. (It also on occasion gives some of the cleanest splits - but it feels random when it does.) Still, I wasn't worried about those two categories. And Idealism is a special case that I'll come back to at the end of the chapter.
 
-So I'm looking at 9 categories to check that the boundaries between them are drawn roughly correctly. And that means there are 9 choose 2, i.e., 36, boundaries to look at. Let's get to it.
+So I'm looking at 9 categories to check that the boundaries between them are drawn roughly correctly. And that means there are 9 choose 2, i.e., 36, boundaries to look at. These are in subsections, not sections, so they don't show up in the sidebar. So I've included links here to the list of boundaries that I'll survey.
+
+1. [Epistemology-Ethics](#catbound23)
+2. [Epistemology-History of Philosophy](#catbound24)
+3. [Epistemology-Logic and Mathematics](#catbound26)
+4. [Epistemology-Metaphysics](#catbound27)
+5. [Epistemology-Philosopy of Language](#catbound28)
+6. [Epistemology-Philosopy of Mind](#catbound29)
+7. [Epistemology-Philosopy of Science](#catbound211)
+8. [Epistemology-Social and Political](#catbound212)
+9. [Ethics-History of Philosophy](#catbound34)
+10. [Ethics-Logic and Mathematics](#catbound36)
+11. [Ethics-Metaphysics](#catbound37)
+12. [Ethics-Philosopy of Language](#catbound38)
+13. [Ethics-Philosopy of Mind](#catbound39)
+14. [Ethics-Philosopy of Science](#catbound311)
+15. [Ethics-Social and Political](#catbound312)
+16. [History of Philosophy-Logic and Mathematics](#catbound46)
+17. [History of Philosophy-Metaphysics](#catbound47)
+18. [History of Philosophy-Philosopy of Language](#catbound48)
+19. [History of Philosophy-Philosopy of Mind](#catbound49)
+20. [History of Philosophy-Philosopy of Science](#catbound411)
+21. [History of Philosophy-Social and Political](#catbound412)
+22. [Logic and Mathematics-Metaphysics](#catbound67)
+23. [Logic and Mathematics-Philosopy of Language](#catbound68)
+24. [Logic and Mathematics-Philosopy of Mind](#catbound69)
+25. [Logic and Mathematics-Philosopy of Science](#catbound611)
+26. [Logic and Mathematics-Social and Political](#catbound612)
+27. [Metaphysics-Philosopy of Language](#catbound78)
+28. [Metaphysics-Philosopy of Mind](#catbound79)
+29. [Metaphysics-Philosopy of Science](#catbound711)
+30. [Metaphysics-Social and Political](#catbound712)
+31. [Philosopy of Language-Philosopy of Mind](#catbound89)
+32. [Philosopy of Language-Philosopy of Science](#catbound811)
+33. [Philosopy of Language-Social and Political](#catbound812)
+34. [Philosopy of Mind-Philosopy of Science](#catbound911)
+35. [Philosopy of Mind-Social and Political](#catbound912)
+36. [Philosopy of Science-Social and Political](#catbound1112)
 
 ```{r cat-sort-01}
 cat_check(2, 3)

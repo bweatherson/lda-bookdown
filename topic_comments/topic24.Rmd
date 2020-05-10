@@ -1,0 +1,85 @@
+```{r t24a}
+jjj <- 24
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t24b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+#source('topic_summary_facet_graph.R')
+# The graphs blow up here, so we're increasing the upper bound
+yupper <- max(filter(journalgamma_frequency, topic == jjj)$gamfre, 0.3, na.rm=TRUE)
+
+facet_labels <- chap_two_facet_labels %>%
+  mutate(year = 1944.5, gamfre = yupper)
+
+facet_labels$journal <- factor(facet_labels$journal, levels = journal_order)
+
+indiv_journal_graphs <- ggplot(data = filter(journalgamma_frequency, topic == jjj) %>% drop_na(), aes(x = year, y = gamfre))  +
+  theme(legend.position="none") +
+  coord_cartesian(ylim=c(0, yupper), expand = TRUE) +
+  scale_y_continuous(breaks = c(0.1,0.2)) +
+  labs(x = "Year", y = "Weighted Proportion of Articles", title = the_categories$subject[jjj]) +
+  theme_minimal() +
+  theme(plot.title = element_text(size = rel(1), 
+                                  face = "bold",
+                                  colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100),
+                                  margin = margin(0, 0, 5, 0)),
+        strip.text = element_blank(),
+        panel.spacing.x = unit(0.3, "lines"),
+        panel.background = element_blank(),
+        panel.spacing.y = unit(0.4, "lines"),
+        axis.title.x = element_text(size = rel(1)),
+        axis.title.y = element_text(size = rel(1)),
+        panel.grid.major = element_line(color = "grey85", size = 0.08),
+        panel.grid.minor = element_line(color = "grey88", size = 0.05),
+        legend.position="none") +
+  geom_point(size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) + 
+  facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names)) +
+  geom_text(data = facet_labels,
+            mapping = aes(label = short_name),
+            vjust = "inward", 
+            hjust = "middle",
+            fontface = "bold", 
+            size = 3,
+            colour = "grey40")
+print(indiv_journal_graphs)
+```
+
+```{r t24c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t24d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t24e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+Note I had to change the scales here, especially because of the Aristotelian Society.
+
+Compare max values for different journals.
+
+Note that there are 30 highly cited articles. Bernard Williams, Frank Jackson, Stephen Yablo, Philippa Foot. Kind of good writers. (Though also Wittgenstein, so shrug emoji.)
+
+Binary sort
+
+Not actually a subject, more a style. Look at the keywords. Maybe do the keyword graphs. And maybe even facet the graph for surely, certainly, perhaps, quite.
+
+It is driven a lot by Aristotelian Society. But stays at 10% of PR for years (maybe Malcolm's influence). Never really catches on a J Phil, and especially at BJPS. Going up and up at PPR and Ethics.
+
+Advice to young players: stop word out a bunch of these words.

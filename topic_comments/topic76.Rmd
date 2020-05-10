@@ -1,0 +1,67 @@
+```{r t76a}
+jjj <- 76
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t76b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t76c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t76d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t76e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+The model separates out the theory of [Knowledge](#topic74) from the theory of [Justification](#topic76), but they end up with the very same graph. And it's not like the division is particularly clean; some of the main papers from the Analysis of Knowledge debate end up here. 
+
+This topic has even fewer papers from the early years that are clearly in the topic. The first paper that gets a topic probability above one-third is by Harry Frankfurt! This tells us something interesting about the background to Gettier's 1963 paper. Just a few years before that paper, there was virtually no discussion of beliefs being justified. It wasn't that Gettier showed that a familiar concept couldn't play a role in the analysis of knowledge. He effectively introduced the concept of justification.
+
+Another way to think about the division the model is making here is that the earlier topic is Knowledge-first epistemology, this is Belief-first epistemology, and the upcoming topic on [Formal Epistemology](#topic84) is credence-first epistemology. The model thinks 'justified' and 'justification' are, respectively, $10^5$ and $10^8$ times more likely to appear in this topic than in Knowledge. But it also thinks 'believe', 'believing', 'beliefs' and 'believed' are, respectively, $10^3$, $10^5$, $10^{14}$ and $10^{15}$ times more likely to be here. On the other hand, it thinks 'know' and 'knows' are $10^6$ and $10^{14}$ times less likely to be here than in Knowledge, while 'skeptic' and 'williamson' are also $10^{14}$ and $10^{20}$ times less likely. Obviously a lot of these words are used in a lot of the articles you seee above, which is why the model has ambivalent verdicts about the papers. But that's the distinction it is drawing. 
+
+With that in mind, the trends over the last few years of the three main epistemology topics are interesting.
+
+```{r modern-epistemology-graph, fig.cap= "Trends in Epistemology in the Last 25 years of the study"}
+t <- weight_ratio %>%
+  filter(year > 1988, topic == 74 | topic == 76 | topic == 84) %>%
+  mutate(topic = as.numeric(topic)) %>%
+  inner_join(the_categories, by = "topic") %>%
+  mutate(topic = as.factor(topic))
+
+ggplot(t, aes(x = year, y = y, color=subject, group=subject)) + 
+#    scale_colour_discrete(labels = subject) + 
+    spaghettistyle +
+    theme(legend.title = element_blank(), 
+          legend.position = "right",
+          legend.spacing.x = unit(0.2, 'pt'),
+          legend.text = element_text(size = rel(1))) +
+    geom_point(size = 1, alpha = 1) +
+    labs(x = "Year", y = "Proportion of all journal articles", title = "Epistemology Topics") +
+    scale_x_continuous(minor_breaks = 10 * 188:201,
+                       expand = expansion(mult = c(0.01, 0.01))) +
+    scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
+  geom_smooth(size = 0.5, se = F, method = "loess", formula = "y ~ x")
+
+```
+
+Justification was for a while the biggest of the three topics. But while it didn't fall, it also hasn't shared in the rapid rise of Knowledge or, especially, Formal Epistemology. The dip in Knowledge in the last few years looks to me like a blip, but that will be interesting to check back on in a little while.

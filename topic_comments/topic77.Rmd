@@ -1,0 +1,42 @@
+```{r t77a}
+jjj <- 77
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t77b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t77c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t77d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t77e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+Harry Frankfurt's article [Alternate Possibilities and Moral Responsibility](https://philpapers.org/rec/FRAAPA-8) had as much impact on the trajectory of the journals as any other article in the data set. 
+
+It essentially launched a new topic, the one we see here. Now there would always have been a free will topic - that's a perennial philosophical concern - but Frankfurt's work meant that there was a detectable new topic about the issues Frankfurt's examples raised.
+
+And it ensured that subsequent work on free will would be in ethics, not metaphysics. When I was an undergraduate, free will was covered in the metaphysics unit of intro, not the ethics unit. I suspect that was because free will was associated with possibility, and possibility is a paradigmatically metaphysical topic. But Frankfurt showed that possibility had less to do with moral responsibility than we thought. And once that happened, it was clear that free will was more tightly tied to the moral notion (responsibility) than the metaphysical notion (possibility). And so we get a topic that is naturally placed in Ethics, and indeed was largely discussed in _Ethics_.
+
+The model, however, does two other odd things here. One is that it puts Gettier's paper in this topic. I think it got thrown by the word 'Jones'. The other is that it put a whole bunch of work on philosopy of fiction in here as well. Fiction turned out to be a tricky topic for models; on different runs it turned up in all sorts of different places. Here it goes with Frankfurt cases, so strictly speaking this is a disjunctive topic. But if you look at what the articles are about, it's something like an 80/20 split in favor of Frankfurt case articles. So that's how I'm identifying the topic.

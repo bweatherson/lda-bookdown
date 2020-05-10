@@ -8,7 +8,7 @@ First, I'm separating the times in the data set into five eras. My idea was to h
 ```{r erasummary}
 year_articles <- articles %>%
   group_by(year) %>%
-  dplyr::summarise(n = n_distinct(file)) %>%
+  dplyr::summarise(n = n_distinct(document)) %>%
   mutate(cs = cumsum(n))
 
 era <- function(x)
@@ -23,7 +23,7 @@ era <- function(x)
 era_articles <- articles %>%
   mutate(epoch = era(year)) %>%
   group_by(epoch) %>%
-  dplyr::summarise(n = n_distinct(file)) 
+  dplyr::summarise(n = n_distinct(document)) 
 
 era_table <- era_articles %>%
   bind_cols(start = c(1876, 1946, 1966, 1982, 1999), end = c(1945, 1965, 1981, 1998, 2013)) %>%
@@ -53,7 +53,7 @@ Within each of these parts, I'm going to run three studies. First, I'll look at 
 # General setup tables that I'll use a lot
 
 article_year <- articles %>%
-  select(filename = file, year)
+  select(document, year)
 
 cat_list <- the_categories %>%
   select(topic, subject)
@@ -128,7 +128,7 @@ category_summary_gamma <- category_gamma %>%
   dplyr::summarise(w= sum(w))
 
 category_era_gamma <- category_gamma %>%
-  inner_join(article_year, by = c("document" = "filename")) %>%
+  inner_join(article_year, by = "document") %>%
   mutate(epoch = era(year)) %>%
   group_by(epoch, cat_name) %>%
   dplyr::summarise(g = sum(gamma)) %>%
@@ -212,7 +212,7 @@ decade_distinctive_wide_bottom <- decade_gamma %>%
 # Category by Decade
 
 category_decade_gamma <- category_gamma %>%
-  inner_join(article_year, by = c("document" = "filename")) %>%
+  inner_join(article_year, by = "document") %>%
   filter(year > 1889, year < 2010) %>%
   mutate(the_dec = decade(year)) %>%
   group_by(the_dec, cat_name) %>%
@@ -262,7 +262,7 @@ common_word_list <- big_word_list %>%
   filter(word %in% common_words$word)
 
 common_word_list <- common_word_list %>%
-  inner_join(article_year, by = "filename")
+  inner_join(article_year, by = "document")
 
 common_word_year <- common_word_list %>%
   group_by(word, year) %>%
@@ -680,7 +680,7 @@ And then one that is a surprise to me: Feminism and Friendship having its distin
 feminism_seventies <- relabeled_gamma %>%
   filter(year > 1969, year < 1980, topic == 69, gamma > 0.4) %>%
   select(document) %>%
-  inner_join(articles, by = c("document" = "file")) %>%
+  inner_join(articles, by = "document") %>%
   arrange(year, length) %>%
   select(citation)
 

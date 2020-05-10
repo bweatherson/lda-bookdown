@@ -124,7 +124,7 @@ Look in the facet for _Philosophical Review_. There are two dots that are much h
 ```{r prexample1}
 phil_review_1999 <- relabeled_gamma %>%
   filter(topic == 21, year == 1999, journal == "Philosophical Review") %>%
-  inner_join(articles, by.x = "document", by.y = "file") %>%
+  inner_join(articles, by = "document") %>%
   arrange(fpage) %>%
   select(citation, gamma)
 
@@ -199,9 +199,7 @@ You'll often see some very low probabilities turning up in these tables. Sometim
 ```{r child = 'topic_comments/topic04.Rmd'}
 ```
 
-```{r t05}
-jjj <- 5
-source('topic_summary.R')
+```{r child = 'topic_comments/topic05.Rmd'}
 ```
 
 ```{r child = 'topic_comments/topic06.Rmd'}
@@ -258,12 +256,8 @@ source('topic_summary.R')
 ```{r child = 'topic_comments/topic23.Rmd'}
 ```
 
-```{r t24}
-jjj <- 24
-source('topic_summary.R')
+```{r child = 'topic_comments/topic24.Rmd'}
 ```
-
-There is a lot to say here, and this might be one of the last topics I complete.
 
 ```{r child = 'topic_comments/topic25.Rmd'}
 ```
@@ -271,15 +265,10 @@ There is a lot to say here, and this might be one of the last topics I complete.
 ```{r child = 'topic_comments/topic26.Rmd'}
 ```
 
-
-```{r t27}
-jjj <- 27
-source('topic_summary.R')
+```{r child = 'topic_comments/topic27.Rmd'}
 ```
 
-```{r t28}
-jjj <- 28
-source('topic_summary.R')
+```{r child = 'topic_comments/topic28.Rmd'}
 ```
 
 ```{r child = 'topic_comments/topic29.Rmd'}
@@ -420,34 +409,22 @@ source('topic_summary.R')
 ```{r child = 'topic_comments/topic74.Rmd'}
 ```
 
-```{r t75}
-jjj <- 75
-source('topic_summary.R')
+```{r child = 'topic_comments/topic75.Rmd'}
 ```
 
-```{r t76}
-jjj <- 76
-source('topic_summary.R')
+```{r child = 'topic_comments/topic76.Rmd'}
 ```
 
-```{r t77}
-jjj <- 77
-source('topic_summary.R')
+```{r child = 'topic_comments/topic77.Rmd'}
 ```
 
-```{r t78}
-jjj <- 78
-source('topic_summary.R')
+```{r child = 'topic_comments/topic78.Rmd'}
 ```
 
-```{r t79}
-jjj <- 79
-source('topic_summary.R')
+```{r child = 'topic_comments/topic79.Rmd'}
 ```
 
-```{r t80}
-jjj <- 80
-source('topic_summary.R')
+```{r child = 'topic_comments/topic80.Rmd'}
 ```
 
 ```{r child = 'topic_comments/topic81.Rmd'}
@@ -457,6 +434,9 @@ source('topic_summary.R')
 ```
 
 ```{r child = 'topic_comments/topic83.Rmd'}
+```
+
+```{r child = 'topic_comments/topic84.Rmd'}
 ```
 
 ```{r child = 'topic_comments/topic85.Rmd'}

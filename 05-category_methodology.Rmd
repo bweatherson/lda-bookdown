@@ -50,12 +50,12 @@ temp_gamma <- tidy(binary_lda, matrix = "gamma") %>%
 temp_binary_one <- temp_gamma %>%
   filter(topic == 1) %>%
   top_n(15, gamma) %>%
-  inner_join(articles, by = c("document" = "file")) %>%
+  inner_join(articles, by = "document") %>%
   select(citation)
 temp_binary_two <- temp_gamma %>%
   filter(topic == 2) %>%
   top_n(15, gamma) %>%
-  inner_join(articles, by = c("document" = "file")) %>%
+  inner_join(articles, by = "document") %>%
   select(citation)
 
 # Get Word Betas

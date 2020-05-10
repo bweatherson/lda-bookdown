@@ -53,22 +53,22 @@ history_articles <- articles %>%
   filter(file %in% filter(relabeled_articles, topic == 4)$document)
 
 history_word_list <- all_journals_tibble %>%
-  filter(filename %in% filter(relabeled_articles, topic == 4)$document)
+  filter(document %in% filter(relabeled_articles, topic == 4)$document)
 
 history_mentions <- history_word_list %>%
   group_by(word) %>%
-  summarise(n1 = n_distinct(filename))
+  summarise(n1 = n_distinct(document))
 
 
 history_mentions_10 <- history_word_list %>%
   filter(wordcount > 9) %>%
   group_by(word) %>%
-  summarise(n10 = n_distinct(filename))
+  summarise(n10 = n_distinct(document))
 
 history_mentions_50 <- history_word_list %>%
     filter(wordcount > 49) %>%
     group_by(word) %>%
-    summarise(n50 = n_distinct(filename))
+    summarise(n50 = n_distinct(document))
 
 
 history_names <- history_mentions_50 %>%
@@ -85,7 +85,7 @@ all_mention_50 <- all_journals_tibble %>%
   filter(word %in% history_names$word) %>%
   filter(wordcount > 49) %>%
   group_by(word) %>%
-  summarise(a50 = n_distinct(filename))
+  summarise(a50 = n_distinct(document))
 
 history_names <- history_names %>%
   inner_join(all_mention_50, by = "word")

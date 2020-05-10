@@ -16,7 +16,7 @@ certainty_check <- relabeled_gamma %>%
   inner_join(relabeled_articles, by = "document") %>%
   select(document, topic, m, c)
 
-certainty_check <- inner_join(certainty_check, articles, by = c("document" = "file")) %>%
+certainty_check <- inner_join(certainty_check, articles, by = "document") %>%
   select(document, topic, m, c, citation, length) %>%
   arrange(-m) %>%
   inner_join(the_categories, by = "topic") %>%
@@ -566,7 +566,7 @@ uk_mid_century_articles <- articles %>%
   filter(year < 1974)
 
 uk_mid_century_gamma <- relabeled_gamma %>%
-  filter(document %in% uk_mid_century_articles$file) %>%
+  filter(document %in% uk_mid_century_articles$document) %>%
   filter(topic < 81) %>%
   group_by(topic) %>%
   dplyr::summarise(uk = sum(gamma))
@@ -577,7 +577,7 @@ us_mid_century_articles <- articles %>%
   filter(year < 1974)
 
 us_mid_century_gamma <- relabeled_gamma %>%
-  filter(document %in% us_mid_century_articles$file) %>%
+  filter(document %in% us_mid_century_articles$document) %>%
   filter(topic < 81) %>%
   group_by(topic) %>%
   dplyr::summarise(us = sum(gamma))
@@ -630,7 +630,7 @@ uk_late_century_articles <- articles %>%
   filter(year > 1973)
 
 uk_late_century_gamma <- relabeled_gamma %>%
-  filter(document %in% uk_late_century_articles$file) %>%
+  filter(document %in% uk_late_century_articles$document) %>%
   filter(topic > 10) %>%
   group_by(topic) %>%
   dplyr::summarise(uk = sum(gamma))
@@ -640,7 +640,7 @@ us_late_century_articles <- articles %>%
   filter(year > 1973)
 
 us_late_century_gamma <- relabeled_gamma %>%
-  filter(document %in% us_late_century_articles$file) %>%
+  filter(document %in% us_late_century_articles$document) %>%
   filter(topic >10) %>%
   group_by(topic) %>%
   dplyr::summarise(us = sum(gamma))

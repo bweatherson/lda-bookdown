@@ -91,7 +91,7 @@ Now let's look at how often these men (and they are all men) are mentioned in th
 
 ```{r idealism_author_graphs}
 word_year <- all_journals_tibble %>%
-  inner_join(article_year_tibble, by = "filename") %>%
+  inner_join(article_year_tibble, by = "document") %>%
   group_by(word, year) %>%
   summarise(count = sum(wordcount))
 ```

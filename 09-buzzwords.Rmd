@@ -318,7 +318,7 @@ early_articles <- articles %>%
 
 # Restrict gamma to those
 early_gamma <- relabeled_gamma %>%
-  filter(document %in% early_articles$file)
+  filter(document %in% early_articles$document)
 
 # Mean and max
 early_journal_summary <- early_gamma %>%

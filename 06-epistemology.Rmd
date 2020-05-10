@@ -15,7 +15,7 @@ epistemology_all_journals_classifications <- epistemology_all_journals_gamma %>%
 epistemology_all_journals_titles_and_topics <- merge(
   epistemology_all_journals_classifications, 
   articles, 
-  by.x="document", by.y="file")
+  by = "document")
 
 epistemology_year_topic_mean <- epistemology_all_journals_titles_and_topics %>% ungroup() %>% 
   group_by(topic)  %>% 
@@ -46,14 +46,14 @@ epistemology_relabeled_gamma <- merge(epistemology_all_journals_gamma, epistemol
   select(-topic) %>%
   dplyr::rename(topic = rank)
 
-epistemology_relabeled_gamma <- merge(epistemology_relabeled_gamma, articles, by.x="document", by.y="file") %>%
+epistemology_relabeled_gamma <- merge(epistemology_relabeled_gamma, articles, by = "document") %>%
   select(document, gamma, topic, year, journal, length) %>%
   mutate(length = case_when(
     is.na(length) ~ 1,
     TRUE ~ length
   ))
 
-epistemology_high_cite_gamma <- merge(highly_cited, epistemology_relabeled_articles, by.x = "file", by.y = "document") %>% 
+epistemology_high_cite_gamma <- merge(highly_cited, epistemology_relabeled_articles, by = "document") %>% 
   arrange(desc(Cites))
 
 epistemology_yeargamma <- epistemology_relabeled_gamma  %>%
@@ -103,7 +103,7 @@ epistemology_gamma <- category_gamma %>%
   dplyr::summarise(g = sum(gamma)) %>%
   filter(g > 0.2) %>%
   arrange(g) %>%
-  inner_join(articles, by = c("document"="file")) %>%
+  inner_join(articles, by = "document") %>%
   select(document, g, authall, title, citation)
 
 epistemology_cuts <- category_gamma %>%
@@ -113,7 +113,7 @@ epistemology_cuts <- category_gamma %>%
   filter(g < 0.2) %>%
   arrange(-g) %>%
   top_n(8, g) %>%
-  inner_join(articles, by = c("document"="file")) %>%
+  inner_join(articles, by = "document") %>%
   select(citation)
 
 epistemology_last_in <- epistemology_gamma %>%
@@ -156,7 +156,7 @@ So the next step was to take the `r nrow(epistemology_gamma)` articles and, as y
 ```{r epistemology_set_up_graphs}
 year_articles <- articles %>%
   group_by(year) %>%
-  dplyr::summarise(n = n_distinct(file)) %>%
+  dplyr::summarise(n = n_distinct(document)) %>%
   mutate(cs = cumsum(n))
 
 epistemology_yearcount_postwar <- epistemology_yearcount %>%
@@ -405,7 +405,7 @@ epistemology_categories <- epistemology_wide %>%
                names_to = "category", 
                names_prefix = "v.") %>%
   select(document, category, gamma = value) %>%
-  inner_join(articles, by = c("document"="file")) %>%
+  inner_join(articles, by = "document") %>%
   select(document, category, gamma, year) %>%
   filter(year > 1945) %>%
   group_by(category, year) %>%

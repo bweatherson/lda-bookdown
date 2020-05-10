@@ -1,0 +1,44 @@
+```{r t75a}
+jjj <- 75
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t75b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t75c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t75d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t75e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+A funny thing about contemporary academia is that there is very little work on (single person) decision theory outside of philosophy, but huge amounts of work on (multi person) game theory. Inside philosophy, the situation is completely reversed. Game theory is a tiny topic. I keep trying to do something about this, primarily by writing game theoretic papers and teaching game theory courses, but I'm not making a big impact.
+
+This topic actually covers three quite disparate subjects.
+
+- General work on the nature of games, some of it related to the discussion of games and play in Wittgenstein.
+- The use of Prisoners Dilemma and other game theoretic tools to analyse social interactions. (This is what accounts for the spike in _Philosophy and Public Affairs_).
+- The use of evolutionary game theory to explain some puzzling biological phenomena.
+
+The last of these is the largest of the three, which is why I've put the topic in Philosophy of Science. But none of them are very large, and collectively they barely make up enough to deserve being a topic.

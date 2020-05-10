@@ -52,7 +52,7 @@ category_count <- category_gamma %>%
   top_n(1, n) %>%
   ungroup() %>%
   select(document, category = cat_name) %>%
-  inner_join(articles, by = c("document" = "file")) %>%
+  inner_join(articles, by = "document") %>%
   select(document, year, category) %>%
   group_by(year, category) %>%
   dplyr::summarise(n = n_distinct(document)) %>%
@@ -92,7 +92,7 @@ In principle it's better to do this with probabilities rather than just these co
 ```{r category_graph_setup}
 
 category_gamma_graph <- category_gamma %>%
-  inner_join(articles, by = c("document" = "file")) %>%
+  inner_join(articles, by = "document") %>%
   select(journal, year, category = cat_name, gamma) %>%
   group_by(journal, year, category) %>%
   dplyr::summarise(g = sum(gamma)) %>%
@@ -223,7 +223,7 @@ In what remains of this chapter, I'll go one by one through eight of the twelve 
 
 ```{r tables_for_category_individual_sections}
 category_section_main_tibble <- category_gamma %>%
-  inner_join(articles, by = c("document" = "file")) %>%
+  inner_join(articles, by = "document") %>%
   select(document, topic, gamma, journal, year)
 
 category_by_topic <- category_section_main_tibble %>%
@@ -236,9 +236,9 @@ category_by_topic <- category_section_main_tibble %>%
   mutate(f = g/d)
 
 journal_denominator <- articles %>%
-  select(file, journal, year) %>%
+  select(document, journal, year) %>%
   group_by(journal, year) %>%
-  dplyr::summarise(d = n_distinct(file))
+  dplyr::summarise(d = n_distinct(document))
 
 category_by_journal <- category_section_main_tibble %>%
   inner_join(the_categories, by = "topic") %>%

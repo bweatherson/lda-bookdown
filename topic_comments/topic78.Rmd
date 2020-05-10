@@ -1,0 +1,36 @@
+```{r t78a}
+jjj <- 78
+source('topic_summary_data.R')
+opts_knit$set(eval.after = "fig.cap")
+```
+
+```{r t78b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
+source('topic_summary_facet_graph.R')
+```
+
+```{r t78c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_summary_overall_graph.R')
+```
+
+```{r t78d}
+cat("<br>")
+source('topic_summary_char_art.R')
+temp_dt
+```
+
+```{r t78e}
+cat("<br>")
+source('topic_summary_high_cites.R')
+if(is_high_cites == 1)
+	{cat("<br>")}
+if(is_high_cites == 1)
+	{high_table}
+if(is_high_cites == 1)
+	{cat("<br>")}
+cat("\n
+	**Comments**
+	\n")
+```
+
+Surprisingly small. Just gets squeezed. Not a single article above 10 pages and above 0.5 probability.

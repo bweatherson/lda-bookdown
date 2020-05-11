@@ -109,14 +109,22 @@ Recall that each of the 398 articles in Early Modern is also assigned a probabil
 
 We can also look through each of the other topics and ask, of the articles in those topics, what is the probability the model gives to them being Early Modern articles? If you do all 89 calculations, it turns out the answer is the topic about the [Ontological Argument](#topic29). This is one of the smaller topics, but the articles in it have on average a probability of just over 2% of being Early Modern Articles. On the other hand, the articles in [Game Theory](#topic75) have a mean probability of being Early Modern articles of only 0.01%. I suspect this is because the model separates out Early Modern from [Social Contract Theory](#topic31), and any paper on the intersection of 17th/18th century philosophy with game theory ends up classifed as a Social Contract paper.
 
-That's enough statistics to get us started, let's move onto some nice graphs.
+That's enough statistics to get us started, let's move onto some nice graphs. First, I'll show the proportion of articles that are in that topic in each year. I'm using weighted sums for this. So really what each point here shows is the average probability that an article in this year is in this topic.
+
+```{r exampleoverall, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+cat("<br>")
+source('topic_comments/topic_summary_overall_graph.R')
+cat("<br>")
+```
+
+Next, I'll do the same thing but broken down by journals.
 
 ```{r examplefacet, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
 jjj <- 21
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
-As you can see, this has years on the x-axis, and ratios on the y-axis, and 12 'facets'. What each dot represents is average probability for an article in a particular year-journal pair being in this topic. Let's work through that with an example.
+As you can see, this has years on the x-axis, and ratios on the y-axis, and 12 'facets'. What each dot represents is average probability for an article in a particular year-journal pair being in this topic. It helps to understand what this means by working through an example.
 
 Look in the facet for _Philosophical Review_. There are two dots that are much higher than the rest, both of them around 0.15. The left-hand one, which is just under 0.15, is from the early 1930s. The right-hand one, just over 0.15, is from 1999. And I'm going to talk through this one for a bit. Here are the 11 articles in _Philosophical Review_ that year, along with their probability of being in topic 21.^[The meta-data includes messy things like "Sleighjr", and I just haven't corrected them - I'm just going with what JSTOR feeds me.]
 
@@ -142,17 +150,11 @@ But how does that explain Murdoch's article? Surely that's an early modern artic
 
 So that's how the facet graphs are constructed. Apart from the _Mind_ facet,the graphs do not start all the way to the left edge, because those journals didn't start publishing until after _Mind_ did. The color of the dots is taken from the color the topic has in the big graphs we will do later when all 90 topics are presented on one graph.
 
-Note that the scale for these graphs will top out at either 0.2 or the highest value graphed, whatever is highest. I sort of wanted them to all be on a common scale, so you could easily eyeball how active a topic is. But that meant so many graphs were just squiggles barely above the x-axis. Instead I made most of them (76 to be precise) have a common scale, and the few outliers get their own scale. But I'll note this when it matters.
+I need to add a few words about the scale of these graphs. There were two competing considerations when setting the scale. On the one hand, it would be good to have the scale of the y-axis be the same for all topics. That way when you're flipping through the pages, you get an immediate visual sense of how big the topic is. On the other hand, that approach forces us to set the scale to accommodate outliers. And if we do that, the vast majority of the graphs are just dots that bounce on or just above the x-axis.
 
-Next, I'll do the same graph but for all the journals at once. So here's what it looks like for topic 21. 
+So to deal with both these concerns I've split the difference somewhat. The vast majority of the overall graphs - the ones that show the prevalance of the topic across all journals, are set to a common scale. I've adjusted the scale a little for the really big topics, like [Idealism](#topic02) and [Ordinary Language Philosophy](#topic24), but mostly the scale is the same. On the other hand, the scales the for the graphs that break things up by journal varies a lot. So if you are trying to get a quick visual impression from the graphs, the first graph tells you something about the size of the topic, and the second graph tells you something about the distribution of the topic over the journals. But the second graph doesn't tell you, unless you look closely at the labelling on the y-axis, how big the topic is in each journal.
 
-```{r exampleoverall, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-cat("<br>")
-source('topic_comments/topic_summary_overall_graph.R')
-cat("<br>")
-```
-
-The big difference here is that I set the default upper limit to the y-axis at 0.05. There are only a handful of cases where that needs to be raised, but they require raising it by a lot.
+I have made one other visual note to help read the graphs. The gridlines in each graph are at the same places. So if the scale is increased for a large topic, you'll see lots of gridlines in the background, and that's a sign that it's a bigger topic as well. I'm not sure this is an ideal solution, but it seemed less bad than the others I tried.
 
 After these graphs, there are two tables of the articles that are in the topic. Here is the first.
 

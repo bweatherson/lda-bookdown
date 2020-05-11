@@ -4,13 +4,13 @@ source('topic_summary_data.R')
 opts_knit$set(eval.after = "fig.cap")
 ```
 
-```{r t04b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-source('topic_summary_facet_graph.R')
+```{r t04b, fig.cap=paste(the_categories$subject[jjj], fig.height= 5.2}
+source('topic_summary_overall_graph.R')
 ```
 
-```{r t04c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+```{r t04c, fig.cap=the_categories$subject[jjj], "Articles in Each Journal")}
 cat("<br>")
-source('topic_summary_overall_graph.R')
+source('topic_summary_facet_graph.R')
 ```
 
 ```{r t04d}
@@ -50,7 +50,7 @@ The first three give us some sense of the spread of the term around a topic. A w
 
 ```{r history-setup}
 history_articles <- articles %>%
-  filter(file %in% filter(relabeled_articles, topic == 4)$document)
+  filter(document %in% filter(relabeled_articles, topic == 4)$document)
 
 history_word_list <- all_journals_tibble %>%
   filter(document %in% filter(relabeled_articles, topic == 4)$document)

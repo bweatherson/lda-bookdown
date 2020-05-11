@@ -33,6 +33,8 @@ require(DT)
 ```
 
 ```{r loader}
+# Loads all the RData
+# Cached because this takes forever each step
 journal_short_names <- c(
   "Analysis" = "Analysis",
   "British Journal for the Philosophy of Science" = "BJPS",
@@ -72,7 +74,7 @@ load("imprint_lda.RData")
 ```
 
 ```{r word_list_loader}
-# The full word list
+# The long word list
 # This isn't on github because it might be proprietary
 # It's in a different module because (a) it isn't on github and (b) it is really slow
 load("all_journals_word_list.RData")
@@ -81,6 +83,7 @@ load("all_journals_word_list.RData")
 ```{r gamma_setup}
 # Gamma is the probability of article being in a topic
 # This retrieves it, and rearranges the topics chronologically
+
 all_journals_gamma <- tidy(thelda, matrix = "gamma")
 
 all_journals_classifications <- all_journals_gamma %>%
@@ -88,7 +91,7 @@ all_journals_classifications <- all_journals_gamma %>%
   top_n(1, gamma) %>%
   ungroup()
 
-all_journals_titles_and_topics <- merge(all_journals_classifications, articles, by = "document")
+all_journals_titles_and_topics <- inner_join(all_journals_classifications, articles, by = "document")
 
 year_topic_mean <- all_journals_titles_and_topics %>% ungroup() %>% 
   group_by(topic)  %>% 
@@ -104,6 +107,7 @@ relabeled_gamma <- merge(all_journals_gamma, year_topic_mean) %>%
   select(-topic) %>%
   dplyr::rename(topic = rank)
 
+# Some code left over from before this was written in tidy
 relabeled_gamma <- merge(relabeled_gamma, articles, by = "document") %>%
   select(document, gamma, topic, year, journal, length) %>%
   mutate(length = case_when(

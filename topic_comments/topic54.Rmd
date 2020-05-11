@@ -4,13 +4,13 @@ source('topic_summary_data.R')
 opts_knit$set(eval.after = "fig.cap")
 ```
 
-```{r t54b, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-source('topic_summary_facet_graph.R')
+```{r t54b, fig.cap=paste(the_categories$subject[jjj], fig.height= 5.2}
+source('topic_summary_overall_graph.R')
 ```
 
-```{r t54c, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
+```{r t54c, fig.cap=the_categories$subject[jjj], "Articles in Each Journal")}
 cat("<br>")
-source('topic_summary_overall_graph.R')
+source('topic_summary_facet_graph.R')
 ```
 
 ```{r t54d}

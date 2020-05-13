@@ -306,6 +306,7 @@ The result of all this is a model with two giant probability functions. These in
 
 The worked example involves David Makinson's article [The Paradox of the Preface](https://philpapers.org/rec/MAKTPO-9). The input to the model looks like this.
 
+<br>
 ```{r preface-words}
 preface_words <- word_list %>%
   filter(document == "10.2307_3326519") %>%
@@ -318,11 +319,13 @@ kable(preface_words,
       digits = c(0, 0)) %>% 
   kable_styling(full_width = F)
 ```
+<br>
 
 That is, the word 'rational' appears 14 times, 'beliefs' appear 11 times, and so on. This is a list of all of the words in the article, excluding the various stop words described above, and the words that appear one to three times.
 
 The model gives a probability to the article being in each of 90 topics. For this article, as for most articles, it just gives a residual probability to the vast majority of topics. So for 83 topics, the probability it gives to the article being in that topic is about 0.0003. The seven topics it gives a serious probability to are:
 
+<br>
 ```{r preface-topics}
 preface_topics <- relabeled_gamma %>%
   select(document, topic, gamma) %>%
@@ -337,11 +340,13 @@ kable(preface_topics,
       digits = c(0, 4)) %>% 
   kable_styling(full_width = F)
 ```
+<br>
 
 I'm going to spend a lot of time in [the next chapter](#all-90-topics) on what these topics are. For now I'll just refer to them by number.
 
 The model also gives a probability to each word turning up in a paradigm article for each of the topics. So for those nineteen words that the model saw as input, we can look at how frequently the model thinks a word should turn up in each of these 7 topics.
 
+<br>
 ```{r preface-large-table}
 preface_large_table <- relabeled_topics %>%
   select(-date) %>%
@@ -357,9 +362,11 @@ kable(preface_wide_table,
       col.names = c("Word", "Topic 4", "Topic 15", "Topic 37", "Topic 39", "Topic 59", "Topic 76", "Topic 81"), 
       caption = "Word Frequencies for topics in The Paradox of the Preface")
 ```
+<br>
 
 But the model doesn't think that "The Paradox of the Preface" is a paradigm case of any one of these topics; it thinks it is a mix of seven. So we can work out what it thinks the word frequences in that article should be by taking weighted means of these columns, with the weights given by the topic probabilities. And we get the following results.
 
+<br>
 ```{r preface-cross-check}
 overall_sum <- sum(preface_words$wordcount)
 
@@ -378,12 +385,13 @@ kable(preface_check_table,
       digits = c(0, 0, 4, 4),
       caption = "Measured and Modelled Frequencies for The Paradox of the Preface")
 ```
+<br>
 
 The modelled frequency of 'rational' is given by multiplying, across seven topics, the probability of the article being in that topic, by the expected frequency of the word given it is in that topic. And the same goes for the other words. What I'm giving here as the measured frequency of a word is not its frequency in the original article; it is its frequency among the words that survive the various filters I described above. In general that will be two to three times as large as its original frequency.
 
 The aim is that the two columns here would line up. And of course they don't. In fact, the model doesn't end up doing very well with this article; it is still a long way from equilibrium.
 
-```{r preface-graph}
+```{r preface-graph, fig.cap = "Modelled and Measured Frequency for Makinson (1965)"}
 cross_check_graph <- function(x){
   temp_gamma <- relabeled_gamma %>%
     select(document, gamma, topic) %>%
@@ -430,21 +438,29 @@ On that graph, every dot is a word type. The x-axis represents the frequency of 
 
 Actually, this is one of the least impressive jobs the model does. I measured the correlations between measured and modelled word frequency, i.e., what this graph represents, for 600 highly cited articles. Among those 600, this was the 23rd lowest correlation between measured and modelled frequency. But in many cases, that correlation was very strong. For example, here are the graphs for three more articles where the model manages to understand what's happening.
 
-```{r good-graphs}
+```{r good-graph-1, fig.cap = "Modelled and Measured Frequency for Davidson (1990)"}
 cross_check_graph("10.2307_2026863")
-cat("/n <br> /n")
+```
+
+```{r good-graph-2, fig.cap = "Modelled and Measured Frequency for Edgington (1995)"}
 cross_check_graph("10.2307_2254793")
-cat("/n <br> /n")
+```
+
+```{r good-graph-3, fig.cap = "Modelled and Measured Frequency for Dworkin (1996)"}
 cross_check_graph("10.2307_2961920")
 ```
 
 There are some articles that it doesn't manage as well, typically articles with unusual words. (It also does poorly with short articles, like "The Paradox of the Preface".)
 
-```{r bad-graphs}
+```{r bad-graph-1, fig.cap = "Modelled and Measured Frequency for Thomson (1998)"}
 cross_check_graph("10.2307_2671962")
-cat("/n <br> /n")
+```
+
+```{r bad-graph-2, fig.cap = "Modelled and Measured Frequency for Elster (1990)"}
 cross_check_graph("10.2307_2381783")
-cat("/n <br> /n")
+```
+
+```{r bad-graph-3, fig.cap = "Modelled and Measured Frequency for Fara (2005)"}
 cross_check_graph("10.2307_3506173")
 ```
 
@@ -452,11 +468,15 @@ A few different things are going on here. In Elster's article, the model doesn't
 
 So it isn't perfect, but as we saw above, it does pretty well with some cases. The papers I've shown so far are pretty much outliers though; here is what more typical articles look like.
 
-```{r medium-graphs}
+```{r medium-graph-1, fig.cap = "Modelled and Measured Frequency for Lewis (1979)"}
 cross_check_graph("10.2307_2215339")
-cat("/n <br> /n")
+```
+
+```{r medium-graph-2, fig.cap = "Modelled and Measured Frequency for Lakoff and Johnson (1980)"}
 cross_check_graph("10.2307_2025464")
-cat("/n <br> /n")
+```
+
+```{r medium-graph-3, fig.cap = "Modelled and Measured Frequency for Kelly (2003)"}
 cross_check_graph("10.2307_20140564")
 ```
 

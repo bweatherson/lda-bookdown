@@ -636,7 +636,8 @@ facetstyle <-   theme_minimal() +
 spaghettistyle <- facetstyle +
   theme(panel.grid.major = element_line(color = "grey80", size = 0.1),
         panel.grid.minor = element_line(color = "grey85", size = 0.05),
-        legend.text = element_text(size = rel(0.5))
+        legend.text = element_text(size = rel(0.5)),
+        plot.caption = element_text(size = rel(0.7))
         )
 freqstyle <-   spaghettistyle +
   theme(legend.text = element_text(size = rel(0.75)),

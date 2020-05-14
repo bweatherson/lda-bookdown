@@ -33,6 +33,8 @@ cat("\n
 	\n")
 ```
 
-Lots of ways to carve up metaphysics. This model puts possible worlds together with dispositions. That sort of makes sense. But it's a little weird - both topics are more connected to counterfactuals than they are to each other. Yet counterfactuals aren't in here. Oh well. And you could put either in with laws, but they aren't really in here either. 
+The top graph makes it look like this is a story of more or less continuous growth from the early 1960s onwards. But under the surface the story is a little more complicated. The topic includes articles about the nature of modality, and in particular the nature of possible worlds, but also articles about the nature of dispositions. 
 
-Would have loved to have included AJP in this, and then we really would have had a Lewis centric topic. As it is, Lewis is a keyword in this, and turns up in the citations (i.e., as author or as named in the title) in 21 articles in this topic. The word 'Lewis' turns up in three others, but it's C. I. Lewis not David.
+There are a lot of ways to carve up metaphysics into topics. This one makes some sense, but is also a bit puzzling. Both work on modality and work on dispositions are more connected to work on counterfactual conditionals than they are to each other. The end result is convenient for my project; we get two debates that are both in metaphysics, and reasonably close to each other, in the one topic. It's just funny to see them both separated from counterfactuals in this way.
+
+David Lewis is as important to the journals from 1965 onwards as any other philosopher, but he doesn't have any one topic that is really centered around his work. This is as close as it gets. Twenty-one of the articles here are either by Lewis, or reference him in their title. (There are other articles with "Lewis" in the title, but they are about C. I. Lewis, not David Lewis.) My biggest regret of this project was that I couldn't include the _Australasian Journal of Philosophy_ because it wasn't in the JSTOR database. That would have given us a much better sense of how Lewis's papers related to the general themes of the era.

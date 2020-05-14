@@ -473,7 +473,7 @@ Again, it's hard to see much of a trend here. _Mind_ stops publishing work that 
 cgt("Philosophy of Mind", 9)
 ```
 
-What I've called "19th Century Psych" actually hangs around through the 1930s. I guess it is Moore's ascension to the _Mind_ editorship that has a big effect here, along with other journals that are not interested in this kind of work coming online. Some of the other topics are arguably papers that could just have easily be classified with "Early Empirical". That's true for the handful of Color papers in the 1880s and the pre-1900 work on Emotions. It's also somewhat true of the early work on Self-Consciousness, though some of that work is also idealist influenced.
+The Psychology topic, which I had always associated with _Mind_ pre-1900, hangs around into the 1930s. It doesn't make up a big portion of what _Mind_ does in the 20th century, but it is an important part of the early years of _Philosophical Review_. Some of the other topics are arguably papers that could just have easily be classified with Psychology. That's true for the handful of Color papers in the 1880s and the pre-1900 work on Emotions. It's also somewhat true of the early work on Self-Consciousness, though some of that work is also idealist influenced.
 
 I've already talked about the Physicalism topic at some length and won't repeat it here; this was a very large surprise.
 

@@ -226,7 +226,7 @@ gbb("The Analysis of Mind")
 ```
 <br>
 
-This is part of why I was happy to include [19th Century Psych](#topic01) as a philosophy of mind topic. It is a bit different to how we now do philosophy of mind. But it includes a lot of what Russell does in _The Analysis of Mind_. And that's definition a philosophy of mind book.
+This is part of why I was happy to include [Psychology](#topic01) as a philosophy of mind topic. It is a bit different to how we now do philosophy of mind. But it includes a lot of what Russell does in _The Analysis of Mind_. And that's definition a philosophy of mind book.
 
 <br>
 ```{r problems-philosophy}
@@ -265,7 +265,7 @@ kable(gg_high_gamma %>%
 ```
 <br>
 
-It really is confident about Russellian works, relatively speaking. Let's see what happens if we leave off 19th Century Psych.
+It really is confident about Russellian works, relatively speaking. Let's see what happens if we leave off Psychology.
 
 <br>
 ```{r gutenberg-highest-b}
@@ -275,7 +275,7 @@ kable(gg_high_gamma %>%
         slice(1:10),
       col.names = c("Book", "Chapter", "Subject", "Probability"),
       digits = c(0, 0, 0, 4),
-      caption = "10 chapters with highest topic probabilities (excluding 19th Century Psych)")
+      caption = "10 chapters with highest topic probabilities (excluding Psychology)")
 ```
 <br>
 

@@ -1,4 +1,4 @@
-# Eras And Decades
+# Eras And Decades {#eraschapter}
 
 All of the analysis so far has been done by year. But sometimes it is helpful to look at a number of years at once. In this chapter I do this twice over. 
 

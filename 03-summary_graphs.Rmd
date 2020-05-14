@@ -1,4 +1,4 @@
-# Summary Graphs
+# Summary Graphs {#summary-graphs}
 
 In the previous [chapter](includelinkhere) I discussed the 90 topics one at a time. The aim of this chapter is to find some way to graph them all at once. The short version of the chapter is that it's an impossible task, and there is too much data to really show all of the trends on one graph. The longer version is that there are a few graphs that are flawed in different ways, and between them they might help give some sense to what the trends where in the philosophy journals over this time.
 
@@ -136,7 +136,7 @@ Table: (\#tab:eight-types) Eight Types of Graph
 
 The raw counts are too uneven, and require trendlines to be added to the graph. And they are fairly arbitrary. If the model says that something has probability 0.21 of being in topic X, and 0.18 of being in topic Y, and 0.16 of being in topic Z, and so on for several other topics, it feels like throwing away information to simply classify it in X. This is especially true if Y and Z are very similar topics, and the model could easily have merged them, while X is fairly different.
 
-Given the variation in the number of articles and pages being published each year, it makes sense to express trends as a proportion of the annual whole, rather than as a count. The problem is that there is too much of a mono-culture (or perhaps bi-culture) in the early years of the data. Idealism and 19th Century Psych routinely account for more than 30% of the articles (or pages) in a year. So any graph we have would have to have a y-axis that stretches that high. But post-1970, the difference between the prominent and less prominent topics is the difference between being 1% and 3% of the total. There is no natural way to represent those things on a single graph.
+Given the variation in the number of articles and pages being published each year, it makes sense to express trends as a proportion of the annual whole, rather than as a count. The problem is that there is too much of a mono-culture (or perhaps bi-culture) in the early years of the data. Idealism and Psychology routinely account for more than 30% of the articles (or pages) in a year. So any graph we have would have to have a y-axis that stretches that high. But post-1970, the difference between the prominent and less prominent topics is the difference between being 1% and 3% of the total. There is no natural way to represent those things on a single graph.
 
 There are a few ways around this, and the proportion based measures make so much sense that I'll use most of the following tricks somewhere in the book.
 
@@ -301,7 +301,7 @@ Again, the frequency graphs are dominated by the topics popular with _Mind_ in i
 spaghettigraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
 ```
 
-There is 19th Century Psych, then Idealism dominates, then there is Ordinary Language philosophy, and the rest is almost all just noise. (Except for a burst of interest in Norms at the end.) It's a bit clearer if we graph the 90 topics distinctly, but not a lot.
+There is Psychology, then Idealism dominates, then there is Ordinary Language philosophy, and the rest is almost all just noise. (Except for a burst of interest in Norms at the end.) It's a bit clearer if we graph the 90 topics distinctly, but not a lot.
 
 ```{r graph7b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Frequency of Pages (Faceted)"}
 facetgraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")

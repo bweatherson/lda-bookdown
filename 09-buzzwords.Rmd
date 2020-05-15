@@ -344,7 +344,7 @@ ggplot(filter(book_journal_graph, topic < 31), aes(x = jm, y  = bm, color = topi
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Average probabilty of topic in journals", y = "Average probability of topic in books") +
-  geom_text(aes(label=ifelse(topic == 1 | topic == 2 | topic == 3 | topic == 16 | topic == 24,as.character(subject),'')),hjust=1.1,vjust=0) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 1 | topic == 2 | topic == 3 | topic == 16 | topic == 24,as.character(subject),''))) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.03, 0.01))) +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.03)))
@@ -359,7 +359,7 @@ ggplot(filter(book_journal_graph, topic < 31), aes(x = jh, y  = bh, color = topi
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Maximum probabilty of topic in journals", y = "Maximum probability of topic in books") +
-  geom_text(aes(label=ifelse(topic == 1 | topic == 2 | topic == 3 | topic == 16 | topic == 24,as.character(subject),'')),hjust=1.1,vjust=0) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 1 | topic == 2 | topic == 3 | topic == 16 | topic == 24,as.character(subject),''))) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.03, 0.01))) +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.03)))
@@ -374,9 +374,7 @@ ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jm, y  = bm, 
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Average probabilty of topic in journals", y = "Average probability of topic in books") +
-  geom_text(aes(label=ifelse(topic == 32 | topic == 47 ,as.character(subject),'')),hjust=-.02,vjust=-0.4) +
-  geom_text(aes(label=ifelse(topic == 41 | topic == 52 ,as.character(subject),'')),hjust=-.01,vjust=1.4) +
-  geom_text(aes(label=ifelse(topic == 60 | topic == 60 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 32 | topic == 41 | topic == 47 | topic == 52 | topic == 60,as.character(subject),''))) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.03, 0.7))) +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.01)))
@@ -391,10 +389,11 @@ ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jh, y  = bh, 
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Maximum probabilty of topic in journals", y = "Maximum probability of topic in books") +
-  geom_text(aes(label=ifelse(topic == 32 | topic == 47 ,as.character(subject),'')),hjust=-.02,vjust=-0.4) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 32 | topic == 40 | topic == 41 | topic == 47 | topic == 51 | topic == 52 | topic == 60,as.character(subject),''))) +
+#  geom_text(aes(label=ifelse(topic == 32 | topic == 47 ,as.character(subject),'')),hjust=-.02,vjust=-0.4) +
 #  geom_text(aes(label=ifelse(topic == 41 | topic == 52 ,as.character(subject),'')),hjust=-.01,vjust=1.4) +
-  geom_text(aes(label=ifelse(topic == 60 | topic == 41 | topic == 52 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
-  geom_text(aes(label=ifelse(topic == 40 | topic == 51 ,as.character(subject),'')),hjust=1.1,vjust=-0.1) +
+#  geom_text(aes(label=ifelse(topic == 60 | topic == 41 | topic == 52 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
+#  geom_text(aes(label=ifelse(topic == 40 | topic == 51 ,as.character(subject),'')),hjust=1.1,vjust=-0.1) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.25, 0.02))) +
   scale_y_continuous(expand = expansion(mult = c(0.06, 0.1)))
@@ -409,10 +408,9 @@ ggplot(filter(book_journal_graph, topic < 91, topic > 60), aes(x = jm, y  = bm, 
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Average probabilty of topic in journals", y = "Average probability of topic in books") +
-  geom_text(aes(label=ifelse(topic == 1 | topic == 47 ,as.character(subject),'')),hjust=-.02,vjust=-0.4) +
-  geom_text(aes(label=ifelse(topic == 65 | topic == 83 ,as.character(subject),'')),hjust=-.01,vjust=1.4) +
-  geom_text(aes(label=ifelse(topic == 60 | topic == 60 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
-  geom_text(aes(label=ifelse(topic == 74 | topic == 51 ,as.character(subject),'')),hjust=1.1,vjust=-0.1) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 65 | topic == 83 | topic == 74,as.character(subject),''))) +
+#  geom_text(aes(label=ifelse(topic == 60 | topic == 60 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
+#  geom_text(aes(label=ifelse(topic == 74 | topic == 51 ,as.character(subject),'')),hjust=1.1,vjust=-0.1) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.1, 0.02))) +
   scale_y_continuous(expand = expansion(mult = c(0.1, 0.02)))
@@ -427,10 +425,10 @@ ggplot(filter(book_journal_graph, topic < 91, topic > 60), aes(x = jh, y  = bh, 
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Maximum probabilty of topic in journals", y = "Maximum probability of topic in books") +
-  geom_text(aes(label=ifelse(topic == 74 | topic == 76 | topic == 83 ,as.character(subject),'')),hjust=-.02,vjust=-0.4) +
-  geom_text(aes(label=ifelse(topic == 65 | topic == 52 ,as.character(subject),'')),hjust=-.01,vjust=1.5) +
-  geom_text(aes(label=ifelse(topic == 1 | topic == 41 | topic == 52 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
-  geom_text(aes(label=ifelse(topic == 71 | topic == 51 ,as.character(subject),'')),hjust=1.03,vjust=-0.01) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 65 | topic == 71 |topic == 74 | topic == 76 | topic == 83 ,as.character(subject),''))) +
+#  geom_text(aes(label=ifelse(topic == 65 | topic == 52 ,as.character(subject),'')),hjust=-.01,vjust=1.5) +
+#  geom_text(aes(label=ifelse(topic == 1 | topic == 41 | topic == 52 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
+#  geom_text(aes(label=ifelse(topic == 71 | topic == 51 ,as.character(subject),'')),hjust=1.03,vjust=-0.01) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.16, 0.02))) +
   scale_y_continuous(expand = expansion(mult = c(0.06, 0.02)))
@@ -442,6 +440,7 @@ For all 30 of these, the highest probability in the journals is higher than the 
 
 I've often speculated in the book about what would happen if we ran the model forward beyond the end of JSTOR's moving wall. The purpose of this section is to look at what happens if we run the model forward in one very particular way. I downloaded all the articles published in 2019 by the open access journal [Philosophers' Imprint](https://www.philosophersimprint.org). I extracted the text from these articles using Jeroen Ooms's package [pdftools](https://docs.ropensci.org/pdftools/). And then I applied the model to these articles using the posterior function in [topicmodels](https://cran.r-project.org/web/packages/topicmodels/index.html). Here are the primary topics for each of the 54 articles.
 
+<br>
 ```{r get-imprint-articles}
 # Load the titles from the CSV
 require(readr)
@@ -473,6 +472,7 @@ datatable(imprint_top_gamma_display %>%
   formatSignif('gamma',3) %>%
   formatStyle(1:3,`text-align` = 'left')
 ```
+<br>
 
 For each article I've shown which topic the model thinks the article most likely falls in. And these are, I think, mostly sensible classifications. But I've also shown the probability the model gives to that article being in just that topic. And given that these are maximal, they might look surprisingly low.
 
@@ -514,6 +514,7 @@ It turns out that the language of twenty-first century philosophy is rather diff
 
 It isn't only Sethi's paper that is part of this linguistic change. There are many papers that are primarily in Norms, even though they aren't really all about normative philosophy. Some of that is washed away when you use the weighted counts, but far from all of it. Here is the table of the weighted sum of each of the topics over the 54 articles. (That is, it's the sum, over the 54 articles, of the article being in that topic.) The table is long, so it's split up, sortable, and searchable.
 
+<br>
 ```{r imprint-topic-summary}
 imprint_summary_DT <- inner_join(imprint_summary, the_categories, by = "topic") %>%
   arrange(-g) %>%
@@ -530,9 +531,11 @@ datatable(imprint_summary_DT,
   formatSignif('g',2) %>%
   formatStyle(1:3,`text-align` = 'left')
 ```
+<br>
 
 How does Norms get to 4.8 like that? Lots of small pieces it turns out.
 
+<br>
 ```{r imprint-norms-summary}
 imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %>%
   filter(topic == 90) %>%
@@ -553,11 +556,13 @@ datatable(imprint_norms_DT %>%
   formatSignif('gamma',3) %>%
   formatStyle(1:2,`text-align` = 'left')
 ```
+<br>
 
 This is really surprising, and I suspect a sign that something's gone wrong. Either there are artefacts from the way I did the text extraction, or this new style of language is really spreading everywhere. I suspect both, but I'm not going to investigate this here. What I'd rather look at, because I think it tells us something more about where philosophy is heading, is the topic that was second on our above list: [Other History](#topic04).
 
 This topic had looked rather dead in recent journals, but it turns up second overall here. And just eyeballing the article list that might not be too surprising. There are articles in Suárez (two of them!), William King, Amo, and Mary Shepherd. But this isn't entirely why Other History pops up so high here.
 
+<br>
 ```{r imprint-history-summary}
 imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %>%
   filter(topic == 4) %>%
@@ -578,6 +583,7 @@ datatable(imprint_norms_DT %>%
   formatSignif('gamma',3) %>%
   formatStyle(1:2,`text-align` = 'left')
 ```
+<br>
 
 This makes the lack of attention to 'Other History' in the journals up to 2013. James, Wittgenstein and Nietzche are hardly obscure figures. If articles on them are enough to keep the Other History scoreboard ticking over, it's really telling that that scoreboard had ground to a halt.
 
@@ -597,7 +603,7 @@ I don't want to say that one article in Imprint is a trend, even if it is someth
 
 One of the methods I used for building the model was to run repeated [refinements](#refinements-section) of the model, to try to make it better track actual philosophical topics. At the time I did this, I was worried that this would have bad consequences. It felt like tightening the strings. And while this is generally a good idea, if you make things too tight, they snap. After a few refinemnts, I started to think this was a silly bit of reasoning by analogy. These aren't actually strings, so they can't actually snap, right? Well, after 100 iterations of the refinement script, I got a topic whose distribution looked like this.
 
-```{r bad-gamma-absolute, fig.cap = "Norms topic in the Bad LDA"}
+```{r bad-gamma-absolute, fig.cap = "Number of articles in Norms topic in the Bad LDA"}
 jjj <- 90
 
 yupper <- max(bad_gamma_year_journal$g,na.rm=TRUE)
@@ -611,7 +617,7 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = g))  +
   facetstyle +
   geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", y = "Weighted Number of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
+  labs(x = "Year", y = "Weighted Number of Articles", title = "The Bad Topic") +
   facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names)) +
     geom_text(data = facet_labels,
             mapping = aes(label = short_name),
@@ -624,7 +630,7 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = g))  +
 
 Those are remarkable graphs - it seems that this topic is getting to be a bigger and bigger deal in all the journals. I had not seen anything like this; after 1970 it's almost impossible to get the 'generalist' journals, the philosophy of science journals, and the ethics journals moving in the same direction. Maybe it's a function of the journals publishing more articles over time. We could check this by looking at what proportion of the journals are made up by this topic, not the absolute number of (expected) articles.^[Most of the graphs in chapter \@ref(all-90-topics) are proportional, not the absolute graph I just showed you.]
 
-```{r bad-gamma-relative}
+```{r bad-gamma-relative, fig.cap = "Proportion of articles in Norms topic in the Bad LDA"}
 jjj <- 90
 
 jjj <- 90
@@ -640,7 +646,7 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = y))  +
   facetstyle +
   geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", y = "Weighted Number of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
+  labs(x = "Year", y = "Average Probability", title = "The Bad Topic") +
   facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names)) +
       geom_text(data = facet_labels,
             mapping = aes(label = short_name),
@@ -650,13 +656,18 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = y))  +
             size = 3,
             colour = "grey40")
 ```
+<br>
 
 It's slightly less steep, especially in _Philosophy of Science_. But the generalist journals - except _Analysis_ - and _British Journal for the Philosophy of Science_ are still rising rapidly. So let's look at what articles are primarily in this topic.
 
 <br>
 ```{r bad-gamma-top-articles}
 
-kable(bad_gamma %>% slice(1:10) %>% select(citation, gamma), col.names = c("Article", "Topic Probability"), 
+kable(bad_gamma %>% 
+        slice(1:10) %>% 
+        select(citation, gamma) %>%
+        mutate(gamma = round(gamma,4)), 
+      col.names = c("Article", "Topic Probability"), 
       caption  = "Top Articles in Norms in Bad LDA")
 ```
 <br>
@@ -676,7 +687,8 @@ t <- relabeled_articles %>%
   filter(topic == 90) %>%
   arrange(-gamma) %>%
   slice(1:10) %>%
-  select(citation, gamma)
+  select(citation, gamma) %>%
+  mutate(gamma = round(gamma, 4))
 
 kable(t, col.names = c("Article", "Topic Probability"), caption = "Top Articles in Norms in Good LDA")
 ```
@@ -785,7 +797,10 @@ There is another puzzle that I left open above that I want to return to. How cou
 
 <br>
 ```{r bad-gamma-pr-2004}
-kable(bad_gamma %>% filter(year == 2004, journal == "Philosophical Review") %>% select(citation, gamma),
+kable(bad_gamma %>% 
+        filter(year == 2004, journal == "Philosophical Review") %>% 
+        select(citation, gamma) %>%
+        mutate(gamma = round(gamma, 4)),
       col.names = c("Article", "Topic Probability"),
       caption = "Philosophical Review, 2004 - probability that each article is in the bad topic")
 ```
@@ -795,7 +810,10 @@ The Roth paper really is about commitments, so it isn't surprising that it's a l
 
 <br>
 ```{r bad-gamma-ethics-2010}
-kable(bad_gamma %>% filter(year == 2010, journal == "Ethics") %>% select(citation, gamma), 
+kable(bad_gamma %>% 
+        filter(year == 2010, journal == "Ethics") %>%
+        select(citation, gamma) %>%
+        mutate(gamma = round(gamma, 4)), 
       col.names = c("Article", "Topic Probability"),
       caption = "Ethics 2010 - probability that each article is in the bad topic")
 ```
@@ -805,7 +823,10 @@ I don't know why all the stars are there in the title; that's just what came fro
 
 <br>
 ```{r bad-gamma-bjps-2011}
-kable(bad_gamma %>% filter(year == 2011, journal == "British Journal for the Philosophy of Science") %>% select(citation, gamma), 
+kable(bad_gamma %>% 
+        filter(year == 2011, journal == "British Journal for the Philosophy of Science") %>% 
+        select(citation, gamma) %>%
+        mutate(gamma = round(gamma, 4)), 
       col.names = c("Article", "Topic Probability"),
       caption = "BJPS 2011 - probability that each article is in the bad topic")
 ```

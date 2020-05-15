@@ -237,15 +237,7 @@ This is probably the second best graph. Even the graph with 90 dots on it shows 
 spaghettigraph(page_weight_ratio, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
 ```
 
-Interestingly, the growing length of articles takes away the bump that is visible in figure \@ref(fig:graph1a); now it seems like all topics get 10-15 weighted pages (at least) every year. The increase length is itself quite remarkable. Here's the average article length over years. And that same effect means that some of the big 21st century topics are now outpacing Ordinary Language philosophy. I'll come back to this article length increase in a bit, but first let's see what this graph looks like with every topic having its own facet.
-
-```{r graph5b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Sum of Pages (Faceted)"}
-facetgraph(page_weight_ratio, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
-```
-
-The acceleration in thelast fifteen topics is much more pronounced. And Ordinary Language doesn't look like it has a rise and fall any more - it has a rise that it holds on to. Norms looks like it is about to eat everything, and maybe it is.
-
-It's worth pausing for a minute about what's driving this. Page lengths increased substantially over the last few decades of the data set. Here is what they look like over time.
+Interestingly, the growing length of articles takes away the bump that is visible in figure \@ref(fig:graph1a); now it seems like all topics get 10-15 weighted pages (at least) every year. The increase length is itself quite remarkable. Here's the average article length over years. 
 
 ```{r page-average, fig.cap = "Average Article Length", fig.height=6, fig.width=7.5, out.width = '80%'}
 page_average <- inner_join(page_demonimator, article_demonimator, by = "year") %>%
@@ -257,7 +249,15 @@ ggplot(page_average, aes(x = year, y = y)) +
   labs(x = "Year", y = "Average Number of Pages in Articles", title = "Average Article Length")
 ```
 
-It's fairly noisy at first, then a sharp dip takes us to a minimum in the early 1960s, and from then it is a steep rise. (One that is not, in my experience, abating any time soon.) But an average covers up a lot of things. For instance, _Noûs_ used to publish absracts of APA presentations as research papers. These were often one page, and could really pull down averages. Here is a slightly more instructive way of looking at the data. The following graph shows various deciles of lengths over time. So the bottom line is the length such that 10% of articles are shorter than (or equal to) its length, the top line is the length such that 90% of articles are short than (or equal to) its lengths, and so on for the in between lines.
+And that same effect means that some of the big 21st century topics are now outpacing Ordinary Language philosophy. I'll come back to this article length increase in a bit, but first let's see what this graph looks like with every topic having its own facet.
+
+```{r graph5b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Sum of Pages (Faceted)"}
+facetgraph(page_weight_ratio, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
+```
+
+The acceleration in thelast fifteen topics is much more pronounced. And Ordinary Language doesn't look like it has a rise and fall any more - it has a rise that it holds on to. Norms looks like it is about to eat everything, and maybe it is.
+
+It's worth pausing for a minute about what's driving this. As I showed above, page lengths increased substantially over the last few decades of the data set. That graph is fairly noisy at first, then a sharp dip takes us to a minimum in the early 1960s, and from then it is a steep rise. (One that is not, in my experience, abating any time soon.) But an average covers up a lot of things. For instance, _Noûs_ used to publish absracts of APA presentations as research papers. These were often one page, and could really pull down averages. Here is a slightly more instructive way of looking at the data. The following graph shows various deciles of lengths over time. So the bottom line is the length such that 10% of articles are shorter than (or equal to) its length, the top line is the length such that 90% of articles are short than (or equal to) its lengths, and so on for the in between lines.
 
 ```{r length-distribution, fig.cap = "Distribution of Article Lengths", fig.height=6, fig.width=7.5, out.width = '80%'}
 p <- ((1:5)/5) - 0.1

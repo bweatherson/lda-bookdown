@@ -43,9 +43,9 @@ kable(category_table,  col.names = c("Topic", "Category", "Subject", "Keywords")
 
 ## Graphs
 
-First, let's look at how many articles are in each category in each year. I'll say an article is 'in' a category if the probability the model gives to the article being from that category is greater than the probability it gives to the article being from any other category. And the probability an article is from a category is just the sum of the probability that it is from one of the topics (or subtopics) that make up the category. (What's a subtopic? I'll get to that in [the next chapter](#subtopics-section.)
+First, let's look at how many articles are in each category in each year. I'll say an article is 'in' a category if the probability the model gives to the article being from that category is greater than the probability it gives to the article being from any other category. And the probability an article is from a category is just the sum of the probability that it is from one of the topics (or subtopics) that make up the category. (What's a subtopic? I'll get to that in [the next chapter](#subtopics-section).)
 
-```{r category_count, fig.cap = "Number of articles in each of the twelve categories over time"}
+```{r category-count, fig.cap = "Number of articles in each of the twelve categories over time"}
 category_count <- category_gamma %>%
   group_by(document, cat_name) %>%
   dplyr::summarise(n = sum(gamma)) %>%
@@ -79,7 +79,7 @@ category_count_graph +
 
 That's a lot of dots, and I'm not sure it's easy to see a trendline in there. Let's add some automatic trendlines to see if it's any clearer.
 
-```{r category_count_trends, fig.cap = "Number of articles in each of the twelve categories over time (with trendlines)"}
+```{r category-count-trends, fig.cap = "Number of articles in each of the twelve categories over time (with trendlines)"}
 category_count_graph + 
   geom_point(size = 0.5, alpha = 0.2) +
   geom_smooth(se=F, method = "loess", formula = "y ~ x", size = 0.2)
@@ -111,7 +111,7 @@ category_frequency <- inner_join(category_year, year_denominator, by = "year") %
   mutate(f = y / d)
 ```
 
-```{r category_weight_graph,  fig.cap = "Weighted number of articles in each of the twelve categories over time"}
+```{r category-weight-graph,  fig.cap = "Weighted number of articles in each of the twelve categories over time"}
 category_weight_graph <- ggplot(category_year, aes(x = year, y = y, color=category, group=category)) +
     labs(x = "Year", y = "Number of Articles") +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
@@ -131,7 +131,7 @@ category_weight_graph +
 
 That's also a bunch of dots, though interestingly the trends are more visible without trend lines. Let's see what happens when we add the trend lines back in.
 
-```{r category_weight_graph_trendlines, fig.cap = "Weighted number of articles in each of the twelve categories over time (with trendlines)"}
+```{r category-weight-graph-trendlines, fig.cap = "Weighted number of articles in each of the twelve categories over time (with trendlines)"}
 category_weight_graph + 
   geom_point(size = 0.5, alpha = 0.2) +
   geom_smooth(se=F, 
@@ -144,10 +144,10 @@ That's pretty similar to the other trendline graph. The big difference is that t
 
 The big challenge here is seeing which rises are due to a category getting more prominent, and which are due to the field getting bigger. So let's take that graph and divide all the values by the number of articles in a given year. What we end up with, for each year-category pair, is the average probability an article from a year falls into that category. The numbers are thrown off a fair bit by the presence of a lot of psychology articles in Mind before 1900, so I'll start in 1900.
 
-```{r category_frequency_graph}
+```{r category-frequency-graph, fig.cap = "Proportion of articles in each Category each year"}
 category_frequency_graph <- ggplot(filter(category_frequency, year > 1899), 
                                    aes(x = year, y = f, color=category, group=category)) +
-    labs(x = "Year", y = "Number of Articles") +
+    labs(x = "Year", y = "Proportion of Articles") +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
 #                     minor_breaks = scales::pretty_breaks(n = 15),
                       minor_breaks = 0.025 * 1:20,
@@ -164,7 +164,7 @@ category_frequency_graph + geom_point(size = 0.5, alpha = 0.5)  + theme(legend.t
 
 It's striking how many trendlines are already visible, but it's clearer with actual trendlines added.
 
-```{r category_frequency_graph_trendlines}
+```{r category-frequency-graph-trendlines, fig.cap = "Proportion of articles in each Category each year (with trendlines)"}
 category_frequency_graph + 
   geom_point(size = 0.5, alpha = 0.2) + 
   geom_smooth(se=F, method = "loess", formula = "y ~ x", size = 0.2) 
@@ -189,8 +189,26 @@ In the next chapter I'll go over how the categories were constructed, which in t
 
 It might be easier to see these twelve categories separated out.
 
-```{r category_frequency_graph_facet}
-category_frequency_graph + geom_point(size = 0.15) + facet_wrap(~category, ncol=3) +   theme(legend.position="none") 
+```{r category-frequency-graph-facet, fig.cap = "Proportion of articles in each Category (with facets)"}
+tt <- filter(category_frequency, year > 1899)
+category_graph_labels <- tt %>%
+  group_by(category) %>%
+  summarise(year = median(year)) %>%
+  mutate(f = max(tt$f) * 1.2)
+ggplot(tt, 
+       aes(x = year, y = f, color=category, group=category)) +
+  geom_text(data = category_graph_labels,
+            mapping = aes(label = category),
+            vjust = "inward", 
+            hjust = "inward",
+            fontface = "bold", 
+            size = 3) +
+  labs(x = "Year", y = "Proportion of Articles", title = "Proportion of Articles in Each Category Per Year") +
+  geom_point(size = 0.15) + 
+  facet_wrap(~category, ncol=3) +  
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.05))) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03))) +
+  facetstyle
 ```
 
 It's really striking how continuous these graphs are. This is not something that's programmed in - we're just seeing one data point after another rather than trend-lines. The numbers here are sums across journals, and acros topics/sub-topics. And within each of those components, you do not see anything like this continuity. But the large year to year variation mostly washes away when you look at the category level.
@@ -283,6 +301,9 @@ ggplot(data = filter(category_by_journal, category == cate), aes(x = year, y = f
 cgt <- function(cate, cate_num){
 
 yupper <- max(filter(category_by_topic, category == cate)$f, na.rm = TRUE)
+
+# A hack to make the Mind category make sense; otherwise swamped by the Psychology topic
+if (cate_num == 9){yupper <- 0.06}
   
 facet_labels <- category_by_topic %>%
   group_by(topic, name, category) %>%
@@ -311,7 +332,7 @@ ggplot(data = filter(category_by_topic, category == cate), aes(x = year, y = f))
 cg("Ethics", 3)
 ```
 
-There are a lot of Ethics articles in _Ethics_. That's not surprising. But what's really the story here is that the proportion of _Ethics_ that is devoted to ethics keeps rising. The two most recently added journals, _Noûs_ and _Philosophy and Public Affairs_, respectively have good and great ethics coverage, so that helps the upward trend as well. But the big story here is the consolidation of the key specialist journal. We will see this trend a few times as we move along.
+There are a lot of Ethics articles in _Ethics_. That's not surprising. But what's really the story here is that the proportion of _Ethics_ that is devoted to Ethics keeps rising. The two most recently added journals, _Noûs_ and _Philosophy and Public Affairs_, respectively have good and great Ethics coverage, so that helps the upward trend as well. But the big story here is the consolidation of the key specialist journal. We will see this trend a few times as we move along.
 
 ```{r ethics-topics, fig.height=10.2, fig.cap = "Topics in Ethics"}
 cgt("Ethics", 3)
@@ -348,11 +369,11 @@ cgt("History of Philosophy", 4)
 
 Two things jump out here. 
 
-One is that when history of philosophy was a major part of the journals, it was driven by the weird mix from Topic 4, not the big names. Remember that the paradigm article from Topic 4 was about James Marsh. 
+One is that when history of philosophy was a major part of the journals, it was driven by the weird mix from [Other History](#topic04), not the big names. Remember that the paradigm article from Topic 4 was about James Marsh. 
 
-The other is that Dewey and Pragmatism is also a big part of the story, at least when history is prominent in the journals.
+The other is that [Dewey and Pragmatism](#topic05) is also a big part of the story, at least when history is prominent in the journals.
 
-But note that both of these things suggest that to some extent the strength of history pre-Ryle is a touch overstated. Topic 4 includes a bunch of papers that are, if history, very much the first draft of history. For example, for several decades _Philosophical Review_ published an annual piece on philosophy in France, usually written by André Lalande. (You can get to a bunch of these papers [via PhilPapers](https://philpapers.org/s/%22Philosophy%20in%20France%22%20Lalande), but I haven't looked at many of them personally.) It's kind of history - it surveys what has happened in a place in a historical period. It's just that the period was, you know, the year that just passed. So not really that historical. All of these articles are classed as history by the algorithm. That doesn't explain what happened with _Mind_, of course, but there is stuff there that is only history for want of somewhere else to put it.
+But note that both of these things suggest that to some extent the strength of history pre-Ryle is a touch overstated. Other History includes a bunch of papers that are, if history, very much the first draft of history. For example, for several decades _Philosophical Review_ published an annual piece on philosophy in France, usually written by André Lalande. (You can get to a bunch of these papers [via PhilPapers](https://philpapers.org/s/%22Philosophy%20in%20France%22%20Lalande), but I haven't looked at many of them personally.) It's kind of history - it surveys what has happened in a place in a historical period. It's just that the period was, you know, the year that just passed. So not really that historical. All of these articles are classed as history by the algorithm. That doesn't explain what happened with _Mind_, of course, but there is stuff there that is only history for want of somewhere else to put it.
 
 And while many of the pragmatism papers are genuinely history papers - they are about works by Dewey several decades after those works were written - some of them are simply works of pragmatist philosophy. (And of course Dewey is still alive, and even publishing, into the 1940s. I think you can do historical work on a figure while they are still alive, but it's a bit odd.)
 
@@ -492,7 +513,7 @@ cg("Philosophy of Science", 11)
 The trend here is fairly simple, and it resembles what I said about the [ethics category](#ethics-category-section). The specialist journals have become more specialised, and the other journals haven't changed a lot. Now in this case, that's in part because most of the journals were doing very little of (what we'd now call) Philosophy of Science. I think they would have disagreed with that description; some of what I've called Metaphysics, and some of what I've called Logic and Mathematics, they would have called Philosophy of Science. But by modern lights they weren't going very much of it, and they still aren't. The big, and important, exception is _Journal of Philosophy_, and it hasn't cut back its Philosophy of Science coverage.
 
 ```{r science-topics, fig.height = 12.2, fig.cap = "Topics in Philosophy of Science"}
-cgt("Philosophy of Mind", 11)
+cgt("Philosophy of Science", 11)
 ```
 
 The model carves up the philosophy of science topics very finely, and so it's hard to eyeball a lot of trends. Quantum goes up rapidly to a peak in the 1990s. (I did not realise it wasn't still growing.) Evolutionary Bioligy starts later, and maybe is still growing. The Realism wars of the 1980s didn't quite end, but maybe they are fading away. On the other hand, there is more attention being paid to Models, and some of that is related to the Realism wars.
@@ -506,7 +527,7 @@ cg("Social and Political", 12)
 With the exception of _Philosophy and Public Affairs_, the trend seems to be down in every journal. This surprised me a lot. In part this was because the journals stopped publishing work on [History and Culture](#topic10). In part it was because the model insisted that [Life and Value](#topic03), what I thought of as Idealist Ethics, was really a topic in Social and Political, not ethics. But in part it was because the study ended before the boom in social and political work in the mid-2010s.
 
 ```{r social-topics, fig.cap = "Topics in Social and Political"}
-cgt("Philosophy of Mind", 11)
+cgt("Social and Political", 12)
 ```
 
 This, I think makes the story about what happened from 1950-2013 make more sense. There was a Rawlsian boom - it shows up clearly in Egalitarainism and Liberal Democracy. There was even a small bit of interest in Feminism. But the drop-off of interest in Marx, and in History and Culture, more than made up for it. Given how often I've heard people complain about the excessive amount of Rawlsiana in the late 20th Century journals, this was rather of a surprise. Of course, you may think that Marxism, and the French Revolution, were slightly more important subjects of detailed study than _A Theory of Justice_, no matter how good a book it is.

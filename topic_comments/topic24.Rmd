@@ -33,19 +33,91 @@ cat("\n
 	\n")
 ```
 
-```{r olp-notes}
-# 
-# Note I had to change the scales here, especially because of the Aristotelian Society.
-# 
-# Compare max values for different journals.
-# 
-# Note that there are 30 highly cited articles. Bernard Williams, Frank Jackson, Stephen Yablo, Philippa Foot. Kind of good writers. (Though also Wittgenstein, so shrug emoji.)
-# 
-# Binary sort
-# 
-# Not actually a subject, more a style. Look at the keywords. Maybe do the keyword graphs. And maybe even facet the graph for surely, certainly, perhaps, quite.
-# 
-# It is driven a lot by Aristotelian Society. But stays at 10% of PR for years (maybe Malcolm's influence). Never really catches on a J Phil, and especially at BJPS. Going up and up at PPR and Ethics.
-# 
-# Advice to young players: stop word out a bunch of these words.
+The biggest topic in the model is also one of the hardest to classify. I've called it Ordinary Language Philosophy, and you can see from the graphs that it peaks in the years we associate with Ordinary Language Philosophy, but beyond that it gets hard to say precisely what it is.
+
+It is such a big deal in the years after World War II, especially in the _Proceedings of the Aristotelian Society_ that I had to change the scale for the graphs by journal. And yet there are very few articles that are unambiguously in this topic.
+
+Part of what's going on here is that what the model is finding is a style as much as a content. Take a look at the keywords at the top of the page: 'ask', 'certainly', 'really', 'surely', 'try', 'anything', etc. These aren't philosophical topics, but they are a way of talking about philosophy. And they were a distinctive enough style that the model, which is always on the lookout for correlated word usages, declares it a big topic. 
+
+To get a sense of just how distinctive, take a look at the frequency of various words that were popular with the Ordinary Language Philosophers. These graphs are taken straight from the JSTOR data. So they cut out all the 1 and 2 letter words, and some stop words that JSTOR filters out, but they don't remove all the other words that I took out. The means that are shown as dashed lines are averages of the rates per year, not overall averages. I thought that was a little more representative, rather than just having all the articles from recent years swamp the averages.
+
+```{r word-frequency-by-journal}
+word_year_journal_frequency <- function(x, y){
+  left_join(word_year_journal_count %>% 
+              filter(journal == y), 
+            all_journals_tibble %>%
+              filter(word == x) %>%
+              left_join(articles, by = "document") %>%
+              filter(journal == y) %>%
+              group_by(year) %>%
+              dplyr::summarise(c = sum(wordcount)),
+            by = "year") %>%
+    replace_na(list(c = 0)) %>%
+    mutate(f = c / a) %>%
+    mutate(term = x)
+}
+
+
+pas_word_journal_frequency_graphs <- function(x){
+  temp_fun <- function(v){
+    word_year_journal_frequency(v, "Proceedings of the Aristotelian Society")
+  }
+  t <- lapply(x, temp_fun) %>% bind_rows()
+  ggplot(t, aes(x = year, y = f, color = term, group = term)) +
+    freqstyle +  
+    stat_summary(fun = mean, 
+               aes(x = 1950, yintercept = ..y.., group = term), 
+               geom = "hline",
+               linetype = "dashed",
+               size = 0.2) +
+    geom_point(size = 0.6, alpha = 0.8) +
+    scale_x_continuous(minor_breaks = 10 * 1:201,
+                       expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
+                     minor_breaks = scales::pretty_breaks(n = 12),
+                     breaks = scales::pretty_breaks(n = 3),
+                     labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
+#  scale_y_continuous(labels = scale_inverter) +
+  labs(x = "Year", y = "Word Frequency") +
+  theme(legend.title = element_blank())
+}
+
+pos_word_journal_frequency_graphs <- function(x){
+  temp_fun <- function(v){
+    word_year_journal_frequency(v, "Philosophy of Science")
+  }
+  t <- lapply(x, temp_fun) %>% bind_rows()
+  ggplot(t, aes(x = year, y = f, color = term, group = term)) +
+    freqstyle +
+    geom_point(size = 0.6, alpha = 0.8) +
+    scale_x_continuous(minor_breaks = 10 * 1:201,
+                       lim = c(1889, 2013),
+                       expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
+                     minor_breaks = scales::pretty_breaks(n = 12),
+                     breaks = scales::pretty_breaks(n = 3),
+                     labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
+#  scale_y_continuous(labels = scale_inverter) +
+  labs(x = "Year", y = "Word Frequency") +
+  theme(legend.title = element_blank())
+}
+
 ```
+
+```{r olpwords-graphs-t24, fig.height = 5, fig.cap = "Popular words in Ordinary Language"}
+word_frequency_graphs(c("ask", "surely", "try", "put", "tell"))
+```
+
+You can see a rise in each of these in the years after World War II. In some cases this is restoring the level that existed back in the 1870s and 1880s, but in akk cases there is a steep fall from the mid-1960s onwards. Let's see what happens if we restrict this to the journal that seems central to Ordinary Language Philosophy, _Proceedings of the Aristotelian Society_.
+
+```{r olpwords-graphs-t24-pas, fig.height = 5, fig.cap = "Popular words in Ordinary Language"}
+pas_word_journal_frequency_graphs(c("ask", "surely", "try", "put", "tell"))
+```
+
+And again you see much higher frequencies in the 1950s and 1960s.
+
+There is a question about whether I should have manually filtered out something like this whole topic. I could have added 'ask', 'quite', 'else' and so on to the stop words that I filtered out. If I'd been really aggressive about this, I could have gotten rid of this whole topic. And maybe I should have done this. There are a few topics that are like this. I could have added 'argument' as a stop word and gotten rid of the [Arguments](#topic55) topic. I could have added 'concept' as a stop word and gotten rid of the [Concepts](#topic78) topic. There is an interesting question about where to stop, and how tightly to focus on _topics_ as opposed to tools (like arguments or concepts), or styles (like ordinary language). I do think that if I were starting over I would try to strip some of the keywords here out, but it's not obvious to me what's right.
+
+There are a lot of highly cited articles in this topic. That's largely because there are a lot of articles in this topic. Notably, a lot of the highly cited articles here are well after the peak of Ordinary Language Philosophers. And the papers are by a fairly disparate set of authors. But one striking thing is that, to my eyes at least, there are a lot of very good writers represented here. So we see papers, for instance, by Bernard Williams, Frank Jackson, Stephen Yablo and Philippa Foot. On the other hand, there is also a Wittgenstein paper here, and I never thought of Wittgenstein as a great stylist, so maybe it's just a coincidence. But I suspect it would be better if more papers were written in the style this topic picks out.
+
+Finally, note that I've put this topic in two categories. While the papers here to cover a huge range (there are 1400 of them after all), there do seem to be two big clusters in ethics and in philosophy of mind. I'll go over how I split topics in two when I come to another topic, [Sets and Grue](#topic37), that is even more binary than this one.

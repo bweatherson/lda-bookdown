@@ -884,7 +884,7 @@ ggplot(counting_tibble, aes(x = 1/y, y = x, color = topicfactor)) +
   geom_point() +
   freqstyle +
   labs(x = "Ratio of Raw Count to Weighted Count", y = "Average Topic Probability of Articles in Topic") +
-  geom_text(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),'')),hjust=0.3,vjust=-1) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),''))) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.1, .2))) +
   scale_y_continuous(expand = expansion(mult = c(0.1, .1)))
@@ -904,7 +904,8 @@ ggplot(counting_tibble, aes(x = 1/y, y = z, color = topicfactor)) +
   geom_point() +
   freqstyle +
   labs(x = "Ratio of Raw Count to Weighted Count", y = "Proportion of Weighted Count that's From Outside Topic") +
-  geom_text(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),'')),hjust=0.2,vjust=1.7) +
+#  geom_text(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),'')),hjust=0.2,vjust=1.7) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),''))) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.05, .1))) +
   scale_y_continuous(expand = expansion(mult = c(0.12, .05)))
@@ -924,7 +925,7 @@ ggplot(counting_tibble, aes(x = x, y = z, color = topicfactor)) +
   geom_point() +
   freqstyle +
   labs(x = "Average Topic Probability of Articles in Topic", y = "Proportion of Weighted Count that's From Outside Topic") +
-  geom_text(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),'')),hjust=0.3,vjust=-1) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),''))) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.1, .2))) +
   scale_y_continuous(expand = expansion(mult = c(0.1, .1)))

@@ -302,27 +302,43 @@ cgt <- function(cate, cate_num){
 
 yupper <- max(filter(category_by_topic, category == cate)$f, na.rm = TRUE)
 
-# A hack to make the Mind category make sense; otherwise swamped by the Psychology topic
-if (cate_num == 9){yupper <- 0.06}
-  
 facet_labels <- category_by_topic %>%
   group_by(topic, name, category) %>%
-  summarise(f = yupper) %>%
-  mutate(f = f * 1.2, year = 1944.5)
+  summarise(f = 0.065) %>%
+  mutate(year = 1944.5)
 
-ggplot(data = filter(category_by_topic, category == cate), aes(x = year, y = f))  +
-      facetstyle +
-      geom_point(size = 0.15, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
-      theme(legend.position="none") +
-      labs(x = "Year", y = "Weighted Proportion of Articles") +
-      facet_wrap(~topic, ncol = 3) +
+print(
+  ggplot(data = filter(category_by_topic, category == cate, f < 0.0601, year > 1900), aes(x = year, y = f))  +
     geom_text(data = filter(facet_labels, category == cate),
             mapping = aes(label = name),
             vjust = "inward", 
             hjust = "middle",
             fontface = "bold", 
             size = 3,
-            colour = "grey40")
+            colour = "grey40") +
+    facetstyle +
+    geom_point(size = 0.15, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
+    theme(legend.position="none",
+          panel.grid.minor = element_line(color = "grey90", size = 0.05)) +
+    labs(x = "Year", y = "Weighted Proportion of Articles") +
+    facet_wrap(~topic, ncol = 3) +
+    scale_y_continuous(breaks = c(0.02, 0.04),
+                       minor_breaks = 0.005 * 1:11,
+                       lim = c(0, 0.0651))
+)
+
+# Tabel of Data Points that are excluded by the topic graph
+if (max(filter(category_by_topic, category == cate, year > 1900)$f > 0.0601)){
+cat("\n <br> \n")
+print(
+     kable(filter(category_by_topic, category == cate, f > 0.0601, year > 1900) %>%
+          select(name, year, f) %>%
+          mutate(f= round(f, 4)),
+        caption = paste0("Points excluded from topic graph for ",cate),
+        col.names = c("Subject", "Year", "Frequency"))
+)
+cat("\n <br> \n")
+}
 }
 ```
 
@@ -334,13 +350,19 @@ cg("Ethics", 3)
 
 There are a lot of Ethics articles in _Ethics_. That's not surprising. But what's really the story here is that the proportion of _Ethics_ that is devoted to Ethics keeps rising. The two most recently added journals, _Noûs_ and _Philosophy and Public Affairs_, respectively have good and great Ethics coverage, so that helps the upward trend as well. But the big story here is the consolidation of the key specialist journal. We will see this trend a few times as we move along.
 
+Let's look at how this is broken up into individual topics. I'm going to do a graph like this for every category, and they will all have the following restrictions.
+
+- The 19th Century is excluded, and the years start in 1901.
+- The y-axis is capped at 0.06, i.e., 6%, and if there are points that are thereby excluded, I'll list them separately in a table.
+
+Both restrictions are motivated by the problems that affected the frequency graphs in the previous chapter. (What I'm doing here is a topic-by-topic version of the [Weighted Frequency of Articles]({#graph-wfa}) graph.) There isn't enough diversity in the early years, so some topics can be 10, 20, even 30% of the total. And there isn't a good way to represent those numbers on a graph while also making the differences between 1% and 3% (which is what we care most about here) particularly visible. So I'll just list separately the problematic data points.
+
 ```{r ethics-topics, fig.height=10.2, fig.cap = "Topics in Ethics"}
+# Burper
 cgt("Ethics", 3)
 ```
 
-There is a bit of a red flag here that topic 90, Norms, is such an important part towards the end. As I noted when discussing it, there is some reason to think that it is tracking stylistic changes as well as content.
-
-Note the sub-topic "OLP Ethics". The "OLP" here is for ordinary language philosophy. This subtopic is the ethics part of ordinary language philosophy. I'm moderately confident that this really is part of ethics - it includes papers like Philippa Foot's [Moral Beliefs](https://philpapers.org/rec/FOOVB). But I'm not 100% sure about this.
+The sub-topic "OLP Ethics". The "OLP" here is for ordinary language philosophy. So this subtopic is the ethics part of ordinary language philosophy. I'm moderately confident that this really is part of ethics - it includes papers like Philippa Foot's [Moral Beliefs](https://philpapers.org/rec/FOOVB). But I'm not 100% sure about this.
 
 Note how there are a few topics that peak one after the other: first Value, then Promises and Imperatives, then Duties, and now Norms. But none of this rise and fall is visible in the overall graph, which is fairly steady. Some of these rises and falls comes from changing interests among folks in the field, but some I think comes from simply change in fashionable terminology.
 
@@ -364,6 +386,7 @@ So part of what's going on is what I mentioned in the previous section. Speciali
 Whatever Hamlyn thought, it doesn't seem to have affected the publications much. You can't see his ascension (in 1971) in the data here. And I think this decision of Ryle's had a large impact on the role of journal articles in history of philosophy. (Though note Hamlyn says in that paper that Ryle left him a backlog of 2 years' material to publish. So any break would be 1973 not 1971. Both these facts, that _Mind_ was only publishing its backlog in 1972 and 1973, and that they were still papers accepted by Ryle, are quite interesting in the context of the differences in citation rates between _Mind_ and its American counterparts in those years. But that's a story for another study.)
 
 ```{r history-topics, fig.height=6.2, fig.cap = "Topics in History of Philosophy"}
+# Burp
 cgt("History of Philosophy", 4)
 ```
 
@@ -395,7 +418,7 @@ The story of this category is a rise until mid-century and a fall afterwards. Th
 
 So part of the story here, perhaps a large part, is a familiar refrain. The specialist journals are getting more specialist, and this is crowding out other things. But the downward trajectory in _Analysis_ and _Noûs_ matters too. Let's look by topics.
 
-```{r lm-topics, fig.cap = "Topics in History of Philosophy"}
+```{r lm-topics, fig.cap = "Topics in Logic and Mathematics"}
 cgt("Logic and Mathematics", 6)
 ```
 
@@ -488,9 +511,10 @@ There would be more topics here, and the overall graph would trend more sharply 
 cg("Philosophy of Mind", 9)
 ```
 
-Again, it's hard to see much of a trend here. _Mind_ stops publishing work that is (by contemporary standards) more psychology than philosophy, and that leads to a bit of a fall. Then there is an odd fall in the 1990s, simultaneous with an upsurge in how many philosophy of language papers _Mind_ publishes. But otherwise it's like every journal decided at its foundation what proportion of its space will go to Philosophy of Mind, and it has stuck to that pretty closely ever since. Just what topics in Philosophy of Mind that they've covered is much less stable. I'm going to cap the next graph at 0.06, which will make a lot of points disappear. The alternative is that the graph is unreadable.
+Again, it's hard to see much of a trend here. _Mind_ stops publishing work that is (by contemporary standards) more psychology than philosophy, and that leads to a bit of a fall. Then there is an odd fall in the 1990s, simultaneous with an upsurge in how many philosophy of language papers _Mind_ publishes. But otherwise it's like every journal decided at its foundation what proportion of its space will go to Philosophy of Mind, and it has stuck to that pretty closely ever since. Just what topics in Philosophy of Mind that they've covered is much less stable. 
 
 ```{r mind-topics, fig.height = 10.2, fig.cap = "Topics in Philosophy of Mind"}
+# Burp
 cgt("Philosophy of Mind", 9)
 ```
 
@@ -527,6 +551,7 @@ cg("Social and Political", 12)
 With the exception of _Philosophy and Public Affairs_, the trend seems to be down in every journal. This surprised me a lot. In part this was because the journals stopped publishing work on [History and Culture](#topic10). In part it was because the model insisted that [Life and Value](#topic03), what I thought of as Idealist Ethics, was really a topic in Social and Political, not ethics. But in part it was because the study ended before the boom in social and political work in the mid-2010s.
 
 ```{r social-topics, fig.cap = "Topics in Social and Political"}
+# Burper
 cgt("Social and Political", 12)
 ```
 

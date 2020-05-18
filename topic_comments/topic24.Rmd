@@ -108,7 +108,7 @@ pos_word_journal_frequency_graphs <- function(x){
 word_frequency_graphs(c("ask", "surely", "try", "put", "tell"))
 ```
 
-You can see a rise in each of these in the years after World War II. In some cases this is restoring the level that existed back in the 1870s and 1880s, but in akk cases there is a steep fall from the mid-1960s onwards. Let's see what happens if we restrict this to the journal that seems central to Ordinary Language Philosophy, _Proceedings of the Aristotelian Society_.
+You can see a rise in each of these in the years after World War II. In some cases this is restoring the level that existed back in the 1870s and 1880s, but in akk cases there is a steep fall from the mid-1960s onwards. Let's see what happens if we restrict this to the journal that seems central to Ordinary Language Philosophy, _Proceedings of the Aristotelian Society_. (Note that the averages on this graph are averages for just this journal, so they are higher than the overall averages.)
 
 ```{r olpwords-graphs-t24-pas, fig.height = 5, fig.cap = "Popular words in Ordinary Language"}
 pas_word_journal_frequency_graphs(c("ask", "surely", "try", "put", "tell"))

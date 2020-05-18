@@ -477,11 +477,13 @@ imprint_top_gamma <- imprint_gamma %>%
 
 ```{r load-bad-lda}
 # The LDA I use for the buzzwords section right at the end
+# Everything goes wrong when this is cached and doesn't load
 load("~/Dropbox/journals-lda/t90t100.RData")
 ```
 
 ```{r setup-bad-lda}
 
+# Just replicate the normal setup, but with The Bad LDA
 bad_gamma <- tidy(refinedlda, matrix = "gamma") %>%
   filter(topic == 6) %>%
   inner_join(articles, by = "document") %>%
@@ -731,7 +733,7 @@ There is something about this story that we see repeated across the subjects. Wh
 
 But what interests me as much as these big picture trends are the little trends underlying them. What particular topics do philosophers talk about, and when do they talk about them? The answer to the latter question is almost always several years later than I had expected. To take one dramatic example, I associate work on [Wide Content](#topic85) with Kripke and Putnam's work from the early 1970s, and hence with the 1970s as a whole. But it turns out this work is practically invisible in the 1970s journals. [Meaning and Reference](https://philpapers.org/rec/PUTMAR-2) shows up, but almost nothing else does until a decade or more later. And that's the general patten; if you associate a topic with its most famous papers, you'll be misled about when it primarily shows up in the journals.
 
-So I'll spend some time in what follows looking at when familiar topics show up. But I'll also be looking at what shows up that isn't part of contemporary philosophy. I've spent a bit of time talking about Idealism, but it isn't the only thing missing from current journals. There used to be much more work on, broadly construed, [philosophy of history and of sociology](#topic10) than there is now. This has one particular impact that intersects with my other interests. Anglophone philosophers nowadays do spend a bit of time on philosophically significant work from the late eighteenth century. But not much of of the work that they look at comes from Philadelphia, or Paris, or even Cap-Haïtien. Now it's not like mid-century philosophers paid any attention to Cap-Haïtien either, but they did think a bit more about the philosophical importance of what happened, and what was written, in Philadelphia and Paris. And that seems like a good idea. And hopefully one of the benefits of the kind of retrospective I'm writing is it encourages people to look back and see what else we used to spend more time on, and could profitably spend more time on in the future.
+So I'll spend some time in what follows looking at when familiar topics show up. But I'll also be looking at what shows up that isn't part of contemporary philosophy. I've spent a bit of time talking about Idealism, but it isn't the only thing missing from current journals. There used to be much more work on, broadly construed, [philosophy of history and of sociology](#topic10) than there is now. This has one particular impact that intersects with my other interests. Anglophone philosophers nowadays do spend a bit of time on philosophically significant work from the late eighteenth century. But not much of of the work that they look at comes from Philadelphia, or Paris, let alone Cap-Haïtien. Now it's not like mid-century philosophers paid any attention to Cap-Haïtien in the late eighteenth century either, but they did think a bit more about the philosophical importance of what happened, and what was written, at that time in Philadelphia and Paris. And that seems like a good idea. And hopefully one of the benefits of the kind of retrospective I'm writing is it encourages people to look back and see what else we used to spend more time on, and could profitably spend more time on in the future.
 
 ## Plan {-}
 

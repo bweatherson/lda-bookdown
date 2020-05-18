@@ -33,6 +33,8 @@ cat("\n
 	\n")
 ```
 
+Note that the scale in the second graph is thrown off by the very high numbers from the early years of _Analysis_. This is, as you can see at the top of the page, one of the larger topics in the study, despite the graphs looking quite low. 
+
 This overlaps a lot with [Deduction](#topic17). Indeed, it is possibly best to simply regard them as part of the same topic. Fortunately if you want to do that, you don't have to do much more than change the scales on the graphs, because their distribution over time, and over journals, is pretty similar.
 
 This topic gets 'implication' rather than 'validity' (which is moved to deduction). And so the logical works in it are a touch earlier. But it also gets 'proposition', so it picks up a bit more weight from more contemporary work on propositions. Here, for instance, is the table for Jeff King's paper "Designating Propositions".

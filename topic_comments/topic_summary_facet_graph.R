@@ -22,7 +22,7 @@ indiv_journal_graphs <- ggplot(data = filter(journalgamma_frequency, topic == jj
         panel.spacing.y = unit(0.4, "lines"),
         axis.title.x = element_text(size = rel(1)),
         axis.title.y = element_text(size = rel(1)),
-        panel.grid.major = element_line(color = "grey85", size = 0.1),
+        panel.grid.major = element_line(color = "grey85", size = 0.08),
         panel.grid.minor = element_line(color = "grey85", size = 0.05),
         legend.position="none") +
   geom_point(size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) + 

@@ -33,3 +33,424 @@ cat("\n
 	\n")
 ```
 
+One of the disappointing things about this model was how it handled pragmatism. Most model runs ended up with a very nice pragmatism topic, that gave you a very clear sense of the rise and fall of pragmatism in the different journals. This model did not. James primarily ended up in [the previous topic](#Topic04), Pierce was all over the place, but primarily in [Universals and Particulars](#Topic14), and Dewey is here. So we don't get a single clear look at where pragmatism goes.
+
+And this topic involves as much looking back at Dewey as it does original work. Of course in philosophy that's sometimes a distinction without a difference; plenty of Kantians do exegetical work that is continuous with their work defending ethical conclusions. But still, it's not great that the closest we get to a pragmatism topic is one that feels as much like a history of pragmatism topic as it does one that reflects pragmatism being done the 'first time around'.
+
+Relatedly, this model doesn't give us a clear test of the claims that Joel Katzav and Krist Vaesen make in their paper [On the emergence of American analytic philosophy](https://www.tandfonline.com/doi/full/10.1080/09608788.2016.1261794). Here's the abstract of their paper, which summarises it as well as I could do.
+
+> This paper is concerned with the reasons for the emergence and dominance of analytic philosophy in America. It closely examines the contents of, and changing editors at, The Philosophical Review, and provides a perspective on the contents of other leading philosophy journals. It suggests that analytic philosophy emerged prior to the 1950s in an environment characterized by a rich diversity of approaches to philosophy and that it came to dominate American philosophy at least in part due to its effective promotion by The Philosophical Review’s editors. Our picture of mid-twentieth-century American philosophy is different from existing ones, including those according to which the prominence of analytic philosophy in America was basically a matter of the natural affinity between American philosophy and analytic philosophy and those according to which the political climate at the time was hostile towards non-analytic approaches. Furthermore, our reconstruction suggests a new perspective on the nature of 1950s analytic philosophy. (Katsav and Vaesen, 2018, 772)
+
+The short version is that there was a change in management at the _Philosophial Review_ in the late 1940s, and after that what had been a flourishing diversity of approaches was narrowed down, and the Review only published papers that met with the approval of the analytically inclined editors. But the short version is a bit of a bad simplification of their view. For one thing, they note that one kind of pragmatism, the kind of scientific pragmatism associated with Dewey, continued well after the analytic takeover. Relatedly, you don't really see a fall away in this topic at _Philosophical Review_ around 1948. For another thing, they note that through the early 1950s, some papers that were more representative of the old style of Review articles were getting through. This wasn't the hard crackdown on disliked subjects that we see Gilbert Ryle execute at _Mind_. And for another thing, 'analytic' is possibly not quite the right term for what takes over in the 1950s. Max Black is unambiguously an analytic philosopher, though a lot of the other folks who play signature roles, especially Norman Malcolm, have somewhat more difficult relationships to what we'd now call analytic philosophy.
+
+But the most relevant point for us is that if they're right, there should be a topic that is a big part of _Philosophical Review_ up until the late 1940s, then falls away very rapidly. And there should be; but in this model there isn't. That's not because Katsav and Vaesen are wrong though; it's an idiosyncracy of this particular model. It was very common when I was building different models to see topics that looked exactly like what you'd expect if you'd read Katsav and Vaesen and believed their analysis. Rather than walking through a whole new model to show you that though, I'm going to look at some of the underlying data that supports their view.
+
+As a methodological note, I found the words that I'm about to focus on by building a small LDA model for just _Mind_, _Philosophical Review_ and _Journal of Philosophy_ for the mid-century years, and looking for topics where _Philosophical Review_ stopped publishing around the time Katsav and Vaesen focus on. And then I looked at the keywords for those topics. That's to say, the words I'm about to talk about were not selected at random. But the data about them does, I think, show that something distinctive happened at the Review around the middle of the century.
+
+What I'm going to do is show you how often a bunch of words appeared in those three journals, i.e.,  _Mind_, _Philosophical Review_ and _Journal of Philosophy_, between 1930 and 1970. The words were chosen to give you a sense of what kinds of things the Review published articles about before 1950, but didn't publish about after 1950. This whole book has been based around using very fancy models to compute that kind of thing from the word frequencies. But sometimes it helps to just look at the word frequencies (or in this case the word counts) themselves.
+
+```{r mid-century-setup-a}
+mid_articles <- articles %>%
+  filter(journal == "Mind" | journal == "Philosophical Review" | journal == "Journal of Philosophy") %>%
+  filter(year > 1929, year < 1970)
+
+mid_word_list <- all_journals_tibble %>%
+  filter(document %in% mid_articles$document)
+
+topic_1 <- c("mead",
+"behavioral", 
+"organism", 
+"brain", 
+"environment", 
+"psychologists", 
+"interaction", 
+"selves", 
+"stimulus", 
+"conscious", 
+"physiological", 
+"immediacy", 
+"consciousness",
+"awareness", 
+"unconscious"
+)
+
+topic_2 <- c("natura", 
+             "res", 
+             "spinoza", 
+             "berkeley", 
+             "hume", 
+             "agency", 
+             "cogito", 
+             "esse", 
+             "descartes", 
+             "treatise", 
+             "intellect", 
+             "impressions", 
+             "ideas", 
+             "immanent", 
+             "idea")
+
+topic_3 <- c("philosophic", 
+             "speculative", 
+             "categories", 
+             "idealism", 
+             "dialectic", 
+             "metaphysics", 
+             "naturalism", 
+             "synthesis", 
+             "dewey", 
+             "traits", 
+             "ontology", 
+             "philosopher", 
+             "philosophies", 
+             "contemporary", 
+             "dialectical")
+
+topic_6 <- c("comic", 
+             "sovereign", 
+             "democracy", 
+             "comedy", 
+             "cultures", 
+             "democratic", 
+             "political", 
+             "government", 
+             "international", 
+             "liberty", 
+             "culture",
+             "national", 
+             "society", 
+             "peace", 
+             "economic")
+
+topic_12 <- c("kierkegaard", 
+              "heidegger", 
+              "existentialism", 
+              "sophist", 
+              "sartre", 
+              "logos", 
+              "lotze", 
+              "christianity", 
+              "plato", 
+              "republic", 
+              "worship", 
+              "santayana", 
+              "christian", 
+              "anselm", 
+              "parmenides")
+
+mid_article_year_journal <- mid_articles %>%
+  select(document, journal, year)
+
+mid_topics <- c(topic_1, topic_2, topic_3, topic_6, topic_12)
+
+mid_words <- all_journals_tibble %>%
+  filter(word %in% mid_topics) %>%
+  inner_join(mid_article_year_journal, by = "document") %>%
+  group_by(journal, year, word) %>%
+  summarise(n = sum(wordcount))
+
+pr_mind_words <- c(
+  "consciousness",
+  "physiological",
+  "conscious",
+  "stimulus",
+  "selves",
+  "interaction",
+  "environment",
+  "immediacy",
+  "organism"
+)
+
+pr_idealism_words <- c(
+  "dialectical",
+  "contemporary",
+  "philosopher",
+  "synthesis",
+  "naturalism",
+  "metaphysics",
+  "idealism",
+  "categories",
+  "speculative"
+)
+
+pr_pol_words <- c(
+  "economic",
+  "society",
+  "national",
+  "culture",
+  "cultures",
+  "democracy"
+)
+```
+
+I've put the words I'm looking at into three categories.
+
+Philosophy of Mind words
+:    `r pr_mind_words`
+
+Speculative Philosophy Words
+:    `r pr_idealism_words`
+
+Political Philosophy Words
+:    `r pr_pol_words`
+
+None of the three titles I've given here are exactly apt. (This is sort of the point; the work from before 1950 doesn't even naturally fall into the categories we now use.) Philosophy of Mind includes a mix of empirical psychology and idealist-inflected reflections on the nature of consciousness. What I've called "Speculative Philosophy" is a bit of a grab-bag of things that the analytic philosophers didn't like. And what I've called "Political Philosophy" is as much about social theory as politics as we'd now understand it. But as long as we keep track of what's being measured, the terms provide a helpful enough shorthand.
+
+So let's start by looking at the Philosophy of Mind words. I'll first graph out how frequently each of these 9 words appears, and then look at what happens when you sum them up.
+
+```{r phil-review-mind-words, fig.cap = "Philosophy of Mind words in the three big journals, 1930-1970"}
+t <- mid_words %>%
+  filter(word %in% pr_mind_words)
+
+facet_labels <- t %>%
+  ungroup() %>%
+  mutate(year = 1968, n = 151, journal = "Mind")
+
+ggplot(t, aes(x = year, y = n, color = journal, group = journal)) +
+  facetstyle +
+  geom_point(size = 0.3) +
+  geom_smooth(size = 0.1, method = "loess", formula = "y ~ x", se = F) +
+  facet_wrap(~word, ncol = 3) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
+  scale_x_continuous(breaks = c(1950)) +
+  labs(x = "Year", y = "Occurrences of word") +
+  geom_text(data = facet_labels,
+            mapping = aes(label = word),
+            vjust = "outward", 
+            hjust = "inward",
+            size = 3,
+            colour = "grey40")
+```
+<br>
+
+```{r phil-review-mind-words-summary, fig.height = 5, fig.cap = "Sum of Philosophy of Mind words in the three big journals, 1930-1970"}
+tt <- t %>%
+  group_by(journal, year) %>%
+  summarise(nn = sum(n))
+
+ggplot(tt, aes(x = year, y = nn, color = journal)) + 
+  spaghettistyle +
+  geom_point(size = 0.3) +
+  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  labs(x = "Year", y = "Word Count", title = "Philosophy of Mind Words") +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
+  scale_x_continuous(breaks = c(1950)) +
+  labs(x = "Year", y = "Occurrences of words")
+```
+
+There are three things happening here, which combine to form the distinctive graph at the end.
+
+One is that Philosophical Review, like a lot of other philosophy journals, started out as a cross between what we'd now think of as a philosophy journal, and what we'd now think of as a psychology journal. Most such journals had split into one of the other by the 1930s, but the Review kept publishing psychology papers for quite a while. But they fade away over the period we're looking at here (i.e., 1930-1970).
+
+A second is that as idealism drops out of the conversation, a particular kind of writing about consciousness goes away with it.
+
+And a third is that behaviorism happens, and this really puts a dampner on discussions of minds.
+
+The third trend gets reversed eventually, but the second trend doesn't. Post-beheaviorist writing about consciousness on the whole does not feel a lot like pre-behaviorist writing. (Though note that the model does think of [What Is It Like to Be a Bat](https://www.jstor.org/stable/2183914?seq=1) as a fairly old-fashioned paper.)
+
+But the result of these three is that you really do see a dramatic falling away in the late 1940s and early 1950s for these 9 words.
+
+Now for what I've called Speculative Philosophy. I'm going to leave _Journal of Philosophy_ off the first set of graphs because some of the words were used so often in some of the years that it threw off the scale. I'll come back to the Journal when I sum these graphs together. I'm also leaving off one data point for the Review: 'philosopher' which gets used 176 times in 1947. The loess curve you can see does, however, take that hidden point into account.
+
+```{r phil-review-idealism-words, fig.cap = "Speculative Philosophy words in (two of) the three big journals, 1930-1970"}
+t <- mid_words %>%
+  filter(word %in% pr_idealism_words) 
+
+facet_labels <- t %>%
+  ungroup() %>%
+  mutate(year = 1968, n = 129, journal = "Philosophical Review")
+
+ggplot(t %>%
+         filter(journal != "Journal of Philosophy"), 
+       aes(x = year, y = n, color = journal, group = journal)) +
+  facetstyle +
+  geom_point(size = 0.3) +
+  geom_smooth(size = 0.1, method = "loess", formula = "y ~ x", se = F) +
+  facet_wrap(~word, ncol = 3) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
+  scale_x_continuous(breaks = c(1950)) +
+  scale_y_continuous(breaks = c(100, 200)) +
+  coord_cartesian(ylim = c(0, 130)) +
+  labs(x = "Year", y = "Occurrences of word") +
+  geom_text(data = facet_labels,
+            mapping = aes(label = word),
+            vjust = "inward", 
+            hjust = "inward",
+            size = 3,
+            colour = "grey40")
+```
+
+Now let's see what that looks like when we sum the nine words, and add the _Journal of Philosophy_ back into the picture.
+
+```{r phil-review-idealism-words-summary, fig.height = 5, fig.cap = "Sum of Speculative Philosophy words in the three big journals, 1930-1970"}
+tt <- t %>%
+  group_by(journal, year) %>%
+  summarise(nn = sum(n))
+
+ggplot(tt, aes(x = year, y = nn, color = journal)) + 
+  spaghettistyle +
+  geom_point(size = 0.3) +
+  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  labs(x = "Year", y = "Word Count", title = "Speculative Philosophy Words") +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
+  scale_x_continuous(breaks = c(1950)) +
+  labs(x = "Year", y = "Occurrences of words")
+```
+
+Again, there is a falling off after 1949, but it's not completely sudden. Finally, we'll look at the Political Philosophy words.
+
+```{r phil-review-polphil-words, fig.height = 6.2, fig.cap = "Political Philosophy words in the three big journals, 1930-1970"}
+t <- mid_words %>%
+  filter(word %in% pr_pol_words) 
+
+facet_labels <- t %>%
+  ungroup() %>%
+  mutate(year = 1968, n = 129, journal = "Philosophical Review")
+
+ggplot(t, 
+       aes(x = year, y = n, color = journal, group = journal)) +
+  facetstyle +
+  geom_point(size = 0.3) +
+  geom_smooth(size = 0.1, method = "loess", formula = "y ~ x", se = F) +
+  facet_wrap(~word, ncol = 3) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
+  scale_x_continuous(breaks = c(1950)) +
+  scale_y_continuous(breaks = c(100, 200)) +
+  coord_cartesian(ylim = c(0, 130)) +
+  labs(x = "Year", y = "Occurrences of word") +
+  geom_text(data = facet_labels,
+            mapping = aes(label = word),
+            vjust = "inward", 
+            hjust = "inward",
+            size = 3,
+            colour = "grey40")
+```
+
+
+```{r phil-review-polphil-words-summary, fig.height = 5, fig.cap = "Sum of Political Philosophy words in the three big journals, 1930-1970"}
+tt <- t %>%
+  group_by(journal, year) %>%
+  summarise(nn = sum(n))
+
+ggplot(tt, aes(x = year, y = nn, color = journal)) + 
+  spaghettistyle +
+  geom_point(size = 0.3) +
+  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  labs(x = "Year", y = "Word Count", title = "Political Philosophy Words") +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
+  scale_x_continuous(breaks = c(1950)) +
+  labs(x = "Year", y = "Occurrences of words")
+```
+
+Again, we see a fairly big drop, though here it seems like the break comes in 1952. And note from the word-by-word graph that it's the parts that seem most like political philosophy in the current sense that hold up for the longest. _Philosophical Review_ in the 1950s talked about democracy a bit, but it didn't talk about culture.
+
+Let's sum all these together to get an overall picture. The next graph shows how often these 24 words appear in each of these journals in each year.
+
+```{r make-phil-rev-look-bad, fig.height = 5, fig.cap = "Sum of word usage for 24 distinctive words in the three big journals, 1930-1970"}
+tt <- mid_words %>%
+  filter(word %in% c(pr_pol_words, pr_idealism_words, pr_mind_words)) %>%
+  group_by(journal, year) %>%
+  summarise(nn = sum(n))
+
+ggplot(tt, aes(x = year, y = nn, color = journal)) + 
+  spaghettistyle +
+  geom_point(size = 0.3) +
+  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  labs(x = "Year", y = "Word Count", title = "How Philosophical Review Changed") +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
+  scale_x_continuous(breaks = c(1950)) +
+  labs(x = "Year", y = "Occurrences of words")
+```
+
+And you'd have to say that by that measure, the 1950s at Philosophical Review do look quite different to the 1940s. This difference is why, I think, most models I looked at had at least one topic that disappeared from _Philosophical Review_ right around 1950. For whatever reason this model didn't have such a topic, this topic on Dewey is the closest, but I wanted to show you why this was a common occurrence.
+
+That said, the big change in Philosophical Review could be summarised by saying that it changed from being like _Journal of Philosophy_ to being like _Mind_. It wasn't like they did something completely unprecedented, or were well out in front of the international trends.
+
+And the changes that _Philosophical Review_ made were eventually replicated at _Journal of Philosophy_. Not just that, the changes preceded the glory years of the Journal in the 1970s. So I don't really think that the changes the Review made around 1950 were particularly bad things. But the evidence from word counts does point towards there really being a change.
+
+It's not connected to Dewey, or the _Philosophical Review_, but I wanted to show you how this kind of evidence from word counts can reveal a change in the journal. So I ran exactly the same kind of query as before, but with words connected to [Early Modern Philosophy](#topic21). 
+
+```{r setup-phil-review-history-words}
+history_words <- c(
+  "idea",
+  "ideas",
+  "immanent",
+  "intellect",
+  "treatise",
+  "esse",
+  "hume",
+  "berkeley",
+  "spinoza",
+  "res",
+  "natura",
+  "descartes"
+)
+```
+
+Early Modern Words
+:    `r history_words`
+
+See if you can spot when Gilbert Ryle, who was particularly hostile to any history of philosophy except ancient, took over.
+
+```{r phil-review-history-words, fig.height = 10.2, fig.cap = "Early Modern words in the three big journals, 1930-1970"}
+t <- mid_words %>%
+  filter(word %in% history_words) 
+
+facet_labels <- t %>%
+  ungroup() %>%
+  mutate(year = 1951, n = 325, journal = "Philosophical Review")
+
+ggplot(t, 
+       aes(x = year, y = n, color = journal, group = journal)) +
+  facetstyle +
+  geom_point(size = 0.3) +
+  geom_smooth(size = 0.1, method = "loess", formula = "y ~ x", se = F) +
+  facet_wrap(~word, ncol = 3) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
+  scale_x_continuous(breaks = c(1950)) +
+  scale_y_continuous(breaks = c(100, 200)) +
+  labs(x = "Year", y = "Occurrences of word") +
+  geom_text(data = facet_labels,
+            mapping = aes(label = word),
+            vjust = "inward", 
+            hjust = "outward",
+            size = 3,
+            colour = "grey40")
+```
+
+<br>
+
+```{r phil-review-history-words-summary, fig.height = 5, fig.cap = "Sum of Early Modern words in the three big journals, 1930-1970"}
+tt <- t %>%
+  group_by(journal, year) %>%
+  summarise(nn = sum(n))
+
+ggplot(tt, aes(x = year, y = nn, color = journal)) + 
+  spaghettistyle +
+  geom_point(size = 0.3) +
+  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  labs(x = "Year", y = "Word Count", title = "Early Modern Words") +
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
+  scale_x_continuous(breaks = c(1950)) +
+  labs(x = "Year", y = "Occurrences of words")
+```
+
+In case you were wondering whether this kind of crude counting could detect a change in journal policy, I think you have the answer right there. It's a bit interesting that we see a fall at the Journal and the Review as well, but that's a story for [another topic](#Topic21).

@@ -42,9 +42,11 @@ The other was that there was a topic that included everything that related to se
 
 The happy consequence of this is that we get a topic that really is all about Judith Jarvis Thomson's work. It's not about all of her work of course - that covers ever so many fields.
 
+<br>
 ```{r thomson-articles}
 author_dt(c("Judith Jarvis", "Judith Jarvis Thomson"), "Judith Jarvis Thomson")
 ```
+<br>
 
 But this topic does include many of the papers on two of her signature contributions: her innovative defense of abortion, and her discussions of the trolley problem. Her original paper on the trolley problem is not in this study, since it wasn't published in one of the twelve journals I'm looking at. But a lot of papers that follow up on it, including Thomson's own second thoughts in "Turning the Trolley" are here.
 

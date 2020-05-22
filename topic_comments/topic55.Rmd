@@ -90,6 +90,7 @@ kable(t,
 
 Here are some of these articles that the model thinks are second-most-likely to be in Arguments. (I've restricted this list to articles at least 20 pages long.)
 
+<br>
 ```{r rank-of-arguments-topic-second-best}
 t <- relabeled_gamma %>%
   group_by(document) %>%
@@ -113,6 +114,7 @@ datatable(t,
       formatSignif('gamma.x',4) %>%
       formatStyle(1:3,`text-align` = 'left')
 ```
+<br>
 
 Probably if the model hadn't landed on this topic, it would have been even clearer that some articles were philosophy of religion articles, or ancient philosophy articles.
 

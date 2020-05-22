@@ -276,17 +276,21 @@ category_by_journal$journal <- factor(category_by_journal$journal, levels = jour
 
 ```{r graph-style-for-categories}
 cg <- function(cate, cate_num){
-  yupper <- max(filter(category_by_journal, category == cate)$f, na.rm=TRUE)
+  yupper <- max(category_by_journal$f, na.rm=TRUE)
 
 facet_labels <- chap_two_facet_labels %>%
-  mutate(year = 1944.5, f = yupper * 1.2)
+  mutate(year = 1944.5, f = yupper)
 
 facet_labels$journal <- factor(facet_labels$journal, levels = journal_order)
 
 ggplot(data = filter(category_by_journal, category == cate), aes(x = year, y = f))  +
       facetstyle +
+      scale_y_continuous(breaks = c(0.25, 0.5),
+                       minor_breaks = 0.05 * 1:14) +
       geom_point(size = 0.15, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
-      theme(legend.position="none") +
+      theme(legend.position="none",
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
       labs(x = "Year", y = "Weighted Proportion of Articles") +
       facet_wrap(~journal, ncol = 3) +
     geom_text(data = facet_labels,
@@ -319,7 +323,9 @@ print(
     facetstyle +
     geom_point(size = 0.15, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
     theme(legend.position="none",
-          panel.grid.minor = element_line(color = "grey90", size = 0.05)) +
+          panel.grid.minor = element_line(color = "grey90", size = 0.03),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
     labs(x = "Year", y = "Weighted Proportion of Articles") +
     facet_wrap(~topic, ncol = 3) +
     scale_y_continuous(breaks = c(0.02, 0.04),
@@ -345,6 +351,7 @@ cat("\n <br> \n")
 ## Ethics {#ethics-category-section}
 
 ```{r ethics-journals, fig.cap = "Proportion of each journal's yearly publications in Ethics"}
+# Burper
 cg("Ethics", 3)
 ```
 
@@ -358,7 +365,7 @@ Let's look at how this is broken up into individual topics. I'm going to do a gr
 Both restrictions are motivated by the problems that affected the frequency graphs in the previous chapter. (What I'm doing here is a topic-by-topic version of the [Weighted Frequency of Articles]({#graph-wfa}) graph.) There isn't enough diversity in the early years, so some topics can be 10, 20, even 30% of the total. And there isn't a good way to represent those numbers on a graph while also making the differences between 1% and 3% (which is what we care most about here) particularly visible. So I'll just list separately the problematic data points.
 
 ```{r ethics-topics, fig.height=10.2, fig.cap = "Topics in Ethics"}
-# Burper
+# Burp
 cgt("Ethics", 3)
 ```
 

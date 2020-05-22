@@ -45,15 +45,23 @@ It's largest topic is this one, but the model also notes it is about definitions
 
 But that's not remotely what happened. The model sees very little work on this topic for another decade. There is a bit of discussion in the mid-1980s, then it is Michael McKinsey's 1991 paper [Anti-Individualism and Privileged Access](https://philpapers.org/rec/MCKAAPhttps://philpapers.org/rec/MCKAAP), that really starts the discussion going. Just to make this vivid, let's focus on the last 40 years of those graphs above, starting from Putnam's original paper.
 
-```{r wide-content-recent-graph}
-jjj <- 85
-indiv_journal_graphs <- ggplot(data = filter(journalgamma_frequency, topic == jjj) %>% drop_na(), aes(x = year, y = gamfre))  +
-      geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
-      theme(legend.position="none") +
-      coord_cartesian(ylim=c(0, 0.09), xlim=c(1973,2013), expand = TRUE) +
-      labs(x = "Year", y = "Weighted Number of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
-      facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names))
-indiv_journal_graphs
+```{r wide-content-recent-graph, fig.cap = "Recent Work on Wide Content"}
+facet_labels <- chap_two_facet_labels %>%
+  mutate(year = 1976, gamfre = yupper * 1.2)
+
+facet_labels$journal <- factor(facet_labels$journal, levels = journal_order)
+
+indiv_journal_graphs +
+  coord_cartesian(xlim = c(1973,2013)) +
+  geom_smooth(method = "loess", formula = "y ~ x", se = F, size = 0.1) +
+  geom_text(data = facet_labels,
+            mapping = aes(label = short_name),
+            vjust = "inward", 
+            hjust = "inward",
+            fontface = "bold", 
+            size = 3,
+            colour = "grey40")
 ```
+
 
 The lack of life in this topic through the 1970s and much of the 1980s was one of the biggest surprises to me of the whole project. In recent years it feels like topics can catch fire immediately after the publication of a high profile paper. But that is realy not what happened in debates about wide content. Putnam's paper is one of the most influential of its time, and its time is the most important few years in the history of philosophy, but that influence was not felt for many years after its publication.

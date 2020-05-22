@@ -45,7 +45,7 @@ word_frequency_graphs(c("laudan", "kuhn", "boyd", "lakatos"))
 
 There is a lot of year to year variation there, but the basic pattern that things rise pretty quickly through the 1980s, and then fall away just as quickly after that, seems fairly clear. In the 1990s when I was reading this stuff, it was a debate running out of steam. 
 
-As one other aside, I'm surprised that the raw counts for 'Kuhn' and 'Boyd' are so low. For one thing, those names belong to more people than their most famous owners. For another I thought 'Boyd' might have more of a boost from being at Cornell, even in the _Philosophical Review_For another, 'Kuhn' is much lower than other similarly famous figures of the third quarter of the twentieth century.
+As one other aside, I'm surprised that the raw counts for 'Kuhn' and 'Boyd' are so low. For one thing, those names belong to more people than their most famous owners. For another I thought 'Boyd' might have more of a boost from being at Cornell, even in the _Philosophical Review_. For another, 'Kuhn' is much lower than other similarly famous figures of the third quarter of the twentieth century.
 
 ```{r mid-century-american-names}
 word_frequency_graphs(c("quine", "kuhn", "rawls", "kripke"))

@@ -234,7 +234,7 @@ All this tells us is that there is a lot more diversity, and a lot more speciali
 This is probably the second best graph. Even the graph with 90 dots on it shows some trends.
 
 ```{r graph5a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Sum of Pages"}
-spaghettigraph(page_weight_ratio, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
+spaghettigraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
 ```
 
 Interestingly, the growing length of articles takes away the bump that is visible in figure \@ref(fig:graph1a); now it seems like all topics get 10-15 weighted pages (at least) every year. The increase length is itself quite remarkable. Here's the average article length over years. 
@@ -245,6 +245,7 @@ page_average <- inner_join(page_demonimator, article_demonimator, by = "year") %
   select(year, y)
 
 ggplot(page_average, aes(x = year, y = y)) + 
+  spaghettistyle +
   geom_point(size = 0.5, colour = hcl(h = 15, l = 65, c = 100)) + 
   labs(x = "Year", y = "Average Number of Pages in Articles", title = "Average Article Length")
 ```
@@ -252,7 +253,7 @@ ggplot(page_average, aes(x = year, y = y)) +
 And that same effect means that some of the big 21st century topics are now outpacing Ordinary Language philosophy. I'll come back to this article length increase in a bit, but first let's see what this graph looks like with every topic having its own facet.
 
 ```{r graph5b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Sum of Pages (Faceted)"}
-facetgraph(page_weight_ratio, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
+facetgraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
 ```
 
 The acceleration in thelast fifteen topics is much more pronounced. And Ordinary Language doesn't look like it has a rise and fall any more - it has a rise that it holds on to. Norms looks like it is about to eat everything, and maybe it is.
@@ -269,6 +270,7 @@ length_deciles <- articles %>%
   summarize_at(vars(length), p_funs) %>%
   pivot_longer(cols = starts_with("d."), names_to = "decile", names_prefix = "d.", values_to = "length")
 ggplot(length_deciles, aes(x = year, y = length, color = decile)) + 
+  spaghettistyle +
   geom_point(size = 0.5, alpha = 0.2) +
   geom_smooth(se = F, method = "loess", size = 0.2) +
   theme(legend.title = element_blank(), legend.position = "bottom") +
@@ -282,13 +284,13 @@ Articles are getting much much longer.
 ## Raw Sum of Pages {#graph-rsp}
 
 ```{r graph6a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Sum of Pages"}
-spaghettigraph(page_count_ratio, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
+spaghettigraph(page_count_numerator, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
 ```
 
 As always, moving from the weighted count to the raw count just exacerbates the trends. Let's see that broken out into topics.
 
 ```{r graph6b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Sum of Pages (faceted)"}
-facetgraph(page_count_ratio, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
+facetgraph(page_count_numerator, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
 ```
 
 Now Ordinary Language philosophy has a boom and bust pattern again. There are a few topics, of which it is the most prominent, where the model sees them never quite going away, but not being the centre of attention once their peak passes. Oddly it also sees this pattern for Wide Content (which I sort of get), and Causation (which I don't). None of these see a fall in the weighted graphs, but they do in the raw graphs. I guess I think the weighted graphs are more aptly reflecting the real trends here.

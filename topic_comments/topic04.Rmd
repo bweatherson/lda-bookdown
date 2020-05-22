@@ -33,6 +33,8 @@ cat("\n
 	\n")
 ```
 
+The faceted graph here is thrown off by a single data point from _Philosophical Quarterly_; it's the dot just above the 's' in _Philosophical_. This is a downside of trying to graph all the data!
+
 This is the only topic of the 90 that I think best gets a negative characterisation; it's history articles on figures who don't fit into the other history categories. So it's what's left after you take out [Pragmatists](#topic05), [Ancient Greeks](#topic13), [Early Moderns](#topic21), [Heidegger and Husserl](#topic27), [Social Contract Theorists](#topic31), [Kant](#topic32) and [Hume](#topic45). That leaves a lot, and it's a bit of a grab bag of figures who are left. 
 
 But yet, as you can see from the graphs above, they collectively make almost no impact on the journals from about 1970-2013. History of philosophy, at least as represented in these journals, got really narrow for several decades. I'll return [much later in the book](#imprint-section) to some evidence that things have changed since 2013, but it's a little shocking how small this category gets for the last 40-odd years I'm studying.

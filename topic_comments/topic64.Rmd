@@ -35,14 +35,15 @@ cat("\n
 
 The model is carving things up a little more finely than may be ideal here, so let's put some stuff back together. This topic obviously has a lot to do with [Denoting](#topic43) and [Belief Ascriptions](#topic72). And it's useful to see all three of these on a single graph.
 
-```{r three-language-topics}
+```{r three-language-topics, fig.height = 5, fig.cap= "Relative frequency of Denoting, Sense and Reference, and Belief Ascriptions"}
 frb <- weight_ratio %>%
   filter(topic == 43 | topic == 64 | topic == 72) 
 
 ggplot(frb, mapping = aes(x = year, y = y, color = topic)) + 
+  spaghettistyle +
   geom_point(alpha = 0.5) + 
-  geom_smooth(se = F, size = 0.5) +
-  labs(x = "Year", y = "Weighted Proportion of Articles") +
+  geom_smooth(se = F, size = 0.5, method = "loess", formula = "y ~ x") +
+  labs(x = "Year", y = "Weighted Proportion of Articles", title = "Three Classic Topics") +
   scale_color_discrete(name = "Topics", labels = c("Denoting", "Sense and Reference", "Belief Ascriptions"))
 ```
 

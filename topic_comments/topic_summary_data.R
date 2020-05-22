@@ -2,7 +2,7 @@ if (jjj < 10){topic_crossref <- paste0("#topic0",jjj)}
 if (jjj > 9){topic_crossref <- paste0("#topic",jjj)}
 
 
-cat("## Topic ", jjj, " - ", the_categories$subject[[jjj]], " {", topic_crossref, "}\n", sep="")
+cat("## ",the_categories$subject[[jjj]], " {", topic_crossref, "}\n", sep="")
 
 if(!the_categories$cat_num[jjj] == 13){
   cat_nam <- the_categories$cat_name[jjj]

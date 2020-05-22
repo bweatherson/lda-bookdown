@@ -37,7 +37,7 @@ The model is carving things very finely at this point. We already have a topic o
 
 One funny thing to notice here is how little overlap there is between the extensive work on belief ascriptions, set out in this topic, and the work on knowledge ascriptions, which will come up [very soon](#topic74). To measure how much overlap between the topics there is, for each article, I calculated the minimum of the probability they are in this topic, and the probability that they are in the topic on [Knowledge](#topic74) ascriptions. Here are the five articles that score highest by this measure.
 
-```{r belief-knowledge overlap}
+```{r belief-knowledge-overlap-a}
 reports <- relabeled_gamma %>%
   filter(topic == 72 | topic == 74) %>%
   group_by(document) %>%
@@ -46,11 +46,24 @@ reports <- relabeled_gamma %>%
   slice(1:10)
 
 individual_article(reports$document[1])
+```
+
+```{r belief-knowledge-overlap-b}
 individual_article(reports$document[2])
+```
+
+```{r belief-knowledge-overlap-c}
 individual_article(reports$document[3])
+```
+
+```{r belief-knowledge-overlap-d}
 individual_article(reports$document[4])
+```
+
+```{r belief-knowledge-overlap-e}
 individual_article(reports$document[5])
 ```
+<br>
 
 Except perhaps the Dretske, none of them really feel like they fit in this topic. Or, to put things more provocatively, I don't see that (this kind of) work on belief ascriptions really had much impact even on work on other propositional attitudes.
 

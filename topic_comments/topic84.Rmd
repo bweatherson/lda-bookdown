@@ -33,6 +33,29 @@ cat("\n
 	\n")
 ```
 
-Me me me me me.
+When I was a graduate student, this was the stuff I worked on - indicative conditionals and probabilistic models of rational agents. At the time, I thought of myself as working at the intersection of philosophy of science and philosophy of language. It was only when I started applying for jobs that I thought, well, since what I'm doing is working on stuff about rationality, maybe I should just insist that it counts as epistemology and see if I get away with it. Twenty-something years later, no one in my position has such worries; this is clearly part of epistemology.
 
-Spaghetti graph of 12 journals from 1980 onwards.
+One way to see how much it has changed is to look at where the papers are being published. Here's a version of the facet graph above but restricted to the period since 1980, and with trendlines added.
+
+```{r formal-epistemology-journal-distribution, fig.cap = "Recent Formal Epistemology"}
+facet_labels <- chap_two_facet_labels %>%
+  mutate(year = 1983, gamfre = yupper)
+
+facet_labels$journal <- factor(facet_labels$journal, levels = journal_order)
+
+
+indiv_journal_graphs +
+  coord_cartesian(xlim = c(1980,2013)) +
+  geom_smooth(method = "loess", formula = "y ~ x", se = F, size = 0.1) +
+  geom_text(data = facet_labels,
+            mapping = aes(label = short_name),
+            vjust = "inward", 
+            hjust = "inward",
+            fontface = "bold", 
+            size = 3,
+            colour = "grey40")
+
+
+```
+
+I think this makes clear something that was intuitively plausible: that it's the generalist journals leading the charge here. As work on Bayesianism has moved from being Philosophy of Science to Epistemology, it has become a much bigger part of what _Mind_, _Philosophical Review_ and _Noûs_ have published. (Though, to be sure, a lot of what's happened in _Noûs_ has been since 2013.) I'm a little surprised there isn't more movement on the _Analysis_ graph, just from the Sleeping Beauty debate. But otherwise this looks like a case where the general picture - this went from something of a specialist topic to a 'generalist' one - is borne out by the data.

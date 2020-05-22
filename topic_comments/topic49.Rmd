@@ -33,19 +33,7 @@ cat("\n
 	\n")
 ```
 
-Given that this topic covers virtue ethics, and discussions of individual virtues, and emotivism, I was surprised to see how low it came in. It's spread out so much across journals that it helps to zoom in on the graph of individual journals.
-
-```{r virtue-zoomed-graph}
-yupper <- 0.06
-ggplot(data = filter(journalgamma_frequency, topic == jjj) %>% drop_na(), aes(x = year, y = gamfre))  +
-  geom_point(size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
-  theme(legend.position="none") +
-  coord_cartesian(ylim=c(0, yupper), expand = TRUE) +
-  labs(x = "Year", y = "Weighted Proportion of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
-  facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names))
-```
-
-The philosophy of science journals are still low, unsurprisingly. But I was a bit surprised to see so little life in the _Journal of Philosophy_ graph, and not even much in the _Philosophy and Public Affairs_ graph. You really do see here a split between ethics and political philosophy.
+Given that this topic covers virtue ethics, and discussions of individual virtues, and emotivism, I was surprised to see how low it came in. I was particularly bit surprised to see so little life in the _Journal of Philosophy_ graph, and not even much in the _Philosophy and Public Affairs_ graph. You really do see here a split between ethics and political philosophy.
 
 A slight surprise here is that "Stevenson" turns up as a keyword. It isn't surprising that this is a keyword at all; [Charles Leslie Stevenson](https://plato.stanford.edu/entries/stevenson/) is one of the most important figures in mid-century philosophy. It's rather that it isn't entirely clear why the model put the work that engages with Stevenson here rather than somewhere else.
 

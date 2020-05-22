@@ -8,7 +8,7 @@ bookdown::gitbook:
         collapsed: false
         smooth_scroll: false
       before: |
-        <li><a href="./">Text Mining Philosophy Journals</a></li>
+        <li><a href="./">A History of Philosophy Journals</a></li>
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
     sharing:

@@ -1,7 +1,8 @@
 --- 
-title: "Text Mining Philosophy Journals"
+title: "A History of Philosophy Journals"
+subtitle: "Volume 1: Evidence from Topic Modeling, 1876-2013"
 author: "Brian Weatherson"
-date: "`r Sys.Date()`"
+date: "Marshall M. Weinberg Professor of Philosophy, University of Michigan, Ann Arbor"
 documentclass: book
 link-citations: yes
 site: bookdown::bookdown_site
@@ -640,33 +641,41 @@ That table shows which twelve journals I'm using, the year they started publicat
 
 The data comes from JSTOR's [Data For Researchers](https://jstor.org/dfr/), which provides for each article in these journals a file with a list of the words in the article and the number of times those words appear. Though as will become important in what follows, this data separates hyphenated words, excludes various common words like 'and' and 'the', and also excludes all one and two letter words.
 
-I used this data to build a Latent Dirichlet Allocation (LDA) model of the journals using the [topicmodels](https://cran.r-project.org/package=topicmodels) package written by [Bettina Grün](http://ifas.jku.at/gruen/) and [Kurt Hornik](http://statmath.wu.ac.at/~hornik/).
+JSTOR has a moving window which means it doesn't make available the latest issues of all of the journals. When I started this project, the last year that I could get access to all issues of all 12 journals was 2013. So this study stops in 2013. I make a number of anecdotal observations about what's happened since 2013 during this book. And at the end I come back to one study on work from 2019. But this is primarily a history of the years 1876-2013.
+
+I used the data from JSTOR to build a Latent Dirichlet Allocation (LDA) model of the journals using the [topicmodels](https://cran.r-project.org/package=topicmodels) package written by [Bettina Grün](http://ifas.jku.at/gruen/) and [Kurt Hornik](http://statmath.wu.ac.at/~hornik/).
 
 An LDA model takes the distribution of words in articles and comes up with a probabilistic assignment of each paper to one of a number of topics. The number of topics has to be set manually, and after some experimentation it seemed that the best results came from dividing the articles up into `r cats` topics. And a lot of this book discusses the characteristics of these `r cats` topics. But to give you a more accessible sense of what the data looks like, I'll start with a graph that groups those topics together into familiar contemporary philosophical subdisciplines, and displays their distributions in the 20th and 21st century journals.^[I'm leaving the 19th century off this graph because it is odd in various ways, and best treated separately. I'll say much more about it as we proceed.]
 
 ```{r initial-graph-style, cache = FALSE}
 facetstyle <-   theme_minimal() +
-  theme(plot.title = element_text(size = rel(1), 
+  theme(text = element_text(family="Lato"),
+        plot.title = element_text(size = rel(1), 
+                                  family = "Lora",
                                   face = "bold",
-                                  margin = margin(0, 0, 8, 0)),
+                                  margin = margin(0, 0, 10, 0)),
         strip.text = element_blank(),
         panel.spacing.x = unit(-0.05, "lines"),
         panel.background = element_blank(),
         panel.spacing.y = unit(1, "lines"),
-        axis.title.x = element_text(size = rel(1)),
-        axis.title.y = element_text(size = rel(1)),
-        panel.grid.major = element_line(color = "grey85", size = 0.07),
-        panel.grid.minor = element_blank(),
+        axis.title.x = element_text(size = rel(1),
+                                    margin = margin(t = 6, r = 0, b = 3, l = 0)),
+        axis.title.y = element_text(size = rel(1),
+                                    margin = margin(t = 0, r = 8, b = 0, l = 0)),
+        panel.grid.major.y = element_line(color = "grey85", size = 0.07),
+        panel.grid.minor.y = element_line(color = "grey85", size = 0.03),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
         legend.position="none")
 spaghettistyle <- facetstyle +
-  theme(panel.grid.major = element_line(color = "grey80", size = 0.1),
-        panel.grid.minor = element_line(color = "grey85", size = 0.05),
+  theme(panel.grid.major.y = element_line(color = "grey80", size = 0.08),
+        panel.grid.minor.y = element_line(color = "grey85", size = 0.04),
         legend.text = element_text(size = rel(0.5)),
         plot.caption = element_text(size = rel(0.7))
         )
 freqstyle <-   spaghettistyle +
   theme(legend.text = element_text(size = rel(0.75)),
-          panel.grid.major = element_line(color = "grey85", size = 0.08),
+          panel.grid.major.y = element_line(color = "grey85", size = 0.08),
         legend.position = "right")
 chap_two_facet_labels <- tribble(
   ~journal, ~short_name,
@@ -683,9 +692,16 @@ chap_two_facet_labels <- tribble(
   "Philosophy of Science", "Philosophy of Science",
   "British Journal for the Philosophy of Science", "BJPS"
 )
+
+# Changing the text in the theme just changes the labels on the axis etc
+# To change what's in the graph itself, you need to use these commands
+# And I'm using a hack to get the titles for the graph appearing in the graph, so...
+update_geom_defaults("text", list(family = "Lato"))
+update_geom_defaults("label", list(family = "Lato"))
+
 ```
 
-```{r first-facet-graph, fig.cap = "Proportion of Articles in Each Category"}
+```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year"}
 tt <- filter(category_frequency, year > 1899)
 category_graph_labels <- tt %>%
   group_by(category) %>%
@@ -699,11 +715,13 @@ ggplot(tt,
             hjust = "inward",
             fontface = "bold", 
             size = 3) +
-  labs(x = "Year", y = "Proportion of Articles", title = "Proportion of Articles in Each Category Per Year") +
+  labs(x = "Year", y = "Proportion of Articles", title = "Trends in Philosophical Categories") +
   geom_point(size = 0.15) + 
   facet_wrap(~category, ncol=3) +  
-  scale_x_continuous(expand = expansion(mult = c(0.05, 0.05))) +
-  scale_y_continuous(expand = expansion(mult = c(0, .03))) +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.05)),
+                     breaks = 25 * 77:80) +
+  scale_y_continuous(breaks = c(0.1,0.2),
+                     expand = expansion(mult = c(0, .03))) +
   facetstyle
 ```
 
@@ -761,13 +779,13 @@ As well as those sources, I learned a lot about how to use **topicmodels** from 
 
 Most of the graphics in this book are based on things I learned from Kieran Healy, either from his book [Data Visualization: A Practical Introduction](https://kieranhealy.org/publications/dataviz/) or from his [blog](https://kieranhealy.org/blog/).
 
-The whole book was put together using the **bookdown** package, primarily built by Yihui Xie. This in turn is built on the **Pandoc** language, which was originally built by John MacFarlane. And the code uses tools from the **tidyverse** package throughout, which was originally built by Hadley Wickham.
+The whole book was put together using the **bookdown** package, primarily built by Yihui Xie. This in turn is built on the **Pandoc** language, which was originally built by John MacFarlane. And the code uses tools from the **tidyverse** package throughout, which was originally built by Hadley Wickham. The design of the book is modeled on that of [rstudio4edu](https://rstudio4edu.github.io/rstudio4edu-book/) by Desirée De Leon and Alison Hill, and I've used a lot of their CSS code under the hood here.
 
 ## GitHub {-}
 
 I've created a GitHub repository for this book. It's at
 
-```https://github.com/bweatherson/lda-bookdown```
+> https://github.com/bweatherson/lda-bookdown
 
 Most of the code and data you need to recreate this book is there. The exception is that the data files that I downloaded from JSTOR are not there. That's for two reasons. One is that it wasn't 100% clear that the licence for them would allow redistribution. The other was that they would have been too big to put on GitHub anyway. So to recreate everything I'm doing here, you'll need to download them directly. 
 
@@ -775,9 +793,453 @@ In the ```notes``` directory of the GitHub repository there are some R scripts f
 
 If you want to go directly to the code for a particular page, the eye icon in the top bar will take you there.
 
+## Replication Instructions {-}
+
+If you want to do a version of this study for yourself, here's a quick guide as to how to get started. I'm going to download the text for issues of _Journal of Philosophy_ in the 1970s, and build a small (10 topic) model on them. I'm going to assume basic familiarity with R, and especially with **tidyverse**. If you don't have that basic familiarity, a good getting started guide is Jenny Bryan's https://stat545.com, especially chapters 1, 2, 5, 6, 7, 14 and 15. OK, I assume you've done that, and we're ready to do some basic text mining.
+
+Go to https://jstor.org/dfr, and set up a free account.
+
+Download the [list of journals JSTOR has](https://www.jstor.org/kbart/collections/all-archive-titles?contentType=journals&fileFormat=xlsx). That link will take you to the Excel file; if you're dedicated to plain text there is [also a text version available](https://www.jstor.org/kbart/collections/all-archive-titles?contentType=journals&fileFormat=csv), but it isn't a lot of fun to use. The key part of that file is the column **title_id**. That gives you the code you need to refer to each journal.
+
+Back at https://jstor.org/dfr go to "Create a Dataset" and use "jcode:(jphilosophy)" (or whatever the title_id for your desired journal is) to get a data set.
+
+![Finding all Journal of Philosophy Articles](instruct_1.png)
+
+We are going to restrict dates, so let's just do the 1970s - type in the years you want (for us it's 1970 to 1979) and click "Update Results".
+
+![Restricting to the 1970s](instruct_2.png)
+
+Click "Request Dataset". You need the metadata and the unigrams, and you need to give it a name (but you won't use it at any time).
+
+![What data we want to get](instruct_4.png)
+
+Once again, click "Request Dataset". You'll get this somewhat less than reassuring popup.
+
+![Uh oh - waiting time](instruct_3.png)
+
+But despite it saying that it may take up to two hours, in fact you normally get the data in minutes, even seconds. You'll get an email (at the address you used for registration) saying it's ready. Clicking the link in that email will get you a zip file. And in that zip file there are two directories: **ngram1** and **metadata**.
+
+We want to put these somewhat memorable. I'll put the first in **data/ngram/jphil** and the second in **data/metadata/jphil**. (So **data** is a subdirectory of my main working directory. And it has two subdirectories in it,**ngram** and **metadata**. And each of those have a subdirectory for each journal being analysed.) It's good to keep the ngrams and the metadata separate places, and it will be very useful (actually essential) to the code I'm about to run to use the same directory name for where a particular journal's metadata is, and where its words are.
+
+There is a hitch here that I should be able to figure out in R, but I couldn't. As things come out, I ended up with names that didn't have spaces in them. So the author of [Should We Respond to Evil with Indifference](https://philpapers.org/rec/WEASWR) was 'BrianWeatherson', not 'Brian Weatherson'. There was probably a way to fix this at the importing stage, but doing so required more understanding of XML files than I have. So instead I came up with a hack. In each journal directory under inside **metadata**, go to the terminal and run this command.
+
+```
+find . -name '*.xml' -print0 | xargs -0 sed -i "" "s/<surname>/<surname> /g
+```
+
+This adds a space before each surname. So in the surname field, that article goes from having the value "Weatherson" to having the value " Weatherson". And now it can be concatenated with "Brian" to produce a reasonable looking name. It's not elegant, but it works.
+
+The next two steps are taken almost entirely from John A. Bernau's paper [Text Analysis with JSTOR Archives](https://doi.org/10.1177%2F2378023118809264). I've tinkered with the scripts a little, but if you go back to the supporting documents for his paper, you can see how much I've literally copied over. 
+
+Anyway, here's the script I ran to convert the metadata files, with are in XML format, into something readable in R. The following file is called **extract_metadata.R** on the GitHub page. If you're working with more journals, you have to add the extra journals into the tibble near the start. The first column should be the name you gave to the directories for the journal's data; the second should be the name you want to appear in any part of the project being read by humans.
+
+```{r echo= T, eval = F}
+# Parsing out xml files
+# Based on a script by John A. Bernau 2018
+
+# Install / load packages
+require(xml2)
+require(tidyverse)
+require(plyr)
+require(dplyr)
+
+# Add every journal that you're using here as an extra line
+journals <- tribble(
+  ~code, ~fullname,
+  "jphil", "Journal of Philosophy",
+)
+
+all_metadata <- tibble()
+
+journal_count <- nrow(journals)
+
+for (j in 1:journal_count){
+  
+  # Identify path to metadata folder and list files
+  path1 <- paste0("data/metadata/",journals$code[j])
+  files <- list.files(path1)
+  
+  # Initialize empty set
+  final_data <- NULL
+  
+  # Using the xml2 package: for each file, extract metadata and append row to final_data
+  for (x in files){
+    path <- read_xml(paste0(path1, "/", x))
+    
+    # File name - without .xml to make it easier for lookup purposes
+    document <- str_remove(str_remove(x, ".xml"),"journal-article-")
+    
+    # Article type
+    type <- xml_find_all(path, "/article/@article-type") %>% 
+      xml_text()
+    
+    # Title
+    title <- xml_find_all(path, xpath = "/article/front/article-meta/title-group/article-title") %>% 
+      xml_text()
+    
+    # Author names
+    authors <- xml_find_all(path, xpath = "/article/front/article-meta/contrib-group/contrib") %>%
+      xml_text()
+    auth1 <- authors[1]
+    auth2 <- authors[2]
+    auth3 <- authors[3]
+    auth4 <- authors[4]
+    
+    # Year
+    year <- xml_find_all(path, xpath = "/article/front/article-meta/pub-date/year") %>% 
+      xml_text()
+    
+    # Volume
+    vol <- xml_find_all(path, xpath = "/article/front/article-meta/volume") %>% 
+      xml_text()
+    
+    # Issue
+    iss <- xml_find_all(path, xpath = "/article/front/article-meta/issue") %>% 
+      xml_text()
+    
+    # First page
+    fpage <- xml_find_all(path, xpath = "/article/front/article-meta/fpage") %>% 
+      xml_text()
+    
+    # Last page
+    lpage <- xml_find_all(path, xpath = "/article/front/article-meta/lpage") %>% 
+      xml_text()
+    # Language
+    lang <-  xml_find_all(path, xpath = "/article/front/article-meta/custom-meta-group/custom-meta/meta-value") %>%  
+      xml_text()
+    
+    # Bind all together
+    article_meta <- cbind(document, type, title, 
+                          auth1, auth2, auth3, auth4, year, vol, iss, fpage, lpage, lang)
+    
+    final_data <- rbind.fill(final_data, data.frame(article_meta, stringsAsFactors = FALSE))
+    
+    # Print progress 
+    if (nrow(final_data) %% 250 == 0){
+      print(paste0("Extracting document # ", nrow(final_data)," - ", journals$code[j]))
+      print(Sys.time())
+    }
+  }
+  
+  # Shorter name
+  fd <- c()
+  fd <- final_data
+  
+  # Adjust data types
+  fd$type <- as.factor(fd$type)
+  fd$year <- as.numeric(fd$year)
+  fd$vol <- as.numeric(fd$vol)
+  fd$iss <- str_replace(fd$iss, "S", "10") # A hack for special issues
+  fd$iss <- as.numeric(fd$iss)
+  
+  # We are going to replace S with some large number, and then undo it a few lines later
+  fd$fpage <- str_replace(fd$fpage, "S", "1000") 
+  fd$lpage <- str_replace(fd$lpage, "S", "1000")
+  # Convert to numeric (roman numerals converted to NA by default, but the S files should be preserved)
+  fd$fpage <- as.numeric(fd$fpage)
+  fd$lpage <- as.numeric(fd$lpage)
+  fd <- fd %>%
+    mutate(
+      fpage = case_when(
+        fpage > 1000000 ~ fpage - 990000,
+        fpage > 100000 ~ fpage - 90000,
+        TRUE ~ fpage
+      )
+    )
+  fd <- fd %>%
+    mutate(
+      lpage = case_when(
+        lpage > 1000000 ~ lpage - 990000,
+        lpage > 100000 ~ lpage - 90000,
+        TRUE ~ lpage
+      )
+    )
+  fd$fpage[fd$fpage == ""] <- NA
+  fd$lpage[fd$lpage == ""] <- NA
+  
+  # Create length variable
+  fd$length <- fd$lpage - fd$fpage + 1
+  
+  # Convert to tibble  
+  fd <- as_tibble(fd)
+  
+  # Filter out things that aren't research-article, have no author
+  fd <- fd %>%
+    arrange(desc(-length)) %>%
+    filter(type == "research-article") %>%
+    filter(is.na(auth1) == FALSE)
+  
+  # Filter articles that we don't want  
+  fd <- fd %>%
+    filter(!grepl("Correction",title)) %>%
+    filter(!grepl("Foreword",title)) %>%
+    filter(!(title == "Descriptive Notices")) %>%
+    filter(!(title == "Editorial")) %>%
+    filter(!(title == "Letter to Editor")) %>%
+    filter(!(title == "Letter")) %>%
+    filter(!(title == "Introduction")) %>%
+    filter(!grepl("Introductory Note",title)) %>%
+    filter(!grepl("Foreword",title)) %>%
+    filter(!grepl("Errat",title)) %>%
+    filter(!grepl("Erata",title)) %>%
+    filter(!grepl("Abstract of C",title)) %>%
+    filter(!grepl("Abstracts of C",title)) %>%
+    filter(!grepl("To the Editor",title)) %>%
+    filter(!grepl("Corrigenda",title)) %>%
+    filter(!grepl("Obituary",title)) %>%
+    filter(!grepl("Congress",title))
+  
+  # Filter foreign language articles. Can't filter on lang = "eng" because some articles have blank
+  fd <- fd %>%
+    filter(!lang == "fre") %>%
+    filter(!lang == "ger")
+  
+  # Convert file to character to avoid cast_dtm bug
+  fd$document <- as.character(fd$document)
+  
+  # Add a column for journal name
+  fd <- fd %>%
+    mutate(journal = journals$fullname[j])
+  
+  # Put the metadata for this journal with metadata for other journals
+  all_metadata <- rbind(fd, all_metadata) %>%
+    arrange(year, fpage)
+}
+
+save(all_metadata, file  = "my_journals_metadata.RData")
+
+# The rest of this is a bunch of tweaks to make the metadata more readable
+
+my_articles <- all_metadata
+
+# Get Rid of All Caps
+my_articles$title <- str_to_title(my_articles$title)
+my_articles$auth1 <- str_to_title(my_articles$auth1)
+my_articles$auth2 <- str_to_title(my_articles$auth2)
+my_articles$auth3 <- str_to_title(my_articles$auth3)
+
+#Get rid of messy spaces in titles
+my_articles$title <- str_squish(my_articles$title)
+my_articles$auth1 <- str_squish(my_articles$auth1)
+my_articles$auth2 <- str_squish(my_articles$auth2)
+my_articles$auth3 <- str_squish(my_articles$auth3)
+
+# Note that this sometimes leaves us with duplicated articles in my_articles
+# The following is the fix duplication code
+my_articles <- my_articles %>% 
+  rowid_to_column("ID") %>%
+  group_by(document) %>%
+  top_n(1, ID) %>%
+  ungroup()
+
+# Making a list of authors; uses 'et al' for 4 or more authors
+my_articles <- my_articles %>%
+  mutate(authall = case_when(
+    is.na(auth2) ~ auth1,
+    is.na(auth3) ~ paste0(auth1," and ", auth2),
+    is.na(auth4) ~ paste0(auth1,", ",auth2," and ",auth3),
+    TRUE ~ paste0(auth1, " et al")
+  ))
+
+# Code for handling page numbers starting with S
+my_articles <- my_articles %>% 
+  mutate(citation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":S",fpage-10000,"-S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall," (",year,") \"", title,"\" ",journal," (Supplementary Volume) ",vol,":",fpage,"-",lpage,"."),
+    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+  )
+  )
+
+# Remove Errant Articles
+# This is used to remove duplicates, articles that aren't in English but don't have a language field, etc.
+# Again, this isn't very elegant, but you just have to look at the list of articles and see what shouldn't be there
+errant_articles <- c(
+  "10.2307_2250251",
+  "10.2307_2102671",
+  "10.2307_2102690",
+  "10.2307_4543952",
+  "10.2307_2103816",
+  "10.2307_185746",
+  "10.2307_3328062"
+)
+
+# Last list of things to exclude
+my_articles <- my_articles %>%
+  filter(!document %in% errant_articles) %>%
+  filter(!lang == "spa")
+
+save(my_articles, file="my_articles.RData")
+```
+
+The main thing I added to this was the ugly code for handling articles with **S** in their page number. This doesn't matter for _Journal of Philosophy_ in the 1970s. But two other journals have page numbers that look like 'S17', 'S145', etc. Treating these as numbers was a bit of a challenge, and the ugly code above is an attempt to handle it. As you can see, I've written distinct lines in for the two journals that I was looking at which did this; if you look at more journals you'll have to be careful with this.
+
+The other thing I did is right near the end, the **mutate** command that introduces the citation field. That's a really helpful way of referring to articles in a familiar human readable way. If you prefer a different citation format, that's the line you want to adjust.
+
+We now have a tibble, called **my_articles** that has the metadata for all the articles. It's somewhat helpful in it's own right; I use the large one I generated from all 12 journals for looking up citations. But we also need the words. For this I use another script that I built off one from Bernau's paper.
+
+This is called **extract_words.R** on the GitHub page. And again, if you want to use more journals, you'll have to extend that tibble at the start.
+
+```{r echo = T, eval = F}
+# Read ngrams
+# Based on script by John A. Bernau 2018
+require(tidyverse)
+require(quanteda)
+
+# Journal List
+journals <- tribble(
+  ~code, ~fullname,
+  "jphil", "Journal of Philosophy",
+)
+
+jlist <- journals$code
+
+# Initialise huge tibble
+huge_tibble <- tibble(filename = character(), word = character(), wordcount = numeric())
+
+for (journal in jlist){
+  # Set up files paths
+  path <- paste0("data/ngram/",journal)
+  n_files <- list.files(path)
+  
+  # Connecting Words to Filter out
+  source("short_words.R")
+  
+  big_tibble <- tibble(filename = character(), word = character(), wordcount = numeric())
+  
+  for (i in seq_along(n_files)){
+    # Remove junk to get codename
+    codename <- str_remove(str_remove(n_files[i], "-ngram1.txt"),"journal-article-")
+    
+    # Get metadata for it
+    meta <- my_articles %>% filter(document == codename)
+    
+    # If it is in article list, extract text
+    if(nrow(meta) > 0){
+        small_tibble <- read.table(paste0(path, "/", n_files[i]))
+        small_tibble <- small_tibble %>%
+          dplyr::rename(word = V1, wordcount = V2) %>%
+          add_column(document = codename, .before=1) %>%
+          mutate(digit = str_detect(word, "[:digit:]"),
+                 len = str_length(word)) %>% 
+          filter(digit == F & len > 2) %>% 
+          filter(!(word %in% short_words)) %>% 
+          select(-digit, -len)
+        big_tibble <- rbind(big_tibble, small_tibble)
+    }
+    if (i %% 250 == 0){
+      print(paste0("Extracting document # ", journal, " - ", i))
+      print(Sys.time())
+    }
+  }
+  huge_tibble <- rbind(huge_tibble, big_tibble)
+}
+
+# Adjust data types
+my_wordlist <- as_tibble(huge_tibble)
+my_wordlist$document <- as.character(my_wordlist$document)
+my_wordlist$word <- as.character(my_wordlist$word)
+
+save(my_wordlist, file  = "my_wordlist.RData")
+```
+
+Now with a tibble of all the articles, and another with all the words in each article, it's time to go to work. The next file is called **create_lda.R** on the GitHub page, and if you're doing a big project, it could take some time to run. This particular script takes less than a minute to run on my computer. But the equivalent step in the main project took over 8 hours on a pretty powerful laptop.
+
+```{r echo = T, eval = F}
+require(tidytext)
+require(topicmodels)
+require(tidyverse)
+
+# This is redundant if you've just run the other scripts, but here for resilience
+load("my_wordlist.RData")
+load("my_articles.RData")
+source("short_words.R")
+
+# Filter out short words and words appearing 1-3 times
+in_use_word_list <- my_wordlist %>%
+  filter(wordcount > 3) %>%
+  filter(!word %in% short_words) %>%
+  filter(document %in% my_articles$document)
+
+# Create a Document Term Matrix 
+my_dtm <- cast_dtm(in_use_word_list, document, word, wordcount)
+
+# Build the lda
+# k is the number of topics
+# seed is to allow replication; vary this to see how different model runs behave
+# Note that this can get slow - the real one I run takes 8 hours, though if you're following this script, it should take seconds
+my_lda <- LDA(my_dtm, k = 10, control = list(seed = 22031848, verbose = 1))
+
+# The start on analysis - extract topic probabilities
+my_gamma <- tidy(my_lda, matrix = "gamma")
+
+# Now extract probability of each word in each topic
+my_beta <- tidy(my_lda, matrix = "beta")
+```
+
+The big step is the one that calls the LDA command. That builds the topic model. From here on your job is to just do analysis. But just to demonstrate what this finds, here is a quick look at what we found. 
+
+<br>
+```{r analyse-dummy-lda}
+load("my_lda.RData")
+my_gamma <- tidy(my_lda, matrix = "gamma")
+
+topic_three <- my_gamma %>%
+  filter(topic == 3) %>%
+  arrange(-gamma) %>%
+  slice(1:10) %>%
+  inner_join(articles, by = "document") %>%
+  select(citation)
+
+kable(topic_three,
+      col.names = "Article",
+      caption = "Top articles in topic 3 in example LDA")
+```
+<br>
+
+These are the 10 articles that our little example LDA gives the highest probability to being in topic 3. What's topic 3? I guess ethics, from the look of those articles. We could check this by seeing which words have the highest probability of turning up in the topic.
+
+<br>
+```{r analyse-dummy-lda-words}
+load("my_lda.RData")
+my_beta <- tidy(my_lda, matrix = "beta")
+
+topic_three_words <- my_beta %>%
+  filter(topic == 3) %>%
+  arrange(-beta) %>%
+  slice(1:10) %>%
+  select(term)
+
+kable(topic_three_words,
+      col.names = "Word",
+      caption = "Topic 3 words") %>%
+   kable_styling(full_width = F)
+```
+<br>
+
+And that seems to back up our initial hunch that this is about ethics, or at least about morality. I'm going to stop the illustration here, because to go any further we'd have to do serious analysis on a model that probably doesn't deserve serious attention. But hopefully I've said enough here that anyone who wants to can get started on their own analysis.
+
 ## Status {-}
 
-This is a **draft**. Don't circulate it yet. I had been hoping to have a finished draft by the end of March 2020, but the virus got in the way. This is subject to very frequent change, and I'll be updating it as often as I can. This message will change substantially when the draft is complete.
+This is a **draft**. It's fine to circulate it, and even cite it, but it is very much subject to change. If people point out mistakes, I'll fix them. If people suggest new studies to add, I'll add them. I'll try to do so in ways that leave the section numbering intact. So if you want to cite a particular section, you can. (There aren't any page numbers of course.) But the figure numbering and table numbering are automatic, and might get altered if things change. In any case, if you cite it while it is in draft form, make sure you note the date you accessed it.
+
+I had been hoping to have a finished draft by the end of March 2020, but the virus got in the way. And I'd been hoping to use the summer to find a way to get it published as an open access book with a university press. But the virus might get in the way of that too, since publishing things open access costs money, and there isn't as much of it around as there used to be. So I'm not sure exactly what the plans are going forward with this work. (It's obviously unprintable.) But if something happens, I'll change this part of the text. And if it can't get published officially, I'm perfectly happy for it to circulate in this form.
+
+The portentious 'Volume 1' in the subtitle is because I have a number of ideas for how to think about the history of philosophy journals. My first project along these lines involved looking at citation patterns, and a version of that might yet be Volume 2. But all of this is vaporware for now; the subtitle is just a way of leaving options open.
+
+The current version of this book has been compiled on:
+
+```{r include-date}
+Sys.Date()
+```
+
+With the following configuration:
+
+<details>
+    <summary>Show configuration</summary>
+```{r session-info}
+xfun::session_info()
+```
+</details>
 
 ```{r articles-with-word}
 articles_with_word <- function(x){

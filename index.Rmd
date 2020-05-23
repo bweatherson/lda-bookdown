@@ -755,11 +755,11 @@ So I'll spend some time in what follows looking at when familiar topics show up.
 
 ## Plan {-}
 
-The book has nine chapters, and it loosely divides into three parts, with three chapters each.
+The book has nine chapters, and it loosely divides into three parts, with three chapters in each part.
 
-The first part concerns the 90 topics that the model divides the articles into. Chapter \@ref(methodology-chapter) is about how and why I set up the model to produce these outputs. Chapter \@ref(all-90-topics) goes through each of these 90 topics one at a time. As well as producing some automated statistics and graphs for each topic, and listing which articles are in each topic, I make some small comments about the topic. These are mostly about the content of the topic and its place in philosophical history, though I also spend a lot of time talking about how the model made its division into topics. Most of the comments here are short, though occasionally I decide that one topic needs 2500 words or more. Chapter \@ref(summary-graphs) is about my attempts to make a legible graph of all 90 topics through time. I run through a lot of different representations of the data; most of them are failures, but some of them are more interesting failures than others.
+The first part concerns the 90 topics that the model divides the articles into. Chapter \@ref(methodology-chapter) is about how and why I made the choices I did in providing the inputs to the model. Chapter \@ref(all-90-topics) goes through each of these 90 topics one at a time. As well as producing some automated statistics and graphs for each topic, and listing which articles are in each topic, I make some small comments about the topic. These are mostly about the content of the topic and its place in philosophical history, though I also spend a lot of time talking about how the model made its division into topics. Most of the comments here are short, though occasionally I decide that one topic needs 2500 words or more. Chapter \@ref(summary-graphs) is about my attempts to make a legible graph of all 90 topics through time. I run through a lot of different representations of the data; most of them are failures, but some of them are more interesting failures than others.
 
-The second part looks at what happens if instead of making a 90-way division into somewhat novel topics, we try a 12 way division into familiar topics. So I divide the articles up into common contemporary categories, like Episemology, Ethics, Metaphysics and Philosophy of Science, and look at the trends in these categories. Chapter \@ref(categorychapter) goes over the trends in the 12 categories. Chapter \@ref(sortingchapter) goes over how I made these divisions, with a special focus on where the categories do, and do not, run into each other. And chapter \@ref(epistemologychapter) looks at one of these categories: Epistemology. This is in part for self-interested reasons; I work in epistemology. But it's in part because the data about epistemology were so surprising. Epistemology, as it is currently practiced, is basically invisible in the journals before World War II. And the most famous part of contemporary epistemology, the Gettier problem, plays a surprisingly small role in recent years.
+The second part looks at what happens if instead of making a 90-way division into somewhat novel topics, we try a 12 way division into familiar topics. So I divide the articles up into common contemporary categories, like Episemology, Ethics, Metaphysics and Philosophy of Science, and look at the trends in these categories. Chapter \@ref(categorychapter) goes over the trends in the 12 categories. Chapter \@ref(sortingchapter) goes over how I made these divisions, with a special focus on where the categories do, and do not, run into each other. And chapter \@ref(epistemologychapter) looks at one of these categories: Epistemology. This is in part for self-interested reasons; it's the field I work in. But it's in part because the data about Epistemology were so surprising. Epistemology, as it is currently practiced, is basically invisible in the journals before World War II. And the most famous part of contemporary Epistemology, the Gettier problem, plays a surprisingly small role in recent years.
 
 The third part looks at further applications of the model. The first six chapters had used years as the main unit of temporal measurement. In Chapter \@ref(eraschapter) I use more coarse-grained measures. First I look at the trends over five 'eras' in philosophy, and then over twelve decades. One benefit of doing things this way is that as well as looking at what the model says, I can look at trends in the underlying data directly, and see how well the model is tracking reality. In Chapter \@ref(outliers) I look at outliers along various dimensions, both to see where extreme events have been happening, and to put some stress on the model. If it's most outlandish claims are true, and I think several of them are, then we should have more confidence in its more mundane claims. And in Chapter \@ref(lookingoutward) I try to look beyond the model. I use the model to compare the early years of the journals with some famous books that were published around the same time. Then I look at how articles in Philosophers' Imprint in 2019 compare to what we saw before 2013. (The big story is the resurgence of interest in historical figures outside the standard canon.) And finally I look at something that almost blew up the project: the very distinctive vocabulary of 21st Century Philosophy.
 
@@ -779,7 +779,11 @@ As well as those sources, I learned a lot about how to use **topicmodels** from 
 
 Most of the graphics in this book are based on things I learned from Kieran Healy, either from his book [Data Visualization: A Practical Introduction](https://kieranhealy.org/publications/dataviz/) or from his [blog](https://kieranhealy.org/blog/).
 
-The whole book was put together using the **bookdown** package, primarily built by Yihui Xie. This in turn is built on the **Pandoc** language, which was originally built by John MacFarlane. And the code uses tools from the **tidyverse** package throughout, which was originally built by Hadley Wickham. The design of the book is modeled on that of [rstudio4edu](https://rstudio4edu.github.io/rstudio4edu-book/) by Desirée De Leon and Alison Hill, and I've used a lot of their CSS code under the hood here.
+The whole book was put together using the **bookdown** package, primarily built by Yihui Xie. This in turn is built on the **Pandoc** language, which was originally built by John MacFarlane. And the code uses tools from the **tidyverse** package throughout, which was originally built by Hadley Wickham. 
+
+The design of the book is modeled on that of [rstudio4edu](https://rstudio4edu.github.io/rstudio4edu-book/) by Desirée De Leon and Alison Hill, and I've used a lot of their CSS code under the hood here.
+
+And my daughter Nyaya has helped catch a lot of errors, though giving the way I write, this is an endless task.
 
 ## GitHub {-}
 
@@ -789,9 +793,9 @@ I've created a GitHub repository for this book. It's at
 
 Most of the code and data you need to recreate this book is there. The exception is that the data files that I downloaded from JSTOR are not there. That's for two reasons. One is that it wasn't 100% clear that the licence for them would allow redistribution. The other was that they would have been too big to put on GitHub anyway. So to recreate everything I'm doing here, you'll need to download them directly. 
 
-In the ```notes``` directory of the GitHub repository there are some R scripts for converting downloaded JSTOR files into things that can be managed in R. And there are also the scripts I used for originally building the model this book is based around. A lot of the things I'm doing here are based on code that's in the code for the book. But it takes about 24-32 hours (on a reasonably fast personal computer) to build the model, so I don't build it anew each time I compile the book.
+In the ```notes``` directory of the GitHub repository there are some R scripts for converting downloaded JSTOR files into things that can be managed in R. A lot of the things I'm doing here are based on code that's in the code for the book. But it takes about 24-32 hours (on a reasonably fast personal computer) to build the model, so I don't build it anew each time I compile the book. The next section describes how to build a model like the one I'm using.
 
-If you want to go directly to the code for a particular page, the eye icon in the top bar will take you there.
+If you want to go directly to the code for the chapter you're in, the eye icon in the top bar will take you there.
 
 ## Replication Instructions {-}
 
@@ -817,23 +821,23 @@ Once again, click "Request Dataset". You'll get this somewhat less than reassuri
 
 ![Uh oh - waiting time](instruct_3.png)
 
-But despite it saying that it may take up to two hours, in fact you normally get the data in minutes, even seconds. You'll get an email (at the address you used for registration) saying it's ready. Clicking the link in that email will get you a zip file. And in that zip file there are two directories: **ngram1** and **metadata**.
+But despite it saying that it may take up to two hours, in fact you normally get the data in minutes, even seconds. You'll get an email (at the address you used for registration) saying it's ready. Clicking the link in that email will get you a zip file. And in that zip file there are two directories: ```ngram1``` and ```metadata```.
 
-We want to put these somewhat memorable. I'll put the first in **data/ngram/jphil** and the second in **data/metadata/jphil**. (So **data** is a subdirectory of my main working directory. And it has two subdirectories in it,**ngram** and **metadata**. And each of those have a subdirectory for each journal being analysed.) It's good to keep the ngrams and the metadata separate places, and it will be very useful (actually essential) to the code I'm about to run to use the same directory name for where a particular journal's metadata is, and where its words are.
+We want to put these somewhat memorable. I'll put the first in ```data/ngram/jphil``` and the second in ```data/metadata/jphil```. (So **data** is a subdirectory of my main working directory. And it has two subdirectories in it, ```ngram``` and ```metadata```. And each of those have a subdirectory for each journal being analysed.) It's good to keep the ngrams and the metadata separate places, and it will be very useful (actually essential) to the code I'm about to run to use the same directory name for where a particular journal's metadata is, and where its words are.
 
-There is a hitch here that I should be able to figure out in R, but I couldn't. As things come out, I ended up with names that didn't have spaces in them. So the author of [Should We Respond to Evil with Indifference](https://philpapers.org/rec/WEASWR) was 'BrianWeatherson', not 'Brian Weatherson'. There was probably a way to fix this at the importing stage, but doing so required more understanding of XML files than I have. So instead I came up with a hack. In each journal directory under inside **metadata**, go to the terminal and run this command.
+There is a hitch here that I should be able to figure out in R, but I couldn't. As things come out, I ended up with names that didn't have spaces in them. So the author of [Should We Respond to Evil with Indifference](https://philpapers.org/rec/WEASWR) was 'BrianWeatherson', not 'Brian Weatherson'. There was probably a way to fix this at the importing stage, but doing so required more understanding of XML files than I have. So instead I came up with a hack. In each journal directory under inside ```metadata```, go to the terminal and run this command.
 
 ```
 find . -name '*.xml' -print0 | xargs -0 sed -i "" "s/<surname>/<surname> /g
 ```
 
-This adds a space before each surname. So in the surname field, that article goes from having the value "Weatherson" to having the value " Weatherson". And now it can be concatenated with "Brian" to produce a reasonable looking name. It's not elegant, but it works.
+This adds a space before each surname. So in the surname field, that article goes from having the value "Weatherson" to having the value “ Weatherson”. And now it can be concatenated with "Brian" to produce a reasonable looking name. It's not elegant, but it works.
 
 The next two steps are taken almost entirely from John A. Bernau's paper [Text Analysis with JSTOR Archives](https://doi.org/10.1177%2F2378023118809264). I've tinkered with the scripts a little, but if you go back to the supporting documents for his paper, you can see how much I've literally copied over. 
 
-Anyway, here's the script I ran to convert the metadata files, with are in XML format, into something readable in R. The following file is called **extract_metadata.R** on the GitHub page. If you're working with more journals, you have to add the extra journals into the tibble near the start. The first column should be the name you gave to the directories for the journal's data; the second should be the name you want to appear in any part of the project being read by humans.
+Anyway, here's the script I ran to convert the metadata files, with are in XML format, into something readable in R. The following file is called ```extract_metadata.R``` on the GitHub page. If you're working with more journals, you have to add the extra journals into the tibble near the start. The first column should be the name you gave to the directories for the journal's data; the second should be the name you want to appear in any part of the project being read by humans.
 
-```{r echo= T, eval = F}
+```{r echo = T, eval = F}
 # Parsing out xml files
 # Based on a script by John A. Bernau 2018
 
@@ -1077,7 +1081,7 @@ The other thing I did is right near the end, the **mutate** command that introdu
 
 We now have a tibble, called **my_articles** that has the metadata for all the articles. It's somewhat helpful in it's own right; I use the large one I generated from all 12 journals for looking up citations. But we also need the words. For this I use another script that I built off one from Bernau's paper.
 
-This is called **extract_words.R** on the GitHub page. And again, if you want to use more journals, you'll have to extend that tibble at the start.
+This is called ```extract_words.R``` on the GitHub page. And again, if you want to use more journals, you'll have to extend that tibble at the start.
 
 ```{r echo = T, eval = F}
 # Read ngrams
@@ -1142,7 +1146,7 @@ my_wordlist$word <- as.character(my_wordlist$word)
 save(my_wordlist, file  = "my_wordlist.RData")
 ```
 
-Now with a tibble of all the articles, and another with all the words in each article, it's time to go to work. The next file is called **create_lda.R** on the GitHub page, and if you're doing a big project, it could take some time to run. This particular script takes less than a minute to run on my computer. But the equivalent step in the main project took over 8 hours on a pretty powerful laptop.
+Now with a tibble of all the articles, and another with all the words in each article, it's time to go to work. The next file is called ```create_lda.R``` on the GitHub page, and if you're doing a big project, it could take some time to run. This particular script takes less than a minute to run on my computer. But the equivalent step in the main project took over 8 hours on a pretty powerful laptop.
 
 ```{r echo = T, eval = F}
 require(tidytext)

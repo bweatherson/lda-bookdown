@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t70c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t70d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -34,7 +32,4 @@ One is that papers on trust ended up here. It's a little hard to know precisely 
 The other is that some of the Freud papers ended up here. The normal thing that happened with Freud papers in different models is that they would be semi-randomly attached to some other topic. In this model they got split up, and then semi-randomly attached to different topics. So some of them are in with [Intention](#topic48), and some of them are here.
 
 That's to say, this topic is a bit of a mess. For a lot of purposes, 90 topics worked reasonably well. Right here the model is saying it could have used a few more. There will always be bumps under the carpet in this kind of exercise.
-
-
-
 

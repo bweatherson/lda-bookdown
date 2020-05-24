@@ -172,29 +172,29 @@ display: table;
 width: 100%;
 border-collapse: collapse;
 border-spacing: 0;
-margin-top: 35px;
-margin-bottom: 50px;
+margin-top: 30px;
+margin-bottom: 45px;
 overflow: auto;
 }
 
 div.dataTables_info {
     margin-top: -35px;
-    padding-bottom: 30px;
+    padding-bottom: 35px;
 }
 
 div.dataTables_paginate {
     margin-top: -35px;
-    padding-bottom: 30px;
+    padding-bottom: 35px;
 }
 
 div.dataTables_length{
   margin-top: 20px;
-  padding-bottom: 5px;
+  padding-bottom: 8px;
 }
 
 div.dataTables_filter{
   margin-top: 20px;
-  padding-bottom: 5px;
+  padding-bottom: 8px;
 }
 
 div.figure {

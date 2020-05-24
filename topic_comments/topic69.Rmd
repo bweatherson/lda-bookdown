@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t69c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t69d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -31,4 +29,4 @@ At first the graph for this surprised me. I didn't think work on feminist philos
 
 In particular, there was a massive debate in Philosophy and Public Affairs during the 1970s about discrimination and affirmative action. Despite philosophers not having paid an enormous amount of attention to issues about equal opportunity before 1970, once affirmative action became a live possibility, it turned out that many philosophers were deeply committed to (a particular version of) equality of opportunity. And they were very keen to write about it. And that's where a lot of the numbers here come from.
 
-Very little of the important work in feminist philosophy prior to 2013 took place in these journals, which is why the numbers here are so low. If the [previous topic](#topic68) was a sign that we were carving things a little too finely, this topic is a sign that we've carved them just right. The amount of work in (or even engaging wth) feminist philosophy in these journals was low enough that when I ran these models with fewer than 90 topics, feminist philosophy typically got lumped in with other unrelated fields. I'm happy that this model found space for it on its own. But given the trends in the discipline, future iterations of this research project shouldn't have nearly as much problem finding work in feminist philosophy.
+Very little of the important work in feminist philosophy prior to 2013 took place in these twelve journals, which is why the numbers here are so low. If the [previous topic](#topic68) was a sign that we were carving things a little too finely, this topic is a sign that we've carved them just right. The amount of work in (or even engaging wth) feminist philosophy in these journals was low enough that when I ran these models with fewer than 90 topics, feminist philosophy typically got lumped in with other unrelated fields. I'm happy that this model found space for it on its own. But given the trends in the discipline, future iterations of this research project shouldn't have nearly as much problem finding work in feminist philosophy.

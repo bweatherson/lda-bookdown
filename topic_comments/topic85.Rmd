@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t85c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t85d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -29,10 +27,9 @@ cat("\n
 
 Contemporary debates about semantic externalism were kicked off by Saul Kripke's [Naming and Necessity](https://philpapers.org/rec/KRINAN) and Hilary Putnam's [Meaning and Reference](https://philpapers.org/rec/PUTMAR-2). _Naming and Necessity_ isn't in this study, though its impacts are felt in several places. But _Meaning and Reference_ is, and it is even in this category. Here is the model's views on where to place _Meaning and Reference_.
 
-
-```{r meaning-and-reference}individual_article("10.2307_2025079")
+```{r meaning-and-reference}
+individual_article("10.2307_2025079")
 ```
-
 
 It's largest topic is this one, but the model also notes it is about definitions and modality, which makes sense. But the probability that it is in this topic is comfortably largest. And it's an incredibly influential paper, so I would have guessed that it would have been quickly followed by a flood of similar papers.
 
@@ -55,6 +52,5 @@ indiv_journal_graphs +
             size = 3,
             colour = "grey40")
 ```
-
 
 The lack of life in this topic through the 1970s and much of the 1980s was one of the biggest surprises to me of the whole project. In recent years it feels like topics can catch fire immediately after the publication of a high profile paper. But that is realy not what happened in debates about wide content. Putnam's paper is one of the most influential of its time, and its time is the most important few years in the history of philosophy, but that influence was not felt for many years after its publication.

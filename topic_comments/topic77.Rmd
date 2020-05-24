@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t77c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t77d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```

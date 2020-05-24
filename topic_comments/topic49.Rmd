@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t49c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t49d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -37,14 +35,11 @@ Part of what makes this odd is that the model only puts one of Stevenson's own j
 author_kable(c("Charles L. Stevenson", "Charles Leslie Stevenson"), "Charles Leslie Stevenson")
 ```
 
-
 Stevenson's own most important work, the book _Ethics and Language_, is not part of this study. But we can look at the works that engage with that book. But it's good to look directly at the raw data. Which articles use the word 'Stevenson' most often? And do those articles mean to refer to Charles Leslie Stevenson?
-
 
 ```{r articles-about-stevenson}
 articles_with_word("stevenson")
 ```
-
 
 The two articles by Brown are about _Adlai_ Stevenson, and the exchange between Leslie Stevenson and Ralph Walker is about Leslie Stevenson, but the rest I believe are about Charles Leslie Stevenson. And they naturally spread across a range of topics.
 

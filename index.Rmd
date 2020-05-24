@@ -375,7 +375,7 @@ datatable(relabeled_articles %>%
 author_kable <- function(x, y){
 kable(relabeled_articles %>%
           filter(auth1 %in% x | auth2 %in% x | auth3 %in% x) %>%
-          arrange(topic) %>%
+          arrange(year) %>%
         mutate(gamma = round(gamma, 4)) %>%
          inner_join(the_categories, by = "topic") %>%
           select(year, citation, subject, gamma),           

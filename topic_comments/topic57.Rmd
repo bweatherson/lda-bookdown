@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t57c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t57d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -27,7 +25,7 @@ cat("\n
 	\n")
 ```
 
-I'm going to say a bit more in Chapter \@ref(#sortingchapter) about why this is in Ethics, because it turned out to be one of the hardest topics to classify. Note for now that the keywords suggest that the focus of this topic is on the utility end of the probability-and-utility model of choice, and that suggests it naturally fits with value theory.
+I'm going to say a bit more in Chapter \@ref(sortingchapter) about why this is in Ethics, because it turned out to be one of the hardest topics to classify. Note for now that the keywords suggest that the focus of this topic is on the utility end of the probability-and-utility model of choice, and that suggests it naturally fits with value theory.
 
 The graph that runs through each journal separately shows that this topic is more prevalent in _Ethics_ than any other journal, which is consistent with classifying the topic in Ethics. _Journal of Philosophy_ started taking an interest in the late 1970s, but it's hard to see a trend after this. Some years there is a lot of decision theory work in _Analysis_, but some years there is not. And there was a flood of work, mostly centered around the [Pasadena Game](https://philpapers.org/rec/NOVVE) in _Mind_ in the 2000s. 
 

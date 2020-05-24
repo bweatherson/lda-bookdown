@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t74c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t74d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -31,7 +29,8 @@ It's perhaps a bit surprising that theory of knowledge - everything from sceptic
 
 In part this is because of how new a topic it is. There just isn't very much that feels like contemporary epistemology from before World War II. Of the 426 articles in this topic, only 6 of them are between World War II. And five of those feel like fairly borderline cases, where the model couldn't really make up its mind. There is one notable exception.
 
-```{r testimony-article}individual_article("10.2307_2249544")
+```{r testimony-article}
+individual_article("10.2307_2249544")
 ```
 
 I couldn't find any other references to **Dhirendon** Mohon Datta, but I suspect that's a typo. (Or a non-standard transliteration.) **Dhirendra** Mohan Datta wrote a book on [The Philosophy of Mahatma Ghandi](https://www.amazon.com/Philosophy-Mahatma-Gandhi-Dhirendra-Mohan/dp/0299010147), and a book on [The Six Ways of Knowing](https://archive.org/details/TheSixWaysOfKnowing1960D.M.Datta/mode/2up). And I think it's the same person. Unlike most of the other papers in the early years of epistemology, it reads quite a bit like a contemporary epistemology article.

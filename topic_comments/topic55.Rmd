@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t55c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t55d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -40,7 +38,6 @@ The 122 articles that are primarily in the topic are a somewhat odd group. There
 
 This topic has, by a lot, the biggest gap between it's raw sum and weighted sum. This is because there are so many articles where the model gives a small, but far from negligible, probability to the article being in the topic. Here's one way to see that. For each topic, we can ask for how many articles is it the _n_-th most probable topic. We've done that already for _n_ = 1; that's what the raw count reports. But for this topic the values for _n_ between 2 and 10 are a little eye popping.
 
-
 ```{r rank-of-arguments-topic}
 t <- relabeled_gamma %>%
   group_by(document) %>%
@@ -56,12 +53,11 @@ kable(t,
       col.names = c("Rank", "Number of Articles"), 
       align=c("c", "c"),
       caption = "How many articles have Arguments as the n-th highest ranked topic"
-      )
+      ) %>%
+  kable_styling(full_width = F)
 ```
 
-
 For comparison, here's what that table looks like for [Causation](#topic54.)
-
 
 ```{r rank-of-causation-topic}
 t <- relabeled_gamma %>%
@@ -78,11 +74,11 @@ kable(t,
       col.names = c("Rank", "Number of Articles"), 
       align=c("c", "c"),
       caption = "How many articles have Causation as the n-th highest ranked topic"
-      )
+      ) %>%
+  kable_styling(full_width = F)
 ```
 
 Here are some of these articles that the model thinks are second-most-likely to be in Arguments. (I've restricted this list to articles at least 20 pages long.)
-
 
 ```{r rank-of-arguments-topic-second-best}
 t <- relabeled_gamma %>%
@@ -107,7 +103,6 @@ datatable(t,
       formatSignif('gamma.x',4) %>%
       formatStyle(1:3,`text-align` = 'left')
 ```
-
 
 Probably if the model hadn't landed on this topic, it would have been even clearer that some articles were philosophy of religion articles, or ancient philosophy articles.
 

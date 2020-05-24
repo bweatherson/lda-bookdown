@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t05c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t05d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -218,7 +216,6 @@ ggplot(t, aes(x = year, y = n, color = journal, group = journal)) +
             colour = "grey40")
 ```
 
-
 ```{r phil-review-mind-words-summary, fig.height = 5, fig.cap = "Sum of Philosophy of Mind words in the three big journals, 1930-1970"}
 tt <- t %>%
   group_by(journal, year) %>%
@@ -330,7 +327,6 @@ ggplot(t,
             colour = "grey40")
 ```
 
-
 ```{r phil-review-polphil-words-summary, fig.height = 5, fig.cap = "Sum of Political Philosophy words in the three big journals, 1930-1970"}
 tt <- t %>%
   group_by(journal, year) %>%
@@ -427,8 +423,6 @@ ggplot(t,
             size = 3,
             colour = "grey40")
 ```
-
-
 
 ```{r phil-review-history-words-summary, fig.height = 5, fig.cap = "Sum of Early Modern words in the three big journals, 1930-1970"}
 tt <- t %>%

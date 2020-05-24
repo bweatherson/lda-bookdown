@@ -149,11 +149,9 @@ kable(gg_revised %>%
 }
 ```
 
-<br>
 ```{r russell-chap-five}
 gtt("The Problems of Philosophy", 5)
 ```
-<br>
 
 There are three things to note about this table.
 
@@ -180,67 +178,51 @@ gbb <- function(x){
 }
 ```
 
-<br>
 ```{r democracy-and-education}
 gbb("Democracy and Education")
 ```
-<br>
 
 It's a bit surprising that the model doesn't identify this with [Pragmatism](#topic05), and even more surprising that [Feminism](#topic70) turns up here. But otherwise this broadly makes sense.
 
-<br>
 ```{r keynes-book}
 gbb("The Economic Consequences of the Peace")
 ```
-<br>
 
 This, on the other hand, doesn't look quite right. It's about WWI, so I guess it looks like war. But it isn't really a history book. And it's certainly not a Marx book. This does look like it pushed the model way past its comfort level.
 
-<br>
 ```{r on-liberty}
 gbb("On Liberty")
 ```
-<br>
 
 Putting this in with [Other History](#topic04) does make some sense because a few of the papers in that topic are about Mill. But it's striking to me that the model thinks of this book as going with social work of its time, even more than it sees it as going with topics on liberalism, or freedom. This is bringing up a limit of this approach that we've seen a few times before. Literary styles change over time, and the model doesn't do well with that kind of change.
 
-<br>
 ```{r principia}
 gbb("Principia Ethica")
 ```
-<br>
 
 One way to look at this data is that it's bringing out the extent to which the Ordinary Language movement wasn't a repudiation of the philosophy that had gone before them, but a return to the way of doing philosophy exemplified by Moore and Russell. The model does not typically think papers from 1903 are Ordinary Language papers, but it does think that Principia Ethica is Ordinary Language.
 
-<br>
 ```{r external-world}
 gbb("Our Knowledge of the External World as a Field for Scientific Method in Philosophy")
 ```
-<br>
 
 The model really doesn't identify _Our Knowledge of the External World_ with any of the contemporary topics. The closest is [Mathematics](#topic51), but this book seems surprisingly dated.
 
-<br>
 ```{r analysis-of-mind}
 gbb("The Analysis of Mind")
 ```
-<br>
 
 This is part of why I was happy to include [Psychology](#topic01) as a philosophy of mind topic. It is a bit different to how we now do philosophy of mind. But it includes a lot of what Russell does in _The Analysis of Mind_. And that's definition a philosophy of mind book.
 
-<br>
 ```{r problems-philosophy}
 gbb("The Problems of Philosophy")
 ```
-<br>
 
 Again, we see that Moore and Russell were precursors as much as opponents of Ordinary Language philosophy. And between [Perception](#topic48), [Denoting](#topic63), [Knowledge](#topic74) and [Justification](#topic76), we see flickers of contemporary philosophy entering into the picture.
 
-<br>
 ```{r methods-ethics}
 gbb("The Methods of Ethics")
 ```
-<br>
 
 This, on the other hand, is a bit disappointing. I would have thought it would have done a better job of identifying _The Methods of Ethics_ as, well, a work of ethics. And you do see a few topics from Ethics here, but also a lot of others.
 
@@ -254,7 +236,6 @@ gg_high_gamma <- gg_revised %>%
   mutate(book_name = replace(book_name, book_name == "Our Knowledge of the External World as a Field for Scientific Method in Philosophy", "Our Knowledge of the External World"))
 ```
 
-<br>
 ```{r gutenberg-highest-a}
 kable(gg_high_gamma %>%
         select(book_name, chap_num, subject, gamma) %>%
@@ -263,11 +244,9 @@ kable(gg_high_gamma %>%
       digits = c(0, 0, 0, 4),
       caption = "10 chapters with highest topic probabilities")
 ```
-<br>
 
 It really is confident about Russellian works, relatively speaking. Let's see what happens if we leave off Psychology.
 
-<br>
 ```{r gutenberg-highest-b}
 kable(gg_high_gamma %>%
         filter(topic > 1) %>%
@@ -277,11 +256,9 @@ kable(gg_high_gamma %>%
       digits = c(0, 0, 0, 4),
       caption = "10 chapters with highest topic probabilities (excluding Psychology)")
 ```
-<br>
 
 And pushing further forward, let's see what happens if we leave off all of topics 1-30.
 
-<br>
 ```{r gutenberg-highest-c}
 kable(gg_high_gamma %>%
         filter(topic > 30) %>%
@@ -291,11 +268,9 @@ kable(gg_high_gamma %>%
       digits = c(0, 0, 0, 4),
       caption = "10 chapters with highest topic probabilities (excluding first 30 topics)")
 ```
-<br>
 
 This doesn't look like the model is doing too bad a job. Russell does talk about philosophy of mathematics, Keynes about war, and Mill about liberal democracy. And remember that Egalitarianism is largely about Parfit, and hence about consequentialism, so it isn't surprising Sidgwick ends up there. What if we restrict things to topics from 61-90?
 
-<br>
 ```{r gutenberg-highest-d}
 kable(gg_high_gamma %>%
         filter(topic > 60) %>%
@@ -305,7 +280,6 @@ kable(gg_high_gamma %>%
       digits = c(0, 0, 0, 4),
       caption = "10 chapters with highest topic probabilities (excluding first 60 topics)")
 ```
-<br>
 
 And while the numbers are low, Russell on epistemology reminds the model much more of contemporary philosophy than most of the other books. This makes sense, I think.
 
@@ -440,7 +414,6 @@ For all 30 of these, the highest probability in the journals is higher than the 
 
 I've often speculated in the book about what would happen if we ran the model forward beyond the end of JSTOR's moving wall. The purpose of this section is to look at what happens if we run the model forward in one very particular way. I downloaded all the articles published in 2019 by the open access journal [Philosophers' Imprint](https://www.philosophersimprint.org). I extracted the text from these articles using Jeroen Ooms's package [pdftools](https://docs.ropensci.org/pdftools/). And then I applied the model to these articles using the posterior function in [topicmodels](https://cran.r-project.org/web/packages/topicmodels/index.html). Here are the primary topics for each of the 54 articles.
 
-<br>
 ```{r get-imprint-articles}
 # Load the titles from the CSV
 require(readr)
@@ -472,7 +445,6 @@ datatable(imprint_top_gamma_display %>%
   formatSignif('gamma',3) %>%
   formatStyle(1:3,`text-align` = 'left')
 ```
-<br>
 
 For each article I've shown which topic the model thinks the article most likely falls in. And these are, I think, mostly sensible classifications. But I've also shown the probability the model gives to that article being in just that topic. And given that these are maximal, they might look surprisingly low.
 
@@ -494,7 +466,6 @@ capt <- paste0(filter(imprint_top_gamma_display, document == x)$citation[1],
                filter(imprint_top_gamma_display, document == x)$number[1]-1900
 )
 
-
 kable(temp_gamma, 
       col.names = c("Subject", "Probability"), 
       caption = capt) %>% 
@@ -502,11 +473,9 @@ kable(temp_gamma,
 }
 ```
 
-<br>
 ```{r sethi-kable}
 imprint_kable("imprint-1934")
 ```
-<br>
 
 The top three look reasonable, though the numbers are too low, especially for Kant. This is just what happens in these out-of-sample applications. I have no idea why the model thought [Dewey and Pragmatism](#topic32) was there. But the story about [Norms](#topic90) is a bit more interesting.
 
@@ -514,7 +483,6 @@ It turns out that the language of twenty-first century philosophy is rather diff
 
 It isn't only Sethi's paper that is part of this linguistic change. There are many papers that are primarily in Norms, even though they aren't really all about normative philosophy. Some of that is washed away when you use the weighted counts, but far from all of it. Here is the table of the weighted sum of each of the topics over the 54 articles. (That is, it's the sum, over the 54 articles, of the article being in that topic.) The table is long, so it's split up, sortable, and searchable.
 
-<br>
 ```{r imprint-topic-summary}
 imprint_summary_DT <- inner_join(imprint_summary, the_categories, by = "topic") %>%
   arrange(-g) %>%
@@ -531,18 +499,15 @@ datatable(imprint_summary_DT,
   formatSignif('g',2) %>%
   formatStyle(1:3,`text-align` = 'left')
 ```
-<br>
 
 How does Norms get to 4.8 like that? Lots of small pieces it turns out.
 
-<br>
 ```{r imprint-norms-summary}
 imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %>%
   filter(topic == 90) %>%
   inner_join(the_categories, by = "topic") %>%
   arrange(-gamma) %>%
   select(citation, gamma, everything())
-
 
 require(DT)
 
@@ -556,20 +521,17 @@ datatable(imprint_norms_DT %>%
   formatSignif('gamma',3) %>%
   formatStyle(1:2,`text-align` = 'left')
 ```
-<br>
 
 This is really surprising, and I suspect a sign that something's gone wrong. Either there are artefacts from the way I did the text extraction, or this new style of language is really spreading everywhere. I suspect both, but I'm not going to investigate this here. What I'd rather look at, because I think it tells us something more about where philosophy is heading, is the topic that was second on our above list: [Other History](#topic04).
 
 This topic had looked rather dead in recent journals, but it turns up second overall here. And just eyeballing the article list that might not be too surprising. There are articles in Suárez (two of them!), William King, Amo, and Mary Shepherd. But this isn't entirely why Other History pops up so high here.
 
-<br>
 ```{r imprint-history-summary}
 imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %>%
   filter(topic == 4) %>%
   inner_join(the_categories, by = "topic") %>%
   arrange(-gamma) %>%
   select(citation, gamma, everything())
-
 
 require(DT)
 
@@ -583,17 +545,14 @@ datatable(imprint_norms_DT %>%
   formatSignif('gamma',3) %>%
   formatStyle(1:2,`text-align` = 'left')
 ```
-<br>
 
 This makes the lack of attention to 'Other History' in the journals up to 2013. James, Wittgenstein and Nietzche are hardly obscure figures. If articles on them are enough to keep the Other History scoreboard ticking over, it's really telling that that scoreboard had ground to a halt.
 
 Apart from this topic, the results are largely as I expected. The contemporary topics mostly keep growing. [Vagueness](#topic86), which peaked in the early 2000s, is an exception. And Imprint does less philosophy of science than some journals, so the recent philosophy of science topics aren't showing up much. But otherwise the new topics are still growing. And the old topics are still mostly shrinking, but with two big exceptions. One, the resurgence of interest in historical figures outside of the huge names like Plato, Descartes and Kant, I've already mentioned. The other is that there is a paper on [Idealism](#topic02).
 
-<br>
 ```{r idealism-imprint-paper-summary}
 imprint_kable("imprint-1944")
 ```
-<br>
 
 Now on the one hand, that's only a 10.1% probability of being in Idealism. On the other hand, it doesn't look like a mistake for the model to put this article in Idealism. And to my eyes, there were no articles after the mid-1990s that were correctly classified that way.
 
@@ -659,11 +618,9 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = y))  +
             size = 3,
             colour = "grey40")
 ```
-<br>
 
 It's slightly less steep, especially in _Philosophy of Science_. But the generalist journals - except _Analysis_ - and _British Journal for the Philosophy of Science_ are still rising rapidly. So let's look at what articles are primarily in this topic.
 
-<br>
 ```{r bad-gamma-top-articles}
 # A very simple kable of which articles have highest probability of being in this bad topic
 kable(bad_gamma %>% 
@@ -673,7 +630,6 @@ kable(bad_gamma %>%
       col.names = c("Article", "Topic Probability"), 
       caption  = "Top Articles in Norms in Bad LDA")
 ```
-<br>
 
 This is very confusing in three different ways.
 
@@ -683,7 +639,6 @@ This is very confusing in three different ways.
 
 For comparison, the original [topic 90](#topic90) had a top 10 list that looked a little more sensible.
 
-<br>
 ```{r bad-gamma-compare-top-articles}
 
 t <- relabeled_articles %>%
@@ -695,54 +650,45 @@ t <- relabeled_articles %>%
 
 kable(t, col.names = c("Article", "Topic Probability"), caption = "Top Articles in Norms in Good LDA")
 ```
-<br>
 
 The papers are more recent, the probabilities are higher, and there is some more unity to the topic. It's about normativity and objectivity, very broadly construed, with a bit of a focus on Brandm. And you can still see hints of that in the new top 10 list, but it's gotten blurrier. The Rosen article that's at nearly 70% in the original topic has dropped to around 20% in the new topic, reflecting the lack of thematic unity.
 
 Maybe we can get a bit better look at this new weird topic by looking at its keywords. Remember that an LDA model assigns each word a probability of being in a paradigm article in the topic. We can compare that to the frequency of that word in the whole data set to get a sense of what's characteristic of the topic. (Again, it's necessary to restrict attention to the 5000 most common words here to prevent too much focus on words that appear just a handful of times.) And here's what we get. The second column here is the ratio of the probability of the word being in a (paradigm) article in this topic to the word's overall frequency.
 
-<br>
 ```{r bad-beta-top-ratio}
 kable(bad_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), 
       col.names = c("Word", "Ratio"),
       caption = "Top Words in Norms in the Bad LDA") %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 This I think is the clue to what's happened. The 'topic' here is just the distinctive vocabulary of twenty-first century philosophy. The topic appears in all journals because these words have become more and more prevalent in all journals.
 
 I'll come back to direct evidence for this hypothesis in a minute, but first I wanted to show you what a table like this looks like for normal topics. Here's the same table for topic 90 in the original model.
 
-<br>
 ```{r good-beta-top-ratio}
 kable(good_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
        caption = "Top Words in Norms in the Good LDA") %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 You can see some of the twenty-first century vocabulary, like 'challenge' and 'accounts' turning up at the bottom. But this is what things mostly should look like for a topic about normativity and objectivity. 
 
 Just to get a sense of the appropriate scale for what's being measured here, here's what the top of the table for the [Kant topic](#topic32) looks like.
 
-<br>
 ```{r kant-beta-top-ratio}
 kable(kant_beta %>% select(word, y) %>% slice(1:10) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
        caption = "Top Words in Kant in the Good LDA") %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 That makes sense; the word 'Kant' is 163 times more likely to appear in a paradigm Kant article than in philosophy in general. A ratio like this of 163 is high, but having the highest ratio be 15 is a sign something has gone wrong. The only topic that is really like this in the original model is [ordinary language philosophy](#topic 24).
 
-<br>
 ```{r olp-beta-top-ratio}
 kable(olp_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
        caption = "Top Words in Ordinary Language Philosophy in the Bad LDA") %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 Like the new topic 90, this topic in the original model really tracked a style not a content. It's really striking that the distinctive words in ordinary language philosophy are so much shorter than the distinctive words in contemporary philosophy.^[I wanted to include here some graphs about average word lengths over time, but they don't really show very much. There is a very gentle increase, focussed on the philosophy of science journals, but the distinctively short keywords don't really track anything about average word length.] But it's probably time to start actually proving that words like 'commitment', 'challange' and 'approach' are distinctively twenty-first century words. So rather than just look at the outputs of complicated models, I'm going to end with some simple graphs of word frequency over time. 
 
@@ -798,7 +744,6 @@ The first three have roughly the pattern I was expecting, but the last two don't
 
 There is another puzzle that I left open above that I want to return to. How could we square the low ratio between the maximal and average topic probabilities for some journal-year pairs? The obvious answer is that every article is in the topic to some non-trivial degree. Let's see how true that is. So for a few journal-year pairs, I'm going to go through every article and list the probability that it is in this new topic. I'll start with _Philosophical Review_ in 2004.
 
-<br>
 ```{r bad-gamma-pr-2004}
 kable(bad_gamma %>% 
         filter(year == 2004, journal == "Philosophical Review") %>% 
@@ -807,11 +752,9 @@ kable(bad_gamma %>%
       col.names = c("Article", "Topic Probability"),
       caption = "Philosophical Review, 2004 - probability that each article is in the bad topic")
 ```
-<br>
 
 The Roth paper really is about commitments, so it isn't surprising that it's a little higher than the others. But look how much this spreads around other articles. The model thinks there is something that all but one of these articles have seriously in common. And I think there isn't anything substantive (as opposed to stylistic) this could be. Let's move on to _Ethics_ in 2010.
 
-<br>
 ```{r bad-gamma-ethics-2010}
 kable(bad_gamma %>% 
         filter(year == 2010, journal == "Ethics") %>%
@@ -820,11 +763,9 @@ kable(bad_gamma %>%
       col.names = c("Article", "Topic Probability"),
       caption = "Ethics 2010 - probability that each article is in the bad topic")
 ```
-<br>
 
 I don't know why all the stars are there in the title; that's just what came from JSTOR. And we get the same pattern; almost all the articles are in the topic at a 5% probability or higher. To the extent that there was anything substantive in the topic, it was in normative ethics, so maybe that's not too surprising. But let's see what happens when we do the same thing for _British Journal for the Philosophy of Science_ in 2011.
 
-<br>
 ```{r bad-gamma-bjps-2011}
 kable(bad_gamma %>% 
         filter(year == 2011, journal == "British Journal for the Philosophy of Science") %>% 
@@ -833,7 +774,6 @@ kable(bad_gamma %>%
       col.names = c("Article", "Topic Probability"),
       caption = "BJPS 2011 - probability that each article is in the bad topic")
 ```
-<br>
 
 Here we do get more articles that are clearly excluded. The difference between the last six articles is unimportant. Once you get below 0.1%, the probabilities are functions of how confident the model is in its central classifications. But it's still striking how many of these are above 1.1%. There are 90 topics, so if the model had no idea it would put each probability at 1.1%. The vast majority of the articles here are above that.
 

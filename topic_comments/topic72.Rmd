@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t72c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t72d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -54,9 +52,9 @@ individual_article(reports$document[3])
 individual_article(reports$document[4])
 ```
 
-```{r belief-knowledge-overlap-e}individual_article(reports$document[5])
+```{r belief-knowledge-overlap-e}
+individual_article(reports$document[5])
 ```
-
 
 Except perhaps the Dretske, none of them really feel like they fit in this topic. Or, to put things more provocatively, I don't see that (this kind of) work on belief ascriptions really had much impact even on work on other propositional attitudes.
 

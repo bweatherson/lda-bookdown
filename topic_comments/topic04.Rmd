@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t04c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t04d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -55,7 +53,6 @@ history_mentions <- history_word_list %>%
   group_by(word) %>%
   summarise(n1 = n_distinct(document))
 
-
 history_mentions_10 <- history_word_list %>%
   filter(wordcount > 9) %>%
   group_by(word) %>%
@@ -65,7 +62,6 @@ history_mentions_50 <- history_word_list %>%
     filter(wordcount > 49) %>%
     group_by(word) %>%
     summarise(n50 = n_distinct(document))
-
 
 history_names <- history_mentions_50 %>%
   slice(5, 7, 8, 13, 18:21, 27:31, 35, 36, 38,
@@ -87,14 +83,12 @@ history_names <- history_names %>%
   inner_join(all_mention_50, by = "word")
 ```
 
-
 ```{r history-table}
 kable(history_names, 
       col.names = c("Name", "50 usages (in topic)", "10 usages", "1 usage", "50 usages (anywhere)"), 
       caption = "Names in Topic 4",
       align=c("l", "c", "c", "c", "c"))
 ```
-
 
 Nietzsche is the big stand-out here, being a focus of 17 of the articles. (And that's not because he is widely discussed elsewhere.) I really would have expected there to have been more Nietzsche in the journals, but he still makes up a big part of this topic.
 

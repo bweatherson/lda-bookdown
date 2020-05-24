@@ -5,17 +5,14 @@ opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t71b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-# Burp
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t71c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t71d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -36,12 +33,10 @@ The other was that there was a topic that included everything that related to se
 
 The happy consequence of this is that we get a topic that really is all about Judith Jarvis Thomson's work. It's not about all of her work of course - that covers ever so many fields.
 
-
 ```{r thomson-articles}
 author_dt(c("Judith Jarvis", "Judith Jarvis Thomson"), "Judith Jarvis Thomson")
 ```
 
-
 But this topic does include many of the papers on two of her signature contributions: her innovative defense of abortion, and her discussions of the trolley problem. Her original paper on the trolley problem is not in this study, since it wasn't published in one of the twelve journals I'm looking at. But a lot of papers that follow up on it, including Thomson's own second thoughts in "Turning the Trolley" are here.
 
-So there is a very natural sense in which this topic is centered around Thomson's work. I don't have a formal analysis of this concept of 'centring' I just used. But most topics are not centered around any one philosophers work. There are topics based around [Marx](#topic23), [Kant](#topic32), [Russell](#topic43), [Hume](#topic45), [Frege](#topic64), [Frankfurt](#topic77) and [Parfit](#topic83), as well as two that are arguably centered around Rawls - [Liberal Democracy](#topic52) and [Egalitarianism](#topic65). But there is no other case, I think, where any female philosopher is as central to as big an area of philosophical research as we see in this case. There are some women, such as Margaret McDonald, who were important influences on the journals as editors. But I'm not sure any woman was more influential on the journals as a writer than Thomson.
+So there is a very natural sense in which this topic is centered around Thomson's work. I don't have a formal analysis of this concept of 'centering' I just used. But most topics are not centered around any one philosophers work. There are topics based around [Marx](#topic23), [Kant](#topic32), [Russell](#topic43), [Hume](#topic45), [Frege](#topic64), [Frankfurt](#topic77) and [Parfit](#topic83), as well as two that are arguably centered around Rawls - [Liberal Democracy](#topic52) and [Egalitarianism](#topic65). But there is no other case, I think, where any female philosopher is as central to as big an area of philosophical research as we see in this case. There are some women, such as Margaret McDonald, who were important influences on the journals as editors. But I'm not sure any woman was more influential on the journals as a writer than Thomson.

@@ -6,7 +6,6 @@ This chapter investigates various outliers in the model. The aim of the chapter 
 
 The model is fairly confident about where some of the articles belong. Other articles it is more confused by. Let's start by looking at those extremes. First, here are the articles where the model is most sure of a classification. That is, they are the articles where the probability of being in one particular category is highest.
 
-<br>
 ```{r highconf}
 certainty_check <- relabeled_gamma %>%
   select(document, topic, gamma) %>% 
@@ -32,11 +31,9 @@ kable(short_certainty,
 
 # See 'most_and_least_certain.R' for more
 ```
-<br>
 
 There is a reasonable spread of topics here; 9 of the 90 are represented in just these ten articles. But note that these tend to be very short articles. This might be why the model is so confident in them. What if we filter out all articles 10 pages or shorter?
 
-<br>
 ```{r highconf-p2}
 medium_certainty <- certainty_check %>%
   filter(length > 9) %>%
@@ -47,13 +44,11 @@ kable(medium_certainty,
       col.names = c("Article", "Subject"),
       caption = "Articles the Model is Most Certain About (Minimum length 10 pages)")
 ```
-<br>
 
 It isn't surprising that evolutionary biology starts to turn up a little here. It's a very specialised topic. (I'll come back to this question of specialisation, and what it means to be a specialised topic, in section \@ref(raw-weight-count).) 
 
 We mostly get new articles if we extend the minimum length to 20 pages.
 
-<br>
 ```{r highconf-p3}
 huge_certainty <- certainty_check %>%
   filter(length > 19) %>%
@@ -64,11 +59,9 @@ kable(huge_certainty,
       col.names = c("Article", "Subject"),
       caption = "Articles the Model is Most Certain About (Minimum length 20 pages)")
 ```
-<br>
 
 And note that all of these are just over 20 pages. (Or exactly 20 in a few cases.) The model really loses confidence the longer a piece gets.
 
-<br>
 ```{r highconf-p4}
 long_certainty <- certainty_check %>%
   filter(length > 29) %>%
@@ -79,11 +72,9 @@ kable(long_certainty,
       col.names = c("Article", "Subject"),
       caption = "Articles the Model is Most Certain About (Minimum length 30 pages)")
 ```
-<br>
 
 Now we're mostly looking at papers in political philosophy. But still it is mostly papers that just fall over the 30 page limit. So for the last one, let's look at the articles it is most confident about that are 40 pages or longer.
 
-<br>
 ```{r highconf-p5}
 absurd_certainty <- certainty_check %>%
   filter(length > 39) %>%
@@ -94,7 +85,6 @@ kable(absurd_certainty,
       col.names = c("Article", "Subject"),
       caption = "Articles the Model is Most Certain About (Minimum length 40 pages)")
 ```
-<br>
 
 Again, normative an political philosophy cover the very top.
 
@@ -124,27 +114,22 @@ There are more or less sophisticated ways to measure how unsure the model is abo
 
 By that measure, here are the ten articles the model is most unsure about.
 
-<br>
 ```{r uncertainty-table}
 all_uncertainty <- certainty_check %>%
   top_n(10, -m) %>%
   arrange(m) %>%
   select(citation, document)
 
-
 kable(select(all_uncertainty, citation), 
       col.names = c("Article"), 
       caption = "Articles the Model is Most Uncertain About")
 ```
-<br>
 
 So did the model get it right? Should it be uncertain about these articles? Let's look at some cases, starting with the one it is most uncertain about.
 
-<br>
 ```{r uncertainty-article-1}
 individual_article(all_uncertainty$document[1])
 ```
-<br>
 
 For reasons best known to them, the editors of the _Philosophical Review_ commissioned a [critical notice](https://philpapers.org/rec/DONTEO) of the 8 volume Encyclopedia of Philosophy. You could call it a book review I guess, but it's 56 pages long, so it feels like it should be in our study.
 
@@ -152,11 +137,9 @@ And I'm fairly happy that this was the article the model had the greatest troubl
 
 So far so good - the model threw up its hands exactly when it should have done so. It would have been wrong to confidently place Donagan's article. What about the second one?
 
-<br>
 ```{r uncertainty-article-2}
 individual_article(all_uncertainty$document[2])
 ```
-<br>
 
 And this is a bit more depressing. [Garfield's article](https://philpapers.org/rec/GARTMO-2) is wide-ranging, covering a number of big questions at the heart of philosophy of mind and epistemology. But still, it isn't that hard to say what it's about broadly. And to be sure, the model does recognise that this isn't a philosophy of physics article, or a political philosophy article, or an ancient philosophy article. But still, you'd think it should do better than this.
 
@@ -164,11 +147,9 @@ What's happened, in a picturesque sense, is this. The articles are arranged in a
 
 I think it isn't a coincidence that there is another article by Wilfred Sellars on the list. I think it is a coincidence that there is an article by his father though. That one is weird. Here is its table.
 
-<br>
 ```{r uncertainty-article-10}
 individual_article(all_uncertainty$document[10])
 ```
-<br>
 
 In [this paper](https://philpapers.org/rec/SELACT), Sellars is operating at a fairly high degree of abstraction, and considering the ways in which the big philosophical views (idealism, pragmatism, realism, etc) have characteristic theories of truth, and offering a correspondence theory that isn't so closely tied to general forms of realism. And you can see why the paper looks, to the model, like it could be about all sorts of things. I'm still a bit surprised that the model didn't just lump it in with other works on truth. It doesn't mention the paradoxes, and has no formalism, and maybe that was enough. But it's surprising.
 
@@ -274,13 +255,11 @@ art_corr <- relabeled_gamma %>%
   mutate(r = round(r, 4))
 ```
 
-<br>
 ```{r correlation-kable}
 kable(art_corr %>%
         slice(1:32) %>%
         select(1:3), col.names = c("Subject One", "Subject Two", "Correlation"), caption = "Highest Topic Correlations")
 ```
-<br>
 
 I think these mostly make sense. The two epistemology topics are very tightly connected. The two topics that are about formal methods in scientific reasoning are correlated. (Remember that [Chance](#topic44) included a lot of work on formal models of inference.) The philosophy of religion articles are correlated. Idealism is correlated with the other early topics. Topics about time are correlated. [Denoting](#topic43) and [Sense and Reference](#topic64) are correlated; Frege and Russell aren't that far apart.
 
@@ -288,33 +267,28 @@ The bottom few here are particularly interesting. [Moral Conscience](#topic25) a
 
 Let's turn to the strongest negative correlations. These are a little less interesting.
 
-<br>
 ```{r correlation-kable-low}
 kable(art_corr %>%
         arrange(r) %>%
         slice(1:25) %>%
         select(1:3), col.names = c("Subject One", "Subject Two", "Correlation"), caption = "Lowest Topic Correlations")
 ```
-<br>
 
 The early topics and the late topics aren't correlated. The Idealists aren't correlated with anyone who isn't sympathetic to idealism. No one was offering arguments, at least not as such, in the early going. Let's come back to this table and see what we can find that's more interesting.
 
 What about the topics that are perfectly independent; they are not correlated with each other at all.
 
-<br>
 ```{r correlation-kable-middle}
 kable(art_corr %>%
         arrange(abs(r)) %>%
         slice(1:25) %>%
         select(1:3), col.names = c("Subject One", "Subject Two", "Correlation"), caption = "Most Independent Topics")
 ```
-<br>
 
 I don't know what I expected here, but I don't think it was this. Some of these felt like they should be positively correlated. I guess just on timing grounds I expected [Personal Identity](#topic62) to correlate with [Wide Content](#topic85). But I would have guessed [Beauty](#topic08) to be negatively correlated with [Meaning and Use](#topic22). Maybe there isn't anything to be found here; this mostly looks like noise to me.
 
 The low correlation table featured mostly topics from the first half of the topics. (Indeed, every pair featured at least one such topic.) So let's do the high and low correlation tables again but with the topics restricted to numbers 46-90.
 
-<br>
 ```{r correlation-kable-late-high}
 kable(art_corr %>%
         filter(x > 45, y > 45) %>%
@@ -323,11 +297,9 @@ kable(art_corr %>%
         col.names = c("Subject One", "Subject Two", "Correlation"), 
         caption = "Highest Topic Correlations (Topics 46-90)")
 ```
-<br>
 
 Those all seem to make sense. That isn't totally surprising, but the model seems to have not messed up here. Let's look at the other end of the table.
 
-<br>
 ```{r correlation-kable-late-low}
 kable(art_corr %>%
         filter(x > 45, y > 45) %>%
@@ -337,7 +309,6 @@ kable(art_corr %>%
         col.names = c("Subject One", "Subject Two", "Correlation"), 
         caption = "Lowest Topic Correlations (Topics 46-90)")
 ```
-<br>
 
 This is a bit surprising. I thought you'd see pairs like Liberal Democracy and [Composition and Constitution](#Topic89) turning up a lot here. That is, I thought what we'd find would recreate the famiilar Ethics vs M&E divide. But pairs like that are not the bulk of the table.
 
@@ -361,7 +332,6 @@ n <- cross_topic_tibble %>%
 
 ```
 
-<br>
 ```{r neighbours-high}
 kable(n %>%
         slice(1:25) %>%
@@ -369,11 +339,9 @@ kable(n %>%
       col.names = c("Subject One", "Subject Two", "Average Probability"), 
       caption = "Highest Cross-Topic Probability")
 ```
-<br>
 
 That's not as helpful as I'd hoped. Lots of topics are such that articles in them look a lot like [Ordinary Language Philosophy](#topic24). I'll deal with this by simple brute force; I'll filter out the Ordinary Language Philosophy topic, and rerun the table.
 
-<br>
 ```{r neighbours-high-no-olp}
 kable(n %>%
         filter(!subject_two == "Ordinary Language") %>%
@@ -382,7 +350,6 @@ kable(n %>%
       col.names = c("Subject One", "Subject Two", "Average Probability"), 
       caption = "Highest Cross-Topic Probability (excluding Ordinary Language)")
 ```
-<br>
 
 That is a little more interesting, and a little more sensible, but there are a couple of things that surprised me.
 
@@ -392,7 +359,6 @@ But the other surprise is that there are so few pairs that are on this list in b
 
 Next let's look at the lower end of this table.
 
-<br>
 ```{r neighbours-low}
 kable(n %>%
         arrange(g) %>%
@@ -401,7 +367,6 @@ kable(n %>%
       col.names = c("Subject One", "Subject Two", "Average Probability"), 
       caption = "Lowest Cross-Topic Probability")
 ```
-<br>
 
 And this is why I've used this measure as my preferred distance measure. Those all look like topics that have nothing to do with each other. And they don't!
 
@@ -415,7 +380,6 @@ That means you really shouldn't care about the order of this table. This is a li
 
 I've mostly been analysing the data here by looking at how many articles (or how many expected articles) are in a topic. But there's a case to be made for using pages rather than articles as the basic measure. To give you a sense of how much this matters, here are the topics with the longest and shortest average lengths.^[Note I'm using weighted, or expected, articles here, so for each topic I'm summing over all articles the probability of the article being in that topic times the length of the article, and dividing by the expected number of articles in the topic.]
 
-<br>
 ```{r topic-length-table-long}
 page_ratio <- inner_join(weight_numerator, page_weight_numerator, by = c("year", "topic")) %>%
   filter(year > 1799, year < 2110) %>%
@@ -438,7 +402,6 @@ page_ratio_summary <- page_ratio %>%
 kable(page_ratio_summary %>% select(Subject, avg) %>% slice(1:5), col.names = c("Topic", "Average Length"), caption = "Topics with Longest Average Page Length") %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 ```{r topic-length-table-short}
 page_ratio_summary <- page_ratio %>%
@@ -457,7 +420,6 @@ page_ratio_summary <- page_ratio %>%
 kable(page_ratio_summary %>% select(Subject, avg) %>% slice(1:5), col.names = c("Topic", "Average Length"), caption = "Topics with Shortest Average Page Length") %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 The difference between the longest and the shortest is almost a 2:1 ratio. So if you measured things by pages, it would make some changes. But in most cases, this difference won't show up on the graphs I've displayed so far. That's because most of the differences are screened by the changes in average article lengths over time. That is, most of the changes are due to the fact that the topics appear at different times in the data, and that the norm for article lengths change over time.
 
@@ -740,15 +702,13 @@ modality_tibble <- relabeled_articles %>%
   arrange(-gamma)
 ```
 
-<br>
 ```{r modality-high-article}
 individual_article(modality_tibble$document[1])
 ```
-<br>
+
 ```{r modality-low-article}
 individual_article(modality_tibble$document[370])
 ```
-<br>
 
 These were not picked at random. The Bird article is the one the model is most confident is in Modality, and the Keyt article is the one of the `r m` that it is least confident about. (Honestly I think the model got this one wrong, and is confused by 'Lewis'.) There is a range of probabilities between those though.
 
@@ -837,7 +797,6 @@ This does look like a measure of specialisation. If you're talking about [Quantu
 
 Let's turn to our last measure of specialisation, $\frac{rp}{w}$. One way to think about how big that is, is to think about the average probability of being in Modality for the articles whose maximal probability is in one of the other 89 topics. Some of these probabilities are quite large, such as for this article.
 
-<br>
 ```{r modal-find-highest-second-best}
 mm <- relabeled_gamma %>%
   filter(topic == 80) %>%
@@ -846,7 +805,6 @@ mm <- relabeled_gamma %>%
 
 individual_article(mm$document[1])
 ```
-<br>
 
 But most contributions aren't that big. In fact, the average is under 1%. But there are nearly 32,000 of them, so they add up. In fact, they add up to about 61% of the weighted count for Modality. So the value of $\frac{rp}{w}$ for Modality is about 39%, since that's what is left once you take out the 61% that comes from the rest of the articles. Is that 39% typical? Well, we can again look at the graph for all 90 topics.
 

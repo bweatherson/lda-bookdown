@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t66c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t66d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -29,6 +27,6 @@ cat("\n
 
 A couple of things about this topic surprised me, though I think this says more about my ignorance than about the field.
 
-One was that the peak of this topic comes considerably earlier than I expected. I had thought of this as a very modern topic, but we see means for it coming in the 1990s and even 1980s. These topics are sort of chronologically ordered, and we still have 24 topics to go. Now to be fair, in other models the quantum physics topic did come much later in the sequence. But I don't think you need a fancy model to se that (a) there are topics on quantum physics going right back to the founding of _Philosophy of Science_, and (b) there is a little less quantum physics in the philosophy of science journals now than in the 1980s and 1990s.
+One was that the peak of this topic comes considerably earlier than I expected. I had thought of this as a very modern topic, but we see means for it coming in the 1990s and even 1980s. These topics are sort of chronologically ordered, and we still have 24 topics to go. Now to be fair, in other models the quantum physics topic did come much later in the sequence. But I don't think you need a fancy model to see that (a) there are topics on quantum physics going right back to the founding of _Philosophy of Science_, and (b) there is a little less quantum physics in the philosophy of science journals now than in the 1980s and 1990s.
 
 The other striking thing about this topic is how Michigan centered it is. Every time I ran one of these models, one of the things I checked for was what percentage of the characteristic articles in the quantum physics topic had a Michigan author. And often the percentage was well over 50%. This model run wasn't quite that high, but we do have four papers with Michigan authors on the first 10.

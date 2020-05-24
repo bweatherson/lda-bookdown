@@ -9,12 +9,10 @@ source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t76c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t76d}
-
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -35,7 +33,7 @@ Another way to think about the division the model is making here is that the ear
 
 With that in mind, the trends over the last few years of the three main epistemology topics are interesting.
 
-```{r modern-epistemology-graph, fig.cap= "Trends in Epistemology in the Last 25 years of the study"}
+```{r modern-epistemology-graph, fig.height = 5, fig.cap= "Trends in Epistemology in the Last 25 years of the study"}
 t <- weight_ratio %>%
   filter(year > 1988, topic == 74 | topic == 76 | topic == 84) %>%
   mutate(topic = as.numeric(topic)) %>%

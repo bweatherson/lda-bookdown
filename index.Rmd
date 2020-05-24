@@ -782,13 +782,13 @@ This book relies on resources that a lot of people have made available, usually 
 
 The raw data comes from JSTOR's [Data for Research](https://www.jstor.org/dfr/) program. It wouldn't really be possible without the work they did to make that set available.
 
-I initially transformed the JSTOR Data into something that could be read in R via some scripts from John Bernau. His paper [Text Analysis with JSTOR Archives](https://doi.org/10.1177%2F2378023118809264) describes some techniques for modelling trends in sociology journals using the JSTOR archives.
+I initially transformed the JSTOR Data into something that could be read in R via some scripts from John Bernau. His paper [Text Analysis with JSTOR Archives](https://doi.org/10.1177%2F2378023118809264) describes some techniques for modeling trends in sociology journals using the JSTOR archives.
 
 Once I had the data in R, I analysed it using the **topicmodels** [package](https://cran.r-project.org/web/packages/topicmodels/index.html) by Bettina Grün and Kurt Hornik.
 
 The idea for analysing this data using topicmodels to analyse the data in this way comes from [What Is This Thing Called Philosophy of Science? A Computational Topic-Modeling Perspective, 1934–2015](https://doi.org/10.1086/704372), by Christophe Malaterre, Jean-François Chartier, and Davide Pulizzotto.
 
-As well as those sources, I learned a lot about how to use **topicmodels** from [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com) by Julia Silge and David Robinson, and from some articles in Towards Data Science, including those by [Shashank Kapadia](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0) and by [Farren tang](https://towardsdatascience.com/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25).
+As well as those sources, I learned a lot about how to use **topicmodels** from [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com) by Julia Silge and David Robinson, and from some articles in Towards Data Science, including those by [Shashank Kapadia](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0) and by [Farren tang](https://towardsdatascience.com/beginners-guide-to-lda-topic-modeling-with-r-e57a5a8e7a25).
 
 Most of the graphics in this book are based on things I learned from Kieran Healy, either from his book [Data Visualization: A Practical Introduction](https://kieranhealy.org/publications/dataviz/) or from his [blog](https://kieranhealy.org/blog/).
 

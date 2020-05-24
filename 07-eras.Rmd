@@ -372,7 +372,7 @@ I'll start by simply listing the ten most popular topics (out of the 90) in each
 kable(era_wide_top, col.names = era_headers, caption = "Most popular topics in each era")
 ```
 
-The striking thing is that Ordinary Language Philosophy comes out top in each era. This is related to the fact that it is as much a style as a topic, and the style never really went away.
+The striking thing is that Ordinary Language Philosophy comes out top in each era after World War II. This is related to the fact that it is as much a style as a topic, and the style never really went away.
 
 We can also look at the bottom ten topics in each era, by the same metric. (The lowest ranked topics are at the top of this list. Any time I'm listing the lowest ranked anything, I'll put the lowest at the top.)
 
@@ -438,39 +438,41 @@ kable(category_era_distinctive_wide_top, col.names = era_headers, caption = "Mos
 
 The journals have never paid a ton of attention to Aesthetics or Philosophy of Religion. But in the post-war years, especially in America, they paid more attention to them than they otherwise did. 
 
-The time that History of Philosophy falls away does seem a bit like my story that it its fall is [largely Ryle's fault](#history-category-section) seem dubious. But note that what happens during this era is that _Philosophy and Phenomenological Research_ really takes the third word in its name seriously, and the model is treating those phenomenological works as history.
+History of Philosophy looks quite strong during the second era, then falls away in the third era. This might make you sceptical of my story that its is [largely Ryle's fault](#history-category-section). But note that a huge proportion of the History papers in this era are in _Philosophy and Phenomenological Research_. At that time PPR was taking the third word in its name really seriously, and I'm classifying [phenomenology papers](#topic28) as part of History. This table shouldn't change your view on the impact Ryle had on History in the philosophy journals.
 
-I've been [suspicious of the idea that there was a positivism-driven drop in metaphysics](#metaphysics-category-section). So it is only fair to note that by this measure (though seemingly no other) there really is a drop in metaphysics in the post-war era.
+I've been [suspicious of the idea that there was a positivism-driven drop in metaphysics](#metaphysics-category-section). So it is only fair to note that by this measure (though seemingly no other) there really is a drop in Metaphysics in the post-war era.
 
-On the other hand, the prominence of ethics during the critical period from 1966-1981 is consistent with something I've been stressing a lot. Part of what made that era so distinctive is the vital contributions made to topics in ethics over that time.
+On the other hand, the prominence of Ethics during the critical period from 1966-1981 is consistent with something I've been stressing a lot. Part of what made that era so distinctive is that so many topics in Ethics were either created or renewed.
 
 ## Words and Eras {#words-eras}
 
-For this section, I am using the original JSTOR word list, with the various words cut from it that I discussed back in the [methodology chapter](#words). I am not filtering out words that appear only 1-3 times per article. But I am only going to focus on the 5000 words that appear most frequently in the data set. That means words that appear about 2200 times or more, or about once every 15 articles. The reason for concentrating on a selective class of words will become clear in a bit.
+For most of the book, I have worked from a dataset that started with the JSTOR word list, then made two major edits. First, I cut out words that don't look like they are part of the content of the papers I'm focussing on. Second, I cut out words that only appear 1 to 3 times in a paper. For this section, mostly still excluding the non-contentful words - though I'll note one point below when I consider them - but I'm restoring the words that appear 1-3 times. 
 
-First, here are the most common words from each era - remembering that we've filtered out a lot of 'stop words'.
+On the other hand, I'm restricting attention to the 5000 most common words in the data set. In practice, that means restricting attention to words that appear about 2200 times or more. That is, the word has to appear about once ever 15 articles. That doesn't mean it has to appear in $\frac{1}{15}$ of the articles; it could appear very often in a few articles. But it does have to get those 2200 appearances somewhere. The reason for this restriction will soon becme clear.
+
+To start, here are the most common words from each era - remembering that we've filtered out a lot of 'stop words'.
 
 ```{r erawords1}
 kable(era_words_wide_top, col.names = era_headers, caption = "Most common words in each era")
 ```
 
-That doesn't tell us a lot. It is a bit interesting that 'theory' and especially 'case' are much more prevalent after world war II than before it, but that's about it.
+That doesn't tell us a lot. It is a bit interesting that 'theory' and especially 'case' are much more prevalent after World War II than before it, but that's about it.
 
-A better test is to normalise by the frequency of words. So rather than ask how many times a word appears in an era, ask what percentage of the word's appearances are in that era.
+We learn more by comparing the frequency of each word in an era to that word's frequency across the whole data set. So rather than ask how many times a word appears in an era, we might ask what percentage of the word's appearances are in that era. That gives us a sense of the characteristic words of a given era.
 
-But as it stands, that doesn't work either. A lot of words have 100% of their appearances in one or other era. For instance, we don't see any occurrences of 'elga', 'kolodny', 'knobe', 'weatherson', 'rayo', 'obama' or 'greaves' until era 5. So they'd all be tied for having 100% of their appearances in this era. And while some of those words are somewhat important to the era, I don't think that's quite what we're looking for.
+But as it stands, that doesn't work either. A lot of words have 100% of their appearances in one or other era. For instance, we don't see any occurrences of 'elga', 'kolodny', 'knobe', 'weatherson', 'rayo', 'obama' or 'greaves' until era 5. So they'd all be tied for being the most characteristic words of the 1999-2013 era, since 100% of their appearances in this era. And while some of those words are somewhat important to the era, I don't think that's quite what we're looking for.
 
-So what I decided to do, and what I think is a fairly common move at this point, is to restrict quantification to words that are in the 5000 most common across the whole study. This excludes all the words I just listed. (I'd have to extend it a fair bit further to get them; 'elga' is at position 10468, 'greaves' at 16583, and the others in between.) And then we can look at which words from that 5000 have the highest percentage of their occurrences in a given era.
+So what I decided to do, following common practice, is to restrict the study to the 5000 most common words. This excludes all the words I just listed. (I'd have to extend it a fair bit further to get them; 'elga' is at position 10468, 'greaves' at 16583, and the others in between.) And then we can look at which words from that 5000 have the highest percentage of their occurrences in a given era.
 
 But it turns out even that isn't quite what we want, though it's not clearly not what we want. If you do what I just said, most of the words that show up are between the 4000th and 5000th most common words. It's just much easier for rarer words, especially names, to appear at one particular time. So I decided to show you a whole bunch of tables.
 
-For every one of the following tables, I restricted attention to the top _n_ thousand words in the data set, and then asked of those words, which have the highest percentage of their occurrences in different eras. I think looking at the tables for each value of _n_ from 1 to 5 is useful. There will be some repetition; sometimes a common word has a distinctive distribution. But you learn a new thing each time you increase _n_. I cut it off at _n_ = 5, but you could keep going beyond that. (Though if you did, you'd find a few more latex words, and journal names, and OCR errors, that in retrospect I might have wanted to delete from the data set.) So here's what we get restricting attention to the 1000 most common words.
+For every one of the following tables, I restricted attention to the top _n_ thousand words in the data set, and then asked of those words, which have the highest percentage of their occurrences in different eras. I think looking at the tables for each value of _n_ from 1 to 5 is useful. There will be some repetition; sometimes a common word has a distinctive distribution. But you learn a new thing each time you increase _n_. I cut it off at _n_ = 5, but you could keep going beyond that. (Though if you did, you'd find a few more latex words, and journal names, and OCR errors, that in retrospect I might have wanted to delete from the dataset.) So here's what we get restricting attention to the 1000 most common words.
 
 ```{r erawords1000}
 words_by_limit(1000)
 ```
 
-Is 'jones' at the top of 1966-1981 because of Sellars, or Gettier, or Frankfurt? I think the answer is, all of the above! I think 'frege' in 1982-1999 because of "Frege cases", not because of a particular upsurge in attention to Frege's own writings. Both 'quine' and 'rawls' are a bit later than their most famous writings, which makes sense. And note 'intuitions' turning up as a distinctive word in the 21st century literature. It's interesting, I think, that it isn't used as much in the era intuitions were allegedly dominating philosophy as in the era when metaphilosophy became such a big deal.
+Is 'jones' at the top of 1966-1981 because of Sellars, or Gettier, or Frankfurt? I think the answer is, all of the above! I think 'frege' appears prominently in 1982-1998 because of "Frege cases", not because of a particular upsurge in attention to Frege's own writings. Both 'quine' and 'rawls' are a bit later than their most famous writings, which makes sense. And note 'intuitions' turning up as a distinctive word in the 21st century literature. It's interesting, I think, that it isn't used as much in the era intuitions were allegedly dominating philosophy as in the era when metaphilosophy became such a big deal.
 
 We can look at the graphs of how frequently these words appeared over time to get a sense of what it means for them to be the distinctive words of an era. I'll just graph the top 5 for each era, because otherwise the graphs get too cluttered.
 
@@ -570,7 +572,7 @@ words_by_limit(5000)
 
 And finally we get that not all the names are of men. Korsgaard is here, and the model doesn't discriminate between the Churchlands, so at least part of the reason for 'churchland' in 1982-1998 is Patricia Churchland.
 
-Apart from the names, the words in the final era are all fairly much as expected. I'll come back in [the last chapter]({#buzzwords-section) to 'credence', because I don't think everyone realises how new a term it is. And I guess I thought 'egalitarianism' would have been used enough in 1982-1998 to not appear here, but I guess not.
+Apart from the names, the words in the final era are all fairly much as expected. I'll come back in [the last chapter]({#buzzwords-section) to 'credence', because I don't think everyone realises how new a term it is. And 'egalitarianism' was used so much in 1982-1998 that I'm very surprised it can turn up here.
 
 I have no idea why 'muscular' is such a common term in the first era. I suspect I wouldn't be happy to find out. 
 
@@ -629,15 +631,15 @@ kable(decade_distinctive_wide_top[7:12], col.names = dec_title[7:12])
 
 The early decades are not much of a surprise. The big topics from those years are big in every decade, with slightly more attention paid to history as we get into the 20th Century.
 
-Early Modern hits a high point in the 1930s before Ryle stops it appearing in _Mind_. 
+[Early Modern](#topic21) hits a high point in the 1930s before Ryle stops it appearing in _Mind_. 
 
-The founding of _Philosophy and Phenomenological Research_ makes Heidegger and Husserl particularly prominent in the 1940s. 
+The founding of _Philosophy and Phenomenological Research_ makes [Heidegger and Husserl](#topic28) particularly prominent in the 1940s. 
 
-And there is a sudden burst, especially in _Journal of Philosophy_ of attention both to philosophy of History and Culture, and to Aesthetics. Unlike the attention to pragmatism and other distinctively American fields, these two topics don't disappear in the earyl 1950s, but they do slow down rapidly.
+And there is a sudden burst, especially in _Journal of Philosophy_ of attention both to philosophy of [History and Culture](#topic10), and to [Aesthetics](#topic08). Unlike the attention to pragmatism and other distinctively American fields, these two topics don't disappear in the earyl 1950s, but they do slow down rapidly.
 
 Wittgensteinian philosophy turns up in the middle of the century, just like you'd expect.
 
-And then one that is a surprise to me: Feminism and Friendship having its distinctive decade be the 1970s. Looking back, especially at _Ethics_, there was a bit more feminist philosophy published then than in later decades. Before doing this project, I had a mental picture of Anglophone analytic philosophy being very hostile to feminist work, and this very very slowly breaking down over the last few decades. This looks a bit like evidence against that view, so let's dig a little deeper into where these articles are coming from. Here is a list of the articles from the 1970s that the model gives a probability of at least 0.4 of being in Feminism and Friendship.
+And then one that is a surprise to me: [Feminism](#topic69) having its distinctive decade be the 1970s. Looking back, especially at _Ethics_, there was a bit more feminist philosophy published then than in later decades. Before doing this project, I had a mental picture of Anglophone analytic philosophy being very hostile to feminist work, and this very very slowly breaking down over the last few decades. This looks a bit like evidence against that view, so let's dig a little deeper into where these articles are coming from. Here is a list of the articles from the 1970s that the model gives a probability of at least 0.4 of being in Feminism.
 
 ```{r feminism-seventies}
 feminism_seventies <- relabeled_gamma %>%
@@ -652,18 +654,16 @@ for (i in 1:nrow(feminism_seventies)){
 }
 ```
 
-One thing that I expected to see, but didn't, was that this was being boosted by a number of articles on friendship. And that's not there at all.
+Four things about this list jump out. One is that a lot of these articles are very short. If I'd weighted by pages not by articles, the topic probably wouldn't have turned up on this list. A second is that these articles are as much about race as about gender. That's not too surprising; a lot of philosophers still talk as if "race-and-gender" is a single word. And the model reflects that. A third is that there are a lot of men on this list. And a fourth is that the median topic here is how awfully bad affirmative action is, and how it's really just as bad as the discrimination it is supposed to remedy. To be fair, a number of philosophers (including some of the men) are replying to this argument. But it's a bit special how much more interested philosophers got in discrimination once affirmative action became a live possibility.
 
-But four things about this list jump out. One is that a lot of these articles are very short. If I'd weighted by pages not by articles, the topic probably wouldn't have turned up on this list. A second is that these articles are as much about race as about gender. That's not too surprising; a lot of philosophers still talk as if "race-and-gender" is a single word. And the model reflects that. A third is that there are a lot of men on this list. And a fourth is that the median topic here is how awfully bad affirmative action is, and how it's really just as bad as the discrimination it is supposed to remedy. To be fair, a number of philosophers (including some of the men) are replying to this argument. But it's a bit special how much more interested philosophers got in discrimination once affirmative action became a live possibility.
-
-I'll end this section with a quick look at the bottom of this list; the topics that have the lowest percentages of their works in a particular decade. Since there are many topics in any decade with practically zero works, this is a very noisy measure.
+I'll end this section with a quick look at the topics that have the lowest percentages of their works in a particular decade. Since there are many topics in any decade with practically zero works, this is a very noisy measure.
 
 ```{r decadetopicsd}
 kable(decade_distinctive_wide_bottom[1:6], col.names = dec_title[1:6], caption = "Least distinctive topics in each decade")
 kable(decade_distinctive_wide_bottom[7:12], col.names = dec_title[7:12])
 ```
 
-Most of that is noise, but the one thing that jumps out is the low position of "Other History" in the 1970s and 1980s. There was less and less history in these journals over time. But even within the space allocated to history, the focus got really narrow for a while there. I think things have gotten a little better in recent years, and especially after the end of this study, but for a while it was a striking gap in the literature.
+Most of that is noise, but the one thing that jumps out is the low position of "Other History" in the 1970s and 1980s. There was less and less history in these journals over time. But even within the space allocated to history, the focus got really narrow for a while  I think things have gotten a little better in recent years, and especially after the end of this study, but for a while it was a striking gap in the literature.
 
 ## Categories and Decades {#categories-decades}
 
@@ -683,9 +683,9 @@ Let's move on to the later six decades.
 kable(category_decade_wide_top[7:12], col.names = dec_title[7:12], caption = "Popularity of categories in last six decades")
 ```
 
-The eras correspond more closely to decades, so this doesn't tell us much that we didn't already see. But it tells us one important thing. Note that Ethics is almost at the top in the 1960s. When looking at the earlier graphs and tables, I was wondering how much the rise of Ethics as a category had to do simply with _Philosophy and Public Affairs_ opening in 1970. And the answer is that the rise is happening even before _Philosophy and Public Affairs_ comes online. Now of course when it does come online it makes a difference. But it's a less dramatic difference than I expected. (In part because it publishes long articles, and I'm primarily measuring by article count.) It might be more plausible to say that the rise in importance of Ethics inside philosophy makes it possible for _Philosophy and Public Affairs_ to launch as a prestigious journal, rather than the launch of _Philosophy and Public Affairs_ as a prestigious journal making Ethics more important in the discipline.
+The eras correspond more closely to decades after 1950, so this doesn't tell us much that we didn't already see. But it tells us one important thing. Note that Ethics is almost at the top in the 1960s. When looking at the earlier graphs and tables, I was wondering how much the rise of Ethics as a category had to do simply with _Philosophy and Public Affairs_ opening in 1970. And the answer is that the rise is happening even before _Philosophy and Public Affairs_ comes online. Now of course when it does come online it makes a difference. But it's a less dramatic difference than I expected. (In part because _Philosophy and Public Affairs_ publishes long articles, and I'm primarily measuring by article count.) It might be more plausible to say that the rise in importance of Ethics inside philosophy makes it possible for _Philosophy and Public Affairs_ to launch as a prestigious journal, rather than the launch of _Philosophy and Public Affairs_ as a prestigious journal making Ethics more important in the discipline.
 
-Let's also take a look at the distinctiveness measures. These tables, recall, rank each category by what proportion of the articles in that category appear in a particular decade. This is a particularly informative measure for the smaller categories, in particular Aesthetics and Philosophy of Religion. 
+Let's also take a look at the distinctiveness measures. These tables, recall, rank each category by what proportion of the articles in that category appear in a particular decade. This is a particularly informative measure for the smaller categories such as Aesthetics and Philosophy of Religion. 
 
 ```{r categorydecadeearlydist}
 kable(category_decade_distinctive_wide_top[1:6], col.names = dec_title[1:6], caption = "Distinctiveness of categories in first six decades")
@@ -723,7 +723,7 @@ early_decade_words_by_limit(3000)
 late_decade_words_by_limit(3000)
 ```
 
-The main auditorium at Monash University is the Alexander Hall. Graduations are there, but it isn't otherwise a major part of student life. I think I went there more often as a high school student than as a university student. But still, it was nice to know that a big part of the university was named after a philosopher, Samuel Alexander. We also had a nice sketch of him on the wall of one of the seminar rooms in the philosophy department while I was there. That didn't mean that we actually talked about Alexander's work; I don't remember ever being assigned one of his papers in a class or seminar. That was perhaps a bit too bad, since he's argaubly the second most important Australian philosopher for the first half of the 20th century. And he's the first Australian to turn up on this list as well.
+The main auditorium at Monash University is the Alexander Hall. Graduations are there, but it isn't otherwise a major part of student life. I think I went there more often as a high school student than as a university student. But still, it was nice to know that a big part of the university was named after a philosopher, Samuel Alexander. We also had a nice sketch of him on the wall of one of the seminar rooms in the philosophy department while I was there. That didn't mean that we actually talked about Alexander's work; I don't remember ever being assigned one of his papers in a class or seminar. That was perhaps a bit too bad, since he's argaubly the second most important Australian philosopher for the first half of the 20th century.
 
 Let's expand this list to the 5000 most common words.
 

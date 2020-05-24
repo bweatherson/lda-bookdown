@@ -13,12 +13,13 @@ source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t25d}
-source('topic_comments/topic_summary_char_art.R')
+source('topic_comments/topic_summary_char_art.R') # Create table of all articles in topic
 temp_dt
 ```
 
 ```{r t25e}
-source('topic_comments/topic_summary_high_cites.R')
+source('topic_comments/topic_summary_high_cites.R') # Generate table of highly cited articles. 
+ # Have to do this at same time as previous script or a weird caching error occurs.
 if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**

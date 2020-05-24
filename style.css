@@ -167,23 +167,27 @@ h1, h2, h3, h4 {
     font-size: 15px;
 }
 
+caption {
+    margin-bottom: 5px;
+}
+
 .book .book-body  .page-wrapper .page-inner section.normal table {
 display: table;
 width: 100%;
 border-collapse: collapse;
 border-spacing: 0;
 margin-top: 30px;
-margin-bottom: 45px;
+margin-bottom: 40px;
 overflow: auto;
 }
 
 div.dataTables_info {
-    margin-top: -35px;
+    margin-top: -30px;
     padding-bottom: 35px;
 }
 
 div.dataTables_paginate {
-    margin-top: -35px;
+    margin-top: -30px;
     padding-bottom: 35px;
 }
 

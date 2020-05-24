@@ -142,6 +142,7 @@ kable(gg_revised %>%
     arrange(-gamma) %>%
     slice(1:10) %>%
     inner_join(the_categories, by = "topic") %>%
+    mutate(gamma = round(gamma, 4)) %>%  
     select(subject, gamma),
     col.names = c("Subject", "Probability"),
     caption = paste(x, "- Chapter", y)) %>%
@@ -457,6 +458,7 @@ temp_gamma <- imprint_gamma %>%
   select(topic, gamma) %>%
   inner_join(the_categories, by = "topic") %>%
   select(subject, gamma) %>%
+  mutate(gamma = round(gamma, 4)) %>%
   arrange(-gamma)
 
 capt <- paste0(filter(imprint_top_gamma_display, document == x)$citation[1],
@@ -496,7 +498,7 @@ datatable(imprint_summary_DT,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2))),
           caption = "Weighted Sum of Topic Probabilities for Philosophers' Imprint 2019"
           )%>%
-  formatSignif('g',2) %>%
+  formatSignif('g',3) %>%
   formatStyle(1:3,`text-align` = 'left')
 ```
 
@@ -522,9 +524,9 @@ datatable(imprint_norms_DT %>%
   formatStyle(1:2,`text-align` = 'left')
 ```
 
-This is really surprising, and I suspect a sign that something's gone wrong. Either there are artefacts from the way I did the text extraction, or this new style of language is really spreading everywhere. I suspect both, but I'm not going to investigate this here. What I'd rather look at, because I think it tells us something more about where philosophy is heading, is the topic that was second on our above list: [Other History](#topic04).
+This is really surprising, and a sign that something's gone wrong. It tells us something, I think, about the language of 21st century philosophy. I'll return to this in the next section. What I'd rather look at, because I think it tells us something more about where philosophy is heading, is the topic that was second on the above list: [Other History](#topic04).
 
-This topic had looked rather dead in recent journals, but it turns up second overall here. And just eyeballing the article list that might not be too surprising. There are articles in Suárez (two of them!), William King, Amo, and Mary Shepherd. But this isn't entirely why Other History pops up so high here.
+This topic had looked rather dead in recent journals, but it turns up second overall here. And just eyeballing the article list that might not be too surprising. There are articles on Suárez (two of them!), William King, Amo, and Mary Shepherd. But this isn't entirely why Other History pops up so high here.
 
 ```{r imprint-history-summary}
 imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %>%
@@ -546,7 +548,7 @@ datatable(imprint_norms_DT %>%
   formatStyle(1:2,`text-align` = 'left')
 ```
 
-This makes the lack of attention to 'Other History' in the journals up to 2013. James, Wittgenstein and Nietzche are hardly obscure figures. If articles on them are enough to keep the Other History scoreboard ticking over, it's really telling that that scoreboard had ground to a halt.
+This makes the lack of attention to 'Other History' in the journals up to 2013 even more striking. James, Wittgenstein and Nietzche are hardly obscure figures. If articles on them are enough to keep the Other History scoreboard ticking over, it's really telling that that scoreboard had ground to a halt.
 
 Apart from this topic, the results are largely as I expected. The contemporary topics mostly keep growing. [Vagueness](#topic86), which peaked in the early 2000s, is an exception. And Imprint does less philosophy of science than some journals, so the recent philosophy of science topics aren't showing up much. But otherwise the new topics are still growing. And the old topics are still mostly shrinking, but with two big exceptions. One, the resurgence of interest in historical figures outside of the huge names like Plato, Descartes and Kant, I've already mentioned. The other is that there is a paper on [Idealism](#topic02).
 
@@ -554,13 +556,13 @@ Apart from this topic, the results are largely as I expected. The contemporary t
 imprint_kable("imprint-1944")
 ```
 
-Now on the one hand, that's only a 10.1% probability of being in Idealism. On the other hand, it doesn't look like a mistake for the model to put this article in Idealism. And to my eyes, there were no articles after the mid-1990s that were correctly classified that way.
+Now on the one hand, that's only a 10.1% probability of being in Idealism. On the other hand, it doesn't look like a mistake for the model to put this article in Idealism. And to my eyes, in the twelve journals I'm focussing on, there are no articles from about 1995-2013 that were correctly classified as Idealism articles.
 
 I don't want to say that one article in Imprint is a trend, even if it is something we hadn't seen in the last 7000 or so articles in the original data set. But it is interesting, and something to watch for over upcoming years. It is so striking to me that Idealism went from being so big to so small, and some regression to the mean seems like it wouldn't be a surprise.
 
 ## Buzzwords {#buzzwords-section}
 
-One of the methods I used for building the model was to run repeated [refinements](#refinements-section) of the model, to try to make it better track actual philosophical topics. At the time I did this, I was worried that this would have bad consequences. It felt like tightening the strings. And while this is generally a good idea, if you make things too tight, they snap. After a few refinemnts, I started to think this was a silly bit of reasoning by analogy. These aren't actually strings, so they can't actually snap, right? Well, after 100 iterations of the refinement script, I got a topic whose distribution looked like this.
+One of the methods I used for building the model was to run repeated [refinements](#refinements-section) of the model, to try to make it better track actual philosophical topics. At the time I did this, I was worried that this would have bad consequences. It felt like tightening the strings. And while this is generally a good idea, if you make things too tight, they snap. After a few refinements, I started to think this was a silly bit of reasoning by analogy. These aren't actually strings, so they can't actually snap, right? Well, after 100 iterations of the refinement script, I got a topic whose distribution looked like this.
 
 ```{r bad-gamma-absolute, fig.cap = "Number of articles in Norms topic in the Bad LDA"}
 # Doing the facet graph with number of articles, not proportion

@@ -13,12 +13,13 @@ source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t88d}
-source('topic_comments/topic_summary_char_art.R')
+source('topic_comments/topic_summary_char_art.R') # Create table of all articles in topic
 temp_dt
 ```
 
 ```{r t88e}
-source('topic_comments/topic_summary_high_cites.R')
+source('topic_comments/topic_summary_high_cites.R') # Generate table of highly cited articles. 
+ # Have to do this at same time as previous script or a weird caching error occurs.
 if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
@@ -27,7 +28,7 @@ cat("\n
 
 The general theme here is models in philosophy of science. And I'm not completely sure whether this is a good topic my model to have landed on, or whether it has gotten confused by the polysyemous nature of 'model'.
 
-Some of the articles here are on causal modelling, and that's certainly an important topic in philosophy of science. And one of the interesting stories of the period this topic is centered on is the drift of causation from being a metaphysics topic to a philosophy of science topic.
+Some of the articles here are on causal modeling, and that's certainly an important topic in philosophy of science. And one of the interesting stories of the period this topic is centered on is the drift of causation from being a metaphysics topic to a philosophy of science topic.
 
 And some of the articles here are about the use of models in special sciences (e.g., economics, climate science), and what the epistemology of learning from models looks like.
 

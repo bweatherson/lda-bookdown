@@ -1,33 +1,27 @@
 ```{r t24a}
 jjj <- 24
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t24b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t24c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t24d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t24e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -110,7 +104,7 @@ word_frequency_graphs(c("ask", "surely", "try", "put", "tell"))
 
 You can see a rise in each of these in the years after World War II. In some cases this is restoring the level that existed back in the 1870s and 1880s, but in akk cases there is a steep fall from the mid-1960s onwards. Let's see what happens if we restrict this to the journal that seems central to Ordinary Language Philosophy, _Proceedings of the Aristotelian Society_. (Note that the averages on this graph are averages for just this journal, so they are higher than the overall averages.)
 
-```{r olpwords-graphs-t24-pas, fig.height = 5, fig.cap = "Popular words in Ordinary Language"}
+```{r olpwords-graphs-t24-pas, fig.height = 5, fig.cap = "Popular words in Ordinary Language in Proceedings of the Aristotelian Society"}
 pas_word_journal_frequency_graphs(c("ask", "surely", "try", "put", "tell"))
 ```
 

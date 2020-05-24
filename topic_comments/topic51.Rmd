@@ -1,33 +1,27 @@
 ```{r t51a}
 jjj <- 51
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t51b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t51c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t51d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t51e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -35,19 +29,15 @@ cat("\n
 
 When I did a new model run, one of the first things I checked was whether the model had found the philosophy of mathematics topic. And the quickest way to check for that was whether it had clearly put the two big Benacerraf papers in the same topic. Most models passed this test, but some of them did so less clearly than others. This model run just passes the test. Here are the probability distributions over the 90 topics for the two articles.^[Remember that these tables are cropped at 2%; the model assigns probabilities to all 90 topics but I'm not showing them all here.]
 
-<br>
 ```{r benacerraf-one}
 individual_article("10.2307_2183530")
 ```
-<br>
 
 That makes sense - it is a Philosophy of Mathematics article, but it is largely about sets, and it can't escape the fact that it's written during the era of Ordinary Language Philosophy. But the second table is a closer run thing.
 
-<br>
 ```{r benacerraf-two}
 individual_article("10.2307_2025075")
 ```
-<br>
 
 Again, this sort of makes sense - the article is about truth. But the model is much less sure how to classify this article, as evidenced by the number of topics that get a probability between 4.6% and 7.4%.
 

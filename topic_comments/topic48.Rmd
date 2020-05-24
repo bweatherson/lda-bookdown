@@ -1,33 +1,27 @@
 ```{r t48a}
 jjj <- 48
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t48b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t48c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t48d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t48e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -37,15 +31,15 @@ I've called this Intention, but I might have been less misleading to call it Bra
 
 Of course, it wasn't asked to place Anscombe's book; we're only doing journals. But there are a couple of articles that one might have hoped would be grouped together with these pieces.
 
-<br>
+
 ```{r anscombe-intention-pas}
 individual_article("10.2307_4544583")
 ```
-<br>
+
 ```{r anscombe-brute-facts-analysis}
 individual_article("10.2307_3326788")
 ```
-<br>
+
 In both cases it thinks about putting the article in this topic, but decides against it. That's too bad. I'll leave it for readers to decide whether putting such a sharp gap between Bratman and Anscombe's work is a sign the model doesn't understand philosophy, or that it understands it all too well.
 
 Although there are some articles about Anscombe in this topic - just type 'Anscombe' into the search box above and you'll get a few - the model puts none of her own articles in here. In general it doesn't really feel like the model knows what to do with Anscombe. Here are the articles of hers that it analyses, along with the topic they most probably ended up in, and the probability that they are in that topic.

@@ -1,66 +1,34 @@
 ```{r t20a}
 jjj <- 20
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t20b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t20c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t20d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t20e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
 ```
 
-This topic contains a bunch of stuff on space and time in classical
-(i.e., pre-relativistic) physics, some stuff on philosophical issues
-arising in geometry, and some historical work connected to those two
-things. It has a lot of overlap with [Topic 50](#topic50) The big
-differences are that this topic is more classical, and topic 50 is
-more relativistic. And topic 50 is considerably more technical and
-mathemtical. I've used the first difference to name the topics, but
-the second difference is what made this go in metaphysics, while topic
-50 goes in philosophy of science.
+This topic contains a bunch of stuff on space and time in classical (i.e., pre-relativistic) physics, some stuff on philosophical issues arising in geometry, and some historical work connected to those two things. It has a lot of overlap with [Space and Time](#topic50) The big differences are that this topic is more classical, and Space and Time is more relativistic. And Space and Time is considerably more technical and mathemtical. I've used the first difference to name the topics, but the second difference is what made this go in metaphysics, while Space and Time goes in philosophy of science.
 
-The characteristic articles in this case are somewhat
-uncharacteristic. The bulk of the articles in the topic are simply
-about space and time. But those articles are the ones that the model
-was most hesitant about clearly putting in this topic rather than 50,
-and so they don't have the highest probability of being in the topic.
-The articles about geometry, and about Reid, didn't confuse the model
-as much, so they get listed here.
+What I've called the characteristic articles for this topic turn out not to be particularly characteristic. They are the ones with the highest probability of being in the topic. But they don't look much like the typical paper in the topic. The bulk of the articles in the topic are simply about space and time. But those articles are the ones that the model was most hesitant about clearly putting in this topic rather than Space and Time, and so they don't have the highest probability of being in the topic. The articles about geometry, and about Reid, didn't confuse the model as much, so they get listed here.
 
-Other model runs didn't distinguish classical from relativistic work
-on space time. They would routinely distinguish work on quantum
-mechanics from classical and relativistic mechanics, but the classical
-versus relativistic distinction was a bit rarer. What sometimes did
-get included in place of this topic was a topic centered on workabout
-philosophy of geometry and measurement. That's still a small topic,
-but quite a lively one. [Brent
-Mundy](https://philpapers.org/s/brent%20mundy) did a lot of important
-work in this field, and recently there has been important work by [Tim
-Maudlin](https://philpeople.org/profiles/tim-maudlin) and by [Cian
-Dorr](https://philpeople.org/profiles/cian-dorr). In other model runs
-this work was classified together with the Reid-influenced work on
-geometry, and that was arguably a better classification.
+Other model runs didn't distinguish classical from relativistic work on space time. They would routinely distinguish work on quantum mechanics from classical and relativistic mechanics, but the classical versus relativistic distinction was a bit rarer. What sometimes did get included in place of this topic was a topic centered on workabout philosophy of geometry and measurement. That's still a small topic, but quite a lively one. [Brent Mundy](https://philpapers.org/s/brent%20mundy) did a lot of important work in this field, and recently there has been important work by [Tim Maudlin](https://philpeople.org/profiles/tim-maudlin) and by [Cian Dorr](https://philpeople.org/profiles/cian-dorr). In other model runs this work was classified together with the Reid-influenced work on geometry, and that was arguably a better classification.

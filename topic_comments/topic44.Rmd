@@ -1,33 +1,27 @@
 ```{r t44a}
 jjj <- 44
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t44b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t44c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t44d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t44e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -39,14 +33,14 @@ Now I was very surprised that the model could tell the difference between the ph
 
 It's not like it doesn't think the two are connected. This topic and Formal Epistemology are two of the closest connected topics. But it does just enough to tell them apart. We can see this by looking at two David Lewis articles. 
 
-<br>
+
 ```{r lewis-bug}
 individual_article("10.2307_2254396")
 ```
-<br>
+
 ```{r lewis-sleeping}
 individual_article("10.2307_3329230")
 ```
-<br>
+
 
 That's pretty good; in each case the model gives the intended topic 10 times the probability it gives the unintended topic. It's not perfect; I really don't know why it thinks the Sleeping Beauty paper is just about as likely to be a [Modality](#topic80) article as the Humean Supervenience article. But this is a quibble; I'm really happy that the model found this distinction. It made looking at the splits between Epistemology and Philosophy of Science much easier.

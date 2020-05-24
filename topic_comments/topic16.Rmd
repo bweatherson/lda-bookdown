@@ -1,33 +1,27 @@
 ```{r t16a}
 jjj <- 16
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t16b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t16c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t16d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t16e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -39,11 +33,11 @@ One of the most important articles in this topic is [The Naturalistic Fallacy](h
 
 The model isn't entirely sure what to say about "The Naturalistic Fallacy", but I think it ultimately makes the right call on it.
 
-<br>
+
 ```{r frankena-naturalistic-fallacy}
 individual_article("10.2307_2250706")
 ```
-<br>
+
 
 All of the top four topics there make sense. The paper is about Moorean conceptions of goodness, so naturally it's about value. It's about the definability of 'good', and which principles in that definition might be analytic, so naturally those two topics turn up as well. And a crucial conclusion of the paper is that what Mooreans should say is that their opponents lack a certain kind of moral insight, something continuous wth the discussions of moral conscience. So I think the model did a reasonable job at classifying Frankena's important early paper.
 

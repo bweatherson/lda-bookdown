@@ -600,7 +600,7 @@ for (jjj in (1:40)){
   cate_nam <- epistemology_subjects$subject[jjj]
 
   cat(" \n")
-  cat("## Topic ", jjj, " - ", cate_nam, " {#e",jjj,"}\n\n", sep="")
+  cat("## ", cate_nam, " {#e",jjj,"}\n\n", sep="")
 
   keyword_list <- epistemology_distinctive_topics %>% filter(topic == jjj)
   keyword_paste <- paste(keyword_list$term, sep = ", ", collapse = ", ")
@@ -753,16 +753,5 @@ print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
     }
   }
 }
-
-
-
-# Then weighted
-# Then as percentage of all epistemology
-# Then as percentage of all philosophy
-# Then loop it
-# Then add paradigm articles
-# Then add stats
-# Then add keywords - that will be work
-
 ```
 

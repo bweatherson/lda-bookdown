@@ -1,34 +1,28 @@
 ```{r t71a}
 jjj <- 71
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t71b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
 # Burp
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t71c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t71d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t71e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -42,11 +36,11 @@ The other was that there was a topic that included everything that related to se
 
 The happy consequence of this is that we get a topic that really is all about Judith Jarvis Thomson's work. It's not about all of her work of course - that covers ever so many fields.
 
-<br>
+
 ```{r thomson-articles}
 author_dt(c("Judith Jarvis", "Judith Jarvis Thomson"), "Judith Jarvis Thomson")
 ```
-<br>
+
 
 But this topic does include many of the papers on two of her signature contributions: her innovative defense of abortion, and her discussions of the trolley problem. Her original paper on the trolley problem is not in this study, since it wasn't published in one of the twelve journals I'm looking at. But a lot of papers that follow up on it, including Thomson's own second thoughts in "Turning the Trolley" are here.
 

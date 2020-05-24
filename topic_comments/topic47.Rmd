@@ -1,51 +1,33 @@
 ```{r t47a}
 jjj <- 47
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t47b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t47c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t47d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t47e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
 ```
 
-I decided at the start of this chapter to use, as far as possible, common scales for the graphs to facilitate easy visual comparison across topics. The downside of this decision is that cases where a topic is spread out across several journals don't show up as clearly. Here is what the graph looks like if we zoom in to the zero to six percent range. (And note this leaves out a couple of data points; one from Philosophical Review and one from Philosophical Quarterly.)
-
-```{r perception-zoomed-graph}
-yupper <- 0.06
-ggplot(data = filter(journalgamma_frequency, topic == jjj) %>% drop_na(), aes(x = year, y = gamfre))  +
-  geom_point(size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
-  theme(legend.position="none") +
-  coord_cartesian(ylim=c(0, yupper), expand = TRUE) +
-  labs(x = "Year", y = "Weighted Proportion of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
-  facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names))
-```
-
-This zooming in makes it clear that Perception has been a much bigger focus of some journals (e.g., _Proceedings of the Aristotelian Society_ and _Philosophy and Phenomenological Research_) than others (e.g., _Journal of Philosophy_ and _Analysis_). This sounds plausible to me, though it wasn't something I had realised until running the study.
+You can see from the facet graphs that Perception has been a much bigger focus of some journals (e.g., _Proceedings of the Aristotelian Society_ and _Philosophy and Phenomenological Research_) than others (e.g., _Journal of Philosophy_ and _Analysis_). This sounds plausible to me, though it wasn't something I had realised until running the study.
 
 Perception has been a recurrent interest of philosophers throughout this period. It feels like there is something distinctive about this; very few topics have so much interest across such a long time. Here's one way to test whether that is true. If something is discussed a lot over a long time, it should do well on a maximin measure - it should have a high lower bound. The data here is a bit noisy to trust that measure though; some wide-ranging topics might have a single down year. So instead I'll use the following measure.
 
@@ -67,7 +49,7 @@ kable(breadth_measure, col.names = c("Subject", "Proportion"), caption = "100th 
   kable_styling(full_width = F)
 ```
 
-And we get the result that Perception is indeed a topic of continuing interest. The only ones ahead of it are Ordinary Language, which is a style as much as a topic, and [Methodology of Science](#topic26), which is obviously also something interesting to philosophers.
+And we get the result that Perception is indeed a topic of continuing interest. The only ones ahead of it are [Ordinary Language](#topic24), which is a style as much as a topic, and [Methodology of Science](#topic26), which is obviously also something of continuiting interest to philosophers.
 
 Most of the others are not surprising, except perhaps for [Life and Value](#topic03). Part of what this shows is that that topic isn't quite as closely tied to [Idealism](#topic02) as it looks at first; it persists long after Idealism falls away.
 

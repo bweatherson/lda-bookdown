@@ -1,33 +1,27 @@
 ```{r t05a}
 jjj <- 05
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t05b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t05c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t05d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t05e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -223,7 +217,7 @@ ggplot(t, aes(x = year, y = n, color = journal, group = journal)) +
             size = 3,
             colour = "grey40")
 ```
-<br>
+
 
 ```{r phil-review-mind-words-summary, fig.height = 5, fig.cap = "Sum of Philosophy of Mind words in the three big journals, 1930-1970"}
 tt <- t %>%
@@ -434,7 +428,7 @@ ggplot(t,
             colour = "grey40")
 ```
 
-<br>
+
 
 ```{r phil-review-history-words-summary, fig.height = 5, fig.cap = "Sum of Early Modern words in the three big journals, 1930-1970"}
 tt <- t %>%

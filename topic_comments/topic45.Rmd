@@ -1,33 +1,27 @@
 ```{r t45a}
 jjj <- 45
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t45b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t45c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t45d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t45e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -41,12 +35,13 @@ Second, the model decided it really really wanted to put work on coherence measu
 
 You don't see a Ryle-driven drop in this topic after World War II. I don't think this is due to Ryle's Humean sympathies. Rather, it's that Hume just wasn't that big a topic before World War II, so the rise in general interest in Hume studies offsets the fall in historical work being published in these twelve journals. It wasn't that there was no work on Hume. Keynes and Sraffa, for example, published their important argument that Hume was the author of the _Abstract_. But it didn't get much attention in the philosophy journals until much more recently.
 
-```{r graph-time-categories-t45, fig.cap = "Early Modern topics - Weighted Frequency of Articles"}
+```{r graph-time-categories-t45, fig.cap = "Early Modern topics - Weighted Frequency of Articles", fig.height = 5}
   weight_ratio_graph <- ggplot(filter(weight_ratio, topic == 21 | topic == 31 | topic == 32 | topic == 45), aes(x = year, y = y, color=topic, group=topic))
   weight_ratio_graph + 
+    spaghettistyle +
     coord_cartesian(xlim = c(1877, 2013), ylim = c(0, 0.03)) +
     scale_colour_discrete(labels = c(the_categories$subject[21], the_categories$subject[31], the_categories$subject[32], the_categories$subject[45])) + 
-    theme(legend.title = element_blank(), legend.position = "bottom") +
+    theme(legend.title = element_blank(), legend.position = "right") +
     geom_point(size = 1, alpha = .5) +
     geom_smooth(se = F, method = "loess", size = .5, formula = "y ~ x") +
     labs(x = "Year", y = "Weighted Frequency of Articles")

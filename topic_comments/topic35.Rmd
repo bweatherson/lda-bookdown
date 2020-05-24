@@ -1,33 +1,27 @@
 ```{r t35a}
 jjj <- 35
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t35b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t35c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t35d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t35e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -37,7 +31,7 @@ One of the big fears I had doing this project was that the model would get confu
 
 And it's what we have here. This topic includes work on political freedom, and work on free will. It doesn't help that both fields spend a lot of time talking about libertarian views. And it really doesn't help that some people, perhaps not that many but enough to confuse the model, think there are deep connections between the fields.
 
-Fortunately there turns out to be a way to handle this problem. As I discussed back in topic 24, we can run a binary sort on the papers that are in the topic. And in this case it has just the results you expect - political freedom on one side, free will on the other.
+Fortunately there turns out to be a way to handle this problem. I'll go over this when we get to [Sets and Grue](#topic37), but the short version is that building a two topic LDA out of the articles in this topic lets us more or less split apart the articles on political freedom from the articles on free will.
 
 I've classified the free will papers as ethics, although I think a lot of the people working on the topic would have thought of themselves as doing metaphysics. Certainly when I was a student we covered free will in intro metaphysics classes, not intro ethics classes. But it seems to me this is clearly about ethics, and the recent trend towards looking much more closely at the nature of responsibility, especially in light of empirical discoveries about the mind and brain, makes this classification much more natural.
 

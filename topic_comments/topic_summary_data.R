@@ -61,5 +61,5 @@ cat("**Topic this Overlaps Least With**: ",
     the_categories$subject[furthest_neighbour_inverse$topic[jjj]], 
     " (", 
     round(furthest_neighbour_inverse$g[jjj],5),
-    ")\n\n <br>",
+    ")",
     sep="")

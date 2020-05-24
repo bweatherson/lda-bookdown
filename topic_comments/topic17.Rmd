@@ -1,33 +1,27 @@
 ```{r t17a}
 jjj <- 17
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t17b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t17c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t17d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t17e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -35,10 +29,9 @@ cat("\n
 
 This is a hard to classify topic. On the one hand, it's clearly about logic, so that's easy enough. But everything else about it is a little odd. The graphs don't show much life after 1920. But it ends up being either the 27th or 15th largest topic, depending on how you measure things. And the measure that makes it 15th is the one the graphs are showing. Its top keyword is syllogism, but most of the characteristic articles are very modern pieces that barely mention the word. In fact, the word mostly vanishes frm the journals after the 1960s.
 
-```{r syllogism-graph}
+```{r syllogism-graph, fig.height = 5, fig.cap = "How frequently does 'syllogism' appear in the journals"}
 word_frequency_graphs(c("syllogism"))
 ```
 
 Part of what's happened here is that while the model has decided to treat talk of 'implication' back in [Topic 7](#topic07) differently to talk here of validity, it's thrown some very old notions in with this topic. That's not absurd, but it does lead to some od results.
-
-If you squint you can see a brief uptick at the end of the graph. But a big part of the story here is that this kind of work, to the extent that its supported by the discipline at all, has largely moved to more specialist journals. So we don't see as much of it in these journals as we use to. And it would take a broader study to see what happens when you add the specialist logic journals to the mix.
+if you squint you can see a brief uptick at the end of the graph. But a big part of the story here is that this kind of work, to the extent that its supported by the discipline at all, has largely moved to more specialist journals. So we don't see as much of it in these journals as we use to. And it would take a broader study to see what happens when you add the specialist logic journals to the mix.

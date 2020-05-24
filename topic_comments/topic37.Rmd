@@ -1,33 +1,27 @@
 ```{r t37a}
 jjj <- 37
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t37b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t37c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t37d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t37e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -143,13 +137,16 @@ The point of all this was to demonstrate something of the power of this method o
 
 This is a graph of the distribution of those 552 articles into the two buckets (grue and sets) over time.
 
-```{r grue-binary-graph}
+```{r grue-binary-graph, fig.height=5, fig.cap = "Articles on Sets and Articles on Grue"}
 grue_years <- grue_years %>%
   mutate(topic.x = as.factor(topic.x))
 ggplot(grue_years, aes(x = year, y = g, group = topic.x, color = topic.x)) + 
+  spaghettistyle +
   geom_point() + 
   labs(x = "Year", y = "Weighted Proportion of Articles", title = "Articles in Each Sub-Topic") +
-  theme(legend.title = element_blank())
+  theme(legend.title = element_blank(),
+        legend.position = "right") +
+  scale_color_discrete(labels = c("Grue", "Sets"))
 
 ```
 

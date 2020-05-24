@@ -215,7 +215,6 @@ In fact of the `r nrow(dualism_temp_gamma)/2` articles, `r nrow(arguments_clear_
 
 Let's look at the rest of the topics that I decided to split up into subtopics
 
-<br>
 ```{r binary-split-dt-part-two}
 datatable(binary_split_table %>% slice(c(24, 35,36,37,77,79, 90)), 
           rownames = FALSE,
@@ -223,7 +222,6 @@ datatable(binary_split_table %>% slice(c(24, 35,36,37,77,79, 90)),
       formatSignif('Confidence',3) %>%
       formatStyle(1:5,`text-align` = 'left') 
 ```
-<br>
 
 [Ordinary Language](#topic24) is a mess, and the Confidence measure isn't as high as I'd like to make a division, but the subtopics look pretty clearly disjoint. The first is about Ethics, the second is about Mind. And since we already have a separate topic for [contemporanous British philosophy of language](#topic22), splitting this topic into Ethics and Mind seems like a sensible plan.
 
@@ -241,7 +239,6 @@ And the work on [Norms](#topic90) divides reasonably neatly into Language norms 
 
 So those are the divisions I made. It's helpful to have them as a table, not least because I've already been using their names in the previous chapter.
 
-<br>
 ```{r table-of-subtopics}
 subtopic_table <- tribble(
   ~topic, ~subject, ~sub_one, ~sub_two
@@ -262,7 +259,6 @@ kable(subtopic_table,
       caption = "The ten topics that are divided into subtopics"
       )
 ```
-<br>
 
 There is one last technical point to notice. The binary sort tells us how to divide the articles that are in a topic into one or other subtopic. But to calculate the weighted sums, we also have assign some weights to the articles that are primarily in other topics, but which have some probability of being in this topic. (This is especially pressing for the Ordinary Language and Arguments topics.)
 
@@ -292,8 +288,8 @@ articles_by_category <- category_gamma %>%
 cat_check <- function(x, y){
 # First a line break because Kable needs it
 cat("\n\n")
-cat("### ",cat_names$cat_name[x]," - ",cat_names$cat_name[y], " {#catbound", x, y, "}", sep="")
-cat("\n\n <br> \n")
+cat("### ",cat_names$cat_name[x]," - ",cat_names$cat_name[y], " {#catbound", x, y, "} {-}", sep="")
+cat("\n\n")
   
 # Retrieve the two category LDA
 load(paste0("category_lda/lda_",x,"_",y,".RData"))

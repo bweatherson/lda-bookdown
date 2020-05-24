@@ -1,33 +1,27 @@
 ```{r t54a}
 jjj <- 54
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t54b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t54c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t54d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t54e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -43,26 +37,20 @@ Partially this is because it's kind of hard to get the boundaries of discussions
 
 This model is very confident that Lewis's two _Journal of Philosophy_ articles belong either in Causation or in Laws, but it's not completely sold on them being causation articles.
 
-<br>
 ```{r lewis-causation-one}
 individual_article("10.2307_2025310")
 ```
-<br>
+
 ```{r lewis-causation-two}
 individual_article("10.2307_2678389")
 ```
-<br>
-
 
 And this isn't a shortcoming of the models, I think. These topics really do blend together, and it's hard to say where one starts and the other ends. One advantage of using a probabilistic model like this is that we can model blurred boundaries as intermediate probabilities, and still get a sense of the size of each topic without making arbitrary distinctions. The three problems above still remain, and you could put the boundary between Causation and Laws, Explanation and Models at very different places. But I think this is a decent picture of the size of discussions of Causation over time.
 
 Note one other thing about this topic. There is an [early Russell paper](https://philpapers.org/rec/RUSOTN-7) that is (just barely) in the topic.
 
-<br>
 ```{r russell-causation}
 individual_article("10.2307_4543833")
 ```
-<br>
 
 But it barely shows up in the graphs. This is such a common phenomenon; topics that are huge parts of late twentieth century philosophy are also the topic of early Russell papers. But the Russell papers made next to no impact in these journals at the time he wrote them.
-

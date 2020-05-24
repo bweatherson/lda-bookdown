@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Abril+Fatface|Lato:400,400i,700,700i|Lora:400,400i,700,700i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i|Playfair+Display:400,400i,600,600i&display=swap');
 
 /* A lot of this code is taken from the CSS code for rstudio4edu by Desirée De Leon and Alison Hill*/
 /* Their book is available at https://rstudio4edu.github.io/rstudio4edu-book/ */
@@ -27,42 +27,68 @@ pre code {
 }
 
 .book.font-family-1 {
-  font-family: 'Lato', arial, sans-serif;
+  font-family: 'Lato', Arial, sans-serif;
+}
+
+.book.font-family-0 {
+  font-family: 'Playfair Display', Georgia, serif;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal h1, 
-.book .book-body .page-wrapper .page-inner section.normal h2, 
+.book .book-body .page-wrapper .page-inner section.normal h2 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
 .book .book-body .page-wrapper .page-inner section.normal h3, 
 .book .book-body .page-wrapper .page-inner section.normal h4, 
 .book .book-body .page-wrapper .page-inner section.normal h5, 
 .book .book-body .page-wrapper .page-inner section.normal h6 {
-    margin-top: 2.275em;
-    margin-bottom: 1em;
+    margin-top: 1em;
+    margin-bottom: 0.3em;
+    font-family: 'Lato', Arial, sans-serif;
+    font-size: 20px;
+    color: #3fb5bd;
 }
 
+
+
 #header .title {
-  font-family: 'Lora', serif;
+  font-family: 'Playfair Display', serif;
   font-size: 3em;
   color: #0b8d96;
   margin-top: 0.175em;
-  margin-bottom: -60px;
+  margin-bottom: -25px;
 }
 
 #header .subtitle {
-  font-family: 'Lora';
+  font-family: 'Playfair Display';
   color: #3fb5bd;
+  margin-bottom: 15px;
+}
+
+.author {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.date {
+  font-family: 'Playfair Display', serif;
+  margin-bottom: -60px;
+  line-height: 1;
 }
 
 
 h1, h2, h3, h4 {
-  font-family: 'Lora', serif;
+  font-family: 'Playfair Display', serif;
   color: #0b8d96;
 }
   
 .section.level1 > p:first-of-type:first-letter { /*drop cap for first p beneath level 1 headers only within class .section*/
   color: #3fb5bd;
   float: left;
-  font-family: 'Abril Fatface', serif;
+  font-family: 'Playfair Display', serif;
   font-size: 7em;
   line-height: 65px;
   padding-top: 4px;
@@ -137,6 +163,41 @@ h1, h2, h3, h4 {
   font-size: 12px;
 }
 
-.datatable p, li, tr, td, caption, th {
-    font-size: 16px;
+.datatable p, tr, td, caption, th {
+    font-size: 15px;
+}
+
+.book .book-body  .page-wrapper .page-inner section.normal table {
+display: table;
+width: 100%;
+border-collapse: collapse;
+border-spacing: 0;
+margin-top: 35px;
+margin-bottom: 50px;
+overflow: auto;
+}
+
+div.dataTables_info {
+    margin-top: -35px;
+    padding-bottom: 30px;
+}
+
+div.dataTables_paginate {
+    margin-top: -35px;
+    padding-bottom: 30px;
+}
+
+div.dataTables_length{
+  margin-top: 20px;
+  padding-bottom: 5px;
+}
+
+div.dataTables_filter{
+  margin-top: 20px;
+  padding-bottom: 5px;
+}
+
+div.figure {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }

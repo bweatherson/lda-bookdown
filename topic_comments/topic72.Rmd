@@ -1,33 +1,27 @@
 ```{r t72a}
 jjj <- 72
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t72b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t72c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t72d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t72e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -60,10 +54,9 @@ individual_article(reports$document[3])
 individual_article(reports$document[4])
 ```
 
-```{r belief-knowledge-overlap-e}
-individual_article(reports$document[5])
+```{r belief-knowledge-overlap-e}individual_article(reports$document[5])
 ```
-<br>
+
 
 Except perhaps the Dretske, none of them really feel like they fit in this topic. Or, to put things more provocatively, I don't see that (this kind of) work on belief ascriptions really had much impact even on work on other propositional attitudes.
 

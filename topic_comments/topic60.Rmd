@@ -1,33 +1,27 @@
 ```{r t60a}
 jjj <- 60
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t60b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t60c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t60d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t60e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -41,7 +35,7 @@ The core figure in this topic is clearly Quine, but you see the topic get a seco
 
 And it is possible that Robbie Williams's work will lead to a reversal of the downward trend. Indeed, if you squint you can almost make out that it had already reversed the trend by the late 2000s. Here are the papers Robbie had in the data-set as of 2013, though he has published much more in these journals since then.
 
-<br>
+
 ```{r robbie-williams-papers}
 author_dt(c("J. R. G. Williams", "J. Robert G. Williams"), "Robbie Williams")
 ```

@@ -1,33 +1,27 @@
 ```{r t14a}
 jjj <- 14
-source('topic_summary_data.R')
+source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t14b, fig.cap=the_categories$subject[jjj], fig.height= 5.2}
-source('topic_summary_overall_graph.R')
+source('topic_comments/topic_summary_overall_graph.R')
 ```
 
 ```{r t14c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal")}
-cat("<br>")
-source('topic_summary_facet_graph.R')
+
+source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t14d}
-cat("<br>")
-source('topic_summary_char_art.R')
+
+source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
 
 ```{r t14e}
-cat("<br>")
-source('topic_summary_high_cites.R')
-if(is_high_cites == 1)
-	{cat("<br>")}
-if(is_high_cites == 1)
-	{high_table}
-if(is_high_cites == 1)
-	{cat("<br>")}
+source('topic_comments/topic_summary_high_cites.R')
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
 	**Comments**
 	\n")
@@ -37,7 +31,7 @@ This is a large and long-lasting topic. And it is somewhat disjunctive.
 
 It includes some metaphysics. Indeed some of the things I'd think of as paradigmatic to early analytic metaphysics, such as Russell's [On the Relations of Universals and Particulars](https://philpapers.org/rec/RUSOTR-3) and Ramsey's [Universals](https://philpapers.org/rec/RAMU). And it includes their contemporary successors, such as Fraser MacBride's [Could Armstrong Have Been a Universal?](https://philpapers.org/rec/MACCAH).
 
-It includes some philosophy of language, though surprisingly less than I would have guessed from the keywords. But it includes, for example, Wilfrid Sellars's [Naming and Saying](https://philpapers.org/rec/SELNAS), and David Liebesman's (https://philpapers.org/rec/LIESG).
+It includes some philosophy of language, though surprisingly less than I would have guessed from the keywords. It includes, for example, Wilfrid Sellars's [Naming and Saying](https://philpapers.org/rec/SELNAS), and David Liebesman's [Simple Generics](https://philpapers.org/rec/LIESG).
 
 It includes a large amount of Peircean pragmatics. Here is a list just of the articles in the topic with "Peirce" in the title.
 

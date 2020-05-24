@@ -371,6 +371,19 @@ datatable(relabeled_articles %>%
 } 
 ```
 
+```{r kable-for-author-articles}
+author_kable <- function(x, y){
+kable(relabeled_articles %>%
+          filter(auth1 %in% x | auth2 %in% x | auth3 %in% x) %>%
+          arrange(topic) %>%
+        mutate(gamma = round(gamma, 4)) %>%
+         inner_join(the_categories, by = "topic") %>%
+          select(year, citation, subject, gamma),           
+          col.names = c("Year", "Article", "Subject", "Probability"), 
+          caption = paste0("Articles with Author ",y), style = "font-weight: bold")
+} 
+```
+
 ```{r words-by-year}
 # Use this to get words to graph
 # This gets used in chapter 7
@@ -651,7 +664,7 @@ An LDA model takes the distribution of words in articles and comes up with a pro
 facetstyle <-   theme_minimal() +
   theme(text = element_text(family="Lato"),
         plot.title = element_text(size = rel(1), 
-                                  family = "Lora",
+                                  family = "Lato",
                                   face = "bold",
                                   margin = margin(0, 0, 10, 0)),
         strip.text = element_blank(),
@@ -659,7 +672,7 @@ facetstyle <-   theme_minimal() +
         panel.background = element_blank(),
         panel.spacing.y = unit(1, "lines"),
         axis.title.x = element_text(size = rel(1),
-                                    margin = margin(t = 6, r = 0, b = 3, l = 0)),
+                                    margin = margin(t = 6, r = 0, b = 0, l = 0)),
         axis.title.y = element_text(size = rel(1),
                                     margin = margin(t = 0, r = 8, b = 0, l = 0)),
         panel.grid.major.y = element_line(color = "grey85", size = 0.07),
@@ -702,11 +715,11 @@ update_geom_defaults("label", list(family = "Lato"))
 ```
 
 ```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year"}
-tt <- filter(category_frequency, year > 1899)
+tt <- filter(category_frequency, year > 1899) # Remove 19th Century from graph
 category_graph_labels <- tt %>%
   group_by(category) %>%
-  summarise(year = median(year)) %>%
-  mutate(f = max(tt$f) * 1.2)
+  summarise(year = median(year)) %>% # Put label at middle horizontally
+  mutate(f = max(tt$f) * 1.2) # Put label above the highest value on the graph
 ggplot(tt, 
        aes(x = year, y = f, color=category, group=category)) +
   geom_text(data = category_graph_labels,

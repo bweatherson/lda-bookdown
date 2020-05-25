@@ -6,15 +6,6 @@ The short version of what I was trying to do is easy. Put each of these 90 topic
 
 Note that one of the challenges here is working out the value for N, and working out which categories it should include. You can see in the previous chapter how I answered this. But I just want to stress at the start that these answers were things that came out of the sorting methodology, not things I settled on before trying to sort the topics. So let's turn to how I did, or in the first instance didn't do, that sorting.
 
-```{r notes-on-category-methodology}
-#- How we got the 12 - maybe say a bit about idealism
-#- Limits of hand coding
-#- 90 binary sorts; 10 splits, and a bunch of non-splits
-#- Explain the next binary sort procedure
-#- Go over all 55 pairs (leave off idealism, all other 2 way splits)
-#- Go over tough cases (splitting L&L, Decision Theory, Arguments, Husserl and Heidegger, Univerals, Verification). And check if there is anything else I disagree with the model about
-```
-
 ## Two Failed Attempts
 
 The first thing I tried was to look at the correlations between topics. That is, for any two topics, measure the correlation between the probability the model assigns to each article being in the first topic, and the probability it assigns to each article being in the second topic. If the topics are part of a common category, this should be reasonably high.
@@ -177,7 +168,6 @@ binary_summary <- function(i)
 binary_split_table <- lapply(1:90, binary_summary) %>% bind_rows()
 ```
 
-<br>
 ```{r binary-split-dt}
 datatable(binary_split_table, 
           rownames = FALSE,
@@ -185,7 +175,6 @@ datatable(binary_split_table,
       formatSignif('Confidence',3) %>%
       formatStyle(1:5,`text-align` = 'left') 
 ```
-<br>
 
 The first column is the topic number, to help line up with the discussion in [Chapter 2](#all-90-topics). The second is the name I gave to the topic. The third is how proportion of articles in the topic that the binary sort put in one or other subtopic with probability at least 0.99. As you can see if you scroll down, or if you sort by that column, these binary sorts are often very decisive.
 
@@ -325,15 +314,10 @@ print(kable(temp_output,
       col.names = c("Catgeory", "Subject", "Mean Probability"),
       caption = paste("Comparing articles in",cat_names$cat_name[x],"and",cat_names$cat_name[y]),
       align=c("l", "l", "l")))
-
-# Another line break
-cat("\n <br> \n")
 }
 ```
 
 ```{r example-category-sort}
-cat("\n\n <br> \n")
-
 x <- 3
 y <- 7
   
@@ -371,9 +355,6 @@ print(kable(temp_output,
       col.names = c("Catgeory", "Subject", "Mean Probability"),
       caption = paste("Comparing articles in",cat_names$cat_name[x],"and",cat_names$cat_name[y]),
       align=c("l", "l", "l")))
-
-# Another line break
-cat("\n <br> \n")
 ```
 
 So that works pretty well. There is a very clean split between the Ethics subjects and the Metaphysics subjects. (I'll use 'subject' from now on to refer to both the topics and the subtopics that are being classified.) The only one vaguely in between is Frankfurt cases, and that even makes sense; until recently Free Will was a subject in Metaphysics textbooks as much as Ethics textbooks.

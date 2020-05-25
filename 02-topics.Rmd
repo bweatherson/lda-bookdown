@@ -128,7 +128,6 @@ As you can see, this has years on the x-axis, and ratios on the y-axis, and 12 '
 
 Look in the facet for _Philosophical Review_. There are two dots that are much higher than the rest, both of them around 0.15. The left-hand one, which is just under 0.15, is from the early 1930s. The right-hand one, just over 0.15, is from 1999. And I'm going to talk through this one for a bit. Here are the 11 articles in _Philosophical Review_ that year, along with their probability of being in topic 21.^[The meta-data includes messy things like "Sleighjr", and I just haven't corrected them - I'm just going with what JSTOR feeds me.]
 
-<br>
 ```{r prexample1}
 phil_review_1999 <- relabeled_gamma %>%
   filter(topic == 21, year == 1999, journal == "Philosophical Review") %>%
@@ -136,9 +135,10 @@ phil_review_1999 <- relabeled_gamma %>%
   arrange(fpage) %>%
   select(citation, gamma)
 
-kable(phil_review_1999, col.names = c("Article", "Probability of being Early Modern"), caption = "Articles in Philosophical Review, 1999")
+kable(phil_review_1999, 
+	col.names = c("Article", "Probability of being Early Modern"),
+	caption = "Articles in Philosophical Review, 1999")
 ```
-<br>
 
 If you sum these 11 probabilities, you get `r sum(phil_review_1999$gamma)`. And dividing by 11 to get the average, you get `r mean(phil_review_1999$gamma)`. And that's where the dot I was pointing out comes from.
 
@@ -179,7 +179,6 @@ cat("<br>")
 source('topic_comments/topic_summary_high_cites.R')
 high_table
 ```
-<br>
 
 I used [Publish or Perish](https://harzing.com/resources/publish-or-perish) to download the 50 most cited articles from each of our 12 journals according to Google Scholar. I do _not_ stand by these lists as being particularly accurate. I tried a couple of obvious ways to download the data, and they had obvious shortcomings, which I corrected. And then I thought the lists I had were good enough for illustrative purposes, so I stopped. But there were so many obvious things to correct that I'm sure there are non-obvious things to correct. But the point is not to do a citation study; it's to list some articles you've probably heard of that are in the topic.
 

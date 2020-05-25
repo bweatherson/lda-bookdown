@@ -2,7 +2,6 @@
 
 The 90 topics we've looked at so far are informative, but they are arguably too detailed to provide a useful big picture view of what's happening in philosophy. To do that I divided up the 90 topics into 12 categories. Or, to be more precise, I divided 80 of them up into categories, and the other 10 were split between two categories. I'll return in the next chapter to how this division was made, and in particular how the splitting was done. For now, let's look at the categories, and then look at their representation in the literature over time.
 
-<br>
 ```{r category_setup_local, fig.height=12, fig.width = 10}
 require(readr)
 the_categories <- read_csv("category-summary-22031848-90-r15.csv")
@@ -37,9 +36,9 @@ for (j in 1:90){
   }
 }
 
-kable(category_table,  col.names = c("Topic", "Category", "Subject", "Keywords"))
+kable(category_table,  
+	col.names = c("Topic", "Category", "Subject", "Keywords"))
 ```
-<br>
 
 ## Graphs
 
@@ -62,15 +61,15 @@ category_count <- category_gamma %>%
 category_count_graph <- ggplot(category_count, aes(x = year, y = n, color=category, group=category)) +
     labs(x = "Year", y = "Number of Articles") +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
-#                     minor_breaks = scales::pretty_breaks(n = 15),
+#                     minor_breaks = scales::breaks_pretty(n = 15),
                       minor_breaks = 10 * 1:20,
-#                     breaks = scales::pretty_breaks(n = 3)) +
+#                     breaks = scales::breaks_pretty(n = 3)) +
                       breaks = 50 * 1:3) +
     scale_x_continuous(expand = expansion(mult = c(0.01, .03)),
                      minor_breaks = 10 * 1:201,
                      breaks = 40 * 1:50) +
     spaghettistyle +
-    theme(legend.title = element_blank())  
+    theme(legend.title = element_blank(), legend.position = "bottom")  
   
 category_count_graph +  
   geom_point(size = 0.5, alpha = 0.5)
@@ -115,15 +114,16 @@ category_frequency <- inner_join(category_year, year_denominator, by = "year") %
 category_weight_graph <- ggplot(category_year, aes(x = year, y = y, color=category, group=category)) +
     labs(x = "Year", y = "Number of Articles") +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
-#                     minor_breaks = scales::pretty_breaks(n = 15),
+#                     minor_breaks = scales::breaks_pretty(n = 15),
                       minor_breaks = 10 * 1:20,
-#                     breaks = scales::pretty_breaks(n = 3)) +
+#                     breaks = scales::breaks_pretty(n = 3)) +
                       breaks = 50 * 1:3) +
     scale_x_continuous(expand = expansion(mult = c(0.01, .03)),
                      minor_breaks = 10 * 1:201,
                      breaks = 40 * 1:50) +
     spaghettistyle +
-    theme(legend.title = element_blank())  
+    theme(legend.title = element_blank(),
+          legend.position = "bottom")  
 
 category_weight_graph + 
   geom_point(size = 0.5, alpha = 0.5)
@@ -149,15 +149,16 @@ category_frequency_graph <- ggplot(filter(category_frequency, year > 1899),
                                    aes(x = year, y = f, color=category, group=category)) +
     labs(x = "Year", y = "Proportion of Articles") +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
-#                     minor_breaks = scales::pretty_breaks(n = 15),
+#                     minor_breaks = scales::breaks_pretty(n = 15),
                       minor_breaks = 0.025 * 1:20,
-#                     breaks = scales::pretty_breaks(n = 3)) +
+#                     breaks = scales::breaks_pretty(n = 3)) +
                       breaks = 0.1 * 0:5) +
     scale_x_continuous(expand = expansion(mult = c(0.01, .03)),
                      minor_breaks = 10 * 1:201,
                      breaks = 40 * 1:50) +
     spaghettistyle +
-    theme(legend.title = element_blank()) 
+    theme(legend.title = element_blank(),
+          legend.position = "botto") 
 
 category_frequency_graph + geom_point(size = 0.5, alpha = 0.5)  + theme(legend.title = element_blank())
 ```
@@ -219,7 +220,6 @@ Normally at this point I would include a long discussion of the methodology that
 
 Several topics didn't easily fit into one or other category. For several of them, I just had to choose the least bad category to put it in. But for some, it turned out to be possible to split the topic into two **sub-topics**, and categorise the sub-topics. I somewhat arbitrarily imposed a limit on myself of doing this 10 times, so the following ten topics got broken into two sub-topics each.
 
-<br>
 ```{r sub-topic-list}
 subtopic_table <- the_categories %>%
   filter(cat_num == 13 | topic > 100)
@@ -227,9 +227,9 @@ subtopic_function <- function(x){
   tibble(a = subtopic_table$subject[x], b = subtopic_table$subject[2*x+9], c = subtopic_table$subject[2*x+10])
 }
 subtopic_kable <- lapply(1:10, subtopic_function) %>% bind_rows()
-kable(subtopic_kable, col.names = c("Original Topic", "First Subtopic", "Second Subtopic"))
+kable(subtopic_kable, 
+	col.names = c("Original Topic", "First Subtopic", "Second Subtopic"))
 ```
-<br>
 
 So we end up with 100 topics and subtopics to classify; the 80 original topics that weren't split, and the 20 sub-topics just generated. How I split them up is a bit of a saga, and I'll run through it in the next [chapter](#sortingchapter).
 
@@ -335,7 +335,6 @@ print(
 
 # Tabel of Data Points that are excluded by the topic graph
 if (max(filter(category_by_topic, category == cate, year > 1900)$f > 0.0601)){
-cat("\n <br> \n")
 print(
      kable(filter(category_by_topic, category == cate, f > 0.0601, year > 1900) %>%
           select(name, year, f) %>%
@@ -343,7 +342,6 @@ print(
         caption = paste0("Points excluded from topic graph for ",cate),
         col.names = c("Subject", "Year", "Frequency"))
 )
-cat("\n <br> \n")
 }
 }
 ```
@@ -351,7 +349,6 @@ cat("\n <br> \n")
 ## Ethics {#ethics-category-section}
 
 ```{r ethics-journals, fig.cap = "Proportion of each journal's yearly publications in Ethics"}
-# Burper
 cg("Ethics", 3)
 ```
 
@@ -379,7 +376,7 @@ Note how there are a few topics that peak one after the other: first Value, then
 cg("History of Philosophy", 4)
 ```
 
-None of these lines seems to be trending up, and several of them are trending down. But there are differences in the ways that they are trending.
+None of these lines seem to be trending up, and several of them are trending down. But there are differences in the ways that they are trending.
 
 - _Ethics_ is a slow, steady decline.
 - _Journal of Philosophy_ is a very rapid decline over the 1960s, between a high equilibrium before that, and a much lower equilibrium after.
@@ -388,7 +385,7 @@ None of these lines seems to be trending up, and several of them are trending do
 
 So part of what's going on is what I mentioned in the previous section. Specialist journals are focussing more on their speciality, and this means doing less of everything else. And in part this feels like the long influence of Gilbert Ryle. This might seem odd given that Ryle published in ancient philosophy, but there is some independent evidence of this. This is from an article his successor as _Mind_ editor, D. M. Hamlyn, wrote about Ryle's editorship.
 
-> [Ryle] said, for example, that, except for Greek Philosophy, he tended to not accept papers on the history of philosophy, and he also said something about what was normally the desirable maximum length for papers. I must say that I found what he had to say on the first point rather odd, though he was absolutely right on the second. ([Hamlyn 1971: 8-9](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents))
+> [Ryle] said, for example, that, except for Greek Philosophy, he tended to not accept papers on the history of philosophy, and he also said something about what was normally the desirable maximum length for papers. I must say that I found what he had to say on the first point rather odd, though he was absolutely right on the second. ([Hamlyn 2003: 8-9](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents))
 
 Whatever Hamlyn thought, it doesn't seem to have affected the publications much. You can't see his ascension (in 1971) in the data here. And I think this decision of Ryle's had a large impact on the role of journal articles in history of philosophy. (Though note Hamlyn says in that paper that Ryle left him a backlog of 2 years' material to publish. So any break would be 1973 not 1971. Both these facts, that _Mind_ was only publishing its backlog in 1972 and 1973, and that they were still papers accepted by Ryle, are quite interesting in the context of the differences in citation rates between _Mind_ and its American counterparts in those years. But that's a story for another study.)
 
@@ -451,7 +448,7 @@ So there are two big topics - Modality, and Composition and Constitution - that 
 
 But we still haven't answered the question about where positivism shows up. I thought that the graph here would be U-shaped, with lots of metaphysics either side of a positivism-driven dip in the middle. We can recreate that gap if we declare that all the work in idealism is really metaphysics.
 
-```{r metaphysics-and-idealism-frequency, fig.cap = "Proportion of each year's articles that are in Idealism or Metaphysics"}
+```{r metaphysics-and-idealism-frequency, fig.cap = "Proportion of each year's articles that are in Idealism or Metaphysics", fig.height = 5}
 cate_num <- 7
 m_and_i_table <- category_frequency %>%
   filter(category == "Metaphysics" | category == "Idealism") %>%
@@ -470,7 +467,7 @@ m_and_i_graph
 
 That's more like what I expected, though the post-positivism rise is much smaller than the pre-positivism fall. It obviously looks different if you use counts rather than proportions.
 
-```{r metaphysics-and-idealism-count, fig.cap = "Weighted number of each year's articles that are in Idealism or Metaphysics"}
+```{r metaphysics-and-idealism-count, fig.cap = "Weighted number of each year's articles that are in Idealism or Metaphysics", fig.height = 5}
 m_and_i_count_table <- category_frequency %>%
   filter(category == "Metaphysics" | category == "Idealism") %>%
   group_by(year) %>%

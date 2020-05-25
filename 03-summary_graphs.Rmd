@@ -41,10 +41,17 @@ facetgraph <- function(datainput, ylabel, titlelabel){
     inner_join(the_categories, by = "topic") %>%
     select(-topic)
   
+  # Place the labels where they won't hit dots
+  # So well above all values from 1907-1982, and above values from outlier years
+  topval <- max(
+    datainput$y,
+    filter(datainput, year > 1906, year < 1983)$y * 1.25
+  )
+  
   # Data for generating the labels - note we have to bounce data style of 'topic' or bad errors happen
   facet_labels <- the_categories %>%
     filter(topic < 91) %>%
-    mutate(year = mean(datainput$year), y = 1.25 * max(datainput$y)) %>% # Change Mean to Min to move labels to left - these are centred
+    mutate(year = mean(datainput$year), y = topval) %>% # Change Mean to Min to move labels to left - these are centred
     mutate(topic = as.factor(topic))
   
   # Now the graph
@@ -72,7 +79,11 @@ facetgraph <- function(datainput, ylabel, titlelabel){
   # Add the style that I generated back in the index
       facetstyle +
   # Notate everything
-      labs(x = "Year", y = ylabel, title = titlelabel)
+      labs(x = "Year", y = ylabel, title = titlelabel) +
+    # Fix check marks
+      scale_y_continuous(expand = expansion(mult = c(0.01, .02)),
+            minor_breaks = scales::breaks_pretty(n = 12),
+            breaks = scales::breaks_pretty(n = 3))
 }
 ```
 
@@ -132,7 +143,7 @@ These three choices totally cross-cut each other, so we get eight possible thing
 
 Table: (\#tab:eight-types) Eight Types of Graph
 
-<br>So why did I go with option 1? Well, all of the other options have flaws that made me want to try something different.
+So why did I go with option 1? Well, all of the other options have flaws that made me want to try something different.
 
 The raw counts are too uneven, and require trendlines to be added to the graph. And they are fairly arbitrary. If the model says that something has probability 0.21 of being in topic X, and 0.18 of being in topic Y, and 0.16 of being in topic Z, and so on for several other topics, it feels like throwing away information to simply classify it in X. This is especially true if Y and Z are very similar topics, and the model could easily have merged them, while X is fairly different.
 
@@ -151,7 +162,6 @@ Third, it is much simpler to use article counts, but there is some value to usin
 
 To give you a sense of how this can happen, here are the weighted article counts and page counts for two topics just restricting attention to the 2000s (i.e., 2000-2009).
 
-<br>
 ```{r pages-and-articles}
 page_ratio <- inner_join(weight_numerator, page_weight_numerator, by = c("year", "topic")) %>%
   filter(year > 1999, year < 2010) %>%
@@ -170,7 +180,6 @@ page_ratio_summary <- page_ratio %>%
 
 kable(slice(page_ratio_summary, c(52, 59)), caption = "Article and Page Counts") %>% kable_styling(full_width = F)
 ```
-<br>
 
 The articles on Truth were largely (though not exclusively) in _Analysis_. The articles on Liberal Democracy were largely (though again not exclusively) in _Philosophy and Public Affairs_. And as you can see, which of these two has a bigger presence in the journals in the 2000s is very much a function of whether you count by articles or pages. If you have a strong view about the journals in the 2000s, you might be able to use this to test which of the two is a more accurate measure.
 

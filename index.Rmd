@@ -28,9 +28,6 @@ require(kableExtra)
 require(corrr)
 library(ggplot2); theme_set(theme_light())
 require(DT)
-# Note to self: Add 'view' followed by github directory to _bookdown.yml
-
-
 ```
 
 ```{r loader}
@@ -446,8 +443,8 @@ ggplot(t, aes(x = year, y = f, color = term, group = term)) +
   scale_x_continuous(minor_breaks = 10 * 1:201,
                      expand = expansion(mult = c(0.01, 0.01))) +
   scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
-                     minor_breaks = scales::pretty_breaks(n = 12),
-                     breaks = scales::pretty_breaks(n = 3),
+                     minor_breaks = scales::breaks_pretty(n = 12),
+                     breaks = scales::breaks_pretty(n = 3),
                      labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
   #  scale_y_continuous(labels = scale_inverter) +
   labs(x = "Year", y = "Word Frequency") +
@@ -636,7 +633,6 @@ The second development was that personal computers have gotten fast enough that 
 
 This study focuses on the following twelve journals.
 
-<br>
 ```{r journal-table}
 journals_summary <- articles %>%
   dplyr::group_by(journal) %>%
@@ -648,7 +644,6 @@ journals_summary <- articles %>%
   )
     
 ```
-<br>
 
 That table shows the twelve journals I'm using, the year they started publication, and how many articles from each journal I'm analysing. That doesn't include everything the journal published, since I'm only looking at the research articles they published in English. So I'm not looking at book reviews, but also not at editorials, introductions, corrections and the like. Because the text mining algorithms really require a single language, I'm also excluding everything that was published in languages other than English.^[I had no idea how many articles in French, German and Spanish were published in these journals over the years.] But even still, there are a lot of articles to look at, and they include many of the most important works in philosophy over that time period.
 
@@ -1195,7 +1190,6 @@ my_beta <- tidy(my_lda, matrix = "beta")
 
 The big step is the one that calls the LDA command. That builds the topic model. From here on your job is to just do analysis. But just to demonstrate what this finds, here is a quick look at what we found. 
 
-<br>
 ```{r analyse-dummy-lda}
 load("my_lda.RData")
 my_gamma <- tidy(my_lda, matrix = "gamma")
@@ -1211,11 +1205,9 @@ kable(topic_three,
       col.names = "Article",
       caption = "Top articles in topic 3 in example LDA")
 ```
-<br>
 
 These are the 10 articles that our little example LDA gives the highest probability to being in topic 3. What's topic 3? I guess ethics, from the look of those articles. We could check this by seeing which words have the highest probability of turning up in the topic.
 
-<br>
 ```{r analyse-dummy-lda-words}
 load("my_lda.RData")
 my_beta <- tidy(my_lda, matrix = "beta")
@@ -1231,7 +1223,6 @@ kable(topic_three_words,
       caption = "Topic 3 words") %>%
    kable_styling(full_width = F)
 ```
-<br>
 
 And that seems to back up our initial hunch that this is about ethics, or at least about morality. I'm going to stop the illustration here, because to go any further we'd have to do serious analysis on a model that probably doesn't deserve serious attention. But hopefully I've said enough here that anyone who wants to can get started on their own analysis.
 

@@ -34,14 +34,12 @@ In [previous work](http://tar.weatherson.org/2017/04/26/citation-patterns-across
 
 As a reminder, here are the journals that I've included.
 
-<br>
 ```{r journaltablereprise, echo=FALSE, cache=TRUE}
   kable(journals_summary, 
         col.names = c("Journal", "First Year", "Number of Articles"), 
         align=c("l", "c", "c")
   )
 ```
-<br>
 
 As you can see, there are two moral and political journals, _Ethics_ and _Philosophy and Public Affairs_, and two philosophy of science journals, _Philosophy of Science_ and _British Journal for the Philosophy of Science_. I could possibly have got by with just one of each. But I thought _Ethics_ and _P&PA_ brought in different fields of philosophy, and so they were both worth including. And that meant it would be good to balance them with two philosophy of science journals. This had the side benefit that I didn't have to decide which of those two philosophy of science journals was more representative.
 
@@ -306,7 +304,6 @@ The result of all this is a model with two giant probability functions. In this 
 
 The worked example involves David Makinson's article [The Paradox of the Preface](https://philpapers.org/rec/MAKTPO-9). The input to the model looks like this.
 
-<br>
 ```{r preface-words}
 preface_words <- word_list %>%
   filter(document == "10.2307_3326519") %>%
@@ -319,13 +316,11 @@ kable(preface_words,
       digits = c(0, 0)) %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 That is, the word 'rational' appears 14 times, 'beliefs' appear 11 times, and so on. This is a list of all of the words in the article, excluding the various stop words described above, and the words that appear one to three times.
 
 The model gives a probability to the article being in each of 90 topics. For this article, as for most articles, it just gives a residual probability to the vast majority of topics. So for 83 topics, the probability it gives to the article being in that topic is about 0.0003. The seven topics it gives a serious probability to are:
 
-<br>
 ```{r preface-topics}
 preface_topics <- relabeled_gamma %>%
   select(document, topic, gamma) %>%
@@ -340,13 +335,11 @@ kable(preface_topics,
       digits = c(0, 4)) %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 I'm going to spend a lot of time in [the next chapter](#all-90-topics) on what these topics are. For now I'll just refer to them by number.
 
 The model also gives a probability to each word turning up in a paradigm article for each of the topics. So for those nineteen words that the model saw as input, we can look at how frequently the model thinks a word should turn up in each of these 7 topics.
 
-<br>
 ```{r preface-large-table}
 preface_large_table <- relabeled_topics %>%
   select(-date) %>%
@@ -362,11 +355,9 @@ kable(preface_wide_table,
       col.names = c("Word", "Topic 4", "Topic 15", "Topic 37", "Topic 39", "Topic 59", "Topic 76", "Topic 81"), 
       caption = "Word Frequencies for topics in The Paradox of the Preface")
 ```
-<br>
 
 But the model doesn't think that "The Paradox of the Preface" is a paradigm case of any one of these topics; it thinks it is a mix of seven. So we can work out what it thinks the word frequences in that article should be by taking weighted means of these columns, with the weights given by the topic probabilities. And we get the following results.
 
-<br>
 ```{r preface-cross-check}
 overall_sum <- sum(preface_words$wordcount)
 
@@ -385,7 +376,6 @@ kable(preface_check_table,
       digits = c(0, 0, 4, 4),
       caption = "Measured and Modelled Frequencies for The Paradox of the Preface")
 ```
-<br>
 
 The modelled frequency of 'rational' is given by multiplying, across seven topics, the probability of the article being in that topic, by the expected frequency of the word given it is in that topic. And the same goes for the other words. What I'm giving here as the measured frequency of a word is not its frequency in the original article; it is its frequency among the words that survive the various filters I described above. In general that will be two to three times as large as its original frequency.
 

@@ -200,7 +200,6 @@ epistemology_yeargamma_postwar <- epistemology_yeargamma %>%
 
 It divided the `r nrow(epistemology_gamma)` papers up into the following 40 subjects. The subject column is my subjective description of what area the papers there seem to be about. The 'count' column is how many articles are in that subject; i.e., the model gives more probability to them being in that subject than it gives to any other subject. The 'weighted count' is the expected number of articles in that subject; i.e., the sum across all articles of the probability of the article being in that subject. And the 'year' column is the average publication date of the papers that are 'in' the subject. As you can see, I've renumbered the topics so they are arranged by year.
 
-<br>
 ```{r epistemology-subject-table}
 epistemology_subjects <- tribble(
   ~topic, ~subject,
@@ -262,7 +261,6 @@ kable(epistemology_subjects,
       sep = "",
       caption = "Topics in the 40 category epistemology LDA")
 ```
-<br>
 
 There are several weirdnesses here that are worth listing. (I don't think this eliminates the usefulness of the model, but we should be up front about the shortcomings.)
 
@@ -294,7 +292,6 @@ epistemology_yeartopics_postwar$topic = as.numeric(epistemology_yeartopics_postw
 
 The 'missing' data points are:
 
-<br>
 ```{r epistemology-missing-data}
 epistemology_missing <- epistemology_yeartopics_postwar %>%
   filter(tn > 6) %>%
@@ -306,7 +303,6 @@ kable(epistemology_missing,
       caption = "Epistemology topics left off Figure 6.2") %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 These points are not shown, but they are influencing the curves.
 
@@ -331,7 +327,6 @@ epistemology_yeargamma_postwar$topic = as.numeric(epistemology_yeargamma_postwar
 
 In this case there are just two missing data points.
 
-<br>
 ```{r epistemology-gamma-missing-data}
 epistemology_gamma_missing <- epistemology_yeargamma_postwar %>%
   filter(gamsum > 6.02) %>%
@@ -343,7 +338,6 @@ kable(epistemology_gamma_missing,
       caption = "Epistemology articles left off Figure 6.3") %>% 
   kable_styling(full_width = F)
 ```
-<br>
 
 It's much easier to see what's happening here with the subjects separated out. Again, I've left off those two data points so they don't throw off the scale of the whole graph.
 

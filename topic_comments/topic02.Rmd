@@ -77,7 +77,8 @@ idealism_authors <- relabeled_articles %>%
   arrange(-n) %>%
   slice(1:20)
 
-kable(idealism_authors, col.names = c("Author", "Number of Articles"))
+kable(idealism_authors, col.names = c("Author", "Number of Articles")) %>%
+  kable_styling(full_width = F)
 ```
 
 Now let's look at how often these men (and they are all men) are mentioned in the twelve journals over the 138 years under discussion. Note that I'm counting tokens here, so sometimes a name appears tens (or even hundreds) of times in an article. Also note that since there are more journals, and longer journals, in recent years, you'd expect graphs like these to trend upwards. (Later I'll measure word usage as a proportion of all words in a year to account for this, but for now the raw numbers are more informative.)

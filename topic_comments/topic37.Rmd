@@ -35,7 +35,7 @@ You can see from the highly cited articles list that the model also put some art
 Because the topic is so disjunctive, it lends itself reasonably well to a binary sort. So I took the 555 articles the model found, and generated a 2-topic LDA from just those articles. 
 
 ```{r binary-grue}
-load("../binary_lda/lda_37.RData")
+load("binary_lda/lda_37.RData")
 grue_gamma <- tidy(binary_lda, matrix = "gamma") %>%
   left_join(relabeled_articles, by = "document") %>%
   mutate(gamma.z = gamma.x * gamma.y)

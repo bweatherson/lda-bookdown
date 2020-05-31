@@ -277,7 +277,7 @@ articles_by_category <- category_gamma %>%
 cat_check <- function(x, y){
 # First a line break because Kable needs it
 cat("\n\n")
-cat("### ",cat_names$cat_name[x]," - ",cat_names$cat_name[y], " {#catbound", x, y, "} {-}", sep="")
+cat("### ",cat_names$cat_name[x]," - ",cat_names$cat_name[y], " {-#catbound", x, y, "}", sep="")
 cat("\n\n")
   
 # Retrieve the two category LDA
@@ -313,7 +313,9 @@ temp_output <-  temp_article_list %>%
 print(kable(temp_output, 
       col.names = c("Catgeory", "Subject", "Mean Probability"),
       caption = paste("Comparing articles in",cat_names$cat_name[x],"and",cat_names$cat_name[y]),
-      align=c("l", "l", "l")))
+      align=c("l", "l", "l")) %>%
+        kable_styling(full_width = F)
+      )
 }
 ```
 
@@ -369,7 +371,7 @@ Third, this is just a tool. There are going to be cases it gets wrong, and I'll 
 
 Fourth, I didn't just find these categories lying around and used this tool to confirm them. There was a lot of juggling around to get it to a point where most of these automatic classifications worked agreed with my classifications, and the ones that didn't were easy enough to explain. And the nature of LDAs is that any change somewhere creates changes everywhere. So the methodology here involves a fair bit of trial and error. But some of the methodology is clear enough. Look back at that table. If I'd put Frankfurt Cases in Metaphysics, the very same test would tell me to move them into Ethics. So this method doesn't just confirm that a classification gets things broadly right, it can say where a classification is going wrong. To be sure, it's basically an equilibrium method, and it doesn't rule out other equilibria. But it's interesting to have found even one.
 
-Fifth, I'm not applying this to three categories: Idealism, Aesthetics and Philosophy of Religion. Both Aesthetics and Philosophy of Religion really don't have borderline cases. And the technique I'm using doesn't work so well when the categories are of very uneven size. So it is often gives wonky results for those two categories. (It also on occasion gives some of the cleanest splits - but it feels random when it does.) Still, I wasn't worried about those two categories. And Idealism is a special case that I'll come back to at the end of the chapter.
+Fifth, I'm not applying this to three categories: Idealism, Aesthetics and Philosophy of Religion. Both Aesthetics and Philosophy of Religion really don't have borderline cases. And the technique I'm using doesn't work so well when the categories are of very uneven size. So it is often gives wonky results for those two categories. (It also on occasion gives some of the cleanest splits - but it feels random when it does.) Still, I wasn't worried about those two categories. And Idealism is a special case that I'll come back to [at the end of the chapter](#idealismsection).
 
 So I'm looking at 9 categories to check that the boundaries between them are drawn roughly correctly. And that means there are 9 choose 2, i.e., 36, boundaries to look at. These are in subsections, not sections, so they don't show up in the sidebar. So I've included links here to the list of boundaries that I'll survey.
 
@@ -718,20 +720,56 @@ The other is that looking at these boundaries is a pretty interesting perspectiv
 
 In general, thinking about where the sharp boundaries are in a study like this, and about what kind of work would make those boundaries less sharp, is a useful way to think about where more work could be usefully done.
 
-## Idealism
+## Idealism {#idealismsection}
 
-- Idealism (Just dominated everything)
-- Life and Value (I thought S&P, looks like Ethics, and I can see that)
-- Dewey and Pragmatism (I mean some of it is History, and where else?)
-- Definitions (Maybe philosophy of science)
-- History and Culture
-- Universals and Particulars
-- Verification
-- Classical Space and Time
-- Analytic/Synthetic
-- Forgiveness
-- Color (Mention correlations)
-- Intention and Freud (Unless did this in the 100)
-- Decision Theory (Hardest of the lot)
-- Game Theory
-- Wide Content
+So the last thing that needs to be discussed is why I haven't put [Idealism](#topic02) into any of the categories. There are a few different factors that went into this decision, and while none of them are decisive, I think it is ultimately a defensible choice.
+
+The first thing to note is that Idealism could go in any number of the categories. It's a metaphysical view, and I thought about putting it in Metaphysics. But it also involves distinctive takes on Epistemology, and Philosophy of Mind. (Note that one of its distinctive words is 'consciousness'.) And it has connections to Philosophy of Religion (though not always Christian religion), and to Aesthetics. If there are so many things it could sort of go in, it feels arbitrary to put it in any one.
+
+Now for other issues that it felt arbitrary to put in one place rather than another, I used binary sorts to split them into classifiable topics. But that didn't work here. In fact, the binary sort I made for Idealism had the lowest proportion of articles the sort was confident about. I had a quick look at whether there was a 3-way or 4-way sort of these papers into more familiar topics, but that didn't help. So any choice here would be arbitrary.
+
+And it would be an arbitrary choice with huge ramifications for how several of the graphs look. If you redo the graphs with Idealism in one or other category, that category looks like it spent most of the twentieth century in almost terminal decline. There are several small topics that were somewhat arbitrarily classified, but they typically didn't affect the shape of the graphs that much. That's in part because I tried to balance out the close calls. But Idealism is too big for that; it dominates the early decades so much that nothing can make up for it. And recall that the point here is not to get some objectively correct classification of philosophical topics, it's to tell a sensible story about twentieth century philosophy. Saying that Idealism is part of Metaphysics, and the story of 20th century philosophy is the continuing retreat of metaphsyics, is really not a sensible story. And the same would be true anywhere else I put Idealism. The story we get from the graphs is the continuing growth of realism, and that I think is a sensible story.
+
+(As an aside, one aspiration I have for future versions of this book is that it will include a simple app where you can see how the category graphs would look if you made different decisions about where the topics went. You can do that now with some coding skills, but I'd like to be able to make it easy for anyone to draw their own category graphs.)
+
+Finally, Idealism would be a real outlier topic in any category it was in. To check whether this was true, I built binary sorts out if Idealism plus each of the other big categories, and looked at the average probability of being in topic 1 for every topic. In almost every case, Idealism was off on an island.
+
+```{r cat-sort-i2}
+cat_check(5, 2)
+```
+
+```{r cat-sort-i3}
+cat_check(5, 3)
+```
+
+```{r cat-sort-i4}
+cat_check(5, 4)
+```
+
+```{r cat-sort-i6}
+cat_check(5, 6)
+```
+
+```{r cat-sort-i7}
+cat_check(5, 7)
+```
+
+```{r cat-sort-i8}
+cat_check(5, 8)
+```
+
+```{r cat-sort-i9}
+cat_check(5, 9)
+```
+
+```{r cat-sort-i11}
+cat_check(5, 11)
+```
+
+```{r cat-sort-i12}
+cat_check(5, 12)
+```
+
+The only one that isn't clearly ruled out is History of Philosophy. And while there were historical elements to Idealism, they sure did talk about Hegel a lot, it doesn't feel like that's primarily what they were doing.
+
+Ultimately, I'm using the categories here from late 20th century philosophy. And Idealism just doesn't map on to those particularly well. To some extent you can say the same thing for all of the topics that are centered around the first few decades of the study. But it is most striking for Idealism. So I've given it its own category, rather than forcing it into a framework that it doesn't belong in.

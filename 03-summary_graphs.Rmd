@@ -110,13 +110,67 @@ facetgraph(weight_numerator, "Weighted Number of Articles", "Weighted Sum of Art
 
 This is a bit clearer on the relative scale of the different topics over time. There are four notable shapes of graph here.
 
-One is the graph with a high peak, but a rapid rise and fall either side of it. Some of these are predictable, like Verification, or Meaning and Use. Others are more surprising, like Promises and Imperatives. I expected Ordinary Language to be like this, but it isn't. The stylistic changes that were brought about didn't totally stick - the graph does go down a little bit - but they don't totally go away eityher.
+One is the graph with a high peak, but a rapid rise and fall either side of it. Some of these are predictable, like Verification, or Meaning and Use. Others are more surprising, like Promises and Imperatives. I expected Ordinary Language to be like this, but it isn't. The stylistic changes that were brought about didn't totally stick - the graph does go down a little bit - but they don't totally go away either.
 
 A second is the graph with a sudden rise to a new equilibria. There are a few of these in this model, such as Explanations, Population Ethics and Personal Identity. Other models had a much larger number of these graphs, but maybe once we've gone as high as 90 topics they start to get less common.
 
 A third is the graph that just rises and rises as the years go along. That's almost all of the last 15 graphs here.
 
 A fourth, which is almost non-existent, is the graph that is such a mess that you need to fit a curve to it to see any trends. I'll do some graphs with trendlines in a bit, but for now I want to note how little need we have for them. Although the model wasn't told about the age of different articles, and was just trying to classify them as best it could, it mostly came up with totals for each topic per year that were approximately continuous. That's interesting, and tells us something about the way in which debates in journals really do seem to follow trends.
+
+It is also somewhat useful to see the graph animated. This shows all the lines one at a time.
+
+<video width="800" height="800" controls>
+  <source src="wsa.mp4" type="video/mp4">
+</video>
+
+```{r animation1}
+## It didn't work very well to have animations inside the bookdown code
+## The compiling got way too slow
+## So I built the animations separately and hand coded them into the text with HTML
+## Here is the code I used to create the graphs
+## I won't include this for later ones, but it's really just a matter of changing
+## * The first line, for the input
+## * If there is a date filter, adding that
+## * Then change the captions
+# 
+# datainput <- weight_numerator %>%
+#   mutate(topic = as.numeric(topic)) %>%
+#   inner_join(the_categories, by = "topic") %>%
+#   arrange(year, topic) %>%
+#   mutate(topic = as.factor(topic))
+# 
+# subject_order <- slice(datainput, 1:90)$subject
+# 
+# datainput$subject <- factor(datainput$subject, levels = subject_order)
+# 
+# p <- ggplot(datainput, aes(x = year, y = y, color = topic, group = year)) + 
+#   geom_point() +
+#   spaghettistyle +
+#   labs(x = element_blank(), 
+#        y = "Weighted Number of Articles", 
+#        title = "Weighted Sum of Articles in Each Topic Per Year", 
+#        caption = "Hello World") +
+#   scale_x_continuous(minor_breaks = 10 * 188:201,
+#                      expand = expansion(mult = c(0.01, 0.01))) +
+#   scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
+#   theme(plot.caption = element_text(face = "bold",
+#                                     size = 16,
+#                                     hjust = -0.02,
+#                                     margin = margin(t = 10, b = 35)),
+#         plot.title = element_text(margin = margin(t = 35)))
+#   
+# anim <- p +
+#   transition_states(subject)+
+#   shadow_mark(color = "grey85", alpha = 0.2) +
+#   labs(caption = '{closest_state}')
+# 
+# animate(anim,
+#         nframes = 1800,
+#         renderer = av_renderer("wsa.mp4"), # Using anim_save on later line doesn't work with av_renderer() on a mac
+#         width = 800,
+#         height = 800)
+```
 
 ## Graph Choices {#graph-choices}
 
@@ -211,6 +265,12 @@ facetgraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Ea
 
 Note a couple of things about this as compared to the graphs back in section \@ref(main-summary-graph). One is that the y-axis is much higher. The raw count measure tends to amplify trends. Another is that the graphs are much noisier. There are still enough trends that I don't think it would really help to add trend-lines, but there are a lot more graphs that look just like scattered points, especially over ten-twenty year patches. I think this is basically a flaw in the underlying measure being amplified.
 
+The animation makes things a bit clearer here because the original features so many overlapping dots.
+
+<video width="800" height="800" controls>
+  <source src="rsa.mp4" type="video/mp4">
+</video>
+
 ## Weighted Frequency of Articles {#graph-wfa}
 
 ```{r graph3a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Frequency of Articles"}
@@ -223,6 +283,21 @@ There are some dots in the upper-left quadrant, and then a bunch of dots bouncin
 ```{r graph3b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Frequency of Articles (Faceted)"}
 facetgraph(weight_ratio, "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
 ```
+
+You get a slightly more readable graph if you focus just on the last 75 years of the graph, so 1939-2013.
+
+```{r graph3c, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Frequency of Articles"}
+#Burper
+spaghettigraph(filter(weight_ratio, year > 1938), "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
+```
+
+There are too many overlapping dots here to see much, but the animation is a little clearer.
+
+<video width="800" height="800" controls>
+  <source src="wfa.mp4" type="video/mp4">
+</video>
+
+And now you get an animated version of some graphs that you saw a lot in the previous chapter.
 
 ## Raw Frequency of Articles {#graph-rfa}
 
@@ -237,6 +312,22 @@ facetgraph(count_ratio, "Raw Frequency of Articles", "Raw Frequency of Articles 
 ```
 
 All this tells us is that there is a lot more diversity, and a lot more specialisation, in journals in the last 30 years than there was 120 years ago. Everything else gets lost in the noise.
+
+It's only a little clearer if you filter down even to the last 75 years.
+
+```{r graph4c, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Frequency of Articles"}
+spaghettigraph(filter(count_ratio, year > 1938), "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
+```
+
+The animation is a bit more revealing.
+
+<video width="800" height="800" controls>
+  <source src="rfa.mp4" type="video/mp4">
+</video>
+
+But what it reveals is primarily that these raw counts are very unstable. That's because the measure they are built on is subject to severe tipping point effects. Whether an article gets probability 0.26 for being in one category and probability 0.25 for being in another, or the other way around, really just depends on where we stopped the algorithm. (It's bob of the head stuff in horse racing terms.) But it makes all the difference to these raw counts. This is why I've tried, contrary to most work that I've seen that uses topic modeling, to de-emphasise these raw counts in favor of the weighted counts.
+
+The rest of the graphs look at what happens when we focus on pages rather than articles. I'm using articles as the basic unit of measure for everything else in this book, but it's worth spending a little time seeing how things look if you focus on pages instead.
 
 ## Weighted Sum of Pages {#graph-wsp}
 
@@ -265,7 +356,11 @@ And that same effect means that some of the big 21st century topics are now outp
 facetgraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
 ```
 
-The acceleration in thelast fifteen topics is much more pronounced. And Ordinary Language doesn't look like it has a rise and fall any more - it has a rise that it holds on to. Norms looks like it is about to eat everything, and maybe it is.
+The acceleration in thelast fifteen topics is much more pronounced. And Ordinary Language doesn't look like it has a rise and fall any more - it has a rise that it holds on to. Norms looks like it is about to eat everything, and maybe it is. This is even more vivid in the animated version of the graph.
+
+<video width="800" height="800" controls>
+  <source src="wsp.mp4" type="video/mp4">
+</video>
 
 It's worth pausing for a minute about what's driving this. As I showed above, page lengths increased substantially over the last few decades of the data set. That graph is fairly noisy at first, then a sharp dip takes us to a minimum in the early 1960s, and from then it is a steep rise. (One that is not, in my experience, abating any time soon.) But an average covers up a lot of things. For instance, _Noûs_ used to publish absracts of APA presentations as research papers. These were often one page, and could really pull down averages. Here is a slightly more instructive way of looking at the data. The following graph shows various deciles of lengths over time. So the bottom line is the length such that 10% of articles are shorter than (or equal to) its length, the top line is the length such that 90% of articles are short than (or equal to) its lengths, and so on for the in between lines.
 
@@ -304,6 +399,14 @@ facetgraph(page_count_numerator, "Raw Sum of Pages", "Raw Sum of Pages in Each T
 
 Now Ordinary Language philosophy has a boom and bust pattern again. There are a few topics, of which it is the most prominent, where the model sees them never quite going away, but not being the centre of attention once their peak passes. Oddly it also sees this pattern for Wide Content (which I sort of get), and Causation (which I don't). None of these see a fall in the weighted graphs, but they do in the raw graphs. I guess I think the weighted graphs are more aptly reflecting the real trends here.
 
+It's much easier to see the later topics on the animation.
+
+<video width="800" height="800" controls>
+  <source src="rsp.mp4" type="video/mp4">
+</video>
+
+One interesting thing that is visible here (and also in the facet graph), is that [Norms](#topic90) doesn't really explode at the end as it does on the weighted graph. This is related to something I'll return to in the last chapter of the book; that topic is picking up a little on changes in linguistic fashion in the literature.
+
 ## Weighted Frequency of Pages {#graph-wfp}
 
 Again, the frequency graphs are dominated by the topics popular with _Mind_ in its early years.
@@ -318,6 +421,12 @@ There is Psychology, then Idealism dominates, then there is Ordinary Language ph
 facetgraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
 ```
 
+And it's a bit clearer still if we restrict to the last 75 years and animate it, but still not particularly useful.
+
+<video width="800" height="800" controls>
+  <source src="wfp.mp4" type="video/mp4">
+</video>
+
 These graphs aren't particularly informative, but we'll end with some graphs that may if anything be less informative.
 
 ## Raw Frequency of Pages {#graph-rfp}
@@ -326,8 +435,14 @@ These graphs aren't particularly informative, but we'll end with some graphs tha
 spaghettigraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
 ```
 
-As always, moving from the weighted count to the raw count just exacerbates the trends. Let's end with looking at the individual topics, though there are a lot of low lines here.
+As always, moving from the weighted count to the raw count just exacerbates the trends. Here are the individual topics; there are a lot of low lines here.
 
 ```{r graph8b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Frequency of Pages (Faceted)"}
 facetgraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
 ```
+
+And we'll end with the animated version, again restricted to the last 75 years.
+
+<video width="800" height="800" controls>
+  <source src="rfp.mp4" type="video/mp4">
+</video>

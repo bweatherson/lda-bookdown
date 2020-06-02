@@ -807,7 +807,9 @@ If you want to go directly to the code for the chapter you're in, the eye icon i
 
 ## Replication Instructions {-}
 
-If you want to do a version of this study for yourself, here's a quick guide as to how to get started. I'm going to download the text for issues of _Journal of Philosophy_ in the 1970s, and build a small (10 topic) model on them. I'm going to assume basic familiarity with R, and especially with **tidyverse**. If you don't have that basic familiarity, a good getting started guide is Jenny Bryan's https://stat545.com, especially chapters 1, 2, 5, 6, 7, 14 and 15. OK, I assume you've done that, and we're ready to do some basic text mining.
+One of the aims of this book is to encourage others to use similar tools to produce better books and papers. This book has lots of flaws, some of which come from me not knowing as much as I did when I started the project as I do now, and some of which are just my limitations. I'm sure others can do better. So I've tried throughout to be as clear as possible about my methodology, so as to provide an entry point for anyone who wants to set out on a similar project.
+
+This section contains step by step instructions for how to build a small scale model of the kind I'm using. The next chapter discusses the many choice points on the way from small scale models like this to the large scale model I use in the book, but it's helpful to have a small example to start with. I'm going to download the text for issues of _Journal of Philosophy_ in the 1970s, and build a small (10 topic) model on them. These instructions assume basic familiarity with R, and especially with **tidyverse**. If you don't have that basic familiarity, a good getting started guide is Jenny Bryan's https://stat545.com, especially chapters 1, 2, 5, 6, 7, 14 and 15. OK, I assume you've done that, and we're ready to do some basic text mining.
 
 Go to https://jstor.org/dfr, and set up a free account.
 

@@ -30,13 +30,13 @@ This topic is mid-century philosophy of language, especially influenced by Wittg
 
 For example, those high points in the graph for pre-war _Analysis_ are largely driven by a few exchanges. One of those is between Margaret MacDonald, A. M. MacIver on how to understand the type/token distinction. The exchange includes at least the following. (I think this is complete, though I may have missed some.)
 
-- [Language and Reference, by Margaret MacDonald](https://academic-oup-com./analysis/article/4/2-3/33/175389), Analysis, 4 (2/3): 33–41 (1936).
-- [Token, Type and Meaning, by A. M. MacIver](https://philpapers.org/rec/MACTTA-2), Analysis 4 (4):58 - 64 (1936).
-- [Reply to Mr. MacIver, by Margaret MacDonald](https://philpapers.org/rec/MACRTM-4) Analysis 4 (5):77 - 80 (1937).
-- [Rejoinder to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACRTM-3), Analysis 4 (6):81 - 88 (1937).
-- [Further Reply to Mr. MacIver, by Margaret MacDonald](https://philpapers.org/rec/MACFRT-2), Analysis 5 (1):12 - 16 (1937).
-- [Last Words to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACLWT), Analysis 5 (2):28 - 31 (1937).
-- [Erratum: Last Words to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACELW),  Analysis 5 (3/4):64 (1938).
+- [Language and Reference, by Margaret MacDonald](https://academic-oup-com./analysis/article/4/2-3/33/175389), Analysis, 4 (2/3): 33–41 [-@macdonald1936a].
+- [Token, Type and Meaning, by A. M. MacIver](https://philpapers.org/rec/MACTTA-2), Analysis 4 (4):58 - 64 [-@maciver1936a].
+- [Reply to Mr. MacIver, by Margaret MacDonald](https://philpapers.org/rec/MACRTM-4) Analysis 4 (5):77 - 80 [-@macdonald1937a].
+- [Rejoinder to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACRTM-3), Analysis 4 (6):81 - 88 [-@maciver1937a].
+- [Further Reply to Mr. MacIver, by Margaret MacDonald](https://philpapers.org/rec/MACFRT-2), Analysis 5 (1):12 - 16 [-@macdonald1937b].
+- [Last Words to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACLWT), Analysis 5 (2):28 - 31 [-@maciver1937b].
+- [Erratum: Last Words to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACELW),  Analysis 5 (3/4):64 [-@maciver1938a].
 
 On the one hand, I'm on MacIver's side of the philosophical dispute here. On the other hand, you could put his articles in a museum as an exemplar of mansplaining. So it's an interesting exchange.
 

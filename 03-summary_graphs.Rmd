@@ -1,8 +1,8 @@
 # Summary Graphs {#summary-graphs}
 
-In the previous [chapter](includelinkhere) I discussed the 90 topics one at a time. The aim of this chapter is to find some way to graph them all at once. The short version of the chapter is that it's an impossible task, and there is too much data to really show all of the trends on one graph. The longer version is that there are a few graphs that are flawed in different ways, and between them they might help give some sense to what the trends where in the philosophy journals over this time.
+In the previous [chapter](#all-90-topics) I discussed the 90 topics one at a time. The aim of this chapter is to find some way to graph them all at once. The short version of the chapter is that it's an impossible task, and there is too much data to really show all of the trends on one graph. The longer version is that there are a few graphs that are flawed in different ways, and between them they might help give some sense to what the trends where in the philosophy journals over this time.
 
-In the first [section](#main-summary-graph) I'll present the (pair of) graphs that do the best job of showing what the trends were. In the second [section](includelinkhere) I'll go over the three binary choices that we have in thinking about how to present the data, leading to eight possible graphs. One of these is the one presented in the first section, but there are cases to be made for each of the other 7 as well. So in the remaining sections, I'll go over each of those seven possible graphs.
+In the first [section](#main-summary-graph) I'll present the (pair of) graphs that do the best job of showing what the trends were. In the second [section](#graph-choices) I'll go over the three binary choices that we have in thinking about how to present the data, leading to eight possible graphs. One of these is the one presented in the first section, but there are cases to be made for each of the other 7 as well. So in the remaining sections, I'll go over each of those seven possible graphs.
 
 <!-- Weight vs Raw -->
 <!-- Sum vs Frequency -->
@@ -205,8 +205,8 @@ Given the variation in the number of articles and pages being published each yea
 
 There are a few ways around this, and the proportion based measures make so much sense that I'll use most of the following tricks somewhere in the book.
 
-- We can present the different topics on different charts, and hope that a combination of labelling the axes carefully and putting reminders about the axis labels in the text will make the differences apparent. I did that in the previous [chapter](#include-link).
-- We can separate out the journals, so prominent modern topics are a reasonable percentage of a particular journal. I did that in the previous [chapter](#include-link) too.
+- We can present the different topics on different charts, and hope that a combination of labelling the axes carefully and putting reminders about the axis labels in the text will make the differences apparent. I did that in the previous [chapter](#all-90-topics).
+- We can separate out the journals, so prominent modern topics are a reasonable percentage of a particular journal. I did that in the previous [chapter](#all-90-topics) too.
 - We can leave off the early years of the data set, so the outliers go away. That works, but it literally involves removing data, and by the time we're done, the quantity of articles and pages has stabilised enough that it's less important to normalise.
 - We can literally leave off some data points, setting the limit to the y-axis below where outlier points are, and just list the outlier points in the text. For the purposes of these eight graphs there are too many points for that to be feasible, but I will use this trick from time to time later in the book.
 

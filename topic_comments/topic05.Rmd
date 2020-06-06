@@ -201,8 +201,8 @@ facet_labels <- t %>%
 
 ggplot(t, aes(x = year, y = n, color = journal, group = journal)) +
   facetstyle +
-  geom_point(size = 0.3) +
-  geom_smooth(size = 0.1, method = "loess", formula = "y ~ x", se = F) +
+  geom_point(size = 0.4) +
+  geom_smooth(size = 0.2, method = "loess", formula = "y ~ x", se = F) +
   facet_wrap(~word, ncol = 3) +
   theme(legend.position = "bottom",
         legend.title = element_blank(),
@@ -224,8 +224,8 @@ tt <- t %>%
 
 ggplot(tt, aes(x = year, y = nn, color = journal)) + 
   spaghettistyle +
-  geom_point(size = 0.3) +
-  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  geom_point(size = 0.4) +
+  geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
   labs(x = "Year", y = "Word Count", title = "Philosophy of Mind Words") +
   theme(legend.position = "right",
         legend.title = element_blank(),
@@ -260,8 +260,8 @@ ggplot(t %>%
          filter(journal != "Journal of Philosophy"), 
        aes(x = year, y = n, color = journal, group = journal)) +
   facetstyle +
-  geom_point(size = 0.3) +
-  geom_smooth(size = 0.1, method = "loess", formula = "y ~ x", se = F) +
+  geom_point(size = 0.4) +
+  geom_smooth(size = 0.2, method = "loess", formula = "y ~ x", se = F) +
   facet_wrap(~word, ncol = 3) +
   theme(legend.position = "bottom",
         legend.title = element_blank(),
@@ -287,8 +287,8 @@ tt <- t %>%
 
 ggplot(tt, aes(x = year, y = nn, color = journal)) + 
   spaghettistyle +
-  geom_point(size = 0.3) +
-  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  geom_point(size = 0.4) +
+  geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
   labs(x = "Year", y = "Word Count", title = "Speculative Philosophy Words") +
   theme(legend.position = "right",
         legend.title = element_blank(),
@@ -310,8 +310,8 @@ facet_labels <- t %>%
 ggplot(t, 
        aes(x = year, y = n, color = journal, group = journal)) +
   facetstyle +
-  geom_point(size = 0.3) +
-  geom_smooth(size = 0.1, method = "loess", formula = "y ~ x", se = F) +
+  geom_point(size = 0.4) +
+  geom_smooth(size = 0.2, method = "loess", formula = "y ~ x", se = F) +
   facet_wrap(~word, ncol = 3) +
   theme(legend.position = "bottom",
         legend.title = element_blank(),
@@ -335,8 +335,8 @@ tt <- t %>%
 
 ggplot(tt, aes(x = year, y = nn, color = journal)) + 
   spaghettistyle +
-  geom_point(size = 0.3) +
-  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  geom_point(size = 0.4) +
+  geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
   labs(x = "Year", y = "Word Count", title = "Political Philosophy Words") +
   theme(legend.position = "right",
         legend.title = element_blank(),
@@ -357,8 +357,8 @@ tt <- mid_words %>%
 
 ggplot(tt, aes(x = year, y = nn, color = journal)) + 
   spaghettistyle +
-  geom_point(size = 0.3) +
-  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  geom_point(size = 0.4) +
+  geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
   labs(x = "Year", y = "Word Count", title = "How Philosophical Review Changed") +
   theme(legend.position = "right",
         legend.title = element_blank(),
@@ -408,8 +408,8 @@ facet_labels <- t %>%
 ggplot(t, 
        aes(x = year, y = n, color = journal, group = journal)) +
   facetstyle +
-  geom_point(size = 0.3) +
-  geom_smooth(size = 0.1, method = "loess", formula = "y ~ x", se = F) +
+  geom_point(size = 0.4) +
+  geom_smooth(size = 0.2, method = "loess", formula = "y ~ x", se = F) +
   facet_wrap(~word, ncol = 3) +
   theme(legend.position = "bottom",
         legend.title = element_blank(),
@@ -432,8 +432,8 @@ tt <- t %>%
 
 ggplot(tt, aes(x = year, y = nn, color = journal)) + 
   spaghettistyle +
-  geom_point(size = 0.3) +
-  geom_smooth(size = 0.1, se = F, method = "loess", formula = "y ~ x") +
+  geom_point(size = 0.4) +
+  geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
   labs(x = "Year", y = "Word Count", title = "Early Modern Words") +
   theme(legend.position = "right",
         legend.title = element_blank(),

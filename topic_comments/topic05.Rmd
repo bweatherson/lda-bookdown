@@ -208,7 +208,7 @@ ggplot(t, aes(x = year, y = n, color = journal, group = journal)) +
         legend.title = element_blank(),
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
-  labs(x = "Year", y = "Occurrences of word") +
+  labs(x = element_blank(), y = "Occurrences of word") +
   geom_text(data = facet_labels,
             mapping = aes(label = word),
             vjust = "outward", 
@@ -226,12 +226,12 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
   spaghettistyle +
   geom_point(size = 0.4) +
   geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
-  labs(x = "Year", y = "Word Count", title = "Philosophy of Mind Words") +
+  labs(x = element_blank(), y = "Word Count", title = "Philosophy of Mind Words") +
   theme(legend.position = "right",
         legend.title = element_blank(),
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
-  labs(x = "Year", y = "Occurrences of words")
+  labs(x = element_blank(), y = "Occurrences of words")
 ```
 
 There are three things happening here, which combine to form the distinctive graph at the end.
@@ -269,7 +269,7 @@ ggplot(t %>%
   scale_x_continuous(breaks = c(1950)) +
   scale_y_continuous(breaks = c(100, 200)) +
   coord_cartesian(ylim = c(0, 130)) +
-  labs(x = "Year", y = "Occurrences of word") +
+  labs(x = element_blank(), y = "Occurrences of word") +
   geom_text(data = facet_labels,
             mapping = aes(label = word),
             vjust = "inward", 
@@ -289,12 +289,12 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
   spaghettistyle +
   geom_point(size = 0.4) +
   geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
-  labs(x = "Year", y = "Word Count", title = "Speculative Philosophy Words") +
+  labs(x = element_blank(), y = "Word Count", title = "Speculative Philosophy Words") +
   theme(legend.position = "right",
         legend.title = element_blank(),
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
-  labs(x = "Year", y = "Occurrences of words")
+  labs(x = element_blank(), y = "Occurrences of words")
 ```
 
 Again, there is a falling off after 1949, but it's not completely sudden. Finally, we'll look at the Political Philosophy words.
@@ -319,7 +319,7 @@ ggplot(t,
   scale_x_continuous(breaks = c(1950)) +
   scale_y_continuous(breaks = c(100, 200)) +
   coord_cartesian(ylim = c(0, 130)) +
-  labs(x = "Year", y = "Occurrences of word") +
+  labs(x = element_blank(), y = "Occurrences of word") +
   geom_text(data = facet_labels,
             mapping = aes(label = word),
             vjust = "inward", 
@@ -337,12 +337,12 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
   spaghettistyle +
   geom_point(size = 0.4) +
   geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
-  labs(x = "Year", y = "Word Count", title = "Political Philosophy Words") +
+  labs(x = element_blank(), y = "Word Count", title = "Political Philosophy Words") +
   theme(legend.position = "right",
         legend.title = element_blank(),
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
-  labs(x = "Year", y = "Occurrences of words")
+  labs(x = element_blank(), y = "Occurrences of words")
 ```
 
 Again, we see a fairly big drop, though here it seems like the break comes in 1952. And note from the word-by-word graph that it's the parts that seem most like political philosophy in the current sense that hold up for the longest. _Philosophical Review_ in the 1950s talked about democracy a bit, but it didn't talk about culture.
@@ -359,12 +359,12 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
   spaghettistyle +
   geom_point(size = 0.4) +
   geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
-  labs(x = "Year", y = "Word Count", title = "How Philosophical Review Changed") +
+  labs(x = element_blank(), y = "Word Count", title = "How Philosophical Review Changed") +
   theme(legend.position = "right",
         legend.title = element_blank(),
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
-  labs(x = "Year", y = "Occurrences of words")
+  labs(x = element_blank(), y = "Occurrences of words")
 ```
 
 And you'd have to say that by that measure, the 1950s at Philosophical Review do look quite different to the 1940s. This difference is why, I think, most models I looked at had at least one topic that disappeared from _Philosophical Review_ right around 1950. For whatever reason this model didn't have such a topic, this topic on Dewey is the closest, but I wanted to show you why this was a common occurrence.
@@ -416,7 +416,7 @@ ggplot(t,
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
   scale_y_continuous(breaks = c(100, 200)) +
-  labs(x = "Year", y = "Occurrences of word") +
+  labs(x = element_blank(), y = "Occurrences of word") +
   geom_text(data = facet_labels,
             mapping = aes(label = word),
             vjust = "inward", 
@@ -434,12 +434,12 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
   spaghettistyle +
   geom_point(size = 0.4) +
   geom_smooth(size = 0.2, se = F, method = "loess", formula = "y ~ x") +
-  labs(x = "Year", y = "Word Count", title = "Early Modern Words") +
+  labs(x = element_blank(), y = "Word Count", title = "Early Modern Words") +
   theme(legend.position = "right",
         legend.title = element_blank(),
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
-  labs(x = "Year", y = "Occurrences of words")
+  labs(x = element_blank(), y = "Occurrences of words")
 ```
 
 In case you were wondering whether this kind of crude counting could detect a change in journal policy, I think you have the answer right there. It's a bit interesting that we see a fall at the Journal and the Review as well, but that's a story for [another topic](#Topic21).

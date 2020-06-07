@@ -131,7 +131,7 @@ So did the model get it right? Should it be uncertain about these articles? Let'
 individual_article(all_uncertainty$document[1])
 ```
 
-For reasons best known to them, the editors of the _Philosophical Review_ commissioned a [critical notice](https://philpapers.org/rec/DONTEO) of the 8 volume Encyclopedia of Philosophy. You could call it a book review I guess, but it's 56 pages long, so it feels like it should be in our study.
+For reasons best known to them, the editors of the _Philosophical Review_ commissioned a [critical notice](https://philpapers.org/rec/DONTEO) [@Donagan1970] of the 8 volume Encyclopedia of Philosophy. You could call it a book review I guess, but it's 56 pages long, so it feels like it should be in our study.
 
 And I'm fairly happy that this was the article the model had the greatest trouble with. How could you classify a critical notice of an encyclopedia. What topic could it not be in? The answer seems to be the very late topics - there is no [Wide Content](#topic82) or [Quantum Physics](#topic66) there - and the very early topics. I'm actually a little surprised that [Idealism](#topic02) doesn't turn up.
 
@@ -141,7 +141,7 @@ So far so good - the model threw up its hands exactly when it should have done s
 individual_article(all_uncertainty$document[2])
 ```
 
-And this is a bit more depressing. [Garfield's article](https://philpapers.org/rec/GARTMO-2) is wide-ranging, covering a number of big questions at the heart of philosophy of mind and epistemology. But still, it isn't that hard to say what it's about broadly. And to be sure, the model does recognise that this isn't a philosophy of physics article, or a political philosophy article, or an ancient philosophy article. But still, you'd think it should do better than this.
+And this is a bit more depressing. [Garfield's article](https://philpapers.org/rec/GARTMO-2) [@Garfield1989] is wide-ranging, covering a number of big questions at the heart of philosophy of mind and epistemology. But still, it isn't that hard to say what it's about broadly. And to be sure, the model does recognise that this isn't a philosophy of physics article, or a political philosophy article, or an ancient philosophy article. But still, you'd think it should do better than this.
 
 What's happened, in a picturesque sense, is this. The articles are arranged in a feature space. The feature space has many, many dimensions, and the articles do form clusters within it. What the model does is pick ninety points in that space, such that as many articles as possible are reasonably close to one of the points. Now some articles, like the Donagan, are going to be so idiosyncratic that they aren't near a point. But the Garfield isn't like that. The model could have decided that Sellarsian theories of mind/epistemology are a focal point. It just didn't do that. Instead these ended up falling between many many different points.
 
@@ -151,7 +151,7 @@ I think it isn't a coincidence that there is another article by Wilfred Sellars 
 individual_article(all_uncertainty$document[10])
 ```
 
-In [this paper](https://philpapers.org/rec/SELACT), Sellars is operating at a fairly high degree of abstraction, and considering the ways in which the big philosophical views (idealism, pragmatism, realism, etc) have characteristic theories of truth, and offering a correspondence theory that isn't so closely tied to general forms of realism. And you can see why the paper looks, to the model, like it could be about all sorts of things. I'm still a bit surprised that the model didn't just lump it in with other works on truth. It doesn't mention the paradoxes, and has no formalism, and maybe that was enough. But it's surprising.
+In [this paper](https://philpapers.org/rec/SELACT) [@Sellars1941], Sellars is operating at a fairly high degree of abstraction, and considering the ways in which the big philosophical views (idealism, pragmatism, realism, etc) have characteristic theories of truth, and offering a correspondence theory that isn't so closely tied to general forms of realism. And you can see why the paper looks, to the model, like it could be about all sorts of things. I'm still a bit surprised that the model didn't just lump it in with other works on truth. It doesn't mention the paradoxes, and has no formalism, and maybe that was enough. But it's surprising.
 
 Anyway, I'm pleased that the article it was most uncertain about was a really impossible to place article, disappointed that it couldn't do a better job with Sellarsian philosophy, and not surprised that it also threw up its hands at various methodology articles. It's not a perfect model, but it did fairly well.
 
@@ -457,7 +457,7 @@ ggplot(length_deciles, aes(x = year, y = length, color = decile)) +
   geom_smooth(se = F, method = "loess", formula = 'y ~ x', size = 0.1) +
   freqstyle +
   theme(legend.title = element_blank()) +
-  labs(x = "Year", y = "Number of Pages", title = "The Articles are Getting Longer (Again)")
+  labs(x = element_blank(), y = "Number of Pages", title = "The Articles are Getting Longer (Again)")
 ```
 
 For each year, I've sorted the articles by length, then plotted the lengths of the articles at five decile markers. So the red curve is the length of the article that is 10% of the way up the length table, the olive line is the article that is 30% of the way up the length chart, the green line is the length of the median article (by length) and so on. 
@@ -485,7 +485,7 @@ year_normality <- weight_ratio %>%
 ggplot(year_normality, aes(x = year, y = normality)) + 
   geom_point(size = 0.5) +
   freqstyle +
-  labs(x = "Year", y = "Normality (i.e., inverse informativeness)", title = "Everything happened in the 1980s")
+  labs(x = element_blank(), y = "Normality (i.e., inverse informativeness)", title = "Everything happened in the 1980s")
 ```
 
 I don't know quite what I expected this to look like, but it wasn't *that*. The distribution gets flatter and flatter, at an accelerating rate, until about 1982, when it turns around and gets more informative in a hurry.
@@ -508,7 +508,7 @@ ggplot(bump_tibble, aes(x = year, y = y, color = name, group = name)) +
   geom_smooth(se = F, method = "loess", size = 0.2, formula = 'y ~ x') +
   scale_color_discrete(labels = c("Lowest", "Third Lowest", "Fifth Lowest")) +
   theme(legend.title = element_blank()) +
-  labs(x = "Year", y = "Average Topic Probability", title = "No one stayed home in the 1980s")
+  labs(x = element_blank(), y = "Average Topic Probability", title = "No one stayed home in the 1980s")
 ```
 
 And we see something very similar to the previous graph. Around the early 1980s, every topic is getting at least some attention from the model. But that changes the further you get away from 1980.

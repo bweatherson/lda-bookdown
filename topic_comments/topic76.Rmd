@@ -49,7 +49,7 @@ ggplot(t, aes(x = year, y = y, color=subject, group=subject)) +
           legend.spacing.x = unit(0.2, 'pt'),
           legend.text = element_text(size = rel(1))) +
     geom_point(size = 1, alpha = 1) +
-    labs(x = "Year", y = "Proportion of all journal articles", title = "Epistemology Topics") +
+    labs(x = element_blank(), y = "Proportion of all journal articles", title = "Epistemology Topics") +
     scale_x_continuous(minor_breaks = 10 * 188:201,
                        expand = expansion(mult = c(0.01, 0.01))) +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +

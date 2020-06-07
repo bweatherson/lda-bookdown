@@ -142,7 +142,7 @@ grue_years <- grue_years %>%
 ggplot(grue_years, aes(x = year, y = g, group = topic.x, color = topic.x)) + 
   spaghettistyle +
   geom_point() + 
-  labs(x = "Year", y = "Weighted Proportion of Articles", title = "Articles in Each Sub-Topic") +
+  labs(x = element_blank(), y = "Weighted Proportion of Articles", title = "Articles in Each Sub-Topic") +
   theme(legend.title = element_blank(),
         legend.position = "right") +
   scale_color_discrete(labels = c("Grue", "Sets"))

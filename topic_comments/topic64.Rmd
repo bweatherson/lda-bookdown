@@ -36,7 +36,7 @@ ggplot(frb, mapping = aes(x = year, y = y, color = topic)) +
   spaghettistyle +
   geom_point(alpha = 0.5) + 
   geom_smooth(se = F, size = 0.5, method = "loess", formula = "y ~ x") +
-  labs(x = "Year", y = "Weighted Proportion of Articles", title = "Three Classic Topics") +
+  labs(x = element_blank(), y = "Weighted Proportion of Articles", title = "Three Classic Topics") +
   scale_color_discrete(name = "Topics", labels = c("Denoting", "Sense and Reference", "Belief Ascriptions"))
 ```
 

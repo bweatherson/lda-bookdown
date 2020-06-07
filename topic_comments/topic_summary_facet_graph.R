@@ -25,7 +25,7 @@ indiv_journal_graphs <- ggplot(data = filter(journalgamma_frequency, topic == jj
 #  coord_cartesian(ylim=c(0, yupper), expand = TRUE) +
   scale_y_continuous(breaks = mybreaks,
                      minor_breaks = 0.01 * 1:30) +
-  labs(x = "Year", y = "Weighted Proportion of Articles", title = the_categories$subject[jjj]) +
+  labs(x = element_blank(), y = "Weighted Proportion of Articles", title = the_categories$subject[jjj]) +
   geom_point(size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) + 
   facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names)) +
   geom_text(data = facet_labels,

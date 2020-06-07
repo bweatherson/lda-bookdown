@@ -448,7 +448,7 @@ ggplot(t, aes(x = year, y = f, color = term, group = term)) +
                      breaks = scales::breaks_pretty(n = 3),
                      labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
   #  scale_y_continuous(labels = scale_inverter) +
-  labs(x = "Year", y = "Word Frequency") +
+  labs(x = element_blank(), y = "Word Frequency") +
   theme(legend.title = element_blank())
 }
 ```
@@ -724,7 +724,7 @@ ggplot(tt,
             hjust = "inward",
             fontface = "bold", 
             size = 3) +
-  labs(x = "Year", y = "Proportion of Articles", title = "Trends in Philosophical Categories") +
+  labs(x = element_blank(), y = "Proportion of Articles", title = "Trends in Philosophical Categories") +
   geom_point(size = 0.15) + 
   facet_wrap(~category, ncol=3) +  
   scale_x_continuous(expand = expansion(mult = c(0.05, 0.05)),
@@ -784,7 +784,9 @@ Once I had the data in R, I analysed it using the **topicmodels** [package](http
 
 The idea for analysing this data using topicmodels to analyse the data in this way comes from [What Is This Thing Called Philosophy of Science? A Computational Topic-Modeling Perspective, 1934–2015](https://doi.org/10.1086/704372), by Christophe Malaterre, Jean-François Chartier, and Davide Pulizzotto.
 
-As well as those sources, I learned a lot about how to use **topicmodels** from [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com) by Julia Silge and David Robinson, and from some articles in Towards Data Science, including those by [Shashank Kapadia](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0) and by [Farren tang](https://towardsdatascience.com/beginners-guide-to-lda-topic-modeling-with-r-e57a5a8e7a25). [@Kapadia2019; @tang2019]
+As well as those sources, I learned a lot about how to use **topicmodels** from [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com) by Julia Silge and David Robinson, and from some articles in Towards Data Science, including those by [Shashank Kapadia](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0) and by [Farren tang](https://towardsdatascience.com/beginners-guide-to-lda-topic-modeling-with-r-e57a5a8e7a25). [@Kapadia2019; @tang2019].
+
+The citation data I use here are from [Google Scholar](http://scholar.google.com), and I accessed them via [Publish or Perish](https://harzing.com/resources/publish-or-perish) [@Harzing2007]. Happily, a Mac version of Publish or Perish came out just last year; in the past I had set up PC emulators just so I could run it.
 
 Most of the graphics in this book are based on things I learned from Kieran Healy, either from his book [Data Visualization: A Practical Introduction](https://kieranhealy.org/publications/dataviz/) [@Healy2019] or from his [blog](https://kieranhealy.org/blog/).
 

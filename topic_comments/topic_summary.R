@@ -70,7 +70,7 @@ indiv_journal_graphs <- ggplot(data = filter(journalgamma_frequency, topic == jj
   geom_point(size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
   coord_cartesian(ylim=c(0, yupper), expand = TRUE) +
-  labs(x = "Year", y = "Weighted Proportion of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
+  labs(x = element_blank(), y = "Weighted Proportion of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
   facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names))
 print(indiv_journal_graphs)
 
@@ -79,7 +79,7 @@ indiv_topic_graphs <- ggplot(data = filter(weight_ratio, topic == jjj), aes(x = 
   theme(legend.position="none") +
   coord_cartesian(ylim=c(0, max(filter(weight_ratio, topic == jjj)$f, 0.05, na.rm=TRUE)), expand = TRUE) +
   #      coord_cartesian(ylim=c(0, 0.25), expand = TRUE) +
-  labs(x = "Year", y = "Weighted Proportion of Articles", title = paste0("Articles from topic ",jjj))
+  labs(x = element_blank(), y = "Weighted Proportion of Articles", title = paste0("Articles from topic ",jjj))
 print(indiv_topic_graphs)
 
 cat(" \n \n")

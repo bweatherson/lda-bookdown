@@ -39,7 +39,7 @@ Especially compared to its neighbours in debates about time, this one has a very
     theme(legend.title = element_blank(), legend.position = "right") +
     geom_point(size = 1, alpha = .5) +
     geom_smooth(se = F, method = "loess", size = .5, formula = "y ~ x") +
-    labs(x = "Year", y = "Weighted Frequency of Articles")
+    labs(x = element_blank(), y = "Weighted Frequency of Articles")
 ```
 
 The two early topics gradually fall, though maybe they have both reached a steady state. Relativistic space and time rises through around 1980, though it too might have obtained an equilibrium. But this topic, the metaphysics of time(s) stays at a very steady level around 1% year after year.

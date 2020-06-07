@@ -43,7 +43,7 @@ You don't see a Ryle-driven drop in this topic after World War II. I don't think
     theme(legend.title = element_blank(), legend.position = "right") +
     geom_point(size = 1, alpha = .5) +
     geom_smooth(se = F, method = "loess", size = .5, formula = "y ~ x") +
-    labs(x = "Year", y = "Weighted Frequency of Articles")
+    labs(x = element_blank(), y = "Weighted Frequency of Articles")
 ```
 
 You can see from this graph of the four early modern topics that Hume is the only one that really rises. The generic early modern topic maybe edges up a bit from the start to 1920, but there is a lot of noise. And social contract theory has a Rawls inspired arrest of its fall. But otherwise the other three are either steady or falling, while Hume sees a mild rise.

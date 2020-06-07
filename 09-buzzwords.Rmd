@@ -581,7 +581,7 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = g))  +
   scale_y_continuous(breaks = c(1, 2, 3, 4)) +
   geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", y = "Weighted Number of Articles", title = "The Bad Topic") +
+  labs(x = element_blank(), y = "Weighted Number of Articles", title = "The Bad Topic") +
   facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names)) +
     geom_text(data = facet_labels,
             mapping = aes(label = short_name),
@@ -610,7 +610,7 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = y))  +
   scale_y_continuous(breaks = 0.03 * 1:3) +
   geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", y = "Average Probability", title = "The Bad Topic") +
+  labs(x = element_blank(), y = "Average Probability", title = "The Bad Topic") +
   facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names)) +
       geom_text(data = facet_labels,
             mapping = aes(label = short_name),

@@ -121,7 +121,7 @@ ggplot(idealist_data, aes(x = year, y = count)) +
   geom_point(size = 0.15, color = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   facetstyle +
   facet_wrap(~word, ncol = 3, scales = "free") +
-  labs(x = "Year", y = "Word Count", title = "Idealists in the Journals") +
+  labs(x = element_blank(), y = "Word Count", title = "Idealists in the Journals") +
   geom_text(data = ttttt,
             mapping = aes(label = name),
             vjust = "inward", 

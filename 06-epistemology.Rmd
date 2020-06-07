@@ -88,7 +88,7 @@ Now I don't mean to say it's small. There is a plausible case that it is (or at 
 
 Within these 12 journals, the literature on the Gettier Problem is round about 100 articles. That's a third of a percent of all the articles in those journals. And given the importance of the question it addresses, _What is Knowledge?_, a third of a percent seems fine to me. I think it's a widespread view in philosophy that the Gettier Problem literature was much bigger than it should have been. And I think that's false; a third of a percent is a perfectly reasonable proportion of the available journal space.
 
-To analyse the epistemology literature, it would help to know what the epistemology articles are. Since I've already said that I'm treating 55.1 - Arguments, 74 - Knowledge, 76- Justification, and 84 - Formal Epistemology, as the epistemology topics, you might think the thing to do would be to just take articles from those topics. But this doesn't work for a couple of reasons. In theory, which topic has the highest probability isn't that significant. Whether an article's highest probability is in one of the epistemology topics depends on just how the model carves up the space of non-epistemology topics, and that seems wrong. In practice, this method declares that [Is Knowledge Justified True Belief?](https://philpapers.org/rec/GETIJT-4) is not an epistemology article, and that isn't something we can live with.
+To analyse the epistemology literature, it would help to know what the epistemology articles are. Since I've already said that I'm treating 55.1 - Arguments, 74 - Knowledge, 76- Justification, and 84 - Formal Epistemology, as the epistemology topics, you might think the thing to do would be to just take articles from those topics. But this doesn't work for a couple of reasons. In theory, which topic has the highest probability isn't that significant. Whether an article's highest probability is in one of the epistemology topics depends on just how the model carves up the space of non-epistemology topics, and that seems wrong. In practice, this method declares that [Is Knowledge Justified True Belief?](https://philpapers.org/rec/GETIJT-4) [@Gettier1963] is not an epistemology article, and that isn't something we can live with.
 
 A better approach is to sum the probabilities that the model gives to an article being in one of the four epistemology topics, call that its epistemology probability, and then say that an article is an epistemology article if its epistemology probability is above a threshold. But where should the threshold go? Since I want to convince you that the Gettier Problem literature isn't that big, I want to have a very inclusive definition of epistemology, so I capture all the articles in that literature. So that militates in favour of a low threshold.
 
@@ -143,7 +143,7 @@ ggplot(data = epistemology_yearcount, aes(x = year, y = n)) +
   epistemologystyle +
   geom_point(size = 0.5) +
   theme(legend.position="none") +
-  labs(x = "Year", y = "Number of Articles", title = "Epistemology Articles") +
+  labs(x = element_blank(), y = "Number of Articles", title = "Epistemology Articles") +
   coord_cartesian(ylim = c(0, 75))
 
 epistemology_prewar <- nrow(filter(epistemology_yearcount, year < 1946))
@@ -283,7 +283,7 @@ ggplot(epistemology_yeartopics_postwar %>% drop_na(), aes(x = year, y = tn, colo
   geom_point(size = 0.5, alpha = 0.5) + 
   epistemologystyle +
   coord_cartesian(ylim=c(0,6))+
-  labs(x = "Year", y = "Number of Articles") +
+  labs(x = element_blank(), y = "Number of Articles") +
   scale_colour_discrete(labels = epistemology_subjects$subject) + 
   theme(legend.title = element_blank(), legend.position = "bottom")
 epistemology_yeartopics_postwar$topic = as.numeric(epistemology_yeartopics_postwar$topic)
@@ -319,7 +319,7 @@ ggplot(epistemology_yeargamma_postwar, aes(x = year, y = gamsum, color=topic, gr
   epistemologystyle +
 #  geom_smooth(se = F, method = "loess", size  = 0.3, alpha = 0.3) +
   coord_cartesian(ylim=c(0,6.02)) + 
-  labs(x = "Year", y = "Number of Articles") +
+  labs(x = element_blank(), y = "Number of Articles") +
   scale_colour_discrete(labels = epistemology_subjects$subject) + 
   theme(legend.title = element_blank(), legend.position = "bottom")
 epistemology_yeargamma_postwar$topic = as.numeric(epistemology_yeargamma_postwar$topic)
@@ -381,7 +381,7 @@ ggplot(epistemology_yeargamma_postwar, aes(x = year, y = gamsum, color=topic, gr
         panel.grid.major = element_line(color = "grey88", size = 0.05),
         panel.grid.minor = element_line(color = "grey88", size = 0.05)) +
   coord_cartesian(ylim=c(0,7.5)) +
-  labs(x = "Year", y = "Number of Articles")
+  labs(x = element_blank(), y = "Number of Articles")
 
 epistemology_yeargamma_postwar$topic = as.numeric(epistemology_yeargamma_postwar$topic)
 ```
@@ -409,7 +409,7 @@ epistemology_categories <- epistemology_wide %>%
 ggplot(epistemology_categories, aes(x = year, y = y, color = category)) + 
   geom_smooth(se = F, size = 0.2, method = "loess", formula = 'y ~ x') +  
   epistemologystyle +
-  labs(x = "Year", y = "Number of Articles") +
+  labs(x = element_blank(), y = "Number of Articles") +
   geom_point(size = 0.5, alpha = 0.5) + 
   theme(legend.title = element_blank(), legend.position = "right")
 ```
@@ -450,7 +450,7 @@ ggplot(data = filter(epistemology_yeartopics_postwar, topic == jjj),
               method = "loess",
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", 
+  labs(x = element_blank(), 
        y = "Raw Number of Articles",
        title = paste0("Raw Number of Articles in topic ",jjj, " - ", cate_nam)) 
 ```
@@ -488,7 +488,7 @@ ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
               method = "loess",
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", 
+  labs(x = element_blank(), 
        y = "Weighted Number of Articles",
        title = paste0("Weighted Number of Articles in topic ",jjj, " - ", cate_nam)) 
 ```
@@ -526,7 +526,7 @@ ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", 
+  labs(x = element_blank(), 
        y = "Weighted Number of Articles",
        title = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam))
 
@@ -565,7 +565,7 @@ ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
               method = "loess",
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", 
+  labs(x = element_blank(), 
        y = "Weighted Number of Articles",
        title = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam))
 ```
@@ -634,7 +634,7 @@ print(
               method = "loess",
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", 
+  labs(x = element_blank(), 
        y = "Raw Number of Articles",
        title = paste0("Raw Number of Articles in topic ",jjj, " - ", cate_nam))
 )
@@ -665,7 +665,7 @@ print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
               method = "loess",
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", 
+  labs(x = element_blank(), 
        y = "Weighted Number of Articles",
        title = paste0("Weighted Number of Articles in topic ",jjj, " - ", cate_nam)))
   
@@ -695,7 +695,7 @@ print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
               method = "loess",
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", 
+  labs(x = element_blank(), 
        y = "Weighted Number of Articles",
        title = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam)))
   
@@ -725,7 +725,7 @@ print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
               method = "loess",
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = "Year", 
+  labs(x = element_blank(), 
        y = "Weighted Number of Articles",
        title = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam)))
   

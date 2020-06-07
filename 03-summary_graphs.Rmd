@@ -27,7 +27,7 @@ spaghettigraph <- function(datainput, ylabel, titlelabel){
           legend.key.height = unit(6, 'pt'),
           legend.spacing.x = unit(0.2, 'pt')) +
     geom_point(size = 0.5, alpha = 0.5) +
-    labs(x = "Year", y = ylabel, title = titlelabel) +
+    labs(x = element_blank(), y = ylabel, title = titlelabel) +
     scale_x_continuous(minor_breaks = 10 * 188:201,
                        expand = expansion(mult = c(0.01, 0.01))) +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)))
@@ -79,7 +79,7 @@ facetgraph <- function(datainput, ylabel, titlelabel){
   # Add the style that I generated back in the index
       facetstyle +
   # Notate everything
-      labs(x = "Year", y = ylabel, title = titlelabel) +
+      labs(x = element_blank(), y = ylabel, title = titlelabel) +
     # Fix check marks
       scale_y_continuous(expand = expansion(mult = c(0.01, .02)),
             minor_breaks = scales::breaks_pretty(n = 12),
@@ -347,7 +347,7 @@ page_average <- inner_join(page_demonimator, article_demonimator, by = "year") %
 ggplot(page_average, aes(x = year, y = y)) + 
   spaghettistyle +
   geom_point(size = 0.5, colour = hcl(h = 15, l = 65, c = 100)) + 
-  labs(x = "Year", y = "Average Number of Pages in Articles", title = "Average Article Length")
+  labs(x = element_blank(), y = "Average Number of Pages in Articles", title = "Average Article Length")
 ```
 
 And that same effect means that some of the big 21st century topics are now outpacing Ordinary Language philosophy. I'll come back to this article length increase in a bit, but first let's see what this graph looks like with every topic having its own facet.
@@ -378,7 +378,7 @@ ggplot(length_deciles, aes(x = year, y = length, color = decile)) +
   geom_point(size = 0.5, alpha = 0.2) +
   geom_smooth(se = F, method = "loess", size = 0.2) +
   theme(legend.title = element_blank(), legend.position = "bottom") +
-  labs(x = "Year", y = "Number of Pages", title = "Distribution of Article Lengths")
+  labs(x = element_blank(), y = "Number of Pages", title = "Distribution of Article Lengths")
 ```
 
 Some of this could be explained by having a bunch of one page notes, but not all of it. For much of the 1950s and 1960s, fewer than 10% of papers were over 20 pages. Now 20 pages is the median article length, in a universe of journals that includes _Analysis_. For that to be explained by having a bunch of very short articles, the olive line (at 30%) would have to be hugging the bottom of the graph, and clearly it isn't. 

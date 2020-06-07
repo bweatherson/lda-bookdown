@@ -59,7 +59,7 @@ category_count <- category_gamma %>%
   complete(year, category, fill = list(n= 0))
 
 category_count_graph <- ggplot(category_count, aes(x = year, y = n, color=category, group=category)) +
-    labs(x = "Year", y = "Number of Articles") +
+    labs(x = element_blank(), y = "Number of Articles") +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
 #                     minor_breaks = scales::breaks_pretty(n = 15),
                       minor_breaks = 10 * 1:20,
@@ -112,7 +112,7 @@ category_frequency <- inner_join(category_year, year_denominator, by = "year") %
 
 ```{r category-weight-graph,  fig.cap = "Weighted number of articles in each of the twelve categories over time"}
 category_weight_graph <- ggplot(category_year, aes(x = year, y = y, color=category, group=category)) +
-    labs(x = "Year", y = "Number of Articles") +
+    labs(x = element_blank(), y = "Number of Articles") +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
 #                     minor_breaks = scales::breaks_pretty(n = 15),
                       minor_breaks = 10 * 1:20,
@@ -147,7 +147,7 @@ The big challenge here is seeing which rises are due to a category getting more 
 ```{r category-frequency-graph, fig.cap = "Proportion of articles in each Category each year"}
 category_frequency_graph <- ggplot(filter(category_frequency, year > 1899), 
                                    aes(x = year, y = f, color=category, group=category)) +
-    labs(x = "Year", y = "Proportion of Articles") +
+    labs(x = element_blank(), y = "Proportion of Articles") +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
 #                     minor_breaks = scales::breaks_pretty(n = 15),
                       minor_breaks = 0.025 * 1:20,
@@ -204,7 +204,7 @@ ggplot(tt,
             hjust = "inward",
             fontface = "bold", 
             size = 3) +
-  labs(x = "Year", y = "Proportion of Articles", title = "Proportion of Articles in Each Category Per Year") +
+  labs(x = element_blank(), y = "Proportion of Articles", title = "Proportion of Articles in Each Category Per Year") +
   geom_point(size = 0.15) + 
   facet_wrap(~category, ncol=3) +  
   scale_x_continuous(expand = expansion(mult = c(0.05, 0.05))) +
@@ -291,7 +291,7 @@ ggplot(data = filter(category_by_journal, category == cate), aes(x = year, y = f
       theme(legend.position="none",
           panel.grid.major.x = element_blank(),
           panel.grid.minor.x = element_blank()) +
-      labs(x = "Year", y = "Weighted Proportion of Articles") +
+      labs(x = element_blank(), y = "Weighted Proportion of Articles") +
       facet_wrap(~journal, ncol = 3) +
     geom_text(data = facet_labels,
             mapping = aes(label = short_name),
@@ -326,7 +326,7 @@ print(
           panel.grid.minor = element_line(color = "grey90", size = 0.03),
           panel.grid.major.x = element_blank(),
           panel.grid.minor.x = element_blank()) +
-    labs(x = "Year", y = "Weighted Proportion of Articles") +
+    labs(x = element_blank(), y = "Weighted Proportion of Articles") +
     facet_wrap(~topic, ncol = 3) +
     scale_y_continuous(breaks = c(0.02, 0.04),
                        minor_breaks = 0.005 * 1:11,
@@ -362,7 +362,6 @@ Let's look at how this is broken up into individual topics. I'm going to do a gr
 Both restrictions are motivated by the problems that affected the frequency graphs in the previous chapter. (What I'm doing here is a topic-by-topic version of the [Weighted Frequency of Articles]({#graph-wfa}) graph.) There isn't enough diversity in the early years, so some topics can be 10, 20, even 30% of the total. And there isn't a good way to represent those numbers on a graph while also making the differences between 1% and 3% (which is what we care most about here) particularly visible. So I'll just list separately the problematic data points.
 
 ```{r ethics-topics, fig.height=10.2, fig.cap = "Topics in Ethics"}
-# Burp
 cgt("Ethics", 3)
 ```
 
@@ -459,7 +458,7 @@ m_and_i_graph <- ggplot(data = m_and_i_table, aes(x = year, y = f)) +
       geom_point(size = 0.5, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
       theme(legend.position="none") +
       ylim(0, 0.4) +
-      labs(x = "Year", y = "Weighted Proportion of Articles")
+      labs(x = element_blank(), y = "Weighted Proportion of Articles")
   
 m_and_i_graph
 ```
@@ -476,7 +475,7 @@ m_and_i_count_graph <- ggplot(data = m_and_i_count_table, aes(x = year, y = f)) 
       spaghettistyle +
       geom_point(size = 0.5, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
       theme(legend.position="none") +
-      labs(x = "Year", y = "Weighted Number of Articles")
+      labs(x = element_blank(), y = "Weighted Number of Articles")
   
 m_and_i_count_graph
 ```

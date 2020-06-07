@@ -70,7 +70,7 @@ pas_word_journal_frequency_graphs <- function(x){
                      breaks = scales::breaks_pretty(n = 3),
                      labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
 #  scale_y_continuous(labels = scale_inverter) +
-  labs(x = "Year", y = "Word Frequency") +
+  labs(x = element_blank(), y = "Word Frequency") +
   theme(legend.title = element_blank())
 }
 
@@ -90,7 +90,7 @@ pos_word_journal_frequency_graphs <- function(x){
                      breaks = scales::breaks_pretty(n = 3),
                      labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
 #  scale_y_continuous(labels = scale_inverter) +
-  labs(x = "Year", y = "Word Frequency") +
+  labs(x = element_blank(), y = "Word Frequency") +
   theme(legend.title = element_blank())
 }
 

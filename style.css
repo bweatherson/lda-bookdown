@@ -68,15 +68,20 @@ pre code {
 }
 
 .author {
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  line-height: 1;
+  font-family: 'Playfair Display';
+  color: #3fb5bd;
+  margin-top: 30px !important;
+  font-size: 1.75em !important;
+  font-weight: bold;
+  text-align: right;
 }
 
 .date {
   font-family: 'Playfair Display', serif;
   margin-bottom: -60px;
-  line-height: 1;
+  margin-top: -20px !important;
+  line-height: 1.5;
+  text-align: right;
 }
 
 

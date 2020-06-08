@@ -2,7 +2,7 @@
 title: "A History of Philosophy Journals"
 subtitle: "Volume 1: Evidence from Topic Modeling, 1876-2013"
 author: "Brian Weatherson"
-date: "Marshall M. Weinberg Professor of Philosophy, University of Michigan, Ann Arbor"
+date: "Marshall M. Weinberg Professor of Philosophy <br> University of Michigan, Ann Arbor"
 documentclass: book
 link-citations: yes
 site: bookdown::bookdown_site

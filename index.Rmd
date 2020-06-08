@@ -772,6 +772,28 @@ The second part looks at what happens if instead of making a 90-way division int
 
 The third part looks at further applications of the model. The first six chapters had used years as the main unit of temporal measurement. In Chapter \@ref(eraschapter) I use more coarse-grained measures. First I look at the trends over five 'eras' in philosophy, and then over twelve decades. One benefit of doing things this way is that as well as looking at what the model says, I can look at trends in the underlying data directly, and see how well the model is tracking reality. In Chapter \@ref(outliers) I look at outliers along various dimensions, both to see where extreme events have been happening, and to put some stress on the model. If it's most outlandish claims are true, and I think several of them are, then we should have more confidence in its more mundane claims. And in Chapter \@ref(lookingoutward) I try to look beyond the model. I use the model to compare the early years of the journals with some famous books that were published around the same time. Then I look at how articles in Philosophers' Imprint in 2019 compare to what we saw before 2013. (The big story is the resurgence of interest in historical figures outside the standard canon.) And finally I look at something that almost blew up the project: the very distinctive vocabulary of 21st Century Philosophy.
 
+## Website Instructions {-}
+
+This book isn't meant to be read cover to cover; it's meant to be picked through like the proverbial box of chocolates. To make this easier, there is a full table of contents on the sidebar. If you click on any of the chapter headings, it take you to that chapter, and expand to list all the sections in that chapter. Then you can go directly to the section.
+
+The sidebar is also scrollable separately from the rest of the text. If you put the mouse in the sidebar and scroll, it will move the sidebar not the main text. This is particularly important in chapter 2, where there are more sections than will fit on most screens.
+
+But the sidebar takes up quite a bit of real estate, especially on a tablet. So if you want to hide it, either hit 's', or click the <i class="fa fa-align-justify"></i> button in the top left. If the sidebar is hidden, doing either of those things will restore it. If you're reading on a phone, the sidebar should be hidden by default.
+
+Next to <i class="fa fa-align-justify"></i>, the <i class="fa fa-search"></i> icon brings up a search box for searching the book. Though note that this only searches the text of the book; it doesn't search the various tables. Clicking 'f' also brings up, or hides if it is already present, the search box.
+
+The <i class="fa fa-font"></i> icon lets you adjust the appearance of the book. You can set the background to white (by default), sepia or dark. Unfortunately, this doesn't change the appearance of the graphs, which will be white no matter what you pick. So I don't love how it looks with different colors, but the option is there. You can also change the font so the body of the book is in the serif font that's used in the titles. And you can increase or decrease the font size.
+
+The <i class="fa fa-eye"></i> icon takes you to the GitHub source for the page you're reading. Except in chapter 2, the source documents are split by chapter not section. So if you click on it right now, it will take you to the source file for the whole introductory chapter. But you should still be able to find the part you are looking for reasonably quickly.
+
+The <i class="fa fa-info"></i> icon provides some basic information about keyboard shortcuts you can use in the book.
+
+The <i class="fa fa-twitter"></i> icon takes you to Twitter with a pre-generated tweet about how wonderful this book is. It isn't working on all browsers yet - it seems rather buggy with Safari - but hopefully that will be fixed soon.
+
+If you use any other social network, the <i class="fa fa-share-alt"></i> icon pulls up a list of other social networks you can share information about the book on. I don't suspect I'll end up with a lot of shares on LinkedIn or Weibo, but just in case that's the social media you most use, it's there.
+
+You can move forward or back between sections using the left and right arrow keys. This is especially useful in long sections where the arrows on the screen might not be immediately visible.
+
 ## Acknowledgements {-}
 
 This book relies on resources that a lot of people have made available, usually for free.

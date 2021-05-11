@@ -10,12 +10,7 @@ Note that I'm not including here papers that are merely mentioned from the twelv
 
 # Chapter 2
 
-```{r dropna-from-journalgamma}
-journalgamma_frequency_dropna <- journalgamma_frequency %>% 
-  drop_na()
-```
-
-```{r append-a}
+```{r append-two-loop}
 require(scales)
 for (jjj in 1:90){
   cat_subject <- the_categories$subject[jjj]
@@ -35,26 +30,21 @@ for (jjj in 1:90){
       temp, 
       align = c('c', 'c'), 
       label = paste0("appendyearfre",jjj),
-      caption = paste("Frequency of", cat_subject, "in each year's journals.")) %>% 
-      kable_styling(full_width = FALSE)
-  )
-  
-  cat("\n\n")
-  cat("**Topic Prevalence in Each Journal by Year** \n \n")
-  
-  temp <- filter(journalgamma_frequency_dropna, topic == jjj) %>%
-    arrange(journal, year) %>%
-    select(Year = year, Journal = journal, gamfre) %>%
-    mutate(Frequency = percent(gamfre, accuracy = 0.1)) %>%
-    select(Year, Journal, Frequency)
-
-  print(
-    kable(
-      temp,
-      align = c('c', 'c', 'c'),
-      label = paste0("appendjournalyearfre",jjj),
-      caption = paste("Frequency of", cat_subject, "in each year journal in each year.")) %>% 
-      kable_styling(full_width = FALSE)
+      caption = paste("Frequency of", cat_subject, "in each year's journals.")) 
   )
 }
 ```
+
+# Chapter 3
+
+# Chapter 4
+
+# Chapter 5
+
+# Chapter 6
+
+# Chapter 7
+
+# Chapter 8
+
+# Chapter 9

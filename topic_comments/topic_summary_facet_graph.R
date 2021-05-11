@@ -50,20 +50,26 @@ temp_by_journal <- temp %>%
   group_by(journal) %>% 
   summarise(m = mean(gamfre))
 
+temp_by_journal_summary <- ""
+
+for (k in 1:nrow(temp_by_journal)){
+  temp_by_journal_summary <- paste0(
+    temp_by_journal_summary,
+    temp_by_journal$journal[k],
+    " - ",
+    percent(temp_by_journal$m[k], accuracy = 0.1),
+    ". "
+  )
+}
+
 alt_text_journals <- paste0(
   "A set of twelve scatterplots showing the proportion of articles in each journal in each year that are in the topic ",
   the_categories$subject[jjj],
   ". There is one scatterplot for each of the twelve journals that are the focus of this book.",
   " In each scatterplot, the x-axis is the year, and the y-axis is the proportion of articles in that year in that journal in this topic.",
-  " This topic appears most frequently in ",
-  slice_max(temp_by_journal, m, n = 1)$journal,
-  " where it makes up, on average, ",
-  percent(slice_max(temp_by_journal, m, n = 1)$m, accuracy = 0.1),
-  " of the articles. And it appears least frequently in ",
-  slice_min(temp_by_journal, m, n = 1)$journal,
-  " where it makes up, on average, ",
-  percent(slice_min(temp_by_journal, m, n = 1)$m, accuracy = 0.1),
-  " of the articles. It reaches its zenith in year ",
+  " Here are the average values for each of the twelve scatterplots - these tell you on average how much of the journal is dedicated to this topic. ",
+  temp_by_journal_summary,
+  "The topic reaches its zenith in year ",
   slice_max(temp_by_year, m, n = 1)$year,
   " when it makes up, on average across the journals, ",
   percent(slice_max(temp_by_year, m, n = 1)$m, accuracy = 0.1),
@@ -71,7 +77,5 @@ alt_text_journals <- paste0(
   slice_min(temp_by_year, m, n = 1)$year,
   " when it makes up, on average across the journals, ",
   percent(slice_min(temp_by_year, m, n = 1)$m, accuracy = 0.1),
-  " of the articles. The full table that provides the data for this graph is available in Table B.",
-  2 * jjj,
-  " in Appendix B.",
+  " of the articles."
 )

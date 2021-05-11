@@ -1,3 +1,60 @@
 # References {-}
 
 Note that I'm not including here papers that are merely mentioned from the twelve journals, or from the other sources that were mined in chapter 9. But I am including papers where I drew on their content (beyond just their word distribution) in preparing this book.
+
+<div id="refs"></div>
+
+# (APPENDIX) Data Tables {-} 
+
+# Intro and Chapter 1
+
+# Chapter 2
+
+```{r dropna-from-journalgamma}
+journalgamma_frequency_dropna <- journalgamma_frequency %>% 
+  drop_na()
+```
+
+```{r append-a}
+require(scales)
+for (jjj in 1:90){
+  cat_subject <- the_categories$subject[jjj]
+
+  cat(" \n")
+  cat("### ", cat_subject, " {-#a",jjj,"}\n\n", sep="")
+  cat("**Topic Prevalence by Year** \n \n")
+  
+  temp <- filter(weight_ratio, topic == jjj) %>% 
+    arrange(year) %>% 
+    select(Year = year, y) %>% 
+    mutate(Frequency = percent(y, accuracy = 0.1)) %>% 
+    select(Year, Frequency)
+  
+  print(
+    kable(
+      temp, 
+      align = c('c', 'c'), 
+      label = paste0("appendyearfre",jjj),
+      caption = paste("Frequency of", cat_subject, "in each year's journals.")) %>% 
+      kable_styling(full_width = FALSE)
+  )
+  
+  cat("\n\n")
+  cat("**Topic Prevalence in Each Journal by Year** \n \n")
+  
+  temp <- filter(journalgamma_frequency_dropna, topic == jjj) %>%
+    arrange(journal, year) %>%
+    select(Year = year, Journal = journal, gamfre) %>%
+    mutate(Frequency = percent(gamfre, accuracy = 0.1)) %>%
+    select(Year, Journal, Frequency)
+
+  print(
+    kable(
+      temp,
+      align = c('c', 'c', 'c'),
+      label = paste0("appendjournalyearfre",jjj),
+      caption = paste("Frequency of", cat_subject, "in each year journal in each year.")) %>% 
+      kable_styling(full_width = FALSE)
+  )
+}
+```

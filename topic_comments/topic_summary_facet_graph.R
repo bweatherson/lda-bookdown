@@ -71,8 +71,7 @@ alt_text_journals <- paste0(
   slice_min(temp_by_year, m, n = 1)$year,
   " when it makes up, on average across the journals, ",
   percent(slice_min(temp_by_year, m, n = 1)$m, accuracy = 0.1),
-  " of the articles. The full table that provides the data for these graphs is available in Appendix A.",
-  jjj,
-  " - ",
-  the_categories$subject[jjj] 
+  " of the articles. The full table that provides the data for this graph is available in Table B.",
+  2 * jjj,
+  " in Appendix B.",
 )

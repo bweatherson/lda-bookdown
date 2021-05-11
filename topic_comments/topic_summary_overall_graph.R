@@ -31,8 +31,7 @@ alt_text = paste0(
   min_year$year[1],
   " when ",
   percent(min_year$y[1], accuracy = 0.1),
-  " of articles were in this topic. The full table that provides the data for this graph is available in Appendix A.",
-  jjj,
-  " - ",
-  the_categories$subject[jjj]
+  " of articles were in this topic. The full table that provides the data for this graph is available in Table B.",
+  2 * jjj - 1,
+  " in Appendix B.",
 )

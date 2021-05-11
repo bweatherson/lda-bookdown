@@ -12,7 +12,9 @@ require(dplyr)
 # Add every journal that you're using here as an extra line
 journals <- tribble(
   ~code, ~fullname,
-  "jphil", "Journal of Philosophy",
+  "revmeta", "Review of Metaphysics",
+  "synthese", "Synthese",
+  "erk", "Erkenntnis"
 )
 
 all_metadata <- tibble()

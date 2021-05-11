@@ -28,3 +28,18 @@ my_gamma <- tidy(my_lda, matrix = "gamma")
 
 # Now extract probability of each word in each topic
 my_beta <- tidy(my_lda, matrix = "beta")
+
+
+## Alternately - what follows is applying the existing LDA to new data
+nj_lda <- posterior(refinedlda, my_dtm)
+nj_gamma<- as_tibble(nj_lda$topics, rownames = NA) %>%
+  rownames_to_column(var = "document") %>%
+  pivot_longer(-document) %>%
+  select(document, topic = name, gamma = value) %>%
+  mutate(topic = as.integer(topic)) %>%
+  inner_join(year_topic_mean, by = "topic") %>%
+  select(document, topic = rank, gamma) %>%
+  arrange(document, -gamma)
+
+nj_main <- inner_join(nj_gamma, my_articles, by = "document") %>%
+  select(citation, journal, year, topic, gamma)

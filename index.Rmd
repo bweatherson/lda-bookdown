@@ -8,6 +8,7 @@ link-citations: yes
 site: bookdown::bookdown_site
 description: Building models of the trends in philosophy journals using LDA.
 bibliography: topic.bib
+always_allow_html: true
 ---
 
 # Introduction {-}
@@ -17,7 +18,7 @@ knitr::opts_chunk$set(dpi=288)
 knitr::opts_chunk$set(echo=FALSE)
 knitr::opts_chunk$set(cache=TRUE)
 knitr::opts_chunk$set(message=FALSE)
-knitr::opts_chunk$set(warning=TRUE)
+knitr::opts_chunk$set(warning=FALSE)
 knitr::opts_chunk$set(fig.height = 8.2)
 knitr::opts_chunk$set(fig.width = 7.5)
 knitr::opts_chunk$set(results='asis')
@@ -27,8 +28,14 @@ require(topicmodels)
 require(knitr)
 require(kableExtra)
 require(corrr)
-library(ggplot2); theme_set(theme_light())
+require(svglite)
+library(ggplot2); theme_set(theme_minimal())
 require(DT)
+#library(webshot)
+#install_phantomjs()
+library(extrafont)
+#loadfonts()
+options(dplyr.summarise.inform = FALSE)
 ```
 
 ```{r loader}
@@ -378,8 +385,9 @@ kable(relabeled_articles %>%
          inner_join(the_categories, by = "topic") %>%
           select(year, citation, subject, gamma),           
           col.names = c("Year", "Article", "Subject", "Probability"), 
-          caption = paste0("Articles with Author ",y), style = "font-weight: bold")
-} 
+#          caption = paste0("Articles with Author ",y), style = "font-weight: bold")
+          caption = paste0("Articles with Author ",y))
+  } 
 ```
 
 ```{r words-by-year}
@@ -490,7 +498,7 @@ imprint_top_gamma <- imprint_gamma %>%
 ```{r load-bad-lda}
 # The LDA I use for the buzzwords section right at the end
 # Everything goes wrong when this is cached and doesn't load
-load("~/Dropbox/journals-lda/t90t100.RData")
+load("t90t100.RData")
 ```
 
 ```{r setup-bad-lda}
@@ -659,7 +667,7 @@ An LDA model takes the distribution of words in articles and comes up with a pro
 ```{r initial-graph-style, cache = FALSE}
 facetstyle <-   theme_minimal() +
   theme(text = element_text(family="Lato"),
-        plot.title = element_text(size = rel(1), 
+        plot.title = element_text(size = rel(1),
                                   family = "Lato",
                                   face = "bold",
                                   margin = margin(0, 0, 10, 0)),
@@ -710,7 +718,7 @@ update_geom_defaults("label", list(family = "Lato"))
 
 ```
 
-```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year"}
+```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year", dev = 'png'}
 tt <- filter(category_frequency, year > 1899) # Remove 19th Century from graph
 category_graph_labels <- tt %>%
   group_by(category) %>%
@@ -768,7 +776,7 @@ The book has nine chapters, and it loosely divides into three parts, with three 
 
 The first part concerns the 90 topics that the model divides the articles into. Chapter \@ref(methodology-chapter) is about how and why I made the choices I did in providing the inputs to the model. Chapter \@ref(all-90-topics) goes through each of these 90 topics one at a time. As well as producing some automated statistics and graphs for each topic, and listing which articles are in each topic, I make some small comments about the topic. These are mostly about the content of the topic and its place in philosophical history, though I also spend a lot of time talking about how the model made its division into topics. Most of the comments here are short, though occasionally I decide that one topic needs 2500 words or more. Chapter \@ref(summary-graphs) is about my attempts to make a legible graph of all 90 topics through time. I run through a lot of different representations of the data; most of them are failures, but some of them are more interesting failures than others.
 
-The second part looks at what happens if instead of making a 90-way division into somewhat novel topics, we try a 12 way division into familiar topics. So I divide the articles up into common contemporary categories, like Epistemology, Ethics, Metaphysics and Philosophy of Science, and look at the trends in these categories. Chapter \@ref(categorychapter) goes over the trends in the 12 categories. Chapter \@ref(sortingchapter) goes over how I made these divisions, with a special focus on where the categories do, and do not, run into each other. And Chapter \@ref(epistemologychapter) looks at one of these categories: Epistemology. This is in part for self-interested reasons; it's the field I work in. But it's in part because the data about Epistemology were so surprising. Epistemology, as it is currently practiced, is basically invisible in the journals before World War II. And the most famous part of contemporary Epistemology, the Gettier problem, plays a surprisingly small role in recent years.
+The second part looks at what happens if instead of making a 90-way division into somewhat novel topics, we try a 12 way division into familiar topics. So I divide the articles up into common contemporary categories, like Epistemology, Ethics, Metaphysics, and Philosophy of Science, and look at the trends in these categories. Chapter \@ref(categorychapter) goes over the trends in the 12 categories. Chapter \@ref(sortingchapter) goes over how I made these divisions, with a special focus on where the categories do, and do not, run into each other. And Chapter \@ref(epistemologychapter) looks at one of these categories: Epistemology. This is in part for self-interested reasons; it's the field I work in. But it's in part because the data about Epistemology were so surprising. Epistemology, as it is currently practiced, is basically invisible in the journals before World War II. And the most famous part of contemporary Epistemology, the Gettier problem, plays a surprisingly small role in recent years.
 
 The third part looks at further applications of the model. The first six chapters had used years as the main unit of temporal measurement. In Chapter \@ref(eraschapter), I use more coarse-grained measures. First I look at the trends over five 'eras' in philosophy, and then over twelve decades. One benefit of doing things this way is that as well as looking at what the model says, I can look at trends in the underlying data directly, and see how well the model is tracking reality. In Chapter \@ref(outliers), I look at outliers along various dimensions, both to see where extreme events have been happening, and to put some stress on the model. If its most outlandish claims are true, and I think several of them are, then we should have more confidence in its more mundane claims. And in Chapter \@ref(lookingoutward), I try to look beyond the model. I use the model to compare the early years of the journals with some famous books that were published around the same time. Then I look at how articles in Philosophers' Imprint in 2019 compare to what we saw before 2013. (The big story is the resurgence of interest in historical figures outside the standard canon.) And finally I look at something that almost blew up the project: the very distinctive vocabulary of 21st Century Philosophy.
 
@@ -804,7 +812,7 @@ I initially transformed the JSTOR Data into something that could be read in R vi
 
 Once I had the data in R, I analysed it using the **topicmodels** [package](https://cran.r-project.org/web/packages/topicmodels/index.html) by Bettina Grün and Kurt Hornik.
 
-The idea for analysing this data using topicmodels to analyse the data in this way comes from [What Is This Thing Called Philosophy of Science? A Computational Topic-Modeling Perspective, 1934–2015](https://doi.org/10.1086/704372), by Christophe Malaterre, Jean-François Chartier, and Davide Pulizzotto.
+The idea for analysing this data using topicmodels to analyse the data in this way comes from [What Is This Thing Called Philosophy of Science? A Computational Topic-Modeling Perspective, 1934–2015](https://doi.org/10.1086/704372), by Christophe Malaterre, Jean-François Chartier, and Davide Pulizzotto [@Malaterre2019].
 
 As well as those sources, I learned a lot about how to use **topicmodels** from [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com) by Julia Silge and David Robinson, and from some articles in Towards Data Science, including those by [Shashank Kapadia](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0) and by [Farren tang](https://towardsdatascience.com/beginners-guide-to-lda-topic-modeling-with-r-e57a5a8e7a25). [@Kapadia2019; @tang2019].
 
@@ -863,7 +871,7 @@ We want to put these somewhat memorable. I'll put the first in ```data/ngram/jph
 There is a hitch here that I should be able to figure out in R, but I couldn't. As things come out, I ended up with names that didn't have spaces in them. So the author of [Should We Respond to Evil with Indifference](https://philpapers.org/rec/WEASWR) was 'BrianWeatherson', not 'Brian Weatherson'. There was probably a way to fix this at the importing stage, but doing so required more understanding of XML files than I have. So instead I came up with a hack. In each journal directory under inside ```metadata```, go to the terminal and run this command.
 
 ```
-find . -name '*.xml' -print0 | xargs -0 sed -i "" "s/<surname>/<surname> /g
+find . -name '*.xml' -print0 | xargs -0 sed -i "" "s/<surname>/<surname> /g"
 ```
 
 This adds a space before each surname. So in the surname field, that article goes from having the value "Weatherson" to having the value “ Weatherson”. And now it can be concatenated with "Brian" to produce a reasonable looking name. It's not elegant, but it works.

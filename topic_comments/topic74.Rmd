@@ -22,7 +22,8 @@ source('topic_comments/topic_summary_high_cites.R') # Generate table of highly c
  # Have to do this at same time as previous script or a weird caching error occurs.
 if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
-	**Comments**
+
+**Comments**
 	\n")
 ```
 
@@ -40,7 +41,7 @@ He wrote [The Philosophy of Mahatma Ghandi](https://www.amazon.com/Philosophy-Ma
 
 He also wrote [The Six Ways of Knowing: A Critical Study of the Vedānta Theory of Knowing](https://archive.org/details/TheSixWaysOfKnowing1960D.M.Datta/mode/2up) [@Datta1960], which overlaps with this paper. Indeed, on page 337 of the second edition of that book, he refers to "Testimony as a Method of Knowing" as his article. (Thanks to Michael Bench-Capon for spotting this.) I've linked to the second edition, which is the only one I could find online. If the first edition is like the second, it would be decades ahead of its time. (And the _Mind_ article suggests that that's true.)
 
-And he co-authored a prominent textbook: [An Introduction to Indian Philosophy](https://www.amazon.com/dp/B01C2IHREY/ref=dp-kindle-redirect) [#@ChatterjeeDatta].
+And he co-authored a prominent textbook: [An Introduction to Indian Philosophy](https://www.amazon.com/dp/B01C2IHREY/ref=dp-kindle-redirect) [@ChatterjeeDatta].
 
 When he retired, Datta's colleagues and students put together a festschrift for him, which is available through the Internet Archive: [World Perspectives in Philosophy, Religion and Culture](https://archive.org/details/in.ernet.dli.2015.126145/page/n7/mode/2up) [@Singh1960]. These books normally have a somewhat detailed biography of the honoree, but this one only has a skimpy four page stub. Still, we learn something interesting from it. Most of the Indian philosophers who published in _Mind_ and _Philosophical Review_ in the first half of the century spent a fair bit of time in Britain or America.^[Datta also had [an invited paper](https://www.jstor.org/stable/2181796?seq=1#metadata_info_tab_contents) in _Philosophical Review_.] Datta did not; he acquired his very extensive knowledge of philosophy in England from his teachers (especially his brother) and his own reading.
 

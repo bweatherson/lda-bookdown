@@ -8,7 +8,9 @@ require(quanteda)
 # Journal List
 journals <- tribble(
   ~code, ~fullname,
-  "jphil", "Journal of Philosophy",
+  "revmeta", "Review of Metaphysics",
+  "synthese", "Synthese",
+  "erk", "Erkenntnis"
 )
 
 jlist <- journals$code

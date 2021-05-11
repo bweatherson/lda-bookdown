@@ -1,0 +1,49 @@
+Last year, Daily Nous published <a href="http://dailynous.com/2019/08/28/data-driven-history-philosophy-science/">a discussion</a> of <a href="https://www.journals.uchicago.edu/doi/abs/10.1086/704372?mobileUi=0">a paper by Christophe Malaterre, Jean-François Chartier, and Davide Pulizzotto</a> using topic modeling to analyse the trends in <i>Philosophy of Science</i>. I thought it would be a fun idea to extend this to other journals, and see if the same techniques could let us see what trends there were in philosophy journals in general. The project got a bit bigger than I expected, and I just finished a book manuscript writing up the results.
+
+<blockquote><a href="http://lda.weatherson.org">A History of Philosophy Journals, Vol 1: Evidence from Topic Modeling, 1876-2013</a></blockquote>
+
+The model that drives the book starts with the text of over 32000 articles and looks for patterns within them. I then looked at how those patterns relate to when the articles were published to see what kinds of trends were visible.
+
+The model sorts the articles into 90 topics. I sorted those topics by the average publication date of articles in them, and gave them names, to produce this graphic of the overall trends.
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">A history of English language philosophy journals in 90 topics in 5 minutes. <a href="https://t.co/dUdHnbuE39">pic.twitter.com/dUdHnbuE39</a></p>&mdash; Brian Weatherson (@bweatherson) <a href="https://twitter.com/bweatherson/status/1260548917906767873?ref_src=twsrc%5Etfw">May 13, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+When you start with this many articles there are a lot of fun little things you find along the way. 
+
+<ul>
+<li>As <a href="https://www.tandfonline.com/doi/full/10.1080/09608788.2016.1261794">Joel Katzav and Krist Vaesen</a> had observed, there is a <a href="http://www-personal.umich.edu/~weath/lda/topic05.html">dramatic change in Philosophical Review</a> around the middle of the 20th century. This trend is visible just in the word counts for key words associated with philosophy of mind, speculative philosophy and political philosophy.</li>
+</ul>
+<img src="http://www-personal.umich.edu/~weath/lda/lda-bookdown_files/figure-html/make-phil-rev-look-bad-1.png" alt="Sum of word usage for 24 distinctive words in the three big journals, 1930-1970">
+
+<ul>
+<li>Philosophy journals publish much less history than they used to, especially about <a href="http://www-personal.umich.edu/~weath/lda/topic04.html">figures outside the canon</a>. The only exception is that work on <a href="http://www-personal.umich.edu/~weath/lda/topic45.html">Hume</a> has increased over time, as he was turned into a central figure in the canon.</li>
+<li>Rawls was so widely discussed in the 1970s that in some years the word 'Rawls' is used on average <a href="http://www-personal.umich.edu/~weath/lda/topic67.html">every 2-3 pages</a> across all the journals I'm looking at.</li>
+<li>The only pre-WWII article that <a href="http://www-personal.umich.edu/~weath/lda/topic74.html">looks like contemporary epistemology</a> was published by <a href="https://www.jstor.org/stable/2249544?seq=1#metadata_info_tab_contents">Dhirendra Mohan Datta</a>, who was trained and was working in Bengal.</li>
+<li>Philosophy articles are getting <a href="http://www-personal.umich.edu/~weath/lda/article-length-section.html">much longer</a> than they have ever been.</li>
+</ul>
+
+<img src="http://www-personal.umich.edu/~weath/lda/lda-bookdown_files/figure-html/article-length-graph-1.png" alt="Graph of deciles of article length over time. It shows a rise through 1910, then a fall until about 1960, then a steep rise through the present">
+
+<ul>
+<li>There are striking differences between <a href="http://www-personal.umich.edu/~weath/lda/atlantic-section.html">British and American</a> journals. Most surprisingly to me, there is a very long term trend of leading British journals publishing much more philosophy of language than leading American journals.</li>
+<li>21st century philosophy has a <a href="http://www-personal.umich.edu/~weath/lda/buzzwords-section.html">very distinctive idiolect</a>; almost as distinct as the idiolect of <a href="http://www-personal.umich.edu/~weath/lda/topic24.html">ordinary langage philosophy</a>.</li>
+</ul>
+
+As well as all the fun little things, there are three big take home lessons from the data.
+
+The biggest is that there is a huge difference between the work that contemporary analytic philosophers take seriously from the late 19th/early 20th century and the work that typically appears in the journals in those years. There is virtually no discussion of <a href="http://www-personal.umich.edu/~weath/lda/topic43.html">On Denoting</a> between 1915 and 1941. Moore, despite his institutional importance, is not prominently discussed in the journals. Frege is mostly invisible until quite late in the 20th century. Wittgenstein's later work does get picked up by his contemporaries, not least because his students founded <i>Analysis</i>, but the <i>Tractatus</i> is also invisible. The journals (at least the ones I'm looking at) only really start discussing positivism when we're into the "one patch per puncture" stage of trying to rescue the verification principle.
+
+Instead of discussions of the views we would later associate with the period, the journals in the early part of the century are full of articles on various forms of idealism. The focus is primarily on <a href="http://www-personal.umich.edu/~weath/lda/topic02.html">mind and metaphysics</a> in the British journals, and <a href="http://www-personal.umich.edu/~weath/lda/topic03.html">ethics and political philosopy</a> in the American journals. Just like the prominent authors now are mostly invisible then, many prominent authors of that era are more or less completely forgotten. Shadworth Hodgson published three dozen papers in leading journals, and is rarely even mentioned in passing these days.
+
+Second, epistemology as we understand it is a really contemporary development. In most fields of contemporary philosophy, you can see some precursors in the early journals. 
+
+<img src="http://www-personal.umich.edu/~weath/lda/lda-bookdown_files/figure-html/first-facet-graph-1.png" alt="Trends in philosophical categories in the journals">
+
+Philosophy of language is a partial exception; until Wittgenstein's later work it is a minor presence. But the biggest exception is epistemology. It's just invisible through the late 1950s. And then even through the 1970s and even the 1980s it is not that big a field, with the <a href="http://www-personal.umich.edu/~weath/lda/epistemologychapter.html">Gettier problem</a> being maybe a fifth of all epistemology over that time period. But since the 1990s a bunch of topics (e.g., testimony, disagreement, probablity and self-location, norms of assertion, accuracy) have exploded, and it's become a central part of the story of philosophy.
+
+The third lesson takes a bit of setting up. I assume that everyone knows that there was a sea-change in philosophy between about 1968 and 1975. A quick glance at article citation rates, or introductory readers, or graduate syllabi, will confirm that. But I think a lot of people conceptualise the change in this period as being centered around mind and language, perhaps extending into metaphysics. It's Lewis, Stalnaker, Kripke, Putnam, Kaplan, Montague and Fodor who are the central players in this version of the story. And they all are really important figures. But looking through all the journals of the time what pops out is that there is a change going on in moral and political philosophy at the exact same time that is at least as momentous. The key figures in this part of the story are Frankfurt, Thomson, Rawls, Singer and Foot. Indeed, it seems to be the <a href="http://www-personal.umich.edu/~weath/lda/categories-decades.html">rising importance of Ethics through the post-war period</a> that really sets up this momentous period. I don't mean to suggest that people will be shocked to learn that Frankfurt and Thomson were important philosophical figures; but I'm not sure they're typically treated as being as central to the graduate curriculum as Kripke, Lewis and Putnam. And I think that's a mistake; they are just as important to the period that sets the agenda for philosophy through at least the 2010s.
+
+As I noted at the start, I'm not the first to approach the history of philosophy journals this way. But this is a new field. And to help anyone else who would like to do something similar, or who (quite reasonably) thinks that they could do a better job than I did, I included a few resources. There is a <a href="http://www-personal.umich.edu/~weath/lda/replication-instructions.html">brief tutorial</a> on how do get started on this kind of analysis. I go into a lot of detail over <a href="http://www-personal.umich.edu/~weath/lda/methodology-chapter.html">two</a> <a href="http://www-personal.umich.edu/~weath/lda/sortingchapter.html">chapters</a> about the many choices I made in getting to an analysis, and why there were a lot of reasonable ways to go at a lot of these choice points. And the code for the book is available on <a href="https://github.com/bweatherson/lda-bookdown">GitHub</a>. The book was built in <a href="https://bookdown.org">bookdown</a>, which is an incredible piece of software, and I encourage other people to think about using it as well.
+
+If you have any questions about this, or have ideas for other analyses to run on this data set, let me know in the comments.
+

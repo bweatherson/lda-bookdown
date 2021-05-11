@@ -28,7 +28,7 @@ The first thing I tried was to identify the keywords for a topic with the words 
 
 The second thing I tried was to identify the keywords with those words where the ratio between the probability the word turns up in this topic with the probability it turns up in an arbitrary article. This is better, but still not right. Doing this makes all the keywords be incredibly rare words, that essentially never turn up in any other topic. (Occasionally this would make 'weatherson' a keyword, for example, though not usually where I expected.)
 
-So what I settled on was to use that ratio, but only quantify over the words that are at least reasonably common across the data. Roughly, they are words that turn up at least once in every 20000 words (excluding stop words).^[More carefully, for any word $w$ and model $t_k$ the model provides something like $\Pr(w | t_k)$, the probability of word turning up in an article in that topic. We're looking for the words that maximise $\frac{\Pr(w | t_k)}{\sum \Pr(w | t_i)}$, where the sum is over the 90 topics, and the constraint is that the average value of $\Pr(w | t_i)$ is at least $\frac{1}{20000}.] Applied to Early Modern, that gives us the following keywords.
+So what I settled on was to use that ratio, but only quantify over the words that are at least reasonably common across the data. Roughly, they are words that turn up at least once in every 20000 words (excluding stop words).^[More carefully, for any word $w$ and model $t_k$ the model provides something like $\Pr(w | t_k)$, the probability of word turning up in an article in that topic. We're looking for the words that maximise $\frac{\Pr(w | t_k)}{\sum \Pr(w | t_i)}$, where the sum is over the 90 topics, and the constraint is that the average value of $\Pr(w | t_i)$ is at least $\frac{1}{20000}$.] Applied to Early Modern, that gives us the following keywords.
 
 ```{r example-keywords}
 distinctive <- distinctive_topics[(jjj-1)*15 + 1, 1]
@@ -46,8 +46,8 @@ The model assigns each article a probability of being in each topic. So for each
 ```{r example-raw-count}
 require(toOrdinal)
 
-cat("**Number of Articles**: ", overall_stats$r_count[jjj], " \n <br>", sep="")
-cat("**Percentage of Total**: ", 100*overall_stats$r_percent[jjj], "%\n <br> ", sep="")
+cat("**Number of Articles**: ", overall_stats$r_count[jjj], " \n <br/>", sep="")
+cat("**Percentage of Total**: ", 100*overall_stats$r_percent[jjj], "%\n", sep="")
 cat("**Rank**: ", toOrdinal(overall_stats$r_rank[jjj]), "\n\n", sep="")
 ```
 
@@ -56,8 +56,8 @@ So there are 398 articles that are in Early Modern (in this sense). Hopefully it
 But this isn't the only way to measure the size of a topic. The model gives a probability of being in Early Modern to every article in the data set. We can simply add those probabilities up to get another way to measure topic size. Formally, this is the way to calculatte the _expected_ number of articles in that topic given the probability distribution, though I don't think thinking of these numbers as expected values is particularly helpful. If we do that, summing the probabilities of being in early modern across all articles, we get the following statistics.
 
 ```{r example-weighted-count}
-cat("**Weighted Number of Articles**: ", overall_stats$w_count[jjj], "\n <br>", sep="")
-cat("**Percentage of Total**: ", 100*overall_stats$w_percent[jjj], "%\n <br>", sep="")
+cat("**Weighted Number of Articles**: ", overall_stats$w_count[jjj], "\n <br/>", sep="")
+cat("**Percentage of Total**: ", 100*overall_stats$w_percent[jjj], "%\n <br/>", sep="")
 cat("**Rank**: ", toOrdinal(overall_stats$w_rank[jjj]), "\n\n", sep="")
 ```
 
@@ -66,9 +66,9 @@ I'll call this calculation the **weighted number** of articles in the topic. As 
 Next I'll look at some facts about the dates of articles in that topic.
 
 ```{r example-dates}
-cat("**Mean Publication Year**: ", overall_stats$mean_y[jjj], "\n <br>", sep="")
-cat("**Weighted Mean Publication Year**: ", overall_stats$wy[jjj], "\n <br>", sep="")
-cat("**Median Publication Year**: ", overall_stats$median_y[jjj], "\n <br>", sep="")
+cat("**Mean Publication Year**: ", overall_stats$mean_y[jjj], "\n <br/>", sep="")
+cat("**Weighted Mean Publication Year**: ", overall_stats$wy[jjj], "\n <br/>", sep="")
+cat("**Median Publication Year**: ", overall_stats$median_y[jjj], "\n <br/>", sep="")
 cat("**Modal Publication Year**: ", overall_stats$modal_y[jjj], "\n\n", sep="")
 ```
 
@@ -81,19 +81,19 @@ cat("**Topic with Most Overlap**: ",
     the_categories$subject[closest_neighbour$othertopic[jjj]], 
     " (", 
     round(closest_neighbour$g[jjj],4),
-    ")\n <br>",
+    ")\n <br/>",
     sep="")
 cat("**Topic this Overlaps Most With**: ",
     the_categories$subject[closest_neighbour_inverse$topic[jjj]], 
     " (", 
     round(closest_neighbour_inverse$g[jjj],4),
-    ")\n <br>",
+    ")\n <br/>",
     sep="")
 cat("**Topic with Least Overlap**: ",
     the_categories$subject[furthest_neighbour$othertopic[jjj]], 
     " (", 
     round(furthest_neighbour$g[jjj],5),
-    ")\n <br>",
+    ")\n <br/>",
     sep="")
 cat("**Topic this Overlaps Least With**: ",
     the_categories$subject[furthest_neighbour_inverse$topic[jjj]], 
@@ -157,7 +157,7 @@ I have made one other visual note to help read the graphs. The gridlines in each
 After these graphs, there are two tables of the articles that are in the topic. Here is the first.
 
 ```{r examplecharart}
-cat("<br>")
+cat("<br/>")
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
@@ -173,7 +173,7 @@ The table is sortable by any of those three columns. But it's default sort order
 The second table is a list of highly cited articles in the topic.
 
 ```{r example-t21e}
-cat("<br>")
+cat("<br/>")
 source('topic_comments/topic_summary_high_cites.R')
 high_table
 ```

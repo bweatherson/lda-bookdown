@@ -22,7 +22,8 @@ source('topic_comments/topic_summary_high_cites.R') # Generate table of highly c
  # Have to do this at same time as previous script or a weird caching error occurs.
 if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
-	**Comments**
+
+**Comments**
 	\n")
 ```
 

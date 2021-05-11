@@ -258,7 +258,7 @@ epistemology_subjects <- epistemology_subjects %>%
 kable(epistemology_subjects, 
       col.names = c("Topic", "Subject", "Count", "Weighted Count", "Year"), 
       align = c('l', 'l', 'c', 'c', 'c'), 
-      sep = "",
+#      sep = "",
       caption = "Topics in the 40 category epistemology LDA")
 ```
 

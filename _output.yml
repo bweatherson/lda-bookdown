@@ -16,4 +16,18 @@ bookdown::gitbook:
       github: no
       twitter: yes
       facebook: no
-  
+
+bookdown::html_document2:
+  split_by: section
+
+bookdown::pdf_book:
+  keep_tex: true
+  includes:
+    in_header: "preamble.tex"
+
+bookdown::epub_book:
+  number_sections: true
+
+bookdown::word_document2:
+  toc: true
+  always_allow_html: true

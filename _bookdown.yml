@@ -7,7 +7,8 @@
       tab: "Table "
     ui:
       chapter_name: ""
-  rmd_files: ["index.Rmd", 
+  rmd_files: 
+    ["index.Rmd", 
               "01-methodology.Rmd", 
               "02-topics.Rmd",
               "topic_comments/topic01.Rmd",
@@ -108,4 +109,4 @@
               "08-outliers.Rmd",
               "09-buzzwords.Rmd",
               "references.Rmd"
-  ]
+   ]

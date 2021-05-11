@@ -68,7 +68,7 @@ You might wonder why I didn't add any other specialist journals, along with ethi
 
 I think you probably do get a better sense of mid-century philosophy if you add one logic journal. But you can't do text mining on symbols. And in more recent years the sense in which the logic journals are primarily philosophy journals as opposed to mathematics journals has gotten weaker. So I left them out.
 
-The twelve journals I have don't include as much history of philosophy as there is in the profession. But that's simply unavoidable if you're doing a study based on journals. History of philosophy is primarily a book discipline not a journal discipline. You can see this in the citation data. Pick almost any prominent figure in history of philosophy, and odds are that I'll have several journal articles with more citations than their most cited article. The prominent figure you picked will almost surely have several books that are more widely cited than any of my articles; the point is that historians of philosophy are never cited. But they rarely have highly cited articles. Just as importantly, when a history article is widely cited, it usually appears in one of the twelve journals I've already included. For this reason, the model that I end up working with does have a lot of history categories. We just have to remember that the absolute numbers of articles in each of these categories is not representative of how important the categories are in philosophy.
+The twelve journals I have don't include as much history of philosophy as there is in the profession. But that's simply unavoidable if you're doing a study based on journals. History of philosophy is primarily a book discipline not a journal discipline. You can see this in the citation data. Pick almost any prominent figure in history of philosophy, and odds are that I'll have several journal articles with more citations than their most cited article. The prominent figure you picked will almost surely have several books that are more widely cited than any of my articles; the point isn't that historians of philosophy are never cited. But they rarely have highly cited articles. Just as importantly, when a history article is widely cited, it usually appears in one of the twelve journals I've already included. For this reason, the model that I end up working with does have a lot of history categories. We just have to remember that the absolute numbers of articles in each of these categories is not representative of how important the categories are in philosophy.
 
 And the other specialist journals are either too new (e.g., _Mind and Language_, or _Linguistics and Philosophy_) or representative of too small a section of contemporary philosophy to be worth including. Aesthetics, for example, is an important philosophical field. (And it shows up in the model in an interesting way.) But including the _Journal of Aesthetics and Art Criticism_ in the study would have made it look like aesthetics was one-thirteenth of the field. And that's misleading. So I stuck with these twelve.
 
@@ -381,7 +381,7 @@ The modelled frequency of 'rational' is given by multiplying, across seven topic
 
 The aim is that the two columns here would line up. And of course they don't. In fact, the model doesn't end up doing very well with this article; it is still a long way from equilibrium.
 
-```{r preface-graph, fig.cap = "Modelled and Measured Frequency for Makinson (1965)"}
+```{r preface-graph, fig.cap = "Modelled and Measured Frequency for Makinson (1965)", fig.alt = "A scatterplot"}
 cross_check_graph <- function(x){
   temp_gamma <- relabeled_gamma %>%
     select(document, gamma, topic) %>%
@@ -416,10 +416,14 @@ print(  ggplot(temp_topics, aes(x = f, y=  proj)) +
     spaghettistyle +
     geom_point(size = 0.5, alpha = 0.5) +
     coord_fixed(xlim = c(0, high_number * 1.02), ylim = c(0, high_number * 1.02)) +
-    labs(caption = temp_gamma$citation[1], x = "Measured Word Frequency", y = "Modelled Word Frequency") +
+    labs(caption = temp_gamma$citation[1],
+        x = "Measured Word Frequency",
+        y = "Modelled Word Frequency")  +
     ggrepel::geom_text_repel(data = salient_words, aes(label = term))
 )
 }
+
+# Burp
 
 cross_check_graph("10.2307_3326519")
 ```

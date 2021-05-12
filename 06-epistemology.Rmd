@@ -418,7 +418,7 @@ I think that gives you a pretty good sense of what the central parts of epistemo
 
 So why was the Gettier Problem so widely thought to be dominating epistemology? The following four graphs might help explain this perception. I'll eventually do these for each of the 40 topics, though I won't include any commentary on any of them other than these. First, here's the graph (with trendline) of the raw number of articles about the Gettier Problem each year.
 
-```{r gettier-first, fig.height=5, fig.cap = "Number of articles in topic 6"}
+```{r gettier-first, fig.height=5, fig.cap = "Number of articles in topic 6 - Gettier"}
 # First Gettier Graph for real
 jjj <- 6
 
@@ -451,13 +451,12 @@ ggplot(data = filter(epistemology_yeartopics_postwar, topic == jjj),
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
   labs(x = element_blank(), 
-       y = "Raw Number of Articles",
-       title = paste0("Raw Number of Articles in topic ",jjj, " - ", cate_nam)) 
+       y = "Raw Number of Articles") 
 ```
 
 There were a few articles, especially in the late 1970s and early 1980s, but it doesn't look so huge. It's even less dramatic if we use weighted counts.
 
-```{r gettier-second, fig.height=5, fig.cap = "Number of articles in topic 6"}
+```{r gettier-second, fig.height=5, fig.cap = "Number of articles in topic 6 - Gettier"}
 jjj <- 6
 
 cate_nam <- epistemology_subjects$subject[jjj]
@@ -489,13 +488,12 @@ ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
   labs(x = element_blank(), 
-       y = "Weighted Number of Articles",
-       title = paste0("Weighted Number of Articles in topic ",jjj, " - ", cate_nam)) 
+       y = "Weighted Number of Articles") 
 ```
 
 We can also look at that as a percentage of all philosophy articles published in that year.
 
-```{r gettier-third, fig.height=5, fig.cap = "Proportion of Philosophy articles that are in Topic 6"}
+```{r gettier-third, fig.height=5, fig.cap = "Proportion of Philosophy articles that are in Topic 6 - Gettier"}
 jjj <- 6
 
 cate_nam <- epistemology_subjects$subject[jjj]
@@ -527,14 +525,13 @@ ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
   geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
   labs(x = element_blank(), 
-       y = "Weighted Number of Articles",
-       title = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam))
+       y = "Weighted Number of Articles")
 
 ```
 
 At its height, it's about 1.3% of all the philosophy being done in a year. That's not a small number, but there are only four years where it is above 1%, and only four more between 0.75% and 1%. So why is it remembered as taking over everything? This graph I think is part of the explanation. Now we'll express these articles as a percentage of all epistemology being published.
 
-```{r gettier-fourth, fig.height=5, fig.cap = "Proportion of epistemology articles in topic 6"}
+```{r gettier-fourth, fig.height=5, fig.cap = "Proportion of epistemology articles in topic 6 - Gettier"}
 jjj <- 6
 
 cate_nam <- epistemology_subjects$subject[jjj]
@@ -566,8 +563,7 @@ ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
               colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
   labs(x = element_blank(), 
-       y = "Weighted Number of Articles",
-       title = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam))
+       y = "Weighted Number of Articles")
 ```
 
 For several years it was 15-20% of all epistemology that was being published. And remember that we have a very inclusive conception of epistemology, so there's a decent case that these numbers are on the low side, and it's really more like 20-25%. And that does seem excessive. So there's a reasonable case that for a while the Gettier Problem literature was a rather excessive proportion of the epistemology literature. And maybe that's why it looms so large in a lot of people's impression of what happens in epistemology.
@@ -589,163 +585,682 @@ epistemology_the_articles <- epistemology_relabeled_articles %>%
   arrange(topic, gamma)
 ```
 
-```{r epistemology_giant_loop, fig.height=5}
-for (jjj in (1:40)){
-  cate_nam <- epistemology_subjects$subject[jjj]
-
-  cat(" \n")
-  cat("## ", cate_nam, " {#e",jjj,"}\n\n", sep="")
-
-  keyword_list <- epistemology_distinctive_topics %>% filter(topic == jjj)
-  keyword_paste <- paste(keyword_list$term, sep = ", ", collapse = ", ")
-
-  cat("**Keywords**: ", keyword_paste, " \n \n")
-
-  raw_count <- epistemology_article_count$n[jjj]
-  weighted_count <- epistemology_article_gamma$g[jjj]
-    
-  cat("**Number of Articles**: ", raw_count, "<br> \n")
-  cat("**Weighted Number of Articles**: ", weighted_count, " \n \n")
-  
- bg <- epistemology_yeartopics_postwar %>%
-    mutate(topic = as.numeric(topic)) %>%
-    inner_join(the_categories, by = "topic") %>%
-    select(-topic)
-
-print(
-  ggplot(data = filter(epistemology_yeartopics_postwar, topic == jjj), 
-       aes(x = year, y = tn)) +
-  geom_smooth(data = epistemology_yeartopics_postwar, 
-                aes(group=topic), 
-                size = 0.1, 
-                color = "grey85", 
-                method = "loess", 
-                alpha = 0.3,
-                se = F,
-                formula = "y ~ x") +
-  scale_x_continuous(minor_breaks = 5 * 1:402,
-                   expand = expansion(mult = c(0.01, 0.01))) +
-  scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
-  epistemologystyle +
-  geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-  geom_smooth(se = F, 
-              formula = "y ~ x", 
-              size = 0.5, 
-              method = "loess",
-              colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-  theme(legend.position="none") +
-  labs(x = element_blank(), 
-       y = "Raw Number of Articles",
-       title = paste0("Raw Number of Articles in topic ",jjj, " - ", cate_nam))
-)
-
-bg <- epistemology_yeargamma_postwar %>%
-    mutate(topic = as.numeric(topic)) %>%
-    inner_join(the_categories, by = "topic") %>%
-    select(-topic)
-
-print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), 
-       aes(x = year, y = gamsum)) +
-  geom_smooth(data = epistemology_yeargamma_postwar, 
-                aes(group=topic), 
-                size = 0.1, 
-                color = "grey85", 
-                method = "loess", 
-                alpha = 0.3,
-                se = F,
-                formula = "y ~ x") +
-  scale_x_continuous(minor_breaks = 5 * 1:402,
-                   expand = expansion(mult = c(0.01, 0.01))) +
-  scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
-  epistemologystyle +
-  geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-  geom_smooth(se = F, 
-              formula = "y ~ x", 
-              size = 0.5, 
-              method = "loess",
-              colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-  theme(legend.position="none") +
-  labs(x = element_blank(), 
-       y = "Weighted Number of Articles",
-       title = paste0("Weighted Number of Articles in topic ",jjj, " - ", cate_nam)))
-  
-bg <- epistemology_yeargamma_postwar %>%
-    mutate(topic = as.numeric(topic)) %>%
-    inner_join(the_categories, by = "topic") %>%
-    select(-topic)
-
-print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), 
-       aes(x = year, y = gamrat_all)) +
-  geom_smooth(data = epistemology_yeargamma_postwar, 
-        aes(group=topic), 
-        size = 0.1, 
-        color = "grey85", 
-        method = "loess", 
-        alpha = 0.3,
-        se = F,
-        formula = "y ~ x") +
-  scale_x_continuous(minor_breaks = 5 * 1:402,
-                   expand = expansion(mult = c(0.01, 0.01))) +
-  scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
-  epistemologystyle +
-  geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-  geom_smooth(se = F, 
-              formula = "y ~ x", 
-              size = 0.5, 
-              method = "loess",
-              colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-  theme(legend.position="none") +
-  labs(x = element_blank(), 
-       y = "Weighted Number of Articles",
-       title = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam)))
-  
-bg <- epistemology_yeargamma_postwar %>%
-    mutate(topic = as.numeric(topic)) %>%
-    inner_join(the_categories, by = "topic") %>%
-    select(-topic)
-
-print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj), 
-       aes(x = year, y = gamrat_local)) +
-  geom_smooth(data = epistemology_yeargamma_postwar, 
-                aes(group=topic), 
-                size = 0.1, 
-                color = "grey85", 
-                method = "loess", 
-                alpha = 0.3,
-                se = F,
-                formula = "y ~ x") +
-  scale_x_continuous(minor_breaks = 5 * 1:402,
-                   expand = expansion(mult = c(0.01, 0.01))) +
-  scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
-  epistemologystyle +
-  geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-  geom_smooth(se = F, 
-              formula = "y ~ x", 
-              size = 0.5, 
-              method = "loess",
-              colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
-  theme(legend.position="none") +
-  labs(x = element_blank(), 
-       y = "Weighted Number of Articles",
-       title = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam)))
-  
-  cat("\n\n**Characteristic Articles** \n \n")
-  for (jj in 1:10){
-    cat(jj,". ", epistemology_the_articles$citation[jjj*10 + jj - 10], " \n", sep="")
-  }
-
-  these_cites <- epistemology_high_cite_gamma %>% 
-    as_tibble() %>%
-    filter(topic == jjj) %>%
-    arrange(desc(Cites))
-  
-  if (nrow(these_cites) > 0){
-  cat(" \n")
-  cat("**Highly Cited Articles** \n \n")
-    for (jj in 1:nrow(these_cites)){
-       cat(jj,". ", these_cites$citation.x[[jj]], " (", these_cites$gamma[[jj]], ")\n", sep="")   
-    }
-  }
-}
+```{r e1a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 1 
+source('epist-loop-a.R') 
 ```
 
+```{r e1b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e1c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e1d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e2a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 2 
+source('epist-loop-a.R') 
+```
+
+```{r e2b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e2c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e2d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e3a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 3 
+source('epist-loop-a.R') 
+```
+
+```{r e3b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e3c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e3d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e4a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 4 
+source('epist-loop-a.R') 
+```
+
+```{r e4b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e4c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e4d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e5a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 5 
+source('epist-loop-a.R') 
+```
+
+```{r e5b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e5c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e5d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e6a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 6 
+source('epist-loop-a.R') 
+```
+
+```{r e6b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e6c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e6d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e7a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 7 
+source('epist-loop-a.R') 
+```
+
+```{r e7b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e7c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e7d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e8a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 8 
+source('epist-loop-a.R') 
+```
+
+```{r e8b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e8c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e8d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e9a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 9 
+source('epist-loop-a.R') 
+```
+
+```{r e9b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e9c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e9d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e10a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 10 
+source('epist-loop-a.R') 
+```
+
+```{r e10b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e10c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e10d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e11a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 11 
+source('epist-loop-a.R') 
+```
+
+```{r e11b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e11c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e11d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e12a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 12 
+source('epist-loop-a.R') 
+```
+
+```{r e12b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e12c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e12d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e13a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 13 
+source('epist-loop-a.R') 
+```
+
+```{r e13b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e13c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e13d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e14a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 14 
+source('epist-loop-a.R') 
+```
+
+```{r e14b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e14c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e14d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e15a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 15 
+source('epist-loop-a.R') 
+```
+
+```{r e15b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e15c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e15d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e16a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 16 
+source('epist-loop-a.R') 
+```
+
+```{r e16b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e16c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e16d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e17a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 17 
+source('epist-loop-a.R') 
+```
+
+```{r e17b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e17c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e17d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e18a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 18 
+source('epist-loop-a.R') 
+```
+
+```{r e18b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e18c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e18d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e19a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 19 
+source('epist-loop-a.R') 
+```
+
+```{r e19b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e19c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e19d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e20a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 20 
+source('epist-loop-a.R') 
+```
+
+```{r e20b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e20c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e20d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e21a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 21 
+source('epist-loop-a.R') 
+```
+
+```{r e21b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e21c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e21d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e22a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 22 
+source('epist-loop-a.R') 
+```
+
+```{r e22b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e22c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e22d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e23a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 23 
+source('epist-loop-a.R') 
+```
+
+```{r e23b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e23c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e23d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e24a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 24 
+source('epist-loop-a.R') 
+```
+
+```{r e24b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e24c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e24d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e25a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 25 
+source('epist-loop-a.R') 
+```
+
+```{r e25b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e25c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e25d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e26a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 26 
+source('epist-loop-a.R') 
+```
+
+```{r e26b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e26c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e26d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e27a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 27 
+source('epist-loop-a.R') 
+```
+
+```{r e27b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e27c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e27d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e28a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 28 
+source('epist-loop-a.R') 
+```
+
+```{r e28b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e28c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e28d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e29a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 29 
+source('epist-loop-a.R') 
+```
+
+```{r e29b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e29c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e29d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e30a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 30 
+source('epist-loop-a.R') 
+```
+
+```{r e30b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e30c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e30d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e31a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 31 
+source('epist-loop-a.R') 
+```
+
+```{r e31b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e31c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e31d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e32a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 32 
+source('epist-loop-a.R') 
+```
+
+```{r e32b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e32c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e32d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e33a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 33 
+source('epist-loop-a.R') 
+```
+
+```{r e33b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e33c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e33d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e34a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 34 
+source('epist-loop-a.R') 
+```
+
+```{r e34b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e34c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e34d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e35a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 35 
+source('epist-loop-a.R') 
+```
+
+```{r e35b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e35c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e35d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e36a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 36 
+source('epist-loop-a.R') 
+```
+
+```{r e36b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e36c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e36d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e37a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 37 
+source('epist-loop-a.R') 
+```
+
+```{r e37b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e37c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e37d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e38a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 38 
+source('epist-loop-a.R') 
+```
+
+```{r e38b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e38c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e38d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e39a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 39 
+source('epist-loop-a.R') 
+```
+
+```{r e39b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e39c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e39d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```
+
+```{r e40a, fig.height = 5, fig.cap = paste0("Raw number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+jjj <- 40 
+source('epist-loop-a.R') 
+```
+
+```{r e40b, fig.height = 5, fig.cap = paste0("Weighted number of articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-b.R') 
+```
+
+```{r e40c, fig.height = 5, fig.cap = paste0("Proportion of philosophy articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-c.R') 
+```
+
+```{r e40d, fig.height = 5, fig.cap = paste0("Proportion of epistemology articles in topic ",jjj, " - ", cate_nam), fig.alt = alt_text}
+source('epist-loop-d.R') 
+```

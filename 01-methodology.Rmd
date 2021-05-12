@@ -381,7 +381,7 @@ The modelled frequency of 'rational' is given by multiplying, across seven topic
 
 The aim is that the two columns here would line up. And of course they don't. In fact, the model doesn't end up doing very well with this article; it is still a long way from equilibrium.
 
-```{r preface-graph, fig.cap = "Modelled and Measured Frequency for Makinson (1965)", fig.alt = "A scatterplot"}
+```{r preface-graph, fig.cap = "Modelled and Measured Frequency for Makinson (1965)", fig.alt = alt_text}
 cross_check_graph <- function(x){
   temp_gamma <- relabeled_gamma %>%
     select(document, gamma, topic) %>%
@@ -423,39 +423,183 @@ print(  ggplot(temp_topics, aes(x = f, y=  proj)) +
 )
 }
 
+salient_words <- function(x){
+    temp_gamma <- relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document"))
+  
+  temp_words <- word_list %>%
+    filter(document == x)
+  
+  total_words = sum(temp_words$wordcount)
+  
+  temp_words <- temp_words %>%
+    mutate(f = wordcount/total_words)
+  
+  temp_topics <- relabeled_topics %>%
+    select(-date) %>%
+    filter(term %in% temp_words$word) %>%
+    inner_join(temp_gamma, by = "topic") %>%
+    group_by(term) %>%
+    summarise(proj = weighted.mean(beta, gamma)) %>%
+    arrange(-proj) %>%
+    inner_join(temp_words, by = c("term" = "word"))
+  
+  the_words <- temp_topics %>%
+    mutate(outlier = f + proj) %>%
+    arrange(-outlier) %>%
+    slice(1:5)
+  
+  paste(the_words$term, collapse = ", ")
+}
+
 # Burp
 
-cross_check_graph("10.2307_3326519")
+x <- "10.2307_3326519"
+
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is well below the 45 degree line. ",
+  "That means they appear in the article more often than the model expects. ",
+  "The word belief only appears a bit more often than expected, then others appear much more often."
+)
 ```
 
 On that graph, every dot is a word type. The x-axis represents the frequency of that word type in the article (after excluding the stop words and so on), and the y-axis represents how frequently the model thinks the word 'should' appear, given its classification of the article into 90 topics, and the frequency of words in those topics. Ideally, all the dots would be on the 45 degree line coming north-east out of the origin. Obviously, that doesn't happen. It can't really, because, to a very rough approximation, I've only given the model 90 degrees of freedom, and I've asked it to approximate over 32,000 data points.
 
 Actually, this is one of the least impressive jobs the model does. I measured the correlations between measured and modelled word frequency, i.e., what this graph represents, for 600 highly cited articles. Among those 600, this was the 23rd lowest correlation between measured and modelled frequency. But in many cases, that correlation was very strong. For example, here are the graphs for three more articles where the model manages to understand what's happening.
 
-```{r good-graph-1, fig.cap = "Modelled and Measured Frequency for Davidson (1990)"}
-cross_check_graph("10.2307_2026863")
+```{r good-graph-1, fig.cap = "Modelled and Measured Frequency for Davidson (1990)", fig.alt = alt_text}
+x <- "10.2307_2026863"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are usually met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is close to the 45 degree line. ",
+  "That means they appear in the article about as often than the model expects. ",
+  "The word truth appears a lot; it is 6% of the words in the article. The model expects a little less; around 5%. The others are very close to the 45 degree line."
+)
 ```
 
 ```{r good-graph-2, fig.cap = "Modelled and Measured Frequency for Edgington (1995)"}
-cross_check_graph("10.2307_2254793")
+x <- "10.2307_2254793"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are usually met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is close to the 45 degree line. ",
+  "That means they appear in the article about as often than the model expects."
+)
+
 ```
 
 ```{r good-graph-3, fig.cap = "Modelled and Measured Frequency for Dworkin (1996)"}
-cross_check_graph("10.2307_2961920")
+x <- "10.2307_2961920"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are usually met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is close to the 45 degree line. ",
+  "That means they appear in the article about as often than the model expects.",
+  " The word moral appears a lot, about 4% of all words in the article. And the model predicts this correctly."
+)
 ```
 
 There are some articles that it doesn't manage as well, typically articles with unusual words. (It also does poorly with short articles, like "The Paradox of the Preface".)
 
 ```{r bad-graph-1, fig.cap = "Modelled and Measured Frequency for Thomson (1998)"}
-cross_check_graph("10.2307_2671962")
+x <- "10.2307_2671962"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is far frothe 45 degree line. ",
+  "The model expects the words property and properties will appear a lot, 3-4% of the time, but they make up only about 1% of the words. It does not expect the words time, part and, especially, clay, to appear as often as they do."
+)
 ```
 
 ```{r bad-graph-2, fig.cap = "Modelled and Measured Frequency for Elster (1990)"}
-cross_check_graph("10.2307_2381783")
+x <- "10.2307_2381783"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is far from to the 45 degree line. ",
+  "The model expects the words society and social to appear more often than they do. But it is very surprised at how often the words honor, norms, and revenge, appear."
+)
 ```
 
 ```{r bad-graph-3, fig.cap = "Modelled and Measured Frequency for Fara (2005)"}
-cross_check_graph("10.2307_3506173")
+x <- "10.2307_3506173"
+
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Four of them are far from the 45 degree line. ",
+  "The model expects the words possible, worlds and, especially, world, to appear much more often than they do.",
+  " But it expects the word disposition to appear much less. ",
+  "The model does correctly predict that the word true will appear about 2% of the time."
+)
 ```
 
 A few different things are going on here. In Elster's article, the model doesn't expect any philosophy article to use the word 'revenge' as much as he does. In Fara's article, the model lumps articles about modality (especially possible worlds) in with articles on dispositions. (This ends up being [Topic 80](#topic80).) And so it expected that Fara will talk about worlds, given he is also talking about dispositions, but he doesn't. Thomson's article has both of these features. The model is surprised that anyone is talking about clay so much. And it expects that a metaphysics article like Thomson's will talk about properties more than Thomson does.
@@ -463,15 +607,61 @@ A few different things are going on here. In Elster's article, the model doesn't
 So it isn't perfect, but as we saw above, it does pretty well with some cases. The papers I've shown so far are pretty much outliers though; here is what more typical articles look like.
 
 ```{r medium-graph-1, fig.cap = "Modelled and Measured Frequency for Lewis (1979)"}
-cross_check_graph("10.2307_2215339")
+x <- "10.2307_2215339"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are mostly met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Four of them are close to the 45 degree line. ",
+  "But the model expects the word laws to appear much more often than it does."
+)
 ```
 
 ```{r medium-graph-2, fig.cap = "Modelled and Measured Frequency for Lakoff and Johnson (1980)"}
-cross_check_graph("10.2307_2025464")
+x <- "10.2307_2025464"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are mostly met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Four of them are close to the 45 degree line. ",
+  "That means they appear in the article about as often than the model expects.",
+  " But the model does not expect the word metaphor to appear so often."
+)
 ```
 
 ```{r medium-graph-3, fig.cap = "Modelled and Measured Frequency for Kelly (2003)"}
-cross_check_graph("10.2307_20140564")
+x <- "10.2307_20140564"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x-axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Belief and reason are far above the 45 degree line, epistemic and rationality far below it. ",
+  "The model expects the word reasons to make up 2% of the words in the article, and in fact it makes up 3%."
+)
 ```
 
 It's not perfect, but the general picture is that the model does a pretty good job of modeling 32000 articles given the tools we offered it. And, more importantly from the perspective of this book, the way it models them ends up grouping like articles together. And that's what I'll use for describing trends in the journals over their first 138 years.

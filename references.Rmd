@@ -6,8 +6,6 @@ Note that I'm not including here papers that are merely mentioned from the twelv
 
 # (APPENDIX) Data Tables {-} 
 
-# Intro and Chapter 1
-
 # Chapter 2
 
 ```{r append-two-loop}

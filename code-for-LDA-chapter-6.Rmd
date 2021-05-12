@@ -1,0 +1,29 @@
+---
+title: "Untitled"
+author: "Brian Weatherson"
+date: "4/27/2021"
+output: html_document
+---
+
+```{r echo=FALSE, comment = NA}
+for (jjj in 1:40){
+
+cat("```{r e",jjj,"a, fig.cap = \"Raw number of articles in topic ",jjj, " - ", cate_nam,"\"}\n",sep="")
+cat("jjj <- ",jjj, " \n",sep="")
+cat("source('epist-loop-a.R') \n")
+cat("```\n\n")
+
+cat("```{r t",jjj,"b, fig.cap = \"Weighted number of articles in topic ",jjj, " - ", cate_nam,"\"}\n",sep="")
+cat("source('epist-loop-b.R') \n")
+cat("```\n\n")
+
+cat("```{r t",jjj,"c, fig.cap = \"Proportion of philosophy articles in topic ",jjj, " - ", cate_nam,"\"}\n",sep="")
+cat("source('epist-loop-c.R') \n")
+cat("```\n\n")
+
+cat("```{r t",jjj,"c, fig.cap = \"Proportion of epistemology articles in topic ",jjj, " - ", cate_nam,"\"}\n",sep="")
+cat("source('epist-loop-d.R') \n")
+cat("```\n\n")
+
+}
+```

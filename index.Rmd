@@ -715,10 +715,10 @@ chap_two_facet_labels <- tribble(
 # And I'm using a hack to get the titles for the graph appearing in the graph, so...
 update_geom_defaults("text", list(family = "Lato"))
 update_geom_defaults("label", list(family = "Lato"))
-
+opts_knit$set(eval.after = c("fig.cap", "fig.alt"))
 ```
 
-```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year", dev = 'png'}
+```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year", dev = 'png', fig.alt = alt_text}
 tt <- filter(category_frequency, year > 1899) # Remove 19th Century from graph
 category_graph_labels <- tt %>%
   group_by(category) %>%
@@ -740,6 +740,12 @@ ggplot(tt,
   scale_y_continuous(breaks = c(0.1,0.2),
                      expand = expansion(mult = c(0, .03))) +
   facetstyle
+
+alt_text <- paste0(
+  "Scatterplots showing the proportion of articles in each year that are in each of the 12 categories the book uses. The categories are ",
+  paste(category_graph_labels$category, collapse = ", "),
+  ". The frequencies are described briefly in the text below, then in much more detail in chapter 4. The key point here is that even though this is a scatterplot, it looks like a line graph. The year-to-year changes in how much each topic is represented are tiny."
+)
 ```
 
 These graphs aren't smoothed - this is just a scatterplot of how prevalent each category is over time. The contintuity in the graphs comes from continuity in the underlying subject matter. Although philosophy changes over time, the changes tend to be small and smooth - at least at this level of resolution. 

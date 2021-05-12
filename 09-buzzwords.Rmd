@@ -312,7 +312,7 @@ book_journal_graph <- inner_join(early_journal_summary, gg_summary, by = "topic"
   inner_join(the_categories, by = "topic")
 ```
 
-```{r first-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for first 30 topics in journals and books", fig.alt = "A scatterplot comparing the distribution of topics 1-30 in journal articles up to 1925 and in the books being discussed. Most topics are present to roughly the same amount, but Idealism is much less prevalent in the books, and Ordinary Language philosophy is more prevalent"}
+```{r first-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for first 30 topics in journals and books", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 31), aes(x = jm, y  = bm, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
@@ -323,6 +323,8 @@ ggplot(filter(book_journal_graph, topic < 31), aes(x = jm, y  = bm, color = topi
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.03, 0.01))) +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.03)))
+
+alt_text <- "A scatterplot comparing the distribution of topics 1-30 in journal articles up to 1925 and in the books being discussed. Most topics are present to roughly the same amount, but Idealism is much less prevalent in the books, and Ordinary Language philosophy is more prevalent"
 ```
 
 The books I've chosen are more like Ordinary Language, and less like Idealism, than the journals. And they have a little more Ethics in them. We get a similar story if we look at the maximum values instead of the average values.

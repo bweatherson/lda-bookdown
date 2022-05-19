@@ -1,7 +1,6 @@
 ```{r t05a}
 jjj <- 05
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t05b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -192,7 +191,7 @@ None of the three titles I've given here are exactly apt. (This is sort of the p
 
 So let's start by looking at the Philosophy of Mind words. I'll first graph out how frequently each of these 9 words appears, and then look at what happens when you sum them up.
 
-```{r phil-review-mind-words, fig.cap = "Philosophy of Mind words in the three big journals, 1930-1970"}
+```{r phil-review-mind-words, fig.cap = "Philosophy of Mind words in the three big journals, 1930-1970", fig.alt = alt_text}
 t <- mid_words %>%
   filter(word %in% pr_mind_words)
 
@@ -216,9 +215,16 @@ ggplot(t, aes(x = year, y = n, color = journal, group = journal)) +
             hjust = "inward",
             size = 3,
             colour = "grey40")
+
+alt_text <- paste0(
+  "Nine scatterplots showing the number of occurrences of the words ",
+  paste(pr_mind_words, collapse = ", "),
+  " in the three big journals. The x-axis is the year, from 1930-1970. The y-axis is the frequency, from 0 to 150.",
+  " The general trend is flat is downwards for Journal of Philosophy. For Philosophical Review, the trend is flat through 1950, then down. For Mind the trend is flat at a low level; the level the other two journals end at."
+)
 ```
 
-```{r phil-review-mind-words-summary, fig.height = 5, fig.cap = "Sum of Philosophy of Mind words in the three big journals, 1930-1970"}
+```{r phil-review-mind-words-summary, fig.height = 5, fig.cap = "Sum of Philosophy of Mind words in the three big journals, 1930-1970", fig.alt = alt_text}
 tt <- t %>%
   group_by(journal, year) %>%
   summarise(nn = sum(n))
@@ -233,6 +239,8 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
   labs(x = element_blank(), y = "Occurrences of words")
+
+alt_text <- "A single scatterplot showing the sums of the values in the nine scatterplots in the previous graph. The trends mentioned there are more pronounced when the sum is shown."
 ```
 
 There are three things happening here, which combine to form the distinctive graph at the end.
@@ -249,7 +257,7 @@ But the result of these three is that you really do see a dramatic falling away 
 
 Now for what I've called Speculative Philosophy. I'm going to leave _Journal of Philosophy_ off the first set of graphs because some of the words were used so often in some of the years that it threw off the scale. I'll come back to the Journal when I sum these graphs together. I'm also leaving off one data point for the Review: 'philosopher' which gets used 176 times in 1947. The loess curve you can see does, however, take that hidden point into account.
 
-```{r phil-review-idealism-words, fig.cap = "Speculative Philosophy words in (two of) the three big journals, 1930-1970"}
+```{r phil-review-idealism-words, fig.cap = "Speculative Philosophy words in (two of) the three big journals, 1930-1970", fig.alt = alt_text}
 t <- mid_words %>%
   filter(word %in% pr_idealism_words) 
 
@@ -277,11 +285,18 @@ ggplot(t %>%
             hjust = "inward",
             size = 3,
             colour = "grey40")
+
+alt_text <- paste0(
+  "Nine scatterplots showing the number of occurrences of the words ",
+  paste(pr_idealism_words, collapse = ", "),
+  " in Mind and Philosophical Review. The x-axis is the year, from 1930-1970. The y-axis is the frequency, from 0 to 150.",
+  " These words do not appear particularly often in Mind, but they occur a lot in Philosophical Review until a  falling away around 1950."
+)
 ```
 
 Now let's see what that looks like when we sum the nine words, and add the _Journal of Philosophy_ back into the picture.
 
-```{r phil-review-idealism-words-summary, fig.height = 5, fig.cap = "Sum of Speculative Philosophy words in the three big journals, 1930-1970"}
+```{r phil-review-idealism-words-summary, fig.height = 5, fig.cap = "Sum of Speculative Philosophy words in the three big journals, 1930-1970", fig.alt = alt_text}
 tt <- t %>%
   group_by(journal, year) %>%
   summarise(nn = sum(n))
@@ -296,11 +311,13 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
   labs(x = element_blank(), y = "Occurrences of words")
+
+alt_text <- "A single scatterplot showing the sums of the values in the nine scatterplots in the previous graph. These words do not get used very often in Mind. In Philosophical Review, they are used roughly three times as often until 1950, when they slowly decline back to Mind's level. The same is true through 1950 for Journal of Philosophy, but theyn they actually increase in frequency through the 1950s, before declining rapidly in the 1960s."
 ```
 
 Again, there is a falling off after 1949, but it's not completely sudden. Finally, we'll look at the Political Philosophy words.
 
-```{r phil-review-polphil-words, fig.height = 6.2, fig.cap = "Political Philosophy words in the three big journals, 1930-1970"}
+```{r phil-review-polphil-words, fig.height = 6.2, fig.cap = "Political Philosophy words in the three big journals, 1930-1970", fig.alt = alt_text}
 t <- mid_words %>%
   filter(word %in% pr_pol_words) 
 
@@ -327,9 +344,16 @@ ggplot(t,
             hjust = "inward",
             size = 3,
             colour = "grey40")
+
+alt_text <- paste0(
+  "Six scatterplots showing the number of occurrences of the words ",
+  paste(pr_pol_words, collapse = ", "),
+  " in the three big journals. The x-axis is the year, from 1930-1970. The y-axis is the frequency, from 0 to 100.",
+  " The words culture and society fall away dramatically in frequency in Philosophical Review after about 1952, and after the late 1950s in Journal of Philosophy."
+)
 ```
 
-```{r phil-review-polphil-words-summary, fig.height = 5, fig.cap = "Sum of Political Philosophy words in the three big journals, 1930-1970"}
+```{r phil-review-polphil-words-summary, fig.height = 5, fig.cap = "Sum of Political Philosophy words in the three big journals, 1930-1970", fig.alt = alt_text}
 tt <- t %>%
   group_by(journal, year) %>%
   summarise(nn = sum(n))
@@ -344,13 +368,16 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
   labs(x = element_blank(), y = "Occurrences of words")
+
+alt_text <- "A single scatterplot showing the sums of the values in the six scatterplots in the previous graph. A loess curve through the graph shows that they start declining in frequency in Philosophical Review in the late 1940s, and in Journal of Philosophy in the mid 1950s."
+
 ```
 
 Again, we see a fairly big drop, though here it seems like the break comes in 1952. And note from the word-by-word graph that it's the parts that seem most like political philosophy in the current sense that hold up for the longest. _Philosophical Review_ in the 1950s talked about democracy a bit, but it didn't talk about culture.
 
 Let's sum all these together to get an overall picture. The next graph shows how often these 24 words appear in each of these journals in each year.
 
-```{r make-phil-rev-look-bad, fig.height = 5, fig.cap = "Sum of word usage for 24 distinctive words in the three big journals, 1930-1970"}
+```{r make-phil-rev-look-bad, fig.height = 5, fig.cap = "Sum of word usage for 24 distinctive words in the three big journals, 1930-1970", fig.alt = alt_text}
 tt <- mid_words %>%
   filter(word %in% c(pr_pol_words, pr_idealism_words, pr_mind_words)) %>%
   group_by(journal, year) %>%
@@ -366,6 +393,8 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
   labs(x = element_blank(), y = "Occurrences of words")
+
+alt_text <- "A single scatterplot summing the frequency of the 24 words discussed so far. Their annual usage in Mind is reasonably stable, around 200 per year. In Philosophical Review they are used around 600 times per year through 1950, then are used even less often than in Mind. In Journal of Philosophy they are used around 700 to 800 times a year until around 1960, then drop to 300 to 400 usages per year."
 ```
 
 And you'd have to say that by that measure, the 1950s at Philosophical Review do look quite different to the 1940s. This difference is why, I think, most models I looked at had at least one topic that disappeared from _Philosophical Review_ right around 1950. For whatever reason this model didn't have such a topic, this topic on Dewey is the closest, but I wanted to show you why this was a common occurrence.
@@ -398,7 +427,7 @@ Early Modern Words
 
 See if you can spot when Gilbert Ryle, who was particularly hostile to any history of philosophy except ancient, took over.
 
-```{r phil-review-history-words, fig.height = 10.2, fig.cap = "Early Modern words in the three big journals, 1930-1970"}
+```{r phil-review-history-words, fig.height = 10.2, fig.cap = "Early Modern words in the three big journals, 1930-1970", fig.alt = alt_text}
 t <- mid_words %>%
   filter(word %in% history_words) 
 
@@ -424,9 +453,16 @@ ggplot(t,
             hjust = "outward",
             size = 3,
             colour = "grey40")
+
+alt_text <- paste0(
+  "Twelve scatterplots showing the number of occurrences of the words ",
+  paste(history_words, collapse = ", "),
+  " in the three big journals. The x-axis is the year, from 1930-1970. The y-axis is the frequency, from 0 to 250.",
+  " The main significance is seeing how all these values in Mind fall to very low levels after Ryle becomes editor after World War II.."
+)
 ```
 
-```{r phil-review-history-words-summary, fig.height = 5, fig.cap = "Sum of Early Modern words in the three big journals, 1930-1970"}
+```{r phil-review-history-words-summary, fig.height = 5, fig.cap = "Sum of Early Modern words in the three big journals, 1930-1970", fig.alt = alt_text}
 tt <- t %>%
   group_by(journal, year) %>%
   summarise(nn = sum(n))
@@ -441,6 +477,8 @@ ggplot(tt, aes(x = year, y = nn, color = journal)) +
         panel.grid.major.x = element_line(color = "grey85", size = 0.07)) +
   scale_x_continuous(breaks = c(1950)) +
   labs(x = element_blank(), y = "Occurrences of words")
+
+alt_text <- "A single scatterplot showing the sum of the previous 12. The fall in how often these words appear in Mind is very dramatic, from averaging about 400 appearances per year to about 150."
 ```
 
 In case you were wondering whether this kind of crude counting could detect a change in journal policy, I think you have the answer right there. It's a bit interesting that we see a fall at the Journal and the Review as well, but that's a story for [another topic](#Topic21).

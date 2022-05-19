@@ -1,7 +1,6 @@
 ```{r t76a}
 jjj <- 76
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t76b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -31,11 +30,11 @@ The model separates out the theory of [Knowledge](#topic74) from the theory of [
 
 This topic has even fewer papers from the early years that are clearly in the topic. The first paper that gets a topic probability above one-third is by Harry Frankfurt! This tells us something interesting about the background to Gettier's 1963 paper. Just a few years before that paper, there was virtually no discussion of beliefs being justified. It wasn't that Gettier showed that a familiar concept couldn't play a role in the analysis of knowledge. He effectively introduced the concept of justification.
 
-Another way to think about the division the model is making here is that the earlier topic is Knowledge-first epistemology, this is Belief-first epistemology, and the upcoming topic on [Formal Epistemology](#topic84) is credence-first epistemology. The model thinks 'justified' and 'justification' are, respectively, $10^5$ and $10^8$ times more likely to appear in this topic than in Knowledge. But it also thinks 'believe', 'believing', 'beliefs' and 'believed' are, respectively, $10^3$, $10^5$, $10^{14}$ and $10^{15}$ times more likely to be here. On the other hand, it thinks 'know' and 'knows' are $10^6$ and $10^{14}$ times less likely to be here than in Knowledge, while 'skeptic' and 'williamson' are also $10^{14}$ and $10^{20}$ times less likely. Obviously a lot of these words are used in a lot of the articles you seee above, which is why the model has ambivalent verdicts about the papers. But that's the distinction it is drawing. 
+Another way to think about the division the model is making here is that the earlier topic is Knowledge-first epistemology, this is Belief-first epistemology, and the upcoming topic on [Formal Epistemology](#topic84) is Credence-first epistemology. The model thinks 'justified' and 'justification' are, respectively, $10^5$ and $10^8$ times more likely to appear in this topic than in Knowledge. But it also thinks 'believe', 'believing', 'beliefs' and 'believed' are, respectively, $10^3$, $10^5$, $10^{14}$ and $10^{15}$ times more likely to be here. On the other hand, it thinks 'know' and 'knows' are $10^6$ and $10^{14}$ times less likely to be here than in Knowledge, while 'skeptic' and 'williamson' are also $10^{14}$ and $10^{20}$ times less likely. Obviously a lot of these words are used in a lot of the articles you seee above, which is why the model has ambivalent verdicts about the papers. But that's the distinction it is drawing. 
 
 With that in mind, the trends over the last few years of the three main epistemology topics are interesting.
 
-```{r modern-epistemology-graph, fig.height = 5, fig.cap= "Trends in Epistemology in the Last 25 years of the study"}
+```{r modern-epistemology-graph, fig.height = 5, fig.cap= "Trends in Epistemology in the Last 25 years of the study", fig.alt = alt_text}
 t <- weight_ratio %>%
   filter(year > 1988, topic == 74 | topic == 76 | topic == 84) %>%
   mutate(topic = as.numeric(topic)) %>%
@@ -55,6 +54,8 @@ ggplot(t, aes(x = year, y = y, color=subject, group=subject)) +
                        expand = expansion(mult = c(0.01, 0.01))) +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
   geom_smooth(size = 0.5, se = F, method = "loess", formula = "y ~ x")
+
+alt_text <- "A scatterplot, with trendlines, of the proportion of papers in recent years on Justification, Knowledge and Formal Epistemology in the last 25 years. Through the 1990s, Justification is much higher than the other two, but it stays fairly flat at around 2.5% throughout the period. In the early 2000s, Knowledge rises rapidly to almost catch up with Justification. Then in the late 2000s Formal Epistemology rises, and even passes, Justification."
 
 ```
 

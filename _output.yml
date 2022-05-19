@@ -16,18 +16,42 @@ bookdown::gitbook:
       github: no
       twitter: yes
       facebook: no
+    download:
+      - ["lda-bookdown.docx", "Word"]
 
-bookdown::html_document2:
+
+bookdown::bs4_book:
+  css: style.css
   split_by: section
+  split_bib: no
+  config:
+    toc:
+      collapse: section
+      toc_float:
+        collapsed: false
+        smooth_scroll: false
+      before: |
+        <li><a href="./">A History of Philosophy Journals</a></li>
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+    sharing:
+      github: no
+      twitter: yes
+      facebook: no
+    download:
+      - ["lda-bookdown.docx", "Word"]
 
-bookdown::pdf_book:
-  keep_tex: true
-  includes:
-    in_header: "preamble.tex"
+# bookdown::html_document2:
+#   split_by: section
+# 
+# bookdown::pdf_book:
+#   keep_tex: true
+#   includes:
+#     in_header: "preamble.tex"
+# 
+# bookdown::epub_book:
+#   number_sections: true
 
-bookdown::epub_book:
-  number_sections: true
-
-bookdown::word_document2:
-  toc: true
-  always_allow_html: true
+# bookdown::word_document2: 
+#   toc: TRUE
+#   always_allow_html: TRUE

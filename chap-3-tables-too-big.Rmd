@@ -1,0 +1,110 @@
+# Data Tables for Chapter 3
+
+### Data Tables for Figures 3.1 and 3.2 {-}
+
+```{r weight-numerator-table}
+temp <- weight_numerator %>% 
+  mutate(topic = as.numeric(topic)) %>% 
+  mutate(y = round(y, 1)) %>% 
+  left_join(the_categories, by = "topic") %>% 
+  pivot_wider(id_cols = subject, names_from = year, values_from = y) %>% 
+  rename(Subject = subject)
+kable(temp, caption = "Weighted number of articles in each topic in each year")
+```
+
+
+### Data Tables for Figures 3.3 and 3.4 {-}
+
+```{r count-numerator-table}
+temp <- count_numerator %>% 
+  mutate(topic = as.numeric(topic)) %>% 
+#  mutate(y = round(y, 1)) %>% 
+  left_join(the_categories, by = "topic") %>% 
+  pivot_wider(id_cols = subject, names_from = year, values_from = y) %>% 
+  rename(Subject = subject)
+kable(temp, caption = "Raw number of articles in each topic in each year")
+```
+
+
+### Data Tables for Figures 3.5, 3.6 and 3.7 {-}
+
+```{r weight-ratio-table}
+temp <- weight_ratio %>% 
+  mutate(topic = as.numeric(topic)) %>% 
+  mutate(y = round(1000*y, 0)) %>% 
+  left_join(the_categories, by = "topic") %>% 
+  pivot_wider(id_cols = subject, names_from = year, values_from = y) %>% 
+  rename(Subject = subject)
+kable(temp, caption = "Weighted number of articles in each topic in each year per 1000 articles in all journals")
+```
+
+
+
+### Data Tables for Figures 3.8, 3.9 and 3.10 {-}
+
+```{r count-ratio-table}
+temp <- count_ratio %>% 
+  mutate(topic = as.numeric(topic)) %>% 
+  mutate(y = round(1000*y, 0)) %>% 
+  left_join(the_categories, by = "topic") %>% 
+  pivot_wider(id_cols = subject, names_from = year, values_from = y) %>% 
+  rename(Subject = subject)
+kable(temp, caption = "Raw number of articles in each topic in each year per 1000 articles in all journals")
+```
+
+
+### Data Tables for Figures 3.11 and 3.13 {-}
+
+```{r page-weight-numerator-table}
+temp <- page_weight_numerator %>% 
+  mutate(topic = as.numeric(topic)) %>% 
+  mutate(y = round(y, 0)) %>% 
+  left_join(the_categories, by = "topic") %>% 
+  pivot_wider(id_cols = subject, names_from = year, values_from = y) %>% 
+  rename(Subject = subject)
+kable(temp, caption = "Weighted number of pages in each topic in each year")
+```
+
+### Data Tables for Figures 3.15 and 3.16 {-}
+
+```{r page-count-numerator-table}
+temp <- page_count_numerator %>% 
+  mutate(topic = as.numeric(topic)) %>% 
+  mutate(y = round(y, 0)) %>% 
+  left_join(the_categories, by = "topic") %>% 
+  pivot_wider(id_cols = subject, names_from = year, values_from = y) %>% 
+  rename(Subject = subject)
+kable(temp, caption = "Raw number of pages in each topic in each year")
+```
+
+
+
+
+
+
+### Data Tables for Figures 3.17 and 3.18 {-}
+
+```{r page-weight-ratio-table}
+temp <- page_weight_ratio%>% 
+  mutate(topic = as.numeric(topic)) %>% 
+  mutate(y = round(1000*y, 0)) %>% 
+  left_join(the_categories, by = "topic") %>% 
+  pivot_wider(id_cols = subject, names_from = year, values_from = y) %>% 
+  rename(Subject = subject)
+kable(temp, caption = "Weighted number of pages in each topic in each year per 1000 pages in all journals")
+```
+
+
+### Data Tables for Figures 3.19 and 3.20 {-}
+
+```{r page-count-ratio-table}
+temp <- page_count_ratio%>% 
+  mutate(topic = as.numeric(topic)) %>% 
+  mutate(y = round(1000*y, 0)) %>% 
+  left_join(the_categories, by = "topic") %>% 
+  pivot_wider(id_cols = subject, names_from = year, values_from = y) %>% 
+  rename(Subject = subject)
+kable(temp, caption = "Raw number of pages in each topic in each year per 1000 pages in all journals")
+```
+
+

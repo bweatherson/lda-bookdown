@@ -1,0 +1,949 @@
+# Outliers {#outliers}
+
+This chapter investigates various outliers in the model. The aim of the chapter is two-fold. One is to look for weird things that we can discover about the history of the journals by looking at extreme values in the model. The other is to test the model by looking at the extreme things it says. Usually the most extreme things a model says are the least plausible; they are artefacts of the model not facts about the underlying phenomena. So if the model is not too plausible at the extremes, that should give us some confidence in the other things it says.
+
+## High Confidence Articles {#high-confidence-articles}
+
+The model is fairly confident about where some of the articles belong. Other articles it is more confused by. Let's start by looking at those extremes. First, here are the articles where the model is most sure of a classification. That is, they are the articles where the probability of being in one particular category is highest.
+
+```{r highconf}
+certainty_check <- relabeled_gamma %>%
+  select(document, topic, gamma) %>% 
+  mutate(gammasq = gamma ^ 2) %>%
+  group_by(document) %>%
+  dplyr::summarise(m = max(gamma), c = sum(gammasq)) %>%
+  inner_join(relabeled_articles, by = "document") %>%
+  select(document, topic, m, c)
+
+certainty_check <- inner_join(certainty_check, articles, by = "document") %>%
+  select(document, topic, m, c, citation, length) %>%
+  arrange(-m) %>%
+  inner_join(the_categories, by = "topic") %>%
+  select(document, subject, m, c, citation, length)
+  
+short_certainty <- certainty_check %>%
+  top_n(10, m) %>%
+  select(citation, subject)
+
+kable(short_certainty, 
+      col.names = c("Article", "Subject"), 
+      caption = "Articles the Model is Most Certain About")
+
+# See 'most_and_least_certain.R' for more
+```
+
+There is a reasonable spread of topics here; 9 of the 90 are represented in just these ten articles. But note that these tend to be very short articles. This might be why the model is so confident in them. What if we filter out all articles 10 pages or shorter?
+
+```{r highconf-p2}
+medium_certainty <- certainty_check %>%
+  filter(length > 9) %>%
+  top_n(10, m) %>%
+  select(citation, subject)
+
+kable(medium_certainty, 
+      col.names = c("Article", "Subject"),
+      caption = "Articles the Model is Most Certain About (Minimum length 10 pages)")
+```
+
+It isn't surprising that evolutionary biology starts to turn up a little here. It's a very specialised topic. (I'll come back to this question of specialisation, and what it means to be a specialised topic, in section \@ref(raw-weight-count).) 
+
+We mostly get new articles if we extend the minimum length to 20 pages.
+
+```{r highconf-p3}
+huge_certainty <- certainty_check %>%
+  filter(length > 19) %>%
+  top_n(10, m) %>%
+  select(citation, subject)
+
+kable(huge_certainty, 
+      col.names = c("Article", "Subject"),
+      caption = "Articles the Model is Most Certain About (Minimum length 20 pages)")
+```
+
+And note that all of these are just over 20 pages. (Or exactly 20 in a few cases.) The model really loses confidence the longer a piece gets.
+
+```{r highconf-p4}
+long_certainty <- certainty_check %>%
+  filter(length > 29) %>%
+  top_n(10, m) %>%
+  select(citation, subject)
+
+kable(long_certainty, 
+      col.names = c("Article", "Subject"),
+      caption = "Articles the Model is Most Certain About (Minimum length 30 pages)")
+```
+
+Now we're mostly looking at papers in political philosophy. But still it is mostly papers that just fall over the 30 page limit. So for the last one, let's look at the articles it is most confident about that are 40 pages or longer.
+
+```{r highconf-p5}
+absurd_certainty <- certainty_check %>%
+  filter(length > 39) %>%
+  top_n(10, m) %>%
+  select(citation, subject)
+
+kable(absurd_certainty, 
+      col.names = c("Article", "Subject"),
+      caption = "Articles the Model is Most Certain About (Minimum length 40 pages)")
+```
+
+Again, normative an political philosophy cover the very top.
+
+The articles here are also mostly fairly recent, but that doesn't tell us much about the model. Rather, it is a sign that long articles are a relatively recent phenomenon. 
+
+```{r long-art-histogram, fig.height= 4, fig.cap = "Number of articles each decade that are at least 40 pages long", fig.alt = alt_text}
+long_articles <- articles %>%
+  filter(length > 39)
+
+ggplot(long_articles) +
+  geom_bar(aes(year), color = "grey40", fill = "grey40", width = 0.5) + 
+  scale_x_binned() +
+  labs(x = "Decade", y = "Number of articles at least 40 pages long", title = "Articles are getting longer") +
+  freqstyle +
+    scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
+                     minor_breaks = scales::breaks_pretty(n = 15),
+                     breaks = scales::breaks_pretty(n = 3))
+
+alt_text <- "A histogram showing the number of articles in each decade from 1900 to 2010 that are at least 40 pages long. The number begins to rise after 1970."
+```
+
+I'll come back to this point in section \@ref(article-length-section)
+
+## Low Confidence Articles {#low-confidence-articles}
+
+What about the other direction? Which articles is the model most uncertain about. This is a bit more of a stress test of the model. The high-confidence articles all look pretty much right for the topics they are in. (Not least because I named the topics after the high confidence articles.) But if the model throws up its hands at articles that are easy to place, that's relatively bad. So let's look. 
+
+There are more or less sophisticated ways to measure how unsure the model is about an article. I'm going to go with one of the less sophisticated ways, because it is easy to understand and provides clear enough guidance. Implicitly in the previous section I measured the model's certainty about an article by the maximal probability it gives to the article being in any one topic. So I'll say it is most uncertain about an article if that maximal probability (for that article) is lowest.
+
+By that measure, here are the ten articles the model is most unsure about.
+
+```{r uncertainty-table}
+all_uncertainty <- certainty_check %>%
+  top_n(10, -m) %>%
+  arrange(m) %>%
+  select(citation, document)
+
+kable(select(all_uncertainty, citation), 
+      col.names = c("Article"), 
+      caption = "Articles the Model is Most Uncertain About")
+```
+
+So did the model get it right? Should it be uncertain about these articles? Let's look at some cases, starting with the one it is most uncertain about.
+
+```{r uncertainty-article-1}
+individual_article(all_uncertainty$document[1])
+```
+
+For reasons best known to them, the editors of the _Philosophical Review_ commissioned a [critical notice](https://philpapers.org/rec/DONTEO) [@Donagan1970] of the 8 volume Encyclopedia of Philosophy. You could call it a book review I guess, but it's 56 pages long, so it feels like it should be in our study.
+
+And I'm fairly happy that this was the article the model had the greatest trouble with. How could you classify a critical notice of an encyclopedia. What topic could it not be in? The answer seems to be the very late topics - there is no [Wide Content](#topic82) or [Quantum Physics](#topic66) there - and the very early topics. I'm actually a little surprised that [Idealism](#topic02) doesn't turn up.
+
+So far so good - the model threw up its hands exactly when it should have done so. It would have been wrong to confidently place Donagan's article. What about the second one?
+
+```{r uncertainty-article-2}
+individual_article(all_uncertainty$document[2])
+```
+
+And this is a bit more depressing. [Garfield's article](https://philpapers.org/rec/GARTMO-2) [@Garfield1989] is wide-ranging, covering a number of big questions at the heart of philosophy of mind and epistemology. But still, it isn't that hard to say what it's about broadly. And to be sure, the model does recognise that this isn't a philosophy of physics article, or a political philosophy article, or an ancient philosophy article. But still, you'd think it should do better than this.
+
+What's happened, in a picturesque sense, is this. The articles are arranged in a feature space. The feature space has many, many dimensions, and the articles do form clusters within it. What the model does is pick ninety points in that space, such that as many articles as possible are reasonably close to one of the points. Now some articles, like the Donagan, are going to be so idiosyncratic that they aren't near a point. But the Garfield isn't like that. The model could have decided that Sellarsian theories of mind/epistemology are a focal point. It just didn't do that. Instead these ended up falling between many many different points.
+
+I think it isn't a coincidence that there is another article by Wilfred Sellars on the list. I think it is a coincidence that there is an article by his father though. That one is weird. Here is its table.
+
+```{r uncertainty-article-10}
+individual_article(all_uncertainty$document[10])
+```
+
+In [this paper](https://philpapers.org/rec/SELACT) [@Sellars1941], Sellars is operating at a fairly high degree of abstraction, and considering the ways in which the big philosophical views (idealism, pragmatism, realism, etc) have characteristic theories of truth, and offering a correspondence theory that isn't so closely tied to general forms of realism. And you can see why the paper looks, to the model, like it could be about all sorts of things. I'm still a bit surprised that the model didn't just lump it in with other works on truth. It doesn't mention the paradoxes, and has no formalism, and maybe that was enough. But it's surprising.
+
+Anyway, I'm pleased that the article it was most uncertain about was a really impossible to place article, disappointed that it couldn't do a better job with Sellarsian philosophy, and not surprised that it also threw up its hands at various methodology articles. It's not a perfect model, but it did fairly well.
+
+## High Confidence Topics {#high-confidence-topics}
+
+I mentioned in section \@ref(high-confidence-articles) that there were several topics that were appearing frequently among the articles the model was very confident about. Let's look at those topics on a graph.
+
+This graph looks at the 50 articles the model is most confident about, and asks how many of them are in the various different topics.
+
+```{r high-confidence-function, fig.cap = "Topic distribution for the 50 articles the model is most certain about", fig.alt = alt_text}
+cols <- tibble(x = 1:90) %>%
+  mutate(col = hcl(h = (x-1)*(360/90)+15, l = 65, c = 100)) %>%
+  deframe()
+
+graph_high_prob_page_limit <- function(x){
+  c <- relabeled_articles %>%
+  arrange(-gamma) %>%
+  filter(length > x-1) %>%
+  slice(1:50) %>%
+  mutate(topicfactor = as.factor(topic)) %>%
+  inner_join(the_categories, by = "topic")
+  
+  ylab <- paste0("Number of articles with topic probability at least ", round(min(c$gamma), 3), ", length at least ",x," pages")
+
+  ggplot(c, aes(reorder(subject, -topic), fill = topicfactor, drop = TRUE)) + 
+    freqstyle +
+  geom_bar(width = 0.8) +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = ylab, x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03))) +
+  scale_fill_manual(values = cols)
+}
+
+confident_articles_no_page_limit <- relabeled_articles %>%
+  arrange(-gamma) %>%
+  slice(1:50) %>%
+  mutate(topicfactor = as.factor(topic)) %>%
+  inner_join(the_categories, by = "topic")
+
+ylab = paste0("Number of articles with topic probability at least ", round(min(confident_articles_no_page_limit$gamma), 3))
+
+ggplot(confident_articles_no_page_limit, 
+       aes(reorder(subject, -topic), 
+           fill = topicfactor)) + 
+  freqstyle +
+  geom_bar(width = 0.8) +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = ylab, x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03))) +
+  scale_fill_manual(values = cols)
+
+alt_text <- "A hisogram showing the topic distribution for the 50 articles the model is the most certain about, shown as the number of articles with topic probability at least 0.905. Space and Time has by far the most articles in this category."
+```
+
+As I noted back when talking about [Space and Time](#topic50), it has a surprising large number of articles the model is very confident about. But as we saw above, a lot of the articles the model is confident about are very short. Let's focus instead on the articles that are at least 10 pages long, and again look at the distribution of the 50 articles the model is most confident about.
+
+```{r high-conf-10-pages, fig.cap = "Topic distribution for the 50 articles the model is most certain about (min 10 pages", fig.alt = alt_text}
+graph_high_prob_page_limit(10)
+
+alt_text <- "A histogram showing the topic distribution for the 50 articles the model is the most certain about that are at least 10 pages long. This is shown as the number of articles with topic probability at least 0.847. Evolutionary Biology is the most frequent in this distribution, followed by War. "
+```
+
+And this isn't surprising; the model gets really confident that [Evolutionary Biology](#topic82) articles are properly placed. The same thing happens when we increase the length to 20 pages.
+
+```{r high-conf-20-pages, fig.cap = "Topic distribution for the 50 articles the model is most certain about (min 20 pages", fig.alt = alt_text }
+graph_high_prob_page_limit(20)
+
+alt_text <- " A histogram showing the topic distribution for the 50 articles the model is the most certain about that are at least 20 pages long. This is shown as the number of articles with topic probability at least 0.785. Evolutionary Biology is the most frequent in this distribution, followed by Quantum Physics. "
+```
+
+There are still 10 Evolutionary Biology articles, though mostly not the same 10. And there are fewer categories here. Just 18 categories are represented in these 50 articles. And the purples and reds indicate that the articles are getting much later. These trends extend when we raise the floor to 30 pages, though now the topics start to shift.
+
+```{r high-conf-30-pages, fig.cap = "Topic distribution for the 50 articles the model is most certain about (min 30 pages" , fig.alt = alt_text}
+graph_high_prob_page_limit(30)
+
+alt_text <- "A histogram showing the topic distribution for the 50 articles the model is the most certain about that are at least 30 pages long. This is shown as the number of articles with topic probability at least 0.695. Liberal Democracy is the most frequent in this distribution, followed by Quantum Physics and Egalitarianism."
+```
+
+There is more Quantum Physics, and more political philosophy. And when we move to 40 pages, which means we're just looking at the longest 2% of articles, these trends really accelerate.
+
+```{r high-conf-40-pages, fig.cap = "Topic distribution for the 50 articles the model is most certain about (min 40 pages", fig.alt = alt_text }
+graph_high_prob_page_limit(40)
+
+alt_text <- "A histogram showing the topic distribution for the 50 articles the model is the most certain about that are at least 40 pages long. This is shown as the number of articles with topic probability at least 0.559. Quantum Physics is the most frequent in this distribution, followed by Liberal Democracy and Early Modern."
+```
+
+By this stage the graph is measuring less which articles the model is really confident in, and more which kinds of philosophers write articles that long. The answer is, apparently, philosophers of (quantum) physics, political philosophers, and early modern historians.
+
+## Correlations {#correlation-section}
+
+The model assigns a probability to each topic-article pair. So across the articles, we can ask how tightly correlated those probabilities are. Which of them tend to go up when the other goes up? There are 8010 pairs of distinct topics, so there is too much data here to usefully examine, or even visualise. But I wanted to go over the extremes. First, here are the 32 strongest correlations. (Why 32? Because these seemed particularly interesting.)
+
+```{r correlation-setup}
+art_corr <- relabeled_gamma %>%
+  arrange(topic) %>%
+  select(-year, -journal, -length) %>%
+  pivot_wider(names_from = topic, values_from = gamma) %>%
+  select(-document) %>%
+  correlate(quiet = TRUE, diagonal = NA) %>%
+  corrr::shave() %>%
+  corrr::stretch(na.rm = FALSE) %>%
+  filter(!x == y) %>%
+  arrange(-r) %>%
+  mutate(x = as.numeric(x), y = as.numeric(y)) %>%
+  inner_join(the_categories, by = c("x" = "topic")) %>%
+  select(subj_one = subject, y, r, x) %>%
+  inner_join(the_categories, by = c("y" = "topic")) %>%
+  select(subj_one, subj_two = subject,  r, x, y) %>%
+  mutate(r = round(r, 4))
+```
+
+```{r correlation-kable}
+kable(art_corr %>%
+        slice(1:32) %>%
+        select(1:3), 
+      col.names = c("Subject One", "Subject Two", "Correlation"), 
+      caption = "Highest Topic Correlations") 
+```
+
+I think these mostly make sense. The two epistemology topics are very tightly connected. The two topics that are about formal methods in scientific reasoning are correlated. (Remember that [Chance](#topic44) included a lot of work on formal models of inference.) The philosophy of religion articles are correlated. Idealism is correlated with the other early topics. Topics about time are correlated. [Denoting](#topic43) and [Sense and Reference](#topic64) are correlated; Frege and Russell aren't that far apart.
+
+The bottom few here are particularly interesting. [Moral Conscience](#topic25) and [Value](#topic16) include some very analytic ethics; it's interesting that it they are so close to [Dewey and Pragmatism](#topic05). [Marx](#topic23) the topic plays well with [Life and Value](#topic03), i.e., Idealist Ethics, with [Liberal Democracy](#topic52), and with [History and Culture](#topic10). This is a bit surprising since Marx himself didn't play well with any of them. But Life and Value also plays well with [Faith and Theism](#topic08), the core philosophy of religion topic. That mildly surprised me, but perhaps it should not have given how important the Absolute is to idealists.
+
+Let's turn to the strongest negative correlations. These are a little less interesting.
+
+```{r correlation-kable-low}
+kable(art_corr %>%
+        arrange(r) %>%
+        slice(1:25) %>%
+        select(1:3), 
+      col.names = c("Subject One", "Subject Two", "Correlation"), 
+      caption = "Lowest Topic Correlations")
+```
+
+The early topics and the late topics aren't correlated. The Idealists aren't correlated with anyone who isn't sympathetic to idealism. No one was offering arguments, at least not as such, in the early going. Let's come back to this table and see what we can find that's more interesting.
+
+What about the topics that are perfectly independent; they are not correlated with each other at all.
+
+```{r correlation-kable-middle}
+kable(art_corr %>%
+        arrange(abs(r)) %>%
+        slice(1:25) %>%
+        select(1:3), 
+      col.names = c("Subject One", "Subject Two", "Correlation"), 
+      caption = "Most Independent Topics") 
+```
+
+I don't know what I expected here, but I don't think it was this. Some of these felt like they should be positively correlated. I guess just on timing grounds I expected [Personal Identity](#topic62) to correlate with [Wide Content](#topic85). But I would have guessed [Beauty](#topic08) to be negatively correlated with [Meaning and Use](#topic22). Maybe there isn't anything to be found here; this mostly looks like noise to me.
+
+The low correlation table featured mostly topics from the first half of the topics. (Indeed, every pair featured at least one such topic.) So let's do the high and low correlation tables again but with the topics restricted to numbers 46-90.
+
+```{r correlation-kable-late-high}
+kable(art_corr %>%
+        filter(x > 45, y > 45) %>%
+        slice(1:25) %>%
+        select(1:3), 
+        col.names = c("Subject One", "Subject Two", "Correlation"), 
+        caption = "Highest Topic Correlations (Topics 46-90)")
+```
+
+Those all seem to make sense. That isn't totally surprising, but it's reassuring to see that the model seems to have not messed up here. Let's look at the other end of the table.
+
+```{r correlation-kable-late-low}
+kable(art_corr %>%
+        filter(x > 45, y > 45) %>%
+        arrange(r) %>%
+        slice(1:25) %>%
+        select(1:3), 
+        col.names = c("Subject One", "Subject Two", "Correlation"), 
+        caption = "Lowest Topic Correlations (Topics 46-90)") 
+```
+
+This is a bit surprising. I thought you'd see pairs like Liberal Democracy and [Composition and Constitution](#Topic89) turning up a lot here. That is, I thought what we'd find would recreate the famiilar Ethics vs M&E divide. But pairs like that are not the bulk of the table. Instead, we get a lot of negatively correlated pairs that are on the same side of this (alleged) divide.
+
+Some such pairs are not surprising. [Concepts](#topic78) and [Formal Epistemology](#topic84) are negatively correlated, but this makes perfect sense because virtually all the work in Formal Epistemology uses unstructured contents.
+
+But you might worry that the lack of an Ethics vs M&E divide here shows that the model has missed something important. I think a better conclusion is that the model is correctly detecting that 'M&E' isn't a useful kind of classification in contemporary philosophy. This feels like something that could do with further study, but I doubt text mining will be the way forward here. It would be interesting, for example, to see whether citation studies show that there is (or is not) a big Ethics vs M&E divide.
+
+## Neighbours {#neighbours-section}
+
+There is another way that we can measure distance between articles. This is the way that I was measuring distance in the topic summaries back in chapter \@ref(all-90-topics). For a pair of topics $\langle x, y\rangle$, look at the articles that are more likely in topic $x$ than any other topic, and find the average probability that these articles are in $y$. Unlike correlations, this is an asymmetric measure. But it tells us something useful about the connections between the topics. I'll start by looking at the top of this table.
+
+```{r neighbours-tibble}
+n <- cross_topic_tibble %>%
+  ungroup() %>%
+  inner_join(the_categories, by = "topic") %>%
+  select(subject_one = subject, topic = othertopic, g) %>%
+  inner_join(the_categories, by = "topic") %>%
+  select(subject_one, subject_two = subject, g) %>%
+  arrange(-g)%>%
+  mutate(g = round(g, 4))
+
+```
+
+```{r neighbours-high}
+kable(n %>%
+        slice(1:25) %>%
+        select(1:3), 
+      col.names = c("Subject One", "Subject Two", "Average Probability"), 
+      caption = "Highest Cross-Topic Probability") 
+```
+
+That's not as helpful as I'd hoped. Lots of topics are such that articles in them look a lot like [Ordinary Language Philosophy](#topic24). I'll deal with this by simple brute force; I'll filter out the Ordinary Language Philosophy topic, and rerun the table.
+
+```{r neighbours-high-no-olp}
+kable(n %>%
+        filter(!subject_two == "Ordinary Language") %>%
+        slice(1:25) %>%
+        select(1:3),
+      col.names = c("Subject One", "Subject Two", "Average Probability"), 
+      caption = "Highest Cross-Topic Probability (excluding Ordinary Language)") 
+```
+
+That is a little more interesting, and a little more sensible, but there are a couple of things that jumped out.
+
+One is that there are a bunch of things here that don't appear on the correlations table. It makes sense that [Kant](#topic32) and [Idealism](#topic02) go together, but the correlation table didn't show that up. So maybe this is a better measure of proximity. It's at least an interestingly different measure.
+
+But the other surprise is that there are so few pairs that are on this list in both directions. Possibly these two surprises are related. [Knowledge](#topic74) and [Justification](#topic76) are there in both directions, and I think that's it. In some cases I think you can see why. The modeling articles are often about causal modeling, so they feel like causation articles. But lots of causation articles, especially pre-Lewis, don't feel like causal modeling articles, and hence don't feel like modeling. But I would have guessed pairs like that woud be the outlier; they seem to be the usual case.
+
+Next let's look at the lower end of this table.
+
+```{r neighbours-low}
+kable(n %>%
+        arrange(g) %>%
+        slice(1:25) %>%
+        select(1:3),
+      col.names = c("Subject One", "Subject Two", "Average Probability"), 
+      caption = "Lowest Cross-Topic Probability")
+```
+
+And this is why I've used this measure as my preferred distance measure. Those all look like topics that have nothing to do with each other. And they don't!
+
+There is a relatively technical point that's worth emphasising here. The model gives a non-zero probability to each article being in each topic. But it pretty clearly doesn't calculate each of those probabilities particularly carefully. If you look at the probability distribution for any article, there are some carefully calculated probabilities for anywhere from 1 to 20 topics. (Usually 5 to 8, at least by my impression.) Then all the other topics get the very same probability. What that same probability is seems, as far as I can tell, to be a factor of how confident the model is in its assignment. But it's just some very very low number.
+
+What we're seeing here is that for a bunch of pairs of topics, every one of the articles that is naturally in the first topic gets one of these residual probabilities for the second topic. For example, for one hundred percent of the articles in [Psychology](#topic01), the probability that they are in [Formal Epistemology](#topic84) is minimal.
+
+That means you really shouldn't care about the order of this table. This is a list of topics that the model thinks have basically nothing in common. And apart from being a little surprised about [Kant](#topic32) being paired up that way with [Medical Ethics and Freud](#topic70), I can't see much to complain about here. And note that even in that case, there are some Medical Ethics articles that the model thinks are a bit about Kant; it just thinks that no Kant articles are maybe about Medical Ethics. And that seems perfectly sensible.
+
+## Articles and Pages {#topic-length-section}
+
+I've mostly been analysing the data here by looking at how many articles (or how many expected articles) are in a topic. But there's a case to be made for using pages rather than articles as the basic measure. To give you a sense of how much this matters, here are the topics with the longest and shortest average lengths.^[Note I'm using weighted, or expected, articles here, so for each topic I'm summing over all articles the probability of the article being in that topic times the length of the article, and dividing by the expected number of articles in the topic.]
+
+```{r topic-length-table-long}
+page_ratio <- inner_join(weight_numerator, page_weight_numerator, by = c("year", "topic")) %>%
+  filter(year > 1799, year < 2110) %>%
+  mutate(pages = y.y/y.x) %>%
+  arrange(-pages)
+
+page_ratio_summary <- page_ratio %>%
+  group_by(topic) %>%
+  dplyr::summarise(a = sum(y.x), p = sum(y.y)) %>%
+  mutate(r = p/a) %>%
+  arrange(topic) %>%
+  mutate(topic = as.numeric(topic)) %>%
+  inner_join(the_categories, by = "topic") %>%
+  mutate(a = round(a, 2), p = round(p, 2)) %>%
+  select(Subject = subject, Articles = a, Pages = p) %>%
+  mutate(avg = Pages/Articles) %>%
+  arrange(-avg) %>%
+  mutate(avg = round(avg, 1))
+
+kable(page_ratio_summary %>% select(Subject, avg) %>% slice(1:5), col.names = c("Topic", "Average Length"), caption = "Topics with Longest Average Page Length") 
+```
+
+```{r topic-length-table-short}
+page_ratio_summary <- page_ratio %>%
+  group_by(topic) %>%
+  dplyr::summarise(a = sum(y.x), p = sum(y.y)) %>%
+  mutate(r = p/a) %>%
+  arrange(topic) %>%
+  mutate(topic = as.numeric(topic)) %>%
+  inner_join(the_categories, by = "topic") %>%
+  mutate(a = round(a, 2), p = round(p, 2)) %>%
+  select(Subject = subject, Articles = a, Pages = p) %>%
+  mutate(avg = Pages/Articles) %>%
+  arrange(avg) %>%
+  mutate(avg = round(avg, 1))
+
+kable(page_ratio_summary %>% select(Subject, avg) %>% slice(1:5), col.names = c("Topic", "Average Length"), caption = "Topics with Shortest Average Page Length") 
+```
+
+The difference between the longest and the shortest is almost a 2:1 ratio. So if you measured things by pages, it would make some changes. But in most cases, this difference won't show up on the graphs I've displayed so far. That's because most of the differences are screened by the changes in average article lengths over time. That is, most of the changes are due to the fact that the topics appear at different times in the data, and that the norm for article lengths change over time.
+
+There are some exceptions to this. The Truth topic has a lot of short-ish articles appearing in recent times, when the article lengths have been getting longer. Though even there something weird happens. Many of these articles are in _Analysis_, and they are very long by _Analysis_ standards, but short overall. Still, it's worth looking at just how much article lengths have changed to provide a sense of how much these changes in length fashions are driving the tables in this section.
+
+## Article Lengths {#article-length-section}
+
+This isn't specifically to do with the model I built, but it's an interesting finding. Articles have been getting longer, much longer, over time. Some of this is to do with the journals getting rid of things like abstracts of APA or PSA papers. But it's also just a fact that articles have been getting longer. Here is a helpful graph that shows the patterns.
+
+```{r article-length-graph, fig.height = 5, fig.cap = "Measures of article length in each year", fig.alt = alt_text}
+p <- ((1:5)/5) - 0.1
+p_names <- map_chr(p, ~paste0("d.", .x*100, "%"))
+p_funs <- map(p, ~partial(quantile, probs = .x, na.rm = TRUE)) %>% 
+  set_names(nm = p_names)
+length_deciles <- articles %>% 
+  group_by(year) %>% 
+  summarize_at(vars(length), p_funs) %>%
+  pivot_longer(cols = starts_with("d."), names_to = "decile", names_prefix = "d.", values_to = "length")
+ggplot(length_deciles, aes(x = year, y = length, color = decile)) + 
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(se = F, method = "loess", formula = 'y ~ x', size = 0.1) +
+  freqstyle +
+  theme(legend.title = element_blank()) +
+  labs(x = element_blank(), y = "Number of Pages", title = "The Articles are Getting Longer (Again)")
+
+alt_text <- "A scatterplot (with trend lines) showing the number of pages of articles from roughtly 1880 to 2000, sorted into five deciles (10%, 30%, 50%, 70%, and 90%). Across all categories, the median number of pages has a peak in the early 1900s, drops until the middle of the centrury, and begins to rise sharply around 1980."
+```
+
+For each year, I've sorted the articles by length, then plotted the lengths of the articles at five decile markers. So the red curve is the length of the article that is 10% of the way up the length table, the olive line is the article that is 30% of the way up the length chart, the green line is the length of the median article (by length) and so on. 
+
+I'm using medians rather than means because the outliers here are really significant. I don't want the numbers to be thrown off by the fact that a journal publishes a single 90 page article. But I also want to be able to see on the graph how much impact the 1 page articles are having.
+
+The latter turns out not to be too significant. Even when the articles are at their shortest in the early 1960s, the olive line only gets down to 5 pages. So even then, 70% or so of the articles are 5 or more pages. There are more abstracts and discussion notes being posted then than there are now, but not enough to explain all of what's happening. The red line creeps up very slowly as first the regular journals start abolishing short articles, then _Analysis_ starts increasing its average page length as well.
+
+But here's the really striking feature of the graph. The median article in the 2010s is as long as the 90th percentile article from the 1950s and 1960s. For a while there, articles over 20 pages were real outliers. Now they are the norm. The outliers are now over 35 pages. This feels like a bad thing; articles are getting bloated, and we need to find a way to get them back to a reasonable length.
+
+## The Bump {#the-bump}
+
+A strange thing about these models is that there is a 'bump' around the early 1980s. I'll explain what I mean by a bump in a minute, but I want to stress that this is not an artifact of the particular LDA model I'm using. It might be an artifact of the LDA process, but it turns up in practically every model I built, no matter how the different parameters get set. Just about the only constants across all model runs were that there was a huge topic on Idealism, and there was a bump.
+
+To get to the bump, start with a slightly different graph. One useful measure of the informativeness of a probability distribution is how different it is from the flat distribution. So if you've got a probability distribution over N atoms, the more distribution is more informative the further away it is from the distribution that assigns probability 1/N to each of the N atoms. There are a bunch of ways of measuring distance here, but for simplicity I'll use a simple Pythagorean measure. This takes the sum (over the N atoms) of the square of the difference between the probability assigned to that atom, and 1/N. (If I was being more careful I'd divide by N to get an average distance, but since we're not going to be varying the number of atoms, this won't be necessary.)
+
+Now one thing you can do with the model I've build is for each year, work out for each topic the average probability that an article in that year will be in that topic. Since this the average of a bunch of probability functions, it is a probability function. And we can then ask how informative this function is by measuring its distance from this flat probability distribution. Or, more or less equivalently, we can ask how 'normal' it is by taking the inverse of this informativeness measure. And if we plot that over time, we get the following graph.
+
+```{r normality-graph, fig.height = 4, fig.cap="How similar the average probability distribution is to the flat distribution", fig.alt = alt_text}
+year_normality <- weight_ratio %>%
+  group_by(year) %>%
+  summarise(inform = sum((y - 1/90)^2)) %>%
+  mutate(normality = 1/inform)
+
+ggplot(year_normality, aes(x = year, y = normality)) + 
+  geom_point(size = 0.5) +
+  freqstyle +
+  labs(x = element_blank(), y = "Normality (i.e., inverse informativeness)", title = "Everything happened in the 1980s")
+
+alt_text <- "A scatterplot measuring the flatness of the probability distribution over all 90 topics in each year. It roughly measures how dispersed the topics are in each year; it would be at 0 if every article was definitely in the same topic, and at infinity if the average probability for each topic in the year was 1 in 90. It has a very sharp peak around 1982, rising fairly continuously and rapidly before that, and falling rapidly, and still fairly continuously, after that."
+```
+
+I don't know quite what I expected this to look like, but it wasn't *that*. The distribution gets flatter and flatter, at an accelerating rate, until about 1982, when it turns around and gets more informative in a hurry.
+
+There are other ways of looking at the model that tell us similar things. Rather than looking at each topic one at a time, we can ask for each year, what's the lowest number of (expected) articles in any topic that year. That can be thrown off by random topics, so we'll also look at the third lowest and fifth lowest average topic probability in each year.
+
+```{r bump-graph, fig.height = 6, fig.cap = "Lowest, third lowest, and fifth lowest average topic probability by year", fig.alt = alt_text}
+bump_tibble <- weight_ratio %>%
+  group_by(year) %>%
+  top_n(5, -y) %>%
+  dplyr::summarise(z1 = min(y), z2 = median(y), z3 = max(y)) %>%
+  pivot_longer(
+    cols = starts_with("z"),
+    values_to = "y"
+    )
+
+ggplot(bump_tibble, aes(x = year, y = y, color = name, group = name)) + 
+  geom_point(size = 0.5, alpha = 0.2) +
+  freqstyle +
+  geom_smooth(se = F, method = "loess", size = 0.2, formula = 'y ~ x') +
+  scale_color_discrete(labels = c("Lowest", "Third Lowest", "Fifth Lowest")) +
+  theme(legend.title = element_blank()) +
+  labs(x = element_blank(), y = "Average Topic Probability", title = "No one stayed home in the 1980s")
+
+alt_text <- "A scatterplot (with trend lines) showing the lowest, third lowest, and fifth lowest average topic probability across time from 1880 to 2010. In all three categories, the probability begins to rise dramatically around 1940 and peaks around 1980. "
+```
+
+And we see something very similar to the previous graph. Around the early 1980s, every topic is getting at least some attention from the model. But that changes the further you get away from 1980.
+
+The results around 1980 are really striking I think. For several years, no topic is below 0.2%, and only 4 topics are below 0.5%. Since by definition to average topic is at 1.1%, this means that there are very few topics that are very far from the mean.
+
+Now I don't have a good theory as to why this should be true. And there are two quite different explanations that seem plausible to me.
+
+1. The twelve journals in the early 1980s really were more pluralist than they have been before or since. There was, at last, space for philosophy of biology, and formal epistemology. But there was still (largely thanks to _Philosophy and Phenomenological Research_ and _Philosophical Quarterly_) space for articles continuous with idealism, pragmatism and phenomenology.
+2. It's just an artifact of the model building process. If there is ever any kind of drift in topics, and there is always going to be some kind of drift in topics, there will be a point near the middle of the data set where all the topics are represented.
+
+I don't know how to tell between these topics without running a lot more studies. For example, I could redo everything I've done, but stop in 1985, and see what these graphs look like. It might be that they look the same (with the last 28 years missing), or it might be that the peaks move back 15 or 20 years. It would take a huge amount of processing time to tell these apart, and I don't think it's a particularly worthwhile exercise.
+
+And one reason for that (one I'll return to in the next chapter when faced with [a similar puzzle](#buzzwords-section)) is that the best way to solve this involves doing something that would be good to do independently: extend the model forwards in time. Hopefully in the future we'll see models like this that don't stop at 2013. The 'artifact' explanation predicts that in those models, the bump will drift forwards a bit. The explanation in terms of actual pluralism predicts that it won't. When those models are built, we'll know more about what's driving the phenomena I've just graphed.
+
+## Trans-Atlantic Philosophy {#atlantic-section}
+
+Especially in the middle of the twentieth century, there is a very different feel to the UK journals as compared to the US journals. Or at least that's how it feels to me when I read those journals. Let's see how much the model agrees with that impressionistic assessmet.
+
+I'll run this test in two parts. First, I'll focus on 1924-1973. This takes us from the _Journal of Philosophy_ getting going until Ryle leaves the editorship of _Mind_. (He left in 1971, but the backlog of papers he left behind meant the next two years were spent publishing articles he accepted.) And so we're on roughly even footing, I'll focus on just four journals.
+
+- Two British journals: _Mind_ and _Proceedings of the Aristotelian Society_.
+- Two American journals: _Philosophical Review_ and _Journal of Philosophy_.
+
+For each topic, I'll look at the proportion of the (weighted) articles they had in those four journals (over those fifty years) that were in the British journals. This is a rough and ready way of teasing apart what UK and US philosophy looked like over that time. (Obviously neither pair of journals is fully representative of their country's philosophical scene, but they aren't the worst proxies either.)
+
+I'm leaving off topics 81-90 because they are so little represented in the journals over this time period that the ratios being graphed are more noise than signal.
+
+```{r atlantic-mid-century-setup}
+uk_mid_century_articles <- articles %>%
+  filter(journal == "Mind" | journal == "Proceedings of the Aristotelian Society") %>%
+  filter(year > 1923) %>%
+  filter(year < 1974)
+
+uk_mid_century_gamma <- relabeled_gamma %>%
+  filter(document %in% uk_mid_century_articles$document) %>%
+  filter(topic < 81) %>%
+  group_by(topic) %>%
+  dplyr::summarise(uk = sum(gamma))
+
+us_mid_century_articles <- articles %>%
+  filter(journal == "Journal of Philosophy" | journal == "Philosophical Review") %>%
+  filter(year > 1923) %>%
+  filter(year < 1974)
+
+us_mid_century_gamma <- relabeled_gamma %>%
+  filter(document %in% us_mid_century_articles$document) %>%
+  filter(topic < 81) %>%
+  group_by(topic) %>%
+  dplyr::summarise(us = sum(gamma))
+
+atlantic_mid_century_gamma <- inner_join(uk_mid_century_gamma, us_mid_century_gamma, by = "topic") %>%
+  inner_join(the_categories, by = "topic") %>%
+  mutate(topicfactor = as.factor(topic)) %>%
+  mutate(rat = uk/(uk + us))
+
+cols <- tibble(x = 1:90) %>%
+  mutate(col = hcl(h = (x-1)*(360/90)+15, l = 65, c = 100)) %>%
+  deframe()
+```
+
+```{r mid-century-graph-by-topic, fig.height = 12.2, fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1924-1973", fig.alt = alt_text}
+ggplot(atlantic_mid_century_gamma, aes(x = reorder(subject, -topic), y = rat, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = "Proportion of Articles in UK journals", x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03))) +
+  scale_fill_manual(values = cols)
+
+alt_text <- "A histogram showing the proportion of articles in big 4 journals that are in UK journals from 1924 to 1973, across 80 topics."
+```
+
+As you can see, there's quite a bit of variation there. Let's reorder the bars so the extremes are more visible.
+
+```{r mid-century-graph-by-ratio, fig.height = 12.2, fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1924-1973", fig.alt = alt_text}
+ggplot(atlantic_mid_century_gamma, aes(x = reorder(subject, -rat), y = rat, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = "Proportion of Articles in UK journals", x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03))) +
+  scale_fill_manual(values = cols)
+
+alt_text <- "A histogram showing the proportion of articles in big 4 journals that are in UK journals from 1924 to 1973, across 80 topics, sorted in order of lowest to highest proportion. Heidegger and Husserl is the lowest, and Propositions and Implications is the highest."
+```
+
+There is a lot more phenomenology in the US journals than the UK journals. This surprised me a little, since I didn't include _Philosophy and Phenomenological Research_ in the study. Less surprisingly, [Dewey and Pragmatism](#topic05) is a more American than British topic. After that, there is much more attention to philosophy of science, and social and political philosophy.
+
+On the UK side, there is [Ordinary Language Philosophy](#topic24). That's not news, but it's nice to see the model found this pattern. There are a couple of topics that have tiny numbers each side of the Atlantic in these journals: [Game Theory](#topic75) and [Feminism](#topic69). But otherwise the focus in the UK is more heavily on language, and on ethics. The latter is a bit of a theme across the journals. From day one there is attention being paid to questions of value. But for a long time there is very little work on ethics that treats it as autonomous subject, as opposed to deriving moral conclusions from, e.g., metaphysical premises.
+
+There is also, as perhaps should be clear from the names of the journals, more Philosophy of Mind in the UK journals. Apart from idealist-tinged works on self-consciousness, there isn't much of this in the US journals. There were more psychology articles in the _Philosophical Review_ in its early years, but they had stopped by 1924.
+
+Let's do the same study for 1974-2013. This time I'll leave off the first ten topics, because they are largely noise.
+
+```{r late-century-atlantic-setup}
+uk_late_century_articles <- articles %>%
+  filter(journal == "Mind" | journal == "Proceedings of the Aristotelian Society") %>%
+  filter(year > 1973)
+
+uk_late_century_gamma <- relabeled_gamma %>%
+  filter(document %in% uk_late_century_articles$document) %>%
+  filter(topic > 10) %>%
+  group_by(topic) %>%
+  dplyr::summarise(uk = sum(gamma))
+
+us_late_century_articles <- articles %>%
+  filter(journal == "Journal of Philosophy" | journal == "Philosophical Review") %>%
+  filter(year > 1973)
+
+us_late_century_gamma <- relabeled_gamma %>%
+  filter(document %in% us_late_century_articles$document) %>%
+  filter(topic >10) %>%
+  group_by(topic) %>%
+  dplyr::summarise(us = sum(gamma))
+
+atlantic_late_century_gamma <- inner_join(uk_late_century_gamma, us_late_century_gamma, by = "topic") %>%
+  inner_join(the_categories, by = "topic") %>%
+  mutate(topicfactor = as.factor(topic)) %>%
+  mutate(rat = uk/(uk + us))
+
+cols <- tibble(x = 1:90) %>%
+  mutate(col = hcl(h = (x-1)*(360/90)+15, l = 65, c = 100)) %>%
+  deframe()
+```
+
+```{r late-century-atlantic-graph-topic, fig.height = 12.2,  fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1974-2013", fig.alt = alt_text}
+ggplot(atlantic_late_century_gamma, aes(x = reorder(subject, -topic), y = rat, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = "Proportion of Articles in UK journals", x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03))) +
+  scale_fill_manual(values = cols)
+
+alt_text <- "A histogram showing the proportion of articles in big 4 journals that are in UK journals, from 1974 to 2013, across 70 topics."
+```
+
+Again, there is substantial variation. I think this is telling us more about the journals than the philosophical scenes in the different countries, but I think there are some signals here. Let's reorder that graph to make the outliers more explicit.
+
+```{r late-century-atlantic-graph-ratio, fig.height = 12.2, fig.cap = "Proportion of articles in big 4 journals that are in UK journals, 1974-2013", fig.alt = alt_text}
+ggplot(atlantic_late_century_gamma, aes(x = reorder(subject, -rat), y = rat, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = "Proportion of Articles in UK journals", x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03))) +
+  scale_fill_manual(values = cols)
+
+alt_text <- "A histogram showing the proportion of articles in big 4 journals that are in UK journals, from 1974 to 2013, sorted in order of lowest to highest proportion. Evolutionary Biology is the lowest, and Vagueness is the highest."
+```
+
+The US side is very heavily represented by philosophy of science topics. I don't think that's really a national difference; it mostly tells us that the _Journal of Philosophy_ was the generalist journal that was most friendly to Philosophy of Science.
+
+The UK side is a bit more interesting. Logic, Philosophy of Language and Philosophy of Mind are very heavily represented at that end of the graph. It isn't surprising that [Speech Acts](#topic63), [Perception](#topic47) and [Concepts](#topic78) are near that end, but the magnitude was greater than I expected. And I had no idea that [Vagueness](#topic86) was so English; though maybe if I'd included other US journals here (especially _Noûs_) this would have been different.
+
+It would be useful to have more matching pairs of journals to confirm this, but I think this is some evidence of a fairly substantial split in interests between the two sides of the Atlantic.
+
+## Raw Counts and Weighted Counts {#raw-weight-count}
+
+```{r counting-tibble-creation}
+counting_tibble <- tibble(
+  topic = 1:90, r_c = 0, w_in_r = 0
+)
+
+weight_count <- relabeled_gamma %>%
+  group_by(topic) %>%
+  dplyr::summarise(w_c = sum(gamma))
+
+for (i in 1:90){
+counting_tibble$topic[i] <- i
+articles_in_topic <- relabeled_articles %>% filter(topic == i)
+counting_tibble$r_c[i] <- nrow(articles_in_topic)
+counting_tibble$w_in_r[i] <- sum(filter(relabeled_gamma, topic == i, document %in% articles_in_topic$document)$gamma)
+}
+
+counting_tibble <- inner_join(counting_tibble, weight_count, by = "topic")
+
+counting_tibble <- counting_tibble %>%
+  mutate(x = w_in_r/r_c, y = w_c/r_c, z = w_in_r/w_c)
+
+# ggplot(counting_tibble, aes(x = x, y = z)) + geom_point()
+
+counting_tibble <- counting_tibble %>%
+  inner_join(the_categories, by = "topic")
+
+counting_tibble <- counting_tibble %>%
+  mutate(topicfactor = as.factor(topic))
+
+m <- counting_tibble$r_c[80]
+mw <- counting_tibble$w_c[80]
+mw <- round(mw, 2)
+```
+
+This section has two aims.
+
+The first aim is to see if we can find a measure of how specialised a topic is. Intuitively, some topics are extremely specialised - only people working in quantum physics talk about [Quantum Physics](#topic66). But other topics cut across philosophy - you don't have to be writing about arguments to talk about [Arguments](#topic55). Is there some way internal to the model to capture that notion?
+
+The second is to cast some light on the relationship between the two ways of measuring topic size I've been using: raw count and weighted count. The raw count is the number of articles such that the probability of being in that topic is higher than the probability of being in any other topic. The weighted count is the sum, across all articles, of the probability of being in that topic. Mathematically, it is the expected number of articles in the topic.
+
+I'll start by looking at the relationship between the raw count and the weighted count for a single topic: [Modality](#topic80). And then I'll turn to see what happens when the focus expands to the other 89 topics. Start with two variables:
+
+- $r$, the raw count of articles in the topic. For Modality, this is `r m`. That is, there are `r m` articles that the model thinks are more probably in Modality than in any other topic.
+- $w$, the weighted count of articles in the topic. For Modality, this is `r mw`. That is, across all the articles, the sum of the probabilities that they are in Modality is `r mw`.
+
+So these are fairly close, though as we'll see, that's not typical. (Indeed, I picked Modality to focus on because they were close, and I wanted to see how typical that was.) There is a third variable I'm going to spend a bit of time on. Focus on those `r m` articles whose probablility of being in Modality is greatest. The model gives them very different probabilities of being in Modality. Here are two articles from the `r m`.
+
+```{r modality-gamma-high-low}
+modality_tibble <- relabeled_articles %>%
+  filter(topic == 80) %>%
+  arrange(-gamma)
+```
+
+```{r modality-high-article}
+individual_article(modality_tibble$document[1])
+```
+
+```{r modality-low-article}
+individual_article(modality_tibble$document[370])
+```
+
+These were not picked at random. The Bird article is the one the model is most confident is in Modality, and the Keyt article is the one of the `r m` that it is least confident about. (Honestly I think the model got this one wrong, and is confused by 'Lewis'.) There is a range of probabilities between those though.
+
+Among the `r m` articles that make up the raw count for Modality, the average probability the model gives to them being in the topic is `r counting_tibble$x[80]`. (That's a little under the midpoint between the Bird and the Keyt articles, but not absurdly so.) This is the value for Modality of the third variable I'm interested in:
+
+- $p$, the average probability of being in the topic among articles that are more probably in that topic than any other.
+
+Between $r$, $w$ and $p$, there are three things that look like plausible specialisation measures.
+
+Measure One
+:    Ratio of raw count to weighted count, i.e., $\frac{r}{w}$.
+
+Measure Two
+:    Average probability of being in the topic among articles that have maximal probability of being in the topic, i.e.,$p$.
+
+Measure Three
+:    What proportion of the weighted count comes from articles that are 'in' the topic, i.e., $\frac{rp}{w}$.
+
+The first measure is intuitive because (as we'll see) it places Arguments right at the bottom of the scale. And that's intuitively our least specialised topic.
+
+The second measure is intuitive because it measures how confident the model is in its placement for articles that get maximal probability of being in a topic. And specialised topics should, in general, do well on this. You won't find the model thinking that this article is most probably a Quantum Physics article, but maybe jusy maybe it's a [Social Contract Theory](#topic31) article, and maybe it's a [Depiction](#topic42) article, so we should spread the probability around between those.
+
+The third measure is intuitive for a similar reason. If a topic is specialised, it won't pick up an extra 3% there or 5% there to its weighted count from articles in other topics. Most of $w$ will come from articles 'in' the topic, i.e., from the part of $w$ that $rp$ measures.
+
+The second and third are obviously related, since $p = \frac{rp}{r}$. In some sense, they are just different ways of normalising $rp$ to the size of the topic.
+
+But intuitively all three should be related, since they all feel like measures of specialisation. It turns out this isn't quite right.
+
+Let's start with measure one, the ratio of raw to weighted count. This is something I talked a bit about back in chapter \@ref(all-90-topics) when discussing two ways of measuring topic size. 
+
+```{r counting-tibble-y-topic, fig.height=12.2, fig.cap = "Ratio of raw count to weighted count by topic", fig.alt = alt_text}
+# Graph for Measuring Ratio of Weighted Count to Raw Count
+
+ggplot(counting_tibble, aes(x = reorder(subject, -topic), y = 1/y, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = "Ratio of Raw Count to Weighted Count", x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03)))
+
+alt_text <- "A histogram showing the ratio of raw to weighted count across article topics."
+```
+
+There is an enormous outlier here: [Arguments](#topic55). (Though [Self-Consciousness](#topic12) and [Concepts](#topic78) are also fairly low.) This makes sense - at least once the model decides that this will be a topic. There aren't that many articles that are about arguments as such, but there are plenty of discussions of arguments in papers, so there are lots of ways to talk the model into thinking there's a 2 or 3 percent chance that that's the right topic for you.
+
+To get a sense of how big the outliers are, it is useful to sort this graph by the ratio it represents.
+
+```{r counting-tibble-y-ratio, fig.height=12.2, fig.cap = "Ratio of raw count to weighted count by topic (sorted)", fig.alt = alt_text}
+# Graph for Measuring Ratio of Weighted Count to Raw Count
+
+ggplot(counting_tibble, aes(x = reorder(subject, -y), y = 1/y, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(y = "Ratio of Raw Count to Weighted Count", x = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, .03)))
+
+alt_text <- "A histogram showing the ratio of raw to weighted count across article topics, sorted from highest to lowest ratio. Beauty has the highest ratio, and Arguments has the lowest."
+```
+
+I don't quite understand why [Beauty](#topic08) and [Crime and Punishment](#topic36) are at the top of this graph. But I'll keep a note of where Beauty appears in subsequent graphs, because it is an interesting case.
+
+Now we'll look at the second measure, i.e., $p$. For Modality, the value of $p$ is `r counting_tibble$x[80]`. How typical is that? Is the average maximal topic probability always around 0.4, or does it vary by topic? Let's look at the data,, and note that the scale does not start at 0.
+
+```{r counting-tibble-x-topic, fig.height=12.2, fig.cap = "Average maximal probability by topic", fig.alt = alt_text}
+# Graph for Measuring average gamma of articles in a topic
+
+ggplot(counting_tibble, aes(x = reorder(subject, -topic), y = x, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip(ylim = c(0.2, 0.6)) +
+  theme(legend.position = "none") +
+  labs(y = "Average Topic Probability of Articles in Topic", x = NULL)
+
+alt_text <- "A histogram showing the average maximal probability of articles across topics."
+
+```
+
+So it turns out Modality is reasonably typical, though there is a lot of variation here. Let's look at the same graph but sorted by probability rather than topic number.
+
+```{r counting-tibble-x-prob, fig.height=12.2, fig.cap = "Average maximal probability by topic (sorted)", fig.alt = alt_text}
+ggplot(counting_tibble, aes(x = reorder(subject, x), y = x, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip(ylim = c(0.2, 0.6)) +
+  theme(legend.position = "none") +
+  labs(y = "Average Topic Probability of Articles in Topic", x = NULL)
+
+alt_text <- "A histogram showing the average maximal probability of articles across topics, sorted from highest to lowest. Evolutionary Biology has the highest average maximal probability, and Ordinary Language has the lowest."
+
+```
+
+This does look like a measure of specialisation. If you're talking about [Quantum Physics](#topic66) or [Evolutionary Biology](#topic82), then you're probably really talking about quantum physics or evolutionary biology. But lots of people use [Ordinary Language](#topic24) and discuss [Concepts](#topic78). So lots of articles that are about lots of different topics can end up looking like Ordinary Language or Concepts articles.
+
+Let's turn to our last measure of specialisation, $\frac{rp}{w}$. One way to think about how big that is, is to think about the average probability of being in Modality for the articles whose maximal probability is in one of the other 89 topics. Some of these probabilities are quite large, such as for this article.
+
+```{r modal-find-highest-second-best}
+mm <- relabeled_gamma %>%
+  filter(topic == 80) %>%
+  filter(!document %in% filter(relabeled_articles, topic == 80)$document) %>%
+  arrange(-gamma)
+
+individual_article(mm$document[1])
+```
+
+But most contributions aren't that big. In fact, the average is under 1%. But there are nearly 32,000 of them, so they add up. In fact, they add up to about 61% of the weighted count for Modality. So the value of $\frac{rp}{w}$ for Modality is about 39%, since that's what is left once you take out the 61% that comes from the rest of the articles. Is that 39% typical? Well, we can again look at the graph for all 90 topics.
+
+```{r counting-tibble-z-topic, fig.height=12.2, fig.cap = "Proportion of weighted count that's from non-topic articles", fig.alt = alt_text}
+ggplot(counting_tibble, aes(x = reorder(subject, -topic), y = z, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip(ylim = c(0, 0.8)) +
+  theme(legend.position = "none") +
+  labs(y = "Proportion of Weighted Count that's From Outside Topic", x = NULL)
+
+alt_text <- "A histogram showing the proportion of weighted count that's from non-topic articles, across topics."
+```
+
+And 39% is somewhat middling, though there's so much variation that I'm not sure what I'd say is typical. Let's look at that one arranged by order.
+
+```{r counting-tibble-z-ratio, fig.height=12.2, fig.cap = "Proportion of weighted count that's from non-topic articles (sorted)", fig.alt = alt_text}
+ggplot(counting_tibble, aes(x = reorder(subject, z), y = z, fill = topicfactor)) +
+  geom_col(width = 0.6) +
+  freqstyle +
+  coord_flip(ylim = c(0, 0.8)) +
+  theme(legend.position = "none") +
+  labs(y = "Proportion of Weighted Count that's From Outside Topic", x = NULL)
+
+alt_text <- "A histogram showing the proportion of weighted count that's from non-topic articles, across topics, sorted from highest to lowest. Quantum Phsyics has the highest proportion, and Arguments has the lowest."
+
+```
+
+And again, it looks like a measure of specialisation. The model doesn't give Quantum Physics much credit for articles that aren't squarely about quantum physics. But it gives Arguments lots of credit for articles that are not primarily about arguments.
+
+If these three things are all sort of measures of specialisation, they should correlate reasonably well. But this turns out not quite to be right. The first and second, for example, are not particularly well correlated. Here is the graph of the two of them, i.e., $\frac{r}{w}$ and $p$, against each other.
+
+```{r compare-specialisation-measures-b, fig.height = 6, fig.cap = "Correlation between first and second specialisation measures", fig.alt = alt_text}
+# Comparing Second and Third
+# First specialisation measure - Raw count/Weighted Count
+# Second specialisation measure - Average in-topic topic probability
+# Third specialisation measure - Weighted count that's outside topic
+
+ggplot(counting_tibble, aes(x = 1/y, y = x, color = topicfactor)) + 
+  geom_point() +
+  freqstyle +
+  labs(x = "Ratio of Raw Count to Weighted Count", y = "Average Topic Probability of Articles in Topic") +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),''))) +
+  theme(legend.position = "none") +
+  scale_x_continuous(expand = expansion(mult = c(0.1, .2))) +
+  scale_y_continuous(expand = expansion(mult = c(0.1, .1)))
+
+alt_text <- "A scatterplot comparing the ratio of raw count to weighted count (r/w) to the average topic probability of articles (p), across topics; i.e., comparing the first and second specialization measures. There is a weak trend."
+
+```
+
+There is a trend there, but it's not a strong one. But the other two pairs are much more closely correlated. (We have here a real life example of how _being closely correlated_ is not always transitive.) Here is the graph of the first against the third, i.e., $\frac{r}{w}$ on one axis, and $\frac{rp}{w}$ on the other.
+
+```{r compare-specialisation-measures-c, fig.height = 6, fig.cap = "Correlation between first and third specialisation measures", fig.alt = alt_text}
+# Comparing First and Third
+# First specialisation measure - Raw count/Weighted Count
+# Second specialisation measure - Average in-topic topic probability
+# Third specialisation measure - Weighted count that's outside topic
+
+ggplot(counting_tibble, aes(x = 1/y, y = z, color = topicfactor)) + 
+  geom_point() +
+  freqstyle +
+  labs(x = "Ratio of Raw Count to Weighted Count", y = "Proportion of Weighted Count that's From Outside Topic") +
+#  geom_text(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),'')),hjust=0.2,vjust=1.7) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),''))) +
+  theme(legend.position = "none") +
+  scale_x_continuous(expand = expansion(mult = c(0.05, .1))) +
+  scale_y_continuous(expand = expansion(mult = c(0.12, .05)))
+
+alt_text <- "A scatterplot comparing the ratio of raw count to weighted count (r/w) to the proportion of weighted count that's from outside the topic (rp/w); i.e., comparing the first and third specializaiton measures. The two measures are well-correlated."
+
+```
+
+Interestingly, although those two are correlated, part of what that means is that there are some cases that they both misclassify if construed as measures of specialisation. If we're looking for a measure of specialisation, we don't want [Functions](#topic68) and [Evolutionary Biology](#topic82) at opposite ends. 
+
+The last two measures, $p$ and $\frac{rp}{w}$ are also well correlated, though with some outliers.
+
+```{r compare-specialisation-measures-a, fig.height = 6, fig.cap = "Correlation between second and third specialisation measures", fig.alt = alt_text}
+# Comparing Second and Third
+# First specialisation measure - Raw count/Weighted Count
+# Second specialisation measure - Average in-topic topic probability
+# Third specialisation measure - Weighted count that's outside topic
+
+ggplot(counting_tibble, aes(x = x, y = z, color = topicfactor)) + 
+  geom_point() +
+  freqstyle +
+  labs(x = "Average Topic Probability of Articles in Topic", y = "Proportion of Weighted Count that's From Outside Topic") +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 8 | topic == 68 | topic == 55 | topic == 82 | topic == 78,as.character(subject),''))) +
+  theme(legend.position = "none") +
+  scale_x_continuous(expand = expansion(mult = c(0.1, .2))) +
+  scale_y_continuous(expand = expansion(mult = c(0.1, .1)))
+
+alt_text <- "A scatterplot comparing the averate topic probability of articles in topic (p) to the proportion of weighted count that's from outside the topic (rp/w); i.e. comparing the second and third specialization measures. The two measures are well-correlated, with some outliers."
+```
+
+And our two measures of specialisation do sort of line up. There are some outliers - [Functions](#topic68) is above the line and Beauty is below it.
+
+I think that what we learn from that is that the best measure of specialisation is $p$, the average probability of being in the topic among articles whose maximal probability is being in just that topic. The other measures are roughly correlated with $p$, but where they differ, $p$ seems to do a better job of measuring specialisation. And they are (somewhat surprisingly) very well correlated with each other.
+
+And we also learned something about the relationship between $r$ and $w$. It's really well correlated with $\frac{rp}{w}$. And the best way to understand $\frac{rp}{w}$ is to think about the average probability of being in a topic when that topic isn't maximal. So $r$ is low relative to $w$ when a topic is often the 2nd, 3rd or 4th highest topic, and high when it is not. This isn't surprising, but I had thought that this would in turn line up with how specialised a topic is. And that didn't really do that. What did line up with intuitive specialisation is the average probability of being in a topic among those papers where that topic probability is maximal.

@@ -1,7 +1,6 @@
 ```{r t37a}
 jjj <- 37
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t37b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -135,19 +134,19 @@ And here we are looking at something very much like set theory.
 
 The point of all this was to demonstrate something of the power of this method of analysis. Even when the model does something that seems wrong - like smushing together two topics that don't really belong - we can use the very same tools to undo the mistake. Now that we've separated out the topics, we can look at their frequency over time.
 
-This is a graph of the distribution of those 552 articles into the two buckets (grue and sets) over time.
+This is a graph of the distribution of those 555 articles into the two buckets (grue and sets) over time.
 
-```{r grue-binary-graph, fig.height=5, fig.cap = "Articles on Sets and Articles on Grue"}
+```{r grue-binary-graph, fig.height=5, fig.cap = "Articles on Sets and Articles on Grue", fig.alt = alt_text}
 grue_years <- grue_years %>%
   mutate(topic.x = as.factor(topic.x))
 ggplot(grue_years, aes(x = year, y = g, group = topic.x, color = topic.x)) + 
   spaghettistyle +
   geom_point() + 
-  labs(x = element_blank(), y = "Weighted Proportion of Articles", title = "Articles in Each Sub-Topic") +
+  labs(x = element_blank(), y = "Weighted Number of Articles", title = "Articles in Each Sub-Topic") +
   theme(legend.title = element_blank(),
         legend.position = "right") +
   scale_color_discrete(labels = c("Grue", "Sets"))
-
+alt_text <- "A scatterplot showing how the model divides up articles into sets and grue. It is described briefly in the text below."
 ```
 
 You can see that both of the topics peak in the late 1960s and early 1970s. And set theory doesn't fall away quite as quickly as grue. But I had expected the difference between the two topics to get rather dramatic after 2000, and it doesn't really. The model, somewhat sensibly, puts other work on formal learning in with grue, and this means the topic doesn't crash away.

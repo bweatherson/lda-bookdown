@@ -1,0 +1,50 @@
+Tweet-thread
+
+Before the pandemic started, I'd been working on a book using topic modeling to help understand the history of philosophy journals. I've belatedly finished up a draft of it. http://lda.weatherson.org
+
+The short version of the methodology is: feed all the text from all the research articles in 12 journals into a black box, and write up the patterns it finds. The longer version of the methodology is in chapter 1. http://lda.weatherson.org/1
+
+The black box, or more precisely the Latent Dirilecht Algorithm, uses word frequencies in the articles to sort them into 90 topics. I named these topics to create this timeline of the topics that I posted a little while back. https://twitter.com/bweatherson/status/1260548917906767873
+
+There were a few big surprises to me. The biggest concerned the inter-war years. The journals spend remarkably little time on the ideas and figures that have most influenced contemporary philosophy.
+
+More generally, it is really striking how little attention is paid to Russell's work at the time it is written. He has an enormous influence on philosophy journals in the second half of the 20th century, but not so much in the first.
+
+I bundled the 90 topics into 12 familiar categories, and it was striking how stable they were over time. Which questions people ask within metaphysics, ethics etc change, but the relative proportion of work in these fields is very stable year-to-year. [Include picture]
+
+There are two big exceptions to this stability, one of which didn't surprise me, but one of which surprised me a lot.
+
+There is very little philosophy of language until Wittgenstein's students found _Analysis_ just before World War II. From then on there is frequent turnover of questions within philosophy of language, but it stays as a stable proportion of the journals. [Include picture]
+
+The other exception is epistemology. There are approximately zero articles that look anything like contemporary epistemology until about 1959. After that there is a rapid succession of questions within a trend of epistemology becoming more and more central. [Include picture]
+
+As I mentioned above, the book starts with a methodology chapter. It goes over how I ended up deciding to sort the articles into 90 topics, and other choices I made about what to include and exclude. http://lda.weatherson.org/1
+
+The bulk of the book is chapter 2. I provide some statistics and graphs for each of the 90 topics, then a small commentary on each. http://lda.weatherson.org/2
+
+Most of the commentaries are short, but some of them are more detauked. For instance, in the discussion of Pragmatism I looked at the textual evidence for the claims that Katzav and Vaesen (2017) make about Phil Review. http://www-personal.umich.edu/~weath/lda/topic05.html
+
+In chapter 3 I try various ways to represent in graphs the trends of the 90 topics over time. Most of the attempts are failures - but maybe between them we get some sense of what the overall trends are like. http://lda.weatherson.org/3
+
+In chapter 4 I discuss the trends in the broader categories that we're familiar with: Ethics, Metaphysics, etc. One big theme is how much more important Ethics becomes over the course of the 20th Century, and especially through the 1960s and 1970s. http://lda.weatherson.org/4
+
+Chapter 5 discusses how I grouped the computer generated topics into these categories. And it discusses which category boundaries are more and less populated in the journals. http://lda.weatherson.org/5
+
+The methodology discussions can be tedious, but thinking about boundary populations is interesting. An unpopulated boundary, like between social/political philosophy and philosophy of language, is an area ripe for exploration.
+
+Chapter 6 discusses one particular category, epistemology. In particular, I defend the claim that the Gettier problem was not as big a part of philosophy, or even episteology, as it sometimes seems to be in philosophers' retrospective views. http://lda.weatherson.org/6
+
+Chapter 7 moves from discussing the data in terms of years to discussing it in terms of eras. This helps bring out the larger trends, such as the rise of Ethics over the middle decades of the century. http://lda.weatherson.org/7
+
+Chapter 8 looks at various quirky patterns in the data, such as which topics are most specialised, what differences there are between Britain and America, and trends in article lengths across topcs and across time. http://lda.weatherson.org/8
+
+And chapter 9 tries to project the data outwards, comparing these journals to some famous books, looking at how Philosophers' Imprint in 2019 compares to the journals, and looking at the weird language of 21st century philosophy. http://lda.weatherson.org/9
+
+This book is only possible because so many open access resources are now available. I list some of the tools I've relied on here, but I fear I've missed some. (It's a draft; I can still add more.) http://www-personal.umich.edu/~weath/lda/acknowledgements.html
+
+In the spirit of paying it forward, I've included a small tutorial on how to build a similar book if you think you can do a better job of this. (And you probably can!) http://www-personal.umich.edu/~weath/lda/replication-instructions.html
+
+If you don't want to do anything that intensive, the book has lots of searchable, sortable tables, so you can explore the data for yourself. And the raw data (and code) is on GitHub if you'd prefer to explore it that way. https://github.com/bweatherson/lda-bookdown
+
+In the meantime, I'd love any kind of feedback on the project - either ideas for different questions to ask, or ways to improve the answers I've given to existing questions.
+

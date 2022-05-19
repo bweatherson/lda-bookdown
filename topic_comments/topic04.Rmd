@@ -1,7 +1,6 @@
 ```{r t04a}
 jjj <- 4
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t04b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -33,13 +32,13 @@ This is the only topic of the 90 that I think best gets a negative characterisat
 
 But yet, as you can see from the graphs above, they collectively make almost no impact on the journals from about 1970-2013. History of philosophy, at least as represented in these journals, got really narrow for several decades. I'll return [much later in the book](#imprint-section) to some evidence that things have changed since 2013, but it's a little shocking how small this category gets for the last 40-odd years I'm studying.
 
-This is especially striking when you consider that as well as some of the more surprising figures to turn up here, like Arnold Geulincx and James Marsh, we also see Nietzsche, James, and Mill and, when the article is particularly historical, Wittgenstein. I'd have thought those three alone would have made more impact than the under 1% numbers we see for many recent decades. (And they are very much part of the resurgence I alluded to just above.)
+This is especially striking when you consider that as well as some of the more surprising figures to turn up here, like Arnold Geulincx and James Marsh, we also see Nietzsche, James,Mill and, when the article is particularly historical, Wittgenstein. I'd have thought those three alone would have made more impact than the under 1% numbers we see for many recent decades. (And they are very much part of the resurgence I alluded to just above.)
 
 So who does fit into this mixture of a category? The following table gives us some clues. I've generated it by looking at the words that appeared more than 50 times in a single article somewhere in the topic. I then split out the names from that list, as well as the word 'revolution' which seemed interesting. And in each row I listed four things.
 
 - First, how often within the topic the word appears 50 or more times in an article.
-- Second, how often with the topic the word appears 10 or more times in an article.
-- Third, how often with the topic the word appears at all in an article.
+- Second, how often within the topic the word appears 10 or more times in an article.
+- Third, how often within the topic the word appears at all in an article.
 - And fourth, how often within the whole study the word appears 50 or more times in an article.
 
 The first three give us some sense of the spread of the term around a topic. A word that appears 50 or more times in an article is going to be more or less the subject of the article. A word that appears 10 or more times is a focus of some sustained discussion in the article. And a word that appears at all is, at least, mentioned. And the last column is to give you a sense of how often this figure (or at least their name) shows up in the broader data set, so you can get a better sense of what's distinctive about this topic.

@@ -1,7 +1,6 @@
 ```{r t72a}
 jjj <- 72
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t72b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -58,6 +57,6 @@ individual_article(reports$document[4])
 individual_article(reports$document[5])
 ```
 
-Except perhaps the Dretske, none of them really feel like they fit in this topic. Or, to put things more provocatively, I don't see that (this kind of) work on belief ascriptions really had much impact even on work on other propositional attitudes.
+Except perhaps the Dretske, none of them really feel like they fit in this topic. Or, to put things more provocatively, somehow all this work on belief ascriptions didn't even have a huge influence on work on ascriptions of very similar propositional attitudes like knowing.
 
-Since 2013 there has been, to my eyes, less work on topics like Puzzling Pierre and Cicero/Tully. But its notable that the last keyword in the list at the top, and the last of the five articles I just displayed, both concern lying. That has been a big topic since 2013, and if we extended the study in time, perhaps we would see this turn into a topic more centered around lies, and less around puzzles about belief ascription.
+Since 2013 there has been, to my eyes, less work on topics like Puzzling Pierre and Cicero/Tully. But it's notable that the last keyword in the list at the top, and the last of the five articles I just displayed, both concern lying. That has been a big topic since 2013, and if we extended the study in time, perhaps we would see this turn into a topic more centered around lies, and less around puzzles about belief ascription.

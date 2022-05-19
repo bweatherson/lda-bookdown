@@ -1,7 +1,6 @@
 ```{r t22a}
 jjj <- 22
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t22b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -39,8 +38,8 @@ For example, those high points in the graph for pre-war _Analysis_ are largely d
 - [Last Words to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACLWT), Analysis 5 (2):28 - 31 [-@maciver1937b].
 - [Erratum: Last Words to Miss MacDonald, by A. M. MacIver](https://philpapers.org/rec/MACELW),  Analysis 5 (3/4):64 [-@maciver1938a].
 
-On the one hand, I'm on MacIver's side of the philosophical dispute here. On the other hand, you could put his articles in a museum as an exemplar of mansplaining. So it's an interesting exchange.
+I don't know how I ultimately want to feel about this exchange. On the one hand, I'm on MacIver's side of the philosophical dispute at the heart of the exchange. On the other hand, you could put McIver's articles in a museum as an exemplar of mansplaining. 
 
 MacDonald is notable for several reasons, this exchange not really being one of them. She was one of the founders of _Analysis_, and then edited it from 1948 until her tragically early death in 1956. She wrote a very important paper on natural rights; it is the only highly cited paper back in [Topic 3](#topic03). And it was her notes, along with those of Alice Ambrose, that got turned into Wittgenstein's _Lectures on Ethics_. So there is a Wittgensteinian influence to these pre-war papers too.
 
-I was surprised that this topic didn't feature more papers in _Philosophical Review_. I thought Norman Malcolm's move to Cornell in 1947 would have led to more Wittgensteinian articles here. But it turns out these mostly ended up in Topic 24.
+I was surprised that this topic didn't feature more papers in _Philosophical Review_. I thought Norman Malcolm's move to Cornell in 1947 would have led to more Wittgensteinian articles here. But most of the Wittgenstein/Malcolm influenced work that turned up in the Review was in Topic 24.

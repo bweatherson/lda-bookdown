@@ -1,7 +1,6 @@
 ```{r t45a}
 jjj <- 45
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t45b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -33,9 +32,9 @@ First, it is a history topic on a single pre-twentieth century figure who is not
 
 Second, the model decided it really really wanted to put work on coherence measures in here and not in with any of the other topics on logic or probability. I have no idea why it wanted to do this. Indeed, one of my motivations for bumping up the number of topics, and on running extra refinements on the model, was to give the model a chance to see the error of its ways. And it worked a little - there are many fewer formal epistemology articles in here than there originally were. But as you can see from the highly cited list, there are still some. This feels just like a bug, but I ran out of tools to squash it with.
 
-You don't see a Ryle-driven drop in this topic after World War II. I don't think this is due to Ryle's Humean sympathies. Rather, it's that Hume just wasn't that big a topic before World War II, so the rise in general interest in Hume studies offsets the fall in historical work being published in these twelve journals. It wasn't that there was no work on Hume. Keynes and Sraffa, for example, published their important argument that Hume was the author of the _Abstract_. But it didn't get much attention in the philosophy journals until much more recently.
+You don't see a Ryle-driven drop in this topic after World War II. I don't think this is due to Ryle's Humean sympathies. Rather, it's that Hume just wasn't that big a topic before World War II, so the rise in general interest in Hume studies offsets the fall in historical work being published in these twelve journals. It wasn't that there was no work on Hume. Keynes and Sraffa, for example, published their important argument that Hume was the author of the _Abstract_ in 1938. But it didn't get much attention in the philosophy journals until much more recently.
 
-```{r graph-time-categories-t45, fig.cap = "Early Modern topics - Weighted Frequency of Articles", fig.height = 5}
+```{r graph-time-categories-t45, fig.cap = "Early Modern topics - Weighted Frequency of Articles", fig.height = 5, fig.alt = alt_text}
   weight_ratio_graph <- ggplot(filter(weight_ratio, topic == 21 | topic == 31 | topic == 32 | topic == 45), aes(x = year, y = y, color=topic, group=topic))
   weight_ratio_graph + 
     spaghettistyle +
@@ -45,6 +44,8 @@ You don't see a Ryle-driven drop in this topic after World War II. I don't think
     geom_point(size = 1, alpha = .5) +
     geom_smooth(se = F, method = "loess", size = .5, formula = "y ~ x") +
     labs(x = element_blank(), y = "Weighted Frequency of Articles")
+  
+alt_text <- "A scatterplot, with trendlines, of the topics Early Modern, Social Contract Theory, Kant, and Hume. In the early years, Hume is the smallest by a long way. But the other three fall a lot, and Hume gently rises, so that in recent years Social Contract is by far the smallest, and the other three are similar in size."
 ```
 
 You can see from this graph of the four early modern topics that Hume is the only one that really rises. The generic early modern topic maybe edges up a bit from the start to 1920, but there is a lot of noise. And social contract theory has a Rawls inspired arrest of its fall. But otherwise the other three are either steady or falling, while Hume sees a mild rise.

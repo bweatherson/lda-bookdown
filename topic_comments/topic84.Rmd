@@ -1,7 +1,6 @@
 ```{r t84a}
 jjj <- 84
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t84b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -31,7 +30,7 @@ When I was a graduate student, this was the stuff I worked on - indicative condi
 
 One way to see how much it has changed is to look at where the papers are being published. Here's a version of the facet graph above but restricted to the period since 1980, and with trendlines added.
 
-```{r formal-epistemology-journal-distribution, fig.cap = "Recent Formal Epistemology"}
+```{r formal-epistemology-journal-distribution, fig.cap = "Recent Formal Epistemology", fig.alt = alt_text}
 facet_labels <- chap_two_facet_labels %>%
   mutate(year = 1983, gamfre = yupper)
 
@@ -48,6 +47,7 @@ indiv_journal_graphs +
             size = 3,
             colour = "grey40")
 
+alt_text <- "A version of figure 2.188 restricted to the years from 1980-2013. The data shows that this topic stayed relatively flat in 9 journals, but took off in Mind, Philosophical Review, and Noûs."
 ```
 
 I think this makes clear something that was intuitively plausible: that it's the generalist journals leading the charge here. As work on Bayesianism has moved from being Philosophy of Science to Epistemology, it has become a much bigger part of what _Mind_, _Philosophical Review_ and _Noûs_ have published. (Though, to be sure, a lot of what's happened in _Noûs_ has been since 2013.) I'm a little surprised there isn't more movement on the _Analysis_ grap; I would have guessed the Sleeping Beauty debate alone would have pushed it higher. But otherwise this looks like a case where the general picture - that this went from something of a specialist topic to a 'generalist' one - is borne out by the data.

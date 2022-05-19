@@ -1,7 +1,6 @@
 ```{r t70a}
 jjj <- 70
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t70b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}

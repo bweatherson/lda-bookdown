@@ -1,7 +1,6 @@
 ```{r t86a}
 jjj <- 86
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t86b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -31,6 +30,6 @@ Stop me if you think you've heard this one before. This is a topic that Bertrand
 
 Vagueness was a huge topic in the 1990s and early 2000s, driven first by Timothy Williamson's book [Vagueness](https://philpapers.org/rec/WILV), and then by the work coming out of the [Arché research centre](https://www.st-andrews.ac.uk/arche/) at St Andrews. As someone working in that field, it felt like it faded a bit after that time, and the dip in the graph at the very end supports that. I thought there were still plenty of interesting questions here to discuss, but the field seemed to move on.
 
-This was a tricky topic to categorise. I felt it should be Philosophy of Language, but I really didn't want to go off my judgments in a field I work in. I'll talk a bit more about this in \@ref(sortingchapter), but it turned out the model itself had fairly strong views about this topic, and that's why it is in Logic and Mathematics.
+This was a tricky topic to categorise. I felt it should be Philosophy of Language, but I really didn't want to go off my judgments in a field I work in. I'll talk a bit more about this in chapter \@ref(sortingchapter), but it turned out the model itself had fairly strong views about this topic, and that's why it is in Logic and Mathematics.
 
-There are some metaphysics papers scattered in here as well. Some of these are papers on metaphysical vagueness, though since logic journals publish papers on metaphysical vagueness, I don't feel too bad classifying them as Logic and Mathematics. But the model also included the small early 2000s topic of Truthmakers in here as well. I'm not entirely sure why it did that, other than the fact that the boom in truthmaker discussions happens at roughly the same time as the boom in vagueness discussions, and both of them owe a lot to work by Russell that hadn't previously troubled the journal. (The latter is a bit of a joke; the model couldn't possibly know that.) But the truthmaker papers make up a small portion of the topic, and it's easiest to think of this as just being the vagueness papers.
+There are some metaphysics papers scattered in here as well. Some of these are papers on metaphysical vagueness, though since logic journals publish papers on metaphysical vagueness, I don't feel too bad classifying them as Logic and Mathematics. But the model also included the small early 2000s topic of Truthmakers in here as well. I'm not entirely sure why it did that, other than the fact that the boom in truthmaker discussions happens at roughly the same time as the boom in vagueness discussions, and both of them owe a lot to work by Russell that hadn't previously troubled the journals. (The latter is a bit of a joke; the model couldn't possibly know that.) But the truthmaker papers make up a small portion of the topic, and it's easiest to think of this as just being the vagueness papers.

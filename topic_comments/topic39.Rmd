@@ -1,7 +1,6 @@
 ```{r t39a}
 jjj <- 39
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t39b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -29,9 +28,9 @@ cat("\n
 
 One of four different topics the model found on time, which has been a continuing source of interest in the journals. This one is on broadly speaking the existence of times. We've already looked discussions of the [temporal paradoxes](#topic19), and [space and time in classical physics](#topic20). and we're coming up to the discussion of [space and time in relativistic physics](#topic50). And that's setting aside the [Composition and Constitution](#topic89), which includes a lot of papers on temporal parts.
 
-Especially compared to its neighbours in debates about time, this one has a very flat distribution across time. Perhaps there is some kind of irony in this. We can see this if we look at all four topics on a single graph. (I'm starting this in the 20th century to exclude some outlier years, and included trend lines to make things clearer.)
+Especially compared to its neighbours in debates about time, this one has a very flat distribution across time. Perhaps there is some kind of irony in this. We can see this if we look at all four topics on a single graph. (I'm starting this in the 20th century to exclude some outlier years, and I've included trend lines to make things clearer.)
 
-```{r graph-time-categories, fig.height = 5, fig.cap = "Time topics - Weighted Frequency of Articles"}
+```{r graph-time-categories, fig.height = 5, fig.cap = "Time topics - Weighted Frequency of Articles", fig.alt = alt_text}
   weight_ratio_graph <- ggplot(filter(weight_ratio, topic == 19 | topic == 20 | topic == 39 | topic == 50), aes(x = year, y = y, color=topic, group=topic))
   weight_ratio_graph + 
     spaghettistyle +
@@ -41,6 +40,8 @@ Especially compared to its neighbours in debates about time, this one has a very
     geom_point(size = 1, alpha = .5) +
     geom_smooth(se = F, method = "loess", size = .5, formula = "y ~ x") +
     labs(x = element_blank(), y = "Weighted Frequency of Articles")
+  
+alt_text <- "A scatterplot showing the proportion of articles in the four main topics about time. The two early topics, Temporal Paradoxes and Classical Space and Time, slowly recede over the years. This topic, which I've simply called Time, peaks in the 1980s. And the topic I've called Space and Time, which is largely about relativity, keeps rising through the century."
 ```
 
 The two early topics gradually fall, though maybe they have both reached a steady state. Relativistic space and time rises through around 1980, though it too might have obtained an equilibrium. But this topic, the metaphysics of time(s) stays at a very steady level around 1% year after year.

@@ -1,7 +1,6 @@
 ```{r t21a}
 jjj <- 21
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t21b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -27,7 +26,7 @@ cat("\n
 	\n")
 ```
 
-This is the main topic the model finds on Early Modern M&E. It is a little bit centered on the rationalists; the characteristic articles are all on broadly rationalist figures. But largely because the model wants to hedge its bets on articles about Locke. Topic 31 will be on social contract theory, and Locke will play a major role in that obviously. So while this topic has 28 articles with "Locke" in the title, all on his M&E, the model is a little nervous about whether it should be putting those in with the other Locke articles in social contract theory. So that's why the characteristic articles are so rationalist.
+This is the main topic the model finds on Early Modern M&E. It is a little bit centered on the rationalists; the characteristic articles are all on broadly rationalist figures. But that's largely because the model wants to hedge its bets on articles about Locke. Topic 31 will be on social contract theory, and Locke will play a major role in that obviously. So while this topic has 28 articles with "Locke" in the title, all on his M&E, the model is a little nervous about whether it should be putting those in with the other Locke articles in social contract theory. So that's why the characteristic articles are so rationalist.
 
 The big story here is the collapse in this category when Ryle takes over _Mind_ in 1947. According to [D. M. Hamlyn](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents), Ryle thought the only history worth publishing was Greek philosophy. And so once he took over a relatively thriving tradition of Early Modern articles in _Mind_ came to a complete halt. Apart from _Philosophical Review_, and to a smaller extent PPR, that put an end to articles in Early Modern turning up in these journals.
 

@@ -1,7 +1,6 @@
 ```{r t87a}
 jjj <- 87
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t87b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -29,8 +28,8 @@ cat("\n
 
 The common theme to most of these articles is that they live at the overlap between philosophy and cognitive science. There is a big focus on the nature of computation, and this occasionally means the model gets confused and pulls in articles that aren't really about cognitive science, like Nick Bostrom's [Are We Living in a Computer Simulation?](https://philpapers.org/rec/BOSAWL-4). But most of them, tracing back to Kitcher's discussion of Marr's theory of vision, are safely inside cognitive science.
 
-As someone who is involved with the [Weinberg Institute for Cognitive Science](https://lsa.umich.edu/weinberginstitute) at UM, I'm pleased to see this work get this level of attention from the model.
+As someone who is involved with the [Weinberg Institute for Cognitive Science](https://lsa.umich.edu/weinberginstitute) at the University of Michigan, I'm pleased to see this work get this level of attention from the model.
 
-I was a bit surprised it wasn't larger. I suspect if we ran the model forward in time it would get a bit bigger. Though it's possible that my decision to not include _Mind and Language_ in the study puts a cap on how big it will get.
+I suspect if we ran the model forward in time this topic would get a bit bigger, though armchair impressions are not always reliable here. There is a lot of work being done at the intersection of cognitive science and philosophy, but I'd have to sit down with the twelve journals to have much of a sense of how much of that work is being done in those journals. It's possible that more of it is taking place in journals like _Mind and Language_ that are outside the study.
 
-I'm not surprised to see Andy Clark be so central to the subject. He turns up on the keywords, the characteristic articles and (separately) the most cited articles. Given his important recent work on predictive processing, I do not think that would change if we extend the model forward in time.
+I'm not surprised to see Andy Clark be so central to the subject. He turns up on the keywords, the characteristic articles and (separately) the most cited articles. Given his important recent work on predictive processing, and the importance of predictive processing to recent debates in philosophy of mind, I do not think that would change if we extend the model forward in time.

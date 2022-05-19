@@ -313,8 +313,7 @@ temp_output <-  temp_article_list %>%
 print(kable(temp_output, 
       col.names = c("Catgeory", "Subject", "Mean Probability"),
       caption = paste("Comparing articles in",cat_names$cat_name[x],"and",cat_names$cat_name[y]),
-      align=c("l", "l", "l")) %>%
-        kable_styling(full_width = F)
+      align=c("l", "l", "l")) %>% kable_styling(full_width = F)
       )
 }
 ```

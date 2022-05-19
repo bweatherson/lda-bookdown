@@ -125,7 +125,7 @@ epistemology_last_in <- epistemology_gamma %>%
   }
 ```
 
-Those aren't all epistemology articles, but some of them are. The Shope clearly is, and the Nathan, and plausibly several others. What about the 8 that just missed the cut, i.e., the 10 with a probability of being in epistemology just below 0.2.
+Those aren't all epistemology articles, but some of them are. The Ludwig clearly is, and the Nathan, and plausibly several others. What about the 8 that just missed the cut, i.e., the 10 with a probability of being in epistemology just below 0.2.
 
 ```{r epistemology-first}
 
@@ -138,7 +138,7 @@ That's pretty good - we don't seem to be excluding any articles that should be i
 
 The result of all this is that we get `r nrow(epistemology_gamma)` articles to work with. They are not distributed evenly across the years, to put it mildly. Here is how many articles there are in each year.
 
-```{r epistemology-how-many, fig.height= 5, fig.cap = "Number of Epistemology articles each year"}
+```{r epistemology-how-many, fig.height= 5, fig.cap = "Number of Epistemology articles each year", fig.alt = alt_text}
 ggplot(data = epistemology_yearcount, aes(x = year, y = n)) +
   epistemologystyle +
   geom_point(size = 0.5) +
@@ -147,6 +147,8 @@ ggplot(data = epistemology_yearcount, aes(x = year, y = n)) +
   coord_cartesian(ylim = c(0, 75))
 
 epistemology_prewar <- nrow(filter(epistemology_yearcount, year < 1946))
+
+alt_text <- "A scatterplot showing how many articles in Epistemology there are each year. There are almost none before 1945, and over 60/year in recent years, with a fairly linear trend between them. The full data are in Table D.1."
 ```
 
 The gaps are for the cases where there are 0 papers. Through 1945, there are only `r epistemology_prewar` papers. So from now on I'm going to start graphs after WWII. And I'm not going to divide things up into journals; you don't need a graph to know that _Philosophy and Public Affairs_ doesn't publish much epistemology. But those `r epistemology_prewar` papers will stay in the analysis; I just won't present them on graphs.
@@ -276,7 +278,7 @@ In the remaining sections of this chapter I include (automatically generated) st
 
 First the overall graphs of the raw count and the weighted count. I've included trend lines for the raw count because otherwise there are a lot of overlapping dots. And I've capped the graph at 6 to make everything clear.
 
-```{r epistemology-main-count-graph, fig.height=9, fig.width=7.5, fig.cap = "Number of articles in each epistemology topic"}
+```{r epistemology-main-count-graph, fig.height=9, fig.width=7.5, fig.cap = "Number of articles in each epistemology topic", fig.alt = alt_text}
 epistemology_yeartopics_postwar$topic = as.factor(epistemology_yeartopics_postwar$topic)
 ggplot(epistemology_yeartopics_postwar %>% drop_na(), aes(x = year, y = tn, color=topic, group=topic)) +
   geom_smooth(se = F, method = "loess", size  = 0.3, alpha = 0.3, formula = "y ~ x") +
@@ -287,6 +289,8 @@ ggplot(epistemology_yeartopics_postwar %>% drop_na(), aes(x = year, y = tn, colo
   scale_colour_discrete(labels = epistemology_subjects$subject) + 
   theme(legend.title = element_blank(), legend.position = "bottom")
 epistemology_yeartopics_postwar$topic = as.numeric(epistemology_yeartopics_postwar$topic)
+
+alt_text <- "A scatterplot showing how many articles are in each of the 40 epistemology topics in each postwar year. It's too messy to say much about, but what can be said is in the text below. The full data is in Table D.2."
 
 ```
 
@@ -312,7 +316,7 @@ The Gettier Problem was a big deal through the late-1970s and early-1980s. It's 
 
 The picture doesn't change enough if we use weighted counts rather than counts, though this does let us remove the trendlines.
 
-```{r epistemology-weighted-count-graph, fig.height=9, fig.width=7.5, fig.cap = "Weighted number of articles in each epistemology topic"}
+```{r epistemology-weighted-count-graph, fig.height=9, fig.width=7.5, fig.cap = "Weighted number of articles in each epistemology topic", fig.cap = alt_text}
 epistemology_yeargamma_postwar$topic = as.factor(epistemology_yeargamma_postwar$topic)
 ggplot(epistemology_yeargamma_postwar, aes(x = year, y = gamsum, color=topic, group=topic)) +
   geom_point(size = 0.5, alpha = 0.5) + 
@@ -323,6 +327,8 @@ ggplot(epistemology_yeargamma_postwar, aes(x = year, y = gamsum, color=topic, gr
   scale_colour_discrete(labels = epistemology_subjects$subject) + 
   theme(legend.title = element_blank(), legend.position = "bottom")
 epistemology_yeargamma_postwar$topic = as.numeric(epistemology_yeargamma_postwar$topic)
+
+alt_text <- "The same graph as before, but using weighted counts rather than raw counts. Again, it's generally too messy to make out many clear trends, so the next graph separates the lines out, then some general results are expressed in the text. The full data for the graph is in Table D.3."
 ```
 
 In this case there are just two missing data points.
@@ -341,7 +347,7 @@ kable(epistemology_gamma_missing,
 
 It's much easier to see what's happening here with the subjects separated out. Again, I've left off those two data points so they don't throw off the scale of the whole graph.
 
-```{r epistemology-facet-graph, fig.height=15.2, fig.width=7, fig.cap = "40 epistemology topics"}
+```{r epistemology-facet-graph, fig.height=15.2, fig.width=7, fig.cap = "40 epistemology topics", fig.alt = alt_text}
 epistemology_facet_labels <- epistemology_subjects %>%
   select(topic, subject) %>%
   mutate(gamsum = 7.5, year = 1947, topic = as.factor(topic))
@@ -384,11 +390,13 @@ ggplot(epistemology_yeargamma_postwar, aes(x = year, y = gamsum, color=topic, gr
   labs(x = element_blank(), y = "Number of Articles")
 
 epistemology_yeargamma_postwar$topic = as.numeric(epistemology_yeargamma_postwar$topic)
+
+alt_text <- "The same graph as before, with each topic on its own facet. The trends are described in the text below, and the full data is in Table D.3."
 ```
 
 The model makes these three weird divisions: splitting experts from testimony, having two assertion categories, and dividing scepticism and scepticism. Let's put those together, alongside the two big topics from theory of knowledge, contextualism and Gettier.
 
-```{r epistemology-category-graph, fig.height=6, fig.cap = "Five epistemology categories"}
+```{r epistemology-category-graph, fig.height=6, fig.cap = "Five epistemology categories", fig.alt = alt_text}
 epistemology_wide <- pivot_wider(epistemology_relabeled_gamma, id_col = document, names_from = topic, values_from = gamma)
 epistemology_categories <- epistemology_wide %>%
   mutate(v.Gettier = `6`, 
@@ -412,6 +420,8 @@ ggplot(epistemology_categories, aes(x = year, y = y, color = category)) +
   labs(x = element_blank(), y = "Number of Articles") +
   geom_point(size = 0.5, alpha = 0.5) + 
   theme(legend.title = element_blank(), legend.position = "right")
+
+alt_text <- "A scatterplot showing the trends in five categories as described in the text. Gettier is by far the largest through the early 1980s. But then Scepticism passes it, and Testimony, Contextualism and Assertion pass it in the 1990s. Gettier ends the period as by far the smallest of the five categories. The full data is in Table D.4."
 ```
 
 I think that gives you a pretty good sense of what the central parts of epistemology have looked like over the last fifty or so years. The Gettier Problem was the central question, for a while by far the central question. (Note that the loess curve here is well under some of the dots, so it understates the trend.) But scepticism keeps being taken more and more seriously, even if still as something haunting the land. But issues about language, and about social epistemology, are now as important as the Gettier Problem ever was.

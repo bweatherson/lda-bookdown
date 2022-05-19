@@ -188,11 +188,11 @@ cat("-", sw)
 
 The surprising one there is 'compliation'. But it most often appears because some journals have a footer saying "Journal compilation © ...".
 
-Then to speed up processing, I deleted any word that appeared in any article three times or fewer. This did lose some content. But it sped up the processing a lot. Some of the steps I'll describe below took several days computing time. Without this restriction they would have taken several weeks. And words that appear 1-3 times in an article shouldn't be that significant for determining its content.
+Then to speed up processing, I deleted any word that appeared in any article three times or fewer. This did lose some content. But it sped up the processing a lot. Some of the steps I'll describe below took several days computing time. Without this restriction they would have taken several weeks. And I thought words that appear 1-3 times in an article shouldn't be that significant for determining its content. (Though as I'll note below, this might in retrospect have been too aggressive.)
 
 ## Building a Model
 
-So at this stage we have a list of `r nrow(articles)` to include, and a list of several hundred words to exclude. JSTOR provides text files for each article that can easily be converted to a two column spreadsheet. The first column is a word, the second column is the number of times the word appears. I added a third column, for the code number of the article, and then merged all the spreadsheets for each article into one giant spreadsheet. (Not for the last time, I used code that was very closely based on code that [John Bernau](https://www.johnabernau.com/about/) built for a similar purpose [@Bernau2018].) Now I had a file that was 137MB large, and had the word counts of all the words in all the articles.
+So at this stage we have a list of `r nrow(articles)` articles to include, and a list of several hundred words to exclude. JSTOR provides text files for each article that can easily be converted to a two column spreadsheet. The first column is a word, the second column is the number of times the word appears. I added a third column, for the code number of the article, and then merged all the spreadsheets for each article into one giant spreadsheet. (Not for the last time, I used code that was very closely based on code that [John Bernau](https://www.johnabernau.com/about/) built for a similar purpose [@Bernau2018].) Now I had a file that was 137MB large, and had the word counts of all the words in all the articles.
 
 I filtered out the words in all the lists above, and all the words that appeared in an article 1-3 times. And I filtered out all the articles that weren't on the list of `r nrow(articles)` research articles. This was the master word list I'd work with.
 
@@ -230,7 +230,7 @@ When I looked at the models that were produced with different numbers of topics,
 
 First, how often did the model come up with topics that simply looked disjunctive? The point of the model is to group the articles into _n_ topics, and hopefully each of these topics has a sensible theme. But sometimes the theme is a disjunction - i.e., the topic consists of papers from philosophical debate X and papers from mostly unrelated debate Y. There are always some of these. Some debates are distinctive enough that the papers within that topic always cluster together - the model can tell that it shouldn't be separating them - but small enough (in these twelve journals) that the model doesn't want to use up a valuable topic on just that debate. There were three of these that almost always came up: feminism, Freud, and vagueness. If you build a model out of these journals with, say, 40 topics, then it is almost certain that three of the topics you'll end up are simply disjunctive, with one of the disjuncts being one of these three topics. My favourite was an otherwise sensible model that decided one of the topics in philosophy consisted of papers on material constitution, and papers on feminist philosophy. Now there are links there - some important feminist theories spend a lot of effort on carefully distinguishing causation from constitution - but it's really a disjunctive topic. And the fewer topics you have, the more disjunctive topics you get. So it's good to get rid of disjunctions, and that's a reason to increase the number of topics.
 
-Second, how often did the model make divisions that cross-cut familiar disciplinary boundaries? Some such divisions are unavoidable, and the model I use ends up with a lot of them. But in the first instance I'd prefer, for example, a model that separates out papers on the metaphysics of causation from papers on the semantics of counterfactuals to one that puts them together. The debates are obviously closely related - but there was a big advantage to me if they were separated. If they were, then measuring how prominent Metaphysics is in the journals becomes one step easier, and so does measuring how prominent Philosophy of Language is. So I'd rather models that split them up.
+Second, how often did the model make divisions that cross-cut familiar disciplinary boundaries? Some such divisions are unavoidable, and the model I use ends up with a lot of them. But in the first instance I'd prefer, for example, a model that separates out papers on the metaphysics of causation from papers on the semantics of counterfactuals, to one that puts them together. The debates are obviously closely related - but there was a big advantage to me if they were separated. If they were, then measuring how prominent Metaphysics is in the journals becomes one step easier, and so does measuring how prominent Philosophy of Language is. So I'd rather models that split them up.
 
 Third, how often did the model divide up debates not in terms of what question they were asking, but in terms of what answers they were giving (or at least taking seriously). For instance, sometimes the model would decide to split up work on causation into, roughly, those papers that did and those that did not take counterfactuals to be central to understanding causation. This tracked pretty closely (but not perfectly) the division into papers before and after David Lewis's paper  [Causation](https://philpapers.org/rec/LEWC) [@Lewis1973b]. (Though, amusingly, models that made this division usually put Lewis's own paper into the pre-Lewisian category; which makes sense since most of that paper is about theories of causation that had come before.) This seemed bad - we want a division into _topics_, and different answers to the same question shouldn't count.
 
@@ -242,7 +242,7 @@ But you might notice at this stage something odd. I said that we got the best ba
 
 ## Choosing Between The Models {#model-seed-choice}
 
-Even once setting the number of topics, there are still a lot of ways that the model can change. Building a model starts with a somewhat random assignment of words and articles to topics, followed by a series of steps (themselves each involving a degree of randomisation) towards a local equilibrium. But there is a lot of path dependency in this process, as there always is in finding a local equilibrium.
+Even once the number of topics is set, there are still a lot of ways that the model can change. Building a model starts with a somewhat random assignment of words and articles to topics, followed by a series of steps (themselves each involving a degree of randomisation) towards a local equilibrium. But there is a lot of path dependency in this process, as there always is in finding a local equilibrium.
 
 Rather than walk through the mathematics of why this is so, I find it more helpful to think about what the model is trying to achieve, and why it is such a hard thing to achieve. Let's just focus on one subject matter in philosophy, friendship, and think about how we could classify it if we're trying to divide all of philosophy up into 60-90 topics.
 
@@ -256,9 +256,9 @@ Or yet another natural thing to do is to group papers on friendship with papers 
 
 Which of these is right? Well, I saw all of them when I ran the algorithm enough times. And they all seem like sensible choices to me. How should we choose which model to use when different models draw such different boundaries within the space of articles? A tempting thought is to see which one looks most like what one thinks philosophy really looks like, and choose it. But now we're back to imposing our prejudices on the model, rather than letting the model teach us something about the discipline.
 
-A better thing to do is to run the model a bunch of times, and find the one that most commonly appears. Intuitively, we're looking for an equilibrium, and there's something to be said for picking the equilibrium with the largest basin of attraction. This is more or less what I did, though there are two problems. 
+A better thing to do is to run the algorithm a bunch of times, and find the output that most commonly appears. Intuitively, we're looking for an equilibrium, and there's something to be said for picking the equilibrium with the largest basin of attraction. This is more or less what I did, though there are two problems. 
 
-The first is 'run the model a bunch of times' is easier said than done. On the computers I was using (pretty good personal computers), it took about 8 hours to come up with a model with 60 topics. So running a bunch of them to find an average was a bit of work. (The University of Michigan has a good unit for doing intensive computing jobs like this. But I kept feeling I was close enough to being done that running things on my own devices was less work than setting up an account there. This ended up being a bad mistake.) But I could just leave them run overnight every night for a couple of weeks, and eventually I had 16 60-topic models to average out.
+The first is 'run the algorithm a bunch of times' is easier said than done. On the computers I was using (pretty good personal computers), it took about 8 hours to come up with a model with 60 topics. So running a bunch of them to find an average was a bit of work. (The University of Michigan has a good unit for doing intensive computing jobs like this. But I kept feeling I was close enough to being done that running things on my own devices was less work than setting up an account there. This ended up being a bad mistake.) But I could just leave them run overnight every night for a couple of weeks, and eventually I had 16 60-topic models to average out.
 
 The models are distinguished by their **seed**. This is a number that you can specify to seed the random number generator. The intended use of it is to make it possible to replicate work like this that relies on randomisation. But it also means that we can run a bunch of models, then make slight changes to the one that seems most representative. And that's what I ended up doing. The seeds I used at this stage were famous dates from the revolutions of 1848. And to get ahead of ourselves, the model the book is based around has seed value 22031848, the date of both the end of the Five Days of Milan, and of the start of the Venetian Revolution.^[Why 1848 and not some other historical event? Well, I had originally been using dates from the French Revolution. But I made so many mistakes that I had to start again. In particular, I didn't learn how many words I needed to filter out, and how many articles I needed to filter out, until I saw how much they were distorting the models. And by that stage I had so many files with names starting with 14071789 and the like that I needed a clean break. So 1848, with all its wins and all its losses, it was.] 
 
@@ -286,7 +286,7 @@ Once I had the 90 topic model, it still wasn't perfect. There were a few places 
 
 So I relied on one last feature of the **topicmodels** package. The algorithm doesn't stop when it reaches an equilibrium; it stops when it sees insufficient progress towards equilibrium. One thing you can do is refine what counts as 'insufficient', but I found this hard to control. A similar approach is to start not with a random distribution, but with a finished model, and then ask it to approach equilibrim from that starting point. It won't go very far; the model was finished to start with. But it will end up with a model that it likes slightly better. (It will, for example, have a lower perplexity score.) I'll call the resulting model a _refinement_.
 
-The refinement process takes a model as input and returns a model as output, so it can be iterated.^[If you're interested in doing this yourself, the magic code looks like ```refinedlda <- LDA(all_dtm, k = 90, model = refinedlda, control = list(seed = 22031848, verbose = 1, initialize = "model"))```. That is ```refinedlda``` is an LDA that takes the DTM we started with, and has 90 topics, and is based on a model, where that model is ```refinedlda``` itself. If loops don't scare you, you can simply loop this process to get as many iterations of refinement as you like. They took about 45 minutes each to run when I did them.] And at this stage I had a clever thought. Since the refinement process improves the model, and it can be iterated, I should just iterate it as often as I can to get a better and better model. At the back of my mind I had two worries at this point. One was that this was a bit like tightening a string, and if you do it too much it will just snap. The other was that I had lost my mind, and was fretting about mathematical models of large text libraries using half-baked metaphors to the physics of everyday objects.
+The refinement process takes a model as input and returns a model as output, so it can be iterated.^[If you're interested in doing this yourself, the magic code looks like ```refinedlda <- LDA(all_dtm, k = 90, model = refinedlda, control = list(seed = 22031848, verbose = 1, initialize = "model"))```. That is ```refinedlda``` is an LDA that takes the DTM we started with, and has 90 topics, and is based on a model, where that model is ```refinedlda``` itself. If loops don't scare you, you can simply loop this process to get as many iterations of refinement as you like. They took about 45 minutes each to run when I did them.] And at this stage I had a clever thought. Since the refinement process improves the model, and it can be iterated, I should just iterate it as often as I can to get a better and better model. At the back of my mind I had two worries at this point. One was that this was a bit like tightening a string, and if you do it too much it will just snap. The other was that I had lost my mind, and was fretting about mathematical models of large text libraries using half-baked metaphors concerning the physics of everyday objects.
 
 Reader, it snapped.
 
@@ -300,7 +300,7 @@ Still, it turns out the refinements weren't all a bad idea. After 15 refinements
 
 ## The Output
 
-The result of all this is a model with two giant probability functions. In this section I'll talk through what those functions look like with first a worked example, and then some graphs about how well the models perform at their intended task
+The result of all this is a model with two giant probability functions. In this section I'll talk through what those functions look like with first a worked example, and then some graphs about how well the models perform at their intended task.
 
 The worked example involves David Makinson's article [The Paradox of the Preface](https://philpapers.org/rec/MAKTPO-9) [@Makinson1965]. The input to the model looks like this.
 
@@ -500,7 +500,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r good-graph-2, fig.cap = "Modelled and Measured Frequency for Edgington (1995)"}
+```{r good-graph-2, fig.cap = "Modelled and Measured Frequency for Edgington (1995)", fig.alt = alt_text}
 x <- "10.2307_2254793"
 cross_check_graph(x)
 
@@ -520,7 +520,7 @@ alt_text <- paste0(
 
 ```
 
-```{r good-graph-3, fig.cap = "Modelled and Measured Frequency for Dworkin (1996)"}
+```{r good-graph-3, fig.cap = "Modelled and Measured Frequency for Dworkin (1996)", fig.alt = alt_text}
 x <- "10.2307_2961920"
 cross_check_graph(x)
 
@@ -542,7 +542,7 @@ alt_text <- paste0(
 
 There are some articles that it doesn't manage as well, typically articles with unusual words. (It also does poorly with short articles, like "The Paradox of the Preface".)
 
-```{r bad-graph-1, fig.cap = "Modelled and Measured Frequency for Thomson (1998)"}
+```{r bad-graph-1, fig.cap = "Modelled and Measured Frequency for Thomson (1998)", fig.alt = alt_text}
 x <- "10.2307_2671962"
 cross_check_graph(x)
 
@@ -561,7 +561,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r bad-graph-2, fig.cap = "Modelled and Measured Frequency for Elster (1990)"}
+```{r bad-graph-2, fig.cap = "Modelled and Measured Frequency for Elster (1990)", fig.alt = alt_text}
 x <- "10.2307_2381783"
 cross_check_graph(x)
 
@@ -580,7 +580,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r bad-graph-3, fig.cap = "Modelled and Measured Frequency for Fara (2005)"}
+```{r bad-graph-3, fig.cap = "Modelled and Measured Frequency for Fara (2005)", fig.alt = alt_text}
 x <- "10.2307_3506173"
 
 cross_check_graph(x)
@@ -604,9 +604,9 @@ alt_text <- paste0(
 
 A few different things are going on here. In Elster's article, the model doesn't expect any philosophy article to use the word 'revenge' as much as he does. In Fara's article, the model lumps articles about modality (especially possible worlds) in with articles on dispositions. (This ends up being [Topic 80](#topic80).) And so it expected that Fara will talk about worlds, given he is also talking about dispositions, but he doesn't. Thomson's article has both of these features. The model is surprised that anyone is talking about clay so much. And it expects that a metaphysics article like Thomson's will talk about properties more than Thomson does.
 
-So it isn't perfect, but as we saw above, it does pretty well with some cases. The papers I've shown so far are pretty much outliers though; here is what more typical articles look like.
+So it isn't perfect, but as we saw above, it does pretty well with some cases. The papers I've shown so far are pretty much outliers though; here are some more typical examples.
 
-```{r medium-graph-1, fig.cap = "Modelled and Measured Frequency for Lewis (1979)"}
+```{r medium-graph-1, fig.cap = "Modelled and Measured Frequency for Lewis (1979)", fig.alt = alt_text}
 x <- "10.2307_2215339"
 cross_check_graph(x)
 
@@ -625,7 +625,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r medium-graph-2, fig.cap = "Modelled and Measured Frequency for Lakoff and Johnson (1980)"}
+```{r medium-graph-2, fig.cap = "Modelled and Measured Frequency for Lakoff and Johnson (1980)", fig.alt = alt_text}
 x <- "10.2307_2025464"
 cross_check_graph(x)
 
@@ -645,7 +645,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r medium-graph-3, fig.cap = "Modelled and Measured Frequency for Kelly (2003)"}
+```{r medium-graph-3, fig.cap = "Modelled and Measured Frequency for Kelly (2003)", fig.alt = alt_text}
 x <- "10.2307_20140564"
 cross_check_graph(x)
 
@@ -666,7 +666,7 @@ alt_text <- paste0(
 
 It's not perfect, but the general picture is that the model does a pretty good job of modeling 32000 articles given the tools we offered it. And, more importantly from the perspective of this book, the way it models them ends up grouping like articles together. And that's what I'll use for describing trends in the journals over their first 138 years.
 
-## Strengts and Weaknesses {#strengths-and-weaknesses-section}
+## Strengths and Weaknesses {#strengths-and-weaknesses-section}
 
 The benefit of using this kind of modeling is that it allows you to take every article into account. This is the history of philosophy (in these journals) without any gaps whatsoever.
 
@@ -676,13 +676,13 @@ If you want to analyse all the articles, if you want to really have no gaps, the
 
 But there are a number of downsides to this algorithmic approach, all of which come from the fact that the machine is just doing string recognition. The algorithm doesn't know any semantics, just syntax. And this causes some complications. I'll mention five here, along with a brief discussion of how badly they impacted the model I ended up using.
 
-One problem that I expected to find more was that the algorithm would run together different uses of the same word. But there was less of this than I feared. It seems, for example, to understand the difference between how 'function' is used in philosophy of biology, to how it is used in logic and mathematics. It didn't run together the different uses of 'realism', or 'internalism'/'externalism', like I would have expected. There is a hint of running together 'scepticism' in the sense most relevant to epistemology with other kinds of philosophical scepticism. (Someone who is a free will sceptic doesn't say we don't know whether free will exists, but that we know it doesn't.) But maybe this isn't too much of a problem, since the views aren't that separate.
+One problem that turned out not to be too big a deal was that the algorithm has a hard time distinguishing different uses of the same word. But while this is hard, it isn't impossible. The model seems, for example, to understand the difference between how 'function' is used in philosophy of biology, to how it is used in logic and mathematics. It didn't run together the different uses of 'realism', or 'internalism'/'externalism', like I would have expected. There is a hint of running together 'scepticism' in the sense most relevant to epistemology with other kinds of philosophical scepticism. (Someone who is a free will sceptic doesn't say we don't know whether free will exists, but that we know it doesn't.) But maybe this isn't too much of a problem, since the views aren't that separate.
 
 The one time that this particular model seems to have gotten confused over the two related meanings of a word concerned 'free'. [Topic 35](#topic35) is a mishmash of work on free will, with work on political freedom. Now you might think this isn't too bad, since the subjects are somewhat connected. But it's not optimal, and we'll eventually work out a way to separate out free will and political freedom. But the big picture is that something that seemed likely to be a problem turned out, pleasingly, to not be that bad.
 
-A second problem comes from the reverse direction. Sometimes the differences in topics just come from a change in terminology. You can see this most clearly, I think, in the logic topics in the model. Papers about sequents get but in a different topic to papers about syllogisms. Papers about implications get put in a different topic from papers about validities. Now there is a sense in which that's a good thing, and the model is picking up a philosophically significant change. But it's a relatively minor change compared to what the model thinks. Still, this isn't a particularly serious problem. The worst case scenario is that we have to come back in after and manually note that we should put together the papers on validities and papers on implications when we're doing analysis. That's a bit of work but it isn't too bad, we just have to remember that it happens.
+A second problem comes from the reverse direction. Sometimes the differences in topics just come from a change in terminology. You can see this most clearly, I think, in the logic topics in the model. Papers about sequents get put in a different topic to papers about syllogisms. Papers about implications get put in a different topic from papers about validities. Now there is a sense in which that's a good thing, and the model is picking up a philosophically significant change. But it's a relatively minor change compared to what the model thinks. Still, this isn't a particularly serious problem. The worst case scenario is that we have to come back in after and manually note that we should put together the papers on validities and papers on implications when we're doing analysis. That's a bit of work but it isn't too bad, we just have to remember that it happens.
 
-A third, and related, problem, comes from when the model makes fine-grained distinctions within a subject. I mentioned earlie that I saw several models that ended up separating out work on causation that didn't discuss counterfactuals (like Mackie's work) from post-Lewisian work where counterfactuals are front and center. That's not great - these really are on the same topic - but it isn't too bad. Again, worst case scenario is yo combine these topics by hand when doing analysis. But in practice I don't think we really saw this problem arise in this particular run of the model.
+A third, and related, problem, comes from when the model makes fine-grained distinctions within a subject. I mentioned earlier that I saw several models that ended up separating out work on causation that didn't discuss counterfactuals (like Mackie's work) from post-Lewisian work where counterfactuals are front and center. That's not great - these really are on the same topic - but it isn't too bad. Again, worst case scenario is you combine these topics by hand when doing analysis. But in practice I don't think we really saw this problem arise in this particular run of the model.
 
 A potentially bigger problem is the converse, which I already discussed when talking about choosing the number of topics. Sometimes the topics are just disjunctive. For example, [Topic 37](#topic37) ends up being half about sets, and half about the grue paradox. Now there is a connection of sorts here - Nelson Goodman is kind of important to both literatures. But really this shouldn't be a single topic. As I already noted, this is a hard problem to fix. If you increase the number of topics, the model becomes harder to read, and you're just as likely to split a coherent topic (like causation) as to split a disjunctive topic.
 
@@ -694,27 +694,28 @@ Or imagine what would happen if every philosopher all at once decided that you s
 
 ## Regrets {#regrets-section}
 
-So that's the methodology I used. Now that I've written the whole thing up, there are a few things I wish I'd done differently. I don't so strongly wish this that I decided to scrap the whole project and start again.^[I went through several cycles of building a model, writing it up, seeing mistakes that way, and restarting the process. This is the model that survived.] But I hope that others will learn from what I've done, and to that end I want to be upfront about my mistakes.
+So that's the methodology I used. Now that I've written the whole thing up, there are a few things I wish I'd done differently. This wish clearly isn't strong enough to make me scrap the project and start again.^[I did in fact scrap several versions of this when writing up the model revealed mistakes in the model building. This is the model that resulted from acting on the lessons of those mistakes.] But I hope that others will learn from what I've done, and to that end I want to be upfront about things I could have done differently.
 
-First, I should have filtered even more words. There are three kinds of words I wish I'd been more aggressive about filtering out.
+First, I should have filtered even more words. There are four kinds of words I wish I'd been more aggressive about filtering out.
 
 - There are some systematic OCR errors in the early articles. I caught 'anid', which appears over 3000 times. (It's almost always meant to be 'and', I think.) But I missed 'aind', which appears about 1500 times. And there are other less common words that are also OCR errors and should be filtered out.
 - I caught a lot of latex words, but somehow missed 'rightarrow', as well as a few much rarer words.
+- If a word is hyphenated in the original journal, each half appears as a word in this data set. (At least if the data was generated by OCR.) I caught a few of the prefixes and suffixes that turn up for that reason, but missed 'ity', which ends up being a reasonably common word.
 - And I caught a lot of words that almost always appear in bibliographies, headers or footers, but missed 'basil' (which turns up on a table later) and 'noûs' (though I caught 'nous').
 
 In general I could have been way more aggressive filtering words like these out.
 
-But second, I think it was a mistake to filter out words that appear 1-3 times in articles. This actually makes perfect sense for long articles, and for some long articles you could get rid of words that appear 4 or 5 times as well. But it's too aggressive for short articles. I needed some kind of rule like filtering out words that appear less than 1 time in 2000 in the article. It is important, I think, to filter out the words that appear just once, or else you have to be perfect in catching OCR errors and weird latex code. But after that you need some kind of sliding scale.
+But second, I think it was a mistake to filter out words that appear 1-3 times in articles. This actually makes perfect sense for long articles, and for some really long articles you could get rid of words that appear 4 or 5 times as well. But it's too aggressive for short articles. I needed some kind of rule like filtering out words that appear less than 1 time in 2000 in the article. It is important, I think, to filter out the words that appear just once, or else you have to be perfect in catching OCR errors and weird latex code. But after that you need some kind of sliding scale.
 
 The next three things are much more systematic, though also less clearly errors.
 
 The third problem was that my model selection was too stepwise, and not holistic enough. I found the best 60 topic model I could find. Then I increased the topics on it (eventually to 90) until the topics looked as good as they could get holding fixed the seed number from the search through 60 topics. Then I ran refinements on it until the refinements looked like they were damaging the model. Then I split some of the topics up for categorisation. What I didn't do at any step was look back and ask, for example, how would the other 60 topic models look if I applied these adjustments to them?
 
-Now there was a reason for that. Each of those adjustments cost quite a lot of my time, and even more computer time. Doing the best you can at each step and then locking in the result makes the process at least a bit manageable. But I should (a) have been a bit more willing to revisit earlier decisions, and (b) more forward looking when making each of those intermediate decisions. I was a bit forward looking at one point; one of my criteria for choosing between 60 topic models was a preference for unwanted conflations over unwanted splits. And that was because I knew I could fix conflations various ways. But I should have done more of this. And maybe I could have stuck much closer to 60 topics if I had.
+Now there was a reason for that. Each of those adjustments cost quite a lot of my time, and even more computer time. Doing the best you can at each step and then locking in the result makes the process at least a bit manageable. But I should (a) have been a bit more willing to revisit earlier decisions, and (b) more forward looking when making each of those intermediate decisions. I was a bit forward looking at one point; one of my criteria for choosing between 60 topic models was a preference for unwanted conflations over unwanted splits. And that was because I knew I could fix conflations various ways. But I should have been both more forward looking, and more willing to take a step or two backwards. And maybe I could have stuck much closer to 60 topics if I had.
 
-The fourth problem was that I didn't realise how bad a topic [Arguments](#topic55) would turn out to be. For the purposes of the kind of study I'm doing, it's really important that the topics really be _topics_ in the ordinary sense, and not tools or methods. Now this is hard in philosophy, because philosophy is so methodologically self-conscious that there are articles that really are about all the tools and methods you might care about. But I wish I'd avoided making one of them a topic. (I'll come back in section \@ref(raw-weight-count) to a formal method one can use for detecting these kinds of topics early in the process.)
+The fourth problem was that I didn't realise how bad a topic [Arguments](#topic55) would turn out to be. For the purposes of the kind of study I'm doing, it's really important that the topics really be _topics_ in the ordinary sense, and not tools or methods. Now this is hard in philosophy, because philosophy is so methodologically self-conscious that there are articles that really are about all the tools and methods you might care about. But I wish I'd avoided having a topic about a tool. (I'll come back in section \@ref(raw-weight-count) to a formal method one can use for detecting these kinds of topics early in the process.)
 
-The fifth problem, if it is a problem, is that I wasn't more aggressive about expanding the list of stop words. This model as a topic on [Ordinary Language Philosophy](#topic24). Actually, _all_ the models I built had a topic like this (at least once they had at least 15 or so topics.) But the keywords characteristic of this topic are words that really could have been included on a stop words list. They are words like 'ask' and 'try'. And one side-effect of this is that the model keeps thinking a huge proportion of the articles in the data set are maybe kind of Ordinary Language Phiosophy articles.
+The fifth problem, if it is a problem, is that I wasn't more aggressive about expanding the list of stop words. This model has a topic on [Ordinary Language Philosophy](#topic24). Actually, _all_ the models I built had a topic like this (at least once they had at least 15 or so topics). But the keywords characteristic of this topic are words that really could have been included on a stop words list. They are words like 'ask' and 'try'. And one side-effect of this is that the model keeps thinking a huge proportion of the articles in the data set are maybe kind of Ordinary Language Philosophy articles.
 
 Another way to put this is that the boundary between a stop word and a contentful word (in this context) is pretty vague. And given that Ordinary Language Philosophy was a thing that happened, and that affected how everyone (at least in the UK) was writing for a while, there is a good case for taking a very expansive understanding of what the stop words were.
 

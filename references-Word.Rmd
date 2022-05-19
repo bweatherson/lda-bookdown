@@ -1,0 +1,183 @@
+# References {-}
+
+Note that I'm not including here papers that are merely mentioned from the twelve journals, or from the other sources that were mined in chapter 9. But I am including papers where I drew on their content (beyond just their word distribution) in preparing this book.
+
+<div id="refs"></div>
+
+# (APPENDIX) Data Tables {-} 
+
+# Data Tables for Chapter 2
+
+There are 90 tables below, one for each subject. In each table there are 138 rows, one for each year. In each year, there are 8 columns. They are
+
+Weight
+:    The weighted number of articles in that subject in that year. This is the main data point that's used throughout the book as the measure of the subject's prominence in the year.
+
+Raw
+:    The raw number of articles in that subject in that year.
+
+W-Ratio
+:    The weighted number of articles in that subject in that year per 1000 articles published that year.
+
+R-Ratio
+:    The raw number of articles in that subject in that year per 1000 articles published that year.
+
+W-Pages
+:    The weighted number of pages of articles on that subject in that year.
+
+R-Pages
+:    The raw number of pages of articles on that subject in that year.
+
+WP-Ratio
+:    The weighted number of pages of articles in that subject in that year per 1000 pages published that year.
+
+RP-Ratio
+:    The raw number of pages of articles in that subject in that year per 1000 pages published that year.
+
+
+```{r append-two-loop}
+app_a_table <- weight_numerator %>% 
+  rename(Weight = y) %>% 
+  mutate(Weight = round(Weight, 1)) %>% 
+  full_join(count_numerator, by = c("year", "topic")) %>% 
+  rename(Raw = y) %>% 
+  full_join(weight_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`W-Ratio` = y) %>% 
+  select(-d) %>% 
+  full_join(count_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`R-Ratio` = y) %>% 
+  select(-d) %>% 
+  full_join(page_weight_numerator, by = c("year", "topic")) %>%
+  mutate(y = round(y, 1)) %>% 
+  rename(`W-Pages` = y) %>% 
+  full_join(page_count_numerator, by = c("year", "topic")) %>%
+  rename(`R-Pages` = y) %>% 
+  full_join(page_weight_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`WP-Ratio` = y) %>% 
+  select(-d) %>% 
+  full_join(page_count_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`RP-Ratio` = y) %>% 
+  select(-d) 
+  
+  
+  
+for (jjj in 1:90){
+  cat_subject <- the_categories$subject[jjj]
+
+  cat(" \n")
+  cat("### ", cat_subject, " {-#a",jjj,"}\n\n", sep="")
+  cat("**Topic Prevalence by Year** \n \n")
+  
+  temp <- filter(app_a_table, topic == jjj) %>% 
+    arrange(year) 
+  
+  print(
+    kable(
+      temp %>% select(-topic), 
+      label = paste0("appendyearfre",jjj),
+      caption = paste("Measures of the prominence of", cat_subject, "in each year's journals.")) 
+  )
+}
+```
+
+# Data Tables for Chapter 3
+
+# Data Tables for Chapter 4
+
+### Data Table for Figures 4.1 and 4.2 {-}
+
+```{r category-count-table}
+temp <- category_count %>% 
+  arrange(year, category) %>% 
+  rename(Year = year, Category = category, `Number of Articles` = n)
+
+kable(temp, caption = "Number of articles in each category in each year.")
+```
+
+### Data Table for Figures 4.3 and 4.4 {-}
+
+```{r category-weight-table}
+temp <- category_year %>% 
+  arrange(year, category) %>%
+  mutate(y = round(y * 10)/10) %>% 
+  rename(Year = year, Category = category, `Weighted Number of Articles` = y)
+
+kable(temp, caption = "Weighted number of articles in each category in each year.")
+```
+
+### Data Table for Figures 4.5 and 4.6 {-}
+
+```{r category-weighted-frequency-table}
+temp <- category_frequency %>% 
+  arrange(year, category) %>%
+  select(year, category, f) %>% 
+  mutate(f = scales::percent(f, accuracy = 0.1, suffix = "%")) %>% 
+  rename(Year = year, Category = category, `Weighted Frequency of Articles` = f)
+
+kable(temp, caption = "Weighted frequency of articles in each category in each year.")
+```
+
+### Data Table for Figure 4.7 {-}
+
+```{r category-frequency-facet}
+temp <- category_frequency %>% 
+  arrange(category, year) %>%
+  select(category, year, f) %>% 
+  mutate(f = scales::percent(f, accuracy = 0.1, suffix = "%")) %>% 
+  rename(Year = year, Category = category, `Weighted Frequency of Articles` = f)
+
+kable(temp, caption = "Weighted frequency of articles in each year for each category.")
+```
+
+# Data Tables for Chapter 6
+
+### Data Table for Figure 6.1 {-}
+
+```{r epistemology-summary-table}
+temp <- epistemology_yearcount %>% 
+  arrange(year) %>% 
+  select(year, n) %>% 
+  rename(Year = year, `Number of Articles` = n)
+
+kable(temp, caption = "Number of Epistemology articles in each year.")
+```
+
+### Data Table for Figure 6.2 {-}
+
+
+```{r epistemology-topic-count}
+temp <- epistemology_yeartopics_postwar %>% drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, tn) %>% 
+  rename(Year = year, Topic = topic, `Number of Articles` = tn)
+
+kable(temp, caption = "Number of Epistemology articles in each topic in each year.")
+```
+
+### Data Table for Figures 6.3 and 6.4 {-}
+
+
+```{r epistemology-topics-weight}
+temp <- epistemology_yeargamma_postwar %>% drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, gamsum) %>% 
+  rename(Year = year, Topic = topic, `Number of Articles` = gamsum)
+
+kable(temp, caption = "Weighted number of Epistemology articles in each topic in each year.")
+```
+
+### Data Table for Figures 6.5 {-}
+
+
+```{r epistemology-categories-count}
+temp <- epistemology_categories %>% 
+  arrange(year, category) %>% 
+  select(year, category, y) %>% 
+  rename(Year = year, Category = category, `Number of Articles` = y)
+
+kable(temp, caption = "Weighted number of Epistemology articles in each category in each year.")
+```

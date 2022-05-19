@@ -1,4 +1,5 @@
 ```{r t01a}
+# Burping-again
 jjj <- 1
 source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = c("fig.cap", "fig.alt"))

@@ -329,7 +329,7 @@ alt_text <- "A scatterplot comparing the distribution of topics 1-30 in journal 
 
 The books I've chosen are more like Ordinary Language, and less like Idealism, than the journals. And they have a little more Ethics in them. We get a similar story if we look at the maximum values instead of the average values.
 
-```{r first-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for first 30 topics in journals and books"}
+```{r first-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for first 30 topics in journals and books", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 31), aes(x = jh, y  = bh, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
@@ -340,11 +340,13 @@ ggplot(filter(book_journal_graph, topic < 31), aes(x = jh, y  = bh, color = topi
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.03, 0.01))) +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.03)))
+
+alt_text <- "A scatterplot comparing the maximum probability distribution of topics 1-30 in journal articles up to 1925 and in the books being discussed. Maximum probabilities are generally higher for journal articles than for books. Ordinary Language and Value are much more present in books. "
 ```
 
 There are a lot more journal articles, and some of them are very short, so the maximum probabilities go much higher for the journals than the chapters. But otherwise there isn't much of a pattern here. Let's move on to the middle 30 topics.
 
-```{r second-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for second 30 topics in journals and books"}
+```{r second-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for second 30 topics in journals and books", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jm, y  = bm, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
@@ -355,11 +357,13 @@ ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jm, y  = bm, 
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.03, 0.7))) +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.01)))
+
+alt_text <- "A scatterplot comparing the average probability distribution of topics 31-60 in journal articles up to 1925 and in the books being discussed. War and Liberal Democracy are much more prevalent in books, and Perception and Kant are more prevalent in journals. Otherwise, most topics are present roughly the same."
 ```
 
 This perhaps tells us more about the books I chose than the difference between philosophy in books and philosophy in journals. I'm sure there was discussion of Kant and Perception in books at the time; just not so much in these 8 books. Maybe War and Liberal Democracy are under-represented in the journals relative to their importance to philosophy at the time; I would need more information. No one is talking about Radical Translation before 1925. The same patterns hold, more or less, if we look at maximum values.
 
-```{r second-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for second 30 topics in journals and books"}
+```{r second-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for second 30 topics in journals and books", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jh, y  = bh, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
@@ -374,11 +378,13 @@ ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jh, y  = bh, 
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.25, 0.02))) +
   scale_y_continuous(expand = expansion(mult = c(0.06, 0.1)))
+
+alt_text <- "A scatterplot comparing the maximum probability distribution of topics 31-60 in journal articles up to 1925 and in the books being discussed. Maximum probabilities are generally higher for journals than books. War is much more prevalent in books."
 ```
 
 The maximum probabilities are, as always, higher for the journals than for the book chapters. And there are some articles that are really about Color, or about Philosophy of Mathematics. There is, as I've already mentioned, one book chapter that's also about Philosophy of Mathematics. Onto the last 30.
 
-```{r third-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for last 30 topics in journals and books"}
+```{r third-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for last 30 topics in journals and books", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 91, topic > 60), aes(x = jm, y  = bm, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
@@ -391,11 +397,13 @@ ggplot(filter(book_journal_graph, topic < 91, topic > 60), aes(x = jm, y  = bm, 
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.1, 0.02))) +
   scale_y_continuous(expand = expansion(mult = c(0.1, 0.02)))
+
+alt_text <- "A scatterplot comparing the average probability distribution of topics 61-90 in journal articles up to 1925 and in the books being discussed. Average probabilities are generally lower for journals. Egalitarianism and Population Ethics are much higher for books; Knowledge is also higher in books."
 ```
 
 Note that the scales here are very different. The numbers are all low, but they are much lower for the journals than the books. So even though Knowledge is way over to the right of the graph, the numbers for it are actually bigger in the books than the journals. And it's a little bigger in the journals than I had quite realised; there are no articles primarily in epistemology, but it isn't at 0 like some other topics. Let's end this section with looking at the maximum probabilities in each topic.
 
-```{r third-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for last 30 topics in journals and books"}
+```{r third-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for last 30 topics in journals and books", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 91, topic > 60), aes(x = jh, y  = bh, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
@@ -409,6 +417,8 @@ ggplot(filter(book_journal_graph, topic < 91, topic > 60), aes(x = jh, y  = bh, 
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.16, 0.02))) +
   scale_y_continuous(expand = expansion(mult = c(0.06, 0.02)))
+
+alt_text <- "A scatterplot comparing the maximum probability distribution of topics 61-90 in journal articles up to 1925 and in the books being discussed. The maximum probablity for journals is higher for all topics than for the maximum probability for books. Abortion and Self-Defense is the most extreme data-point, and is much higher in journal articles than in books."
 ```
 
 For all 30 of these, the highest probability in the journals is higher than the highest probability in any book chapter. I was wondering whether the epistemology chapters would be the counterexamples to this claim, but they didn't come that close. Where we did get close to a counterexample was that Sidgwick _almost_ sounds more like a modern Parfitian than any journal author. But not quite - when there are 3000 journal articles, you can usually find one counterexample to any generalisation in there somewhere.
@@ -566,7 +576,7 @@ I don't want to say that one article in Imprint is a trend, even if it is someth
 
 One of the methods I used for building the model was to run repeated [refinements](#refinements-section) of the model, to try to make it better track actual philosophical topics. At the time I did this, I was worried that this would have bad consequences. It felt like tightening the strings. And while this is generally a good idea, if you make things too tight, they snap. After a few refinements, I started to think this was a silly bit of reasoning by analogy. These aren't actually strings, so they can't actually snap, right? Well, after 100 iterations of the refinement script, I got a topic whose distribution looked like this.
 
-```{r bad-gamma-absolute, fig.cap = "Number of articles in Norms topic in the Bad LDA"}
+```{r bad-gamma-absolute, fig.cap = "Number of articles in Norms topic in the Bad LDA", fig.alt = alt_text}
 # Doing the facet graph with number of articles, not proportion
 # It's a bit cheating to do this first, but it looks really striking
 jjj <- 90
@@ -592,11 +602,14 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = g))  +
             fontface = "bold", 
             size = 3,
             colour = "grey40")
+
+alt_text <- "A series of scatterplots showing the weighted number of articles about Norms in twelve journals from 1900 to 2000. The number rises dramatically starting sometime between 1940 and 1980 across all journals."
+
 ```
 
 Those are remarkable graphs - it seems that this topic is getting to be a bigger and bigger deal in all the journals. I had not seen anything like this; after 1970 it's almost impossible to get the 'generalist' journals, the philosophy of science journals, and the ethics journals moving in the same direction. Maybe it's a function of the journals publishing more articles over time. We could check this by looking at what proportion of the journals are made up by this topic, not the absolute number of (expected) articles.^[Most of the graphs in chapter \@ref(all-90-topics) are proportional, not the absolute graph I just showed you.]
 
-```{r bad-gamma-relative, fig.cap = "Proportion of articles in Norms topic in the Bad LDA"}
+```{r bad-gamma-relative, fig.cap = "Proportion of articles in Norms topic in the Bad LDA", fig.alt = alt_text}
 # A standard facet graph, but with the bad LDA instead of the good LDA
 jjj <- 90
 
@@ -621,6 +634,7 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = y))  +
             fontface = "bold", 
             size = 3,
             colour = "grey40")
+alt_text <- "A series of scatterplots showing the proportion of articles about Norms in twelve journals from 1900 to 2000. The proportion rises dramatically sometime between 1940 and 1980 for all journals, though the rise is less steep for Analysis, Philosophy of Science, and British Journal for the Philosophy of Science."
 ```
 
 It's slightly less steep, especially in _Philosophy of Science_. But the generalist journals - except _Analysis_ - and _British Journal for the Philosophy of Science_ are still rising rapidly. So let's look at what articles are primarily in this topic.
@@ -698,24 +712,29 @@ Like the new topic 90, this topic in the original model really tracked a style n
 
 The data set I'm using for the graphs to follow is the word lists as provided by JSTOR. So that excludes some stop words, and all one and two letter words, but not all the other words that I filtered out before building the LDA. I'll start with some graphs of the keywords from this new topic 90.
 
-```{r buzzwords-graphs-a, fig.height = 5, fig.cap = "Words about theories"}
+```{r buzzwords-graphs-a, fig.height = 5, fig.cap = "Words about theories", fig.alt = alt_text}
 word_frequency_graphs(c("account", "accounts", "claim", "claims"))
+alt_text <- "A scatterplot showing the frequency of words about theories ('account', 'accounts', 'claim', and 'claims') in journal articles from 1880 to after 2000. The frequency of all four words begins to increase more rapidly beginning around 1960. "
 ```
 
-```{r buzzwords-graphs-b, fig.height = 5, fig.cap = "Words about plans"}
+```{r buzzwords-graphs-b, fig.height = 5, fig.cap = "Words about plans", fig.alt = alt_text}
 word_frequency_graphs(c("role", "appeal", "project", "focus"))
+alt_text <- "A scatterplot showing the frequency of words about plans ('appeal', 'focus', 'project', and 'role') in journal articles from 1880 to after 2000. The frequency of all four words begins to increase more rapidly after 1960."
 ```
 
-```{r buzzwords-graphs-c, fig.height = 5, fig.cap = "Words about views"}
+```{r buzzwords-graphs-c, fig.height = 5, fig.cap = "Words about views", fig.alt = alt_text}
 word_frequency_graphs(c("commitment", "commitments", "proposal", "proposals"))
+alt_text <- "A scatterplot showing the frequency of words about views ('commitment', 'commitments', 'proposal', and 'proposals') in journal articles from 1880 to after 2000. The frequency for all four is quite low early on, and begins to increase significantly around 1930-1940."
 ```
 
-```{r buzzwords-graphs-d, fig.height = 5, fig.cap = "Words about objections"}
+```{r buzzwords-graphs-d, fig.height = 5, fig.cap = "Words about objections", fig.alt = alt_text}
 word_frequency_graphs(c("worry", "worries", "challenge", "challenges"))
+alt_text <- "A scatterplot showing the frequency of words about objections ('challenge', 'challenges', 'worries', and 'worry') in jounal articles from 1880 to after 2000. The frequency for all four begins to rise by around 1950, though 'challenge' starts to rise earlier, around 1920. "
 ```
 
-```{r buzzwords-graphs-e, fig.height = 5, fig.cap = "Words about what's common"}
+```{r buzzwords-graphs-e, fig.height = 5, fig.cap = "Words about what's common", fig.alt = alt_text}
 word_frequency_graphs(c("typically", "relevant", "practices"))
+alt_text <- "A scatterplot showing the frequency of words about what's common ('practices', 'relevant', 'typically') in journal articles from 1880 to after 2000. The frequency of 'relevant' begins to rise dramatically around 1900; 'practices' and 'typically' begin to rise around 1960."
 ```
 
 Not all of these words are shooting upwards, but many of them are. It's striking to me that you don't really need trendlines here to see a trend. At this rate we'll soon see articles made up of just the words 'account', 'typically', 'relevant' and 'challenge', plus perhaps their plurals.
@@ -724,24 +743,29 @@ So this is why I just used 15 refinements of the model rather than 100. The lang
 
 But didn't we have this already back in [ordinary language philosophy](#topic 24)? We did, though fortunately the binary sort helped find a couple of natural topics within it. Still, it would be nice to confirm that these words really were being used more frequently in mid-century. So let's look at the same graphs for the keywords from ordinary language philosophy.
 
-```{r olpwords-graphs-a, fig.height = 5, fig.cap = "Words about speech acts"}
+```{r olpwords-graphs-a, fig.height = 5, fig.cap = "Words about speech acts", fig.alt = alt_text}
 word_frequency_graphs(c("ask", "answer", "question", "said"))
+alt_text <- "A scatterplot showing the frequency of words about speech acts ('answer,' 'ask,' 'question,' and 'said') in journal articles from 1880 to after 2000. 'Question' is always the most frequent and 'ask' is always the least frequent. All four words show a similar pattern with frequency peaks around the 1960s."
 ```
 
-```{r olpwords-graphs-b, fig.height = 5, fig.cap = "Words about epistemic modality"}
+```{r olpwords-graphs-b, fig.height = 5, fig.cap = "Words about epistemic modality", fig.alt = alt_text}
 word_frequency_graphs(c("really", "perhaps", "course", "certainly"))
+alt_text <- "A scatterplot showing the frequency of words about epistemic modality ('certianly,' 'course,' 'perhaps,' and 'really') in journal articles from 1880 to after 2000. 'Course' is generally the most frequent, and 'certainly' is the least frequent. All four words show a peak in frequency around 1960."
 ```
 
-```{r olpwords-graphs-c, fig.height = 5, fig.cap = "Words about quantity"}
+```{r olpwords-graphs-c, fig.height = 5, fig.cap = "Words about quantity", fig.alt = alt_text}
 word_frequency_graphs(c("quite", "sort", "seem", "much"))
+alt_text <- "A scatterplot showing the frequency of words about quantity ('much,' 'quite,' 'seem,' and 'sort') in journal articles from 1880 to after 2000. 'Much' generally has the highest frequency, though its frequency declines steadily with time. 'Sort' has the lowest frequency in the 1880s through mid-1900s. The words somewhat converge in frequency around 1970. "
 ```
 
-```{r olpwords-graphs-d, fig.height = 5, fig.cap = "Words about mental state attribution"}
+```{r olpwords-graphs-d, fig.height = 5, fig.cap = "Words about mental state attribution", fig.alt = alt_text}
 word_frequency_graphs(c("think", "want", "get"))
+alt_text <- "A scatterplot showing the frequency of words about mental state attribution ('get,' 'think,' and 'want') in journal articles from 1880 to after 2000. 'Think' appears much more frequently than the other words throughout the time span. All three words have moderate peaks in frequency around the 1970s. "
 ```
 
-```{r olpwords-graphs-e, fig.height = 5, fig.cap = "Words about quantification"}
+```{r olpwords-graphs-e, fig.height = 5, fig.cap = "Words about quantification", fig.alt = alt_text}
 word_frequency_graphs(c("anything", "something", "things"))
+alt_text <- "A scatterplot showing the frequency of words about quantification ('anything,' 'something,' and 'thigs') in journal articles from 1880 to after 2000. 'Anything' is the least frequent throughout most of the time span. All three words show a peak in frequency around 1960, though the peak is more pronounced for 'something' and 'things.'"
 ```
 
 The first three have roughly the pattern I was expecting, but the last two don't. I think there is a sense in which some of the stylistic changes that the ordinary language philosophers brought in persisted. And there is also a sense in which they were the last holdouts against the move to a more scientific philosophy. As is so often the case, it helps to look at a distinctive era as both the end of what came before it, and the start of what came after it.

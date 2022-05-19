@@ -1,7 +1,6 @@
 ```{r t79a}
 jjj <- 79
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t79b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -27,8 +26,10 @@ cat("\n
 	\n")
 ```
 
-This topic would look very different if we ran the study forward a few years. Work on race is distinctive enough that the model wants to put it somewhere on its own, but small enough that it needs supplementing with other work to get to be a topic. Even with supplementation, it's the smallest topic (by weighted sum) of the 90. That would not be the case if we ran the study through 2020, I'm sure.
+This topic would look very different if we ran the study forward a few years. Work on race is distinctive enough that the model wants to put it somewhere on its own, but small enough that it needs supplementing with other work to get to be a topic. Even with supplementation, it's the smallest topic (by weighted sum) of the 90. That would not be the case if we ran the study through the present day, I'm sure.
 
 Putting together papers about DNA with papers about race isn't the strangest thing the model has done. (Though it is a little random; this wasn't a common pairing.) Even philosophers who deny that DNA has much if anything to do with race will talk why it does not. And the model is just tracking word associations. If everyone is talking about why X and Y aren't connected, the model just sees the words for X and Y turning up a lot in the same papers, and connects them.
 
 I don't really know enough philosophy of biology to know why the biology papers in this topic were split off from the much larger topic of [Evolutionary Biology](#topic82). It looks like a distinction without much of a difference to me, but maybe it's tracking an important topic distinction.
+
+Note that Lindley Darden is co-author of the most cited article in this topic. She's also co-author of the most cited article in [Mechanisms](#topic18). There are eight philosophers who have an authorship share in the top cited article in two or more topics. David Lewis is the only one to have the most cited article in three different topics. The other six are G. E. Moore, Thomas Nagel, Paul Boghossian, Amartya Sen, H. L. A. Hart, and Hilary Putnam. So Darden is the only woman to achive this feat, relative at least to this model. Her work doesn't get nearly as much attention as the other seven philosophers I just mentioned, at least among non-specialists. That's unfortunate, I think, given its quality, and the philosophical importance of the topics she addresses.

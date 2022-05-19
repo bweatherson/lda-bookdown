@@ -1,7 +1,6 @@
 ```{r t67a}
 jjj <- 67
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t67b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -33,16 +32,19 @@ Nope! This topic really has fallen away quite a bit from the 1990s. Or, at least
 
 You don't need a fancy model to see this. You can see it too in the raw word counts. This is helpful because it lets us cross test the output of the fancy model. It's not helpful to look at how often the word 'realism' is used, since this has so many different meanings. But we can look at some of the names most associated with this debate to get a sense of how often the debate was taking place in the pages of these journals.^[Note that the y-axis measures the frequency of the words across all words in the JSTOR dataset, not just amongst the words that I'm including. So the denominator here includes the stop words, the LaTeX words, the bibliographic words, etc. This will be true whenever I do one of these graphs throughout the book.]
 
-```{r realism-names, fig.height = 5, fig.caption = "Word frequency for four famous names in philosophy of science"}
+```{r realism-names, fig.height = 5, fig.cap = "Word frequency for four famous names in philosophy of science", fig.alt = alt_text}
 word_frequency_graphs(c("laudan", "kuhn", "boyd", "lakatos"))
+alt_text <- word_frequency_graph_alt_text(c("laudan", "kuhn", "boyd", "lakatos"))
 ```
 
 There is a lot of year to year variation there, but the basic pattern that things rise pretty quickly through the 1980s, and then fall away just as quickly after that, seems fairly clear. In the 1990s when I was reading this stuff, it was a debate running out of steam. 
 
 As one other aside, I'm surprised that the raw counts for 'Kuhn' and 'Boyd' are so low. For one thing, those names belong to more people than their most famous owners. For another I thought 'Boyd' might have more of a boost from being at Cornell, even in the _Philosophical Review_. For another, 'Kuhn' is much lower than other similarly famous figures of the third quarter of the twentieth century.
 
-```{r mid-century-american-names, fig.height = 5, fig.caption = "Word frequency for names of four famous philosophers"}
+```{r mid-century-american-names, fig.height = 5, fig.cap = "Word frequency for names of four famous philosophers", fig.alt = alt_text}
 word_frequency_graphs(c("quine", "kuhn", "rawls", "kripke"))
+alt_text <- word_frequency_graph_alt_text(c("quine", "kuhn", "rawls", "kripke"))
+
 ```
 
 There are years when the word 'Rawls' is being used about once every thousand words. Even accounting for the stop words JSTOR excludes, that's once every 2-3 pages over all 12 journals! But 'Kuhn' only once gets above once every five thousand words, and then only barely.

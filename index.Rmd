@@ -14,14 +14,15 @@ always_allow_html: true
 # Introduction {-}
 
 ```{r packages, echo=FALSE, message = FALSE, warning = FALSE, cache=FALSE}
-knitr::opts_chunk$set(dpi=288)
-knitr::opts_chunk$set(echo=FALSE)
-knitr::opts_chunk$set(cache=TRUE)
-knitr::opts_chunk$set(message=FALSE)
-knitr::opts_chunk$set(warning=FALSE)
+knitr::opts_knit$set(eval.after = c("fig.cap", "fig.alt"))
+knitr::opts_chunk$set(dpi = 288)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(fig.height = 8.2)
 knitr::opts_chunk$set(fig.width = 7.5)
-knitr::opts_chunk$set(results='asis')
+knitr::opts_chunk$set(results = 'asis')
 require(tidyverse)
 require(tidytext)
 require(topicmodels)
@@ -38,7 +39,7 @@ library(extrafont)
 options(dplyr.summarise.inform = FALSE)
 ```
 
-```{r loader}
+```{r loader, cache=FALSE}
 # Loads all the RData
 # Cached because this takes forever each step
 journal_short_names <- c(
@@ -60,7 +61,10 @@ journal_short_names <- c(
 load("fixed_articles.RData")
 
 # The list of highly cited articles
-load("highly_cited_articles.RData")
+load("Highly_Cites_articles.RData")
+
+highly_cited <- highly_cited %>% 
+  mutate(document = file)
 
 # The list of commonly used words (could calculate this from below)
 load("common_words.RData")
@@ -459,6 +463,90 @@ ggplot(t, aes(x = year, y = f, color = term, group = term)) +
   labs(x = element_blank(), y = "Word Frequency") +
   theme(legend.title = element_blank())
 }
+
+word_frequency_graph_alt_text <- function(x){
+  t1 <- paste0(
+    "A scatterplot showing the frequency of the words ",
+    paste(x, collapse=", "),
+    ". "
+  )
+  for (ijk in 1:length(x)){
+    temp <- word_year_frequency(x[ijk]) %>% 
+      mutate(f = round(f * 1000000))
+    temp_max <- temp %>% slice_max(f, n = 1)
+    temp_min <- temp %>% slice_min(f, n = 1)
+    t1 <- paste0(t1,
+            paste0(
+              "The word ",
+              x[ijk],
+              " appears, on average across the years, ",
+              round(mean(temp$f)),
+              " times per million words, and in the median year, it appears ",
+              round(median(temp$f)),
+              " times per million words. Its most frequent occurrence is in ",
+              temp_max$year[1],
+              " when it appears ",
+              temp_max$f[1],
+              " times per million words, and its least frequent occurrence is in ",
+              temp_min$year[1],
+              " when it appears ",
+              temp_min$f[1],
+              " times per million words. "
+            ))
+  }
+  t1
+}
+
+word_year_journal_frequency <- function(x, y){
+  left_join(word_year_journal_count %>% 
+              filter(journal == y), 
+            all_journals_tibble %>%
+              filter(word == x) %>%
+              left_join(articles, by = "document") %>%
+              filter(journal == y) %>%
+              group_by(year) %>%
+              dplyr::summarise(c = sum(wordcount)),
+            by = "year") %>%
+    replace_na(list(c = 0)) %>%
+    mutate(f = c / a) %>%
+    mutate(term = x)
+}
+
+journal_word_frequency_graph_alt_text <- function(x, j){
+  t1 <- paste0(
+    "A scatterplot showing the frequency of the words ",
+    paste(x, collapse=", "),
+    " in the journal ",
+    j,
+    ". (All stats from now on just refer to that journal.) "
+  )
+  for (ijk in 1:length(x)){
+    temp <- word_year_journal_frequency(x[ijk], j) %>% 
+      mutate(f = round(f * 1000000)) %>% 
+      ungroup()
+    temp_max <- temp %>% slice_max(f, n = 1)
+    temp_min <- temp %>% slice_min(f, n = 1)
+    t1 <- paste0(t1,
+            paste0(
+              "The word ",
+              x[ijk],
+              " appears, on average across the years, ",
+              round(mean(temp$f)),
+              " times per million words, and in the median year, it appears ",
+              round(median(temp$f)),
+              " times per million words. Its most frequent occurrence is in ",
+              temp_max$year[1],
+              " when it appears ",
+              temp_max$f[1],
+              " times per million words, and its least frequent occurrence is in ",
+              temp_min$year[1],
+              " when it appears ",
+              temp_min$f[1],
+              " times per million words. "
+            ))
+  }
+  t1
+}
 ```
 
 ```{r word-era-graphs}
@@ -470,6 +558,16 @@ word_era_graphs <- function(x, y){
     ungroup() %>%
     slice(1:5)
   print(word_frequency_graphs(word_freq_data$word))
+}
+
+word_era_graphs_alt_text <- function(x, y){
+    word_freq_data <- era_words %>%
+    filter(word %in% slice(common_words, 1:x)$word) %>%
+    filter(epoch == y) %>%
+    arrange(-f) %>%
+    ungroup() %>%
+    slice(1:5)
+    word_frequency_graph_alt_text(word_freq_data$word)
 }
 ```
 
@@ -632,9 +730,9 @@ category_frequency <- inner_join(category_year, year_denominator, by = "year") %
 
 Anglophone philosophy in the twentieth century was centered, to an unprecedented extent, around journals: periodical publications that aimed to present (one vision of) the best philosophical work of the moment. By looking at the trends across these journals, we can see important trends in philosophy itself.
 
-But looking at the journals is easier said than done. Most major journals have published thousands of articles. If we want to get a guide to philosophy as a whole, and not just to one particular vision of it, we need to look at several different journals. And now we're needing to look at tens of thousands of articles. This is impossible for any human to do.
+But looking at the journals is easier said than done. Most major journals have published thousands of articles. To get a guide to philosophy as a whole, and not just to one particular vision of it, it's necessary to look at several different journals, and tens of thousands of articles. This is impossible for any human to do.
 
-Fortunately, we don't just have to rely on humans. Two technological developments have made it practical to use computers to do at least some of the reading for us.
+Fortunately, it's not necessary to rely on humans. Two technological developments have made it practical to use computers to do at least some of the reading for us.
 
 The first development was that JSTOR used optical character recognition (OCR) software to create text versions of many archived journals. They combined this with the original electronic versions of recent issues to create a full library of the text of many leading journals. And, crucially, they made this library available to the general public.
 
@@ -646,10 +744,11 @@ This study focuses on the following twelve journals.
 journals_summary <- articles %>%
   dplyr::group_by(journal) %>%
   dplyr::summarise(fyear = min(year), art = n_distinct(document))
-  kable(journals_summary, 
-        col.names = c("Journal", "First Year", "Number of Articles"), 
-        align=c("l", "c", "c"),
-        caption = "The twelve journals that this book talks about"
+
+kable(journals_summary, 
+      col.names = c("Journal", "First Year", "Number of Articles"), 
+      align=c("l", "c", "c"),
+      caption = "The twelve journals that this book talks about"
   )
     
 ```
@@ -715,7 +814,6 @@ chap_two_facet_labels <- tribble(
 # And I'm using a hack to get the titles for the graph appearing in the graph, so...
 update_geom_defaults("text", list(family = "Lato"))
 update_geom_defaults("label", list(family = "Lato"))
-opts_knit$set(eval.after = c("fig.cap", "fig.alt"))
 ```
 
 ```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year", dev = 'png', fig.alt = alt_text}
@@ -1267,13 +1365,9 @@ kable(topic_three_words,
 
 And that seems to back up our initial hunch that this is about ethics, or at least about morality. I'm going to stop the illustration here, because to go any further we'd have to do serious analysis on a model that probably doesn't deserve serious attention. But hopefully I've said enough here that anyone who wants to can get started on their own analysis.
 
-## Status {-}
+## Volumes {-}
 
-This is a **draft**. It's fine to circulate it, and even cite it, but it is very much subject to change. If people point out mistakes, I'll fix them. If people suggest new studies to add, I'll add them. I'll try to do so in ways that leave the section numbering intact. So if you want to cite a particular section, you can. (There aren't any page numbers of course.) But the figure numbering and table numbering are automatic, and might get altered if things change. In any case, if you cite it while it is in draft form, make sure you note the date you accessed it.
-
-I had been hoping to have a finished draft by the end of March 2020, but the virus got in the way. And I'd been hoping to use the summer to find a way to get it published as an open access book with a university press. But the virus might get in the way of that too, since publishing things open access costs money, and there isn't as much of it around as there used to be. So I'm not sure exactly what the plans are going forward with this work. (It's obviously unprintable.) But if something happens, I'll change this part of the text. And if it can't get published officially, I'm perfectly happy for it to circulate in this form.
-
-The portentious 'Volume 1' in the subtitle is because I have a number of ideas for how to think about the history of philosophy journals. My first project along these lines involved looking at citation patterns, and a version of that might yet be Volume 2. But all of this is vaporware for now; the subtitle is just a way of leaving options open.
+The portentious 'Volume 1' in the subtitle is because I have a number of ideas for how to think about the history of philosophy journals. My first project along these lines involved looking at citation patterns, and a version of that focusing on early 21st century journals should be Volume 2. When I started working on this what I really wanted to understand was the revolution in philosophy (at least as it appeared in journals) between 1968 an 1975, and maybe there will be a Volume 3 if I figure out something to say about that period. But Volume 2 is barely started and Volume 3 is for now vaporware. The subtitle is to leave options open, not to announce further work.
 
 The current version of this book has been compiled on:
 

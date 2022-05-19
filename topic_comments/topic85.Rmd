@@ -1,7 +1,6 @@
 ```{r t85a}
 jjj <- 85
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t85b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -27,7 +26,7 @@ cat("\n
 	\n")
 ```
 
-Contemporary debates about semantic externalism were kicked off by Saul Kripke's [Naming and Necessity](https://philpapers.org/rec/KRINAN) and Hilary Putnam's [Meaning and Reference](https://philpapers.org/rec/PUTMAR-2). _Naming and Necessity_ isn't in this study, though its impacts are felt in several places. But _Meaning and Reference_ is, and it is even in this category. Here is the model's views on where to place _Meaning and Reference_.
+Contemporary debates about semantic externalism were kicked off by Saul Kripke's [Naming and Necessity](https://philpapers.org/rec/KRINAN) and Hilary Putnam's [Meaning and Reference](https://philpapers.org/rec/PUTMAR-2). _Naming and Necessity_ isn't in this study, though its impacts are felt in several places. But _Meaning and Reference_ is, and it is even in this category. Here are the model's views on where to place _Meaning and Reference_.
 
 ```{r meaning-and-reference}
 individual_article("10.2307_2025079")
@@ -37,7 +36,7 @@ It's largest topic is this one, but the model also notes it is about definitions
 
 But that's not remotely what happened. The model sees very little work on this topic for another decade. There is a bit of discussion in the mid-1980s, then it is Michael McKinsey's 1991 paper [Anti-Individualism and Privileged Access](https://philpapers.org/rec/MCKAAPhttps://philpapers.org/rec/MCKAAP), that really starts the discussion going. Just to make this vivid, let's focus on the last 40 years of those graphs above, starting from Putnam's original paper.
 
-```{r wide-content-recent-graph, fig.cap = "Recent Work on Wide Content"}
+```{r wide-content-recent-graph, fig.cap = "Recent Work on Wide Content", fig.alt = alt_text}
 facet_labels <- chap_two_facet_labels %>%
   mutate(year = 1976, gamfre = yupper * 1.2)
 
@@ -53,6 +52,7 @@ indiv_journal_graphs +
             fontface = "bold", 
             size = 3,
             colour = "grey40")
+alt_text <- "A version of figure 2.191 restricted to the years from 1973 to 2013. It shows that in each journal, the peak year for this topic was in or around the 1990s, not in the immediate aftermath of the famous works on wide content from the 1970s."
 ```
 
 The lack of life in this topic through the 1970s and much of the 1980s was one of the biggest surprises to me of the whole project. In recent years it feels like topics can catch fire immediately after the publication of a high profile paper. But that is realy not what happened in debates about wide content. Putnam's paper is one of the most influential of its time, and its time is the most important few years in the history of philosophy, but that influence was not felt for many years after its publication.

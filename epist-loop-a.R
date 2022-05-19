@@ -11,8 +11,8 @@ cat("**Keywords**: ", keyword_paste, " \n \n")
 raw_count <- epistemology_article_count$n[jjj]
 weighted_count <- epistemology_article_gamma$g[jjj]
 
-cat("**Number of Articles**: ", raw_count, "<br> \n")
-cat("**Weighted Number of Articles**: ", weighted_count, " \n \n")
+cat("**Number of Articles**: ", raw_count, "  \n")
+cat("**Weighted Number of Articles**: ", weighted_count, "  \n  \n")
 
 bg <- epistemology_yeartopics_postwar %>%
   mutate(topic = as.numeric(topic)) %>%

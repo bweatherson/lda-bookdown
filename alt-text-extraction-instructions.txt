@@ -1,0 +1,18 @@
+How to extract alt-text (more or less)
+
+Make a copy of the book that includes the md
+   bookdown::render_book('index.Rmd', clean = FALSE)
+   Need to not specify files by format for this. Not sure why.
+   
+Use BBEdit to extract all the lines
+  Text > Process Lines Containing img src
+  
+Then delete the junk (grep on for these searches)
+    Find: ^.*?alt
+    Replace: alt
+    Find alt="
+    Replace: blank
+    Find: width = ...
+    Replace: blank
+    
+This will give them a list of all the alt-text

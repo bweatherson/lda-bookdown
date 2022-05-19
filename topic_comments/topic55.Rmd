@@ -1,7 +1,6 @@
 ```{r t55a}
 jjj <- 55
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t55b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -27,11 +26,11 @@ cat("\n
 	\n")
 ```
 
-So this is a slightly unfortunate choice that the model made. It notices that there are papers that are about arguments, focussing on things like question begging and circularity. Then it identifies this as a topic, and everywhere someone talks about arguments, it says that maybe that paper should be in this topic. But a lot of philosophy papers talk about arguments! 
-if all papers talked about arguments to the same extent, then the model would zero it all out. But that's not what happened. It doesn't even happen to equal amounts over years. We can see this just by looking at word frequency graphs.
+So this is a slightly unfortunate choice that the model made. It notices that there are papers that are about arguments, focusing on things like question begging and circularity. Then it identifies this as a topic, and everywhere someone talks about arguments, it says that maybe that paper should be in this topic. But a lot of philosophy papers talk about arguments! If all papers talked about arguments to the same extent, then the model would zero it all out. But that's not what happened. It doesn't even happen to equal amounts over years. We can see this just by looking at word frequency graphs.
 
-```{r t55-frequency-graphs}
+```{r t55-frequency-graphs, fig.cap = "Words about arguments", fig.alt = alt_text}
 word_frequency_graphs(c("argument", "arguments","premise", "conclusion"))
+alt_text <- word_frequency_graph_alt_text(c("argument", "arguments","premise", "conclusion"))
 ```
 
 It's interesting that 'premise' and 'conclusion' don't change their frequency over time. But there is a rapid acceleration in how often the word 'argument' is used. And, though I'm not sure the graph makes this clear, 'arguments' also increases too. And you'll note that the word frequency of 'argument' tracks really closely the weighted sum of the topic.

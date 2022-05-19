@@ -1,7 +1,6 @@
 ```{r t64a}
 jjj <- 64
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t64b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -29,7 +28,7 @@ cat("\n
 
 The model is carving things up a little more finely than may be ideal here, so let's put some stuff back together. This topic obviously has a lot to do with [Denoting](#topic43) and [Belief Ascriptions](#topic72). And it's useful to see all three of these on a single graph.
 
-```{r three-language-topics, fig.height = 5, fig.cap= "Relative frequency of Denoting, Sense and Reference, and Belief Ascriptions"}
+```{r three-language-topics, fig.height = 5, fig.cap= "Relative frequency of Denoting, Sense and Reference, and Belief Ascriptions", fig.alt = alt_text}
 frb <- weight_ratio %>%
   filter(topic == 43 | topic == 64 | topic == 72) 
 
@@ -39,6 +38,8 @@ ggplot(frb, mapping = aes(x = year, y = y, color = topic)) +
   geom_smooth(se = F, size = 0.5, method = "loess", formula = "y ~ x") +
   labs(x = element_blank(), y = "Weighted Proportion of Articles", title = "Three Classic Topics") +
   scale_color_discrete(name = "Topics", labels = c("Denoting", "Sense and Reference", "Belief Ascriptions"))
+
+alt_text <- "The graphs for three topics - Denoting, Sense and Reference, and Belief Ascriptions - on one chart. The shape of the graph is described in the text below."
 ```
 
 As you can see, there is a tiny amount of discussion of these three, mostly focussed on descriptions, up until World War Two. Then they all start to take off. But descriptions as such starts to fade quite early, with its peak being the late 1970s. Some of that is just substitution - there is obviously a lot of discussion of how descriptions work in articles on Sense and Reference, and articles on Belief Ascriptions. But the sum seems to be headed a little downwards as we move into the 21st century, and I'd expect that gentle trend continues through 2020.

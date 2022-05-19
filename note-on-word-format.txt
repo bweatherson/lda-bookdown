@@ -1,0 +1,1 @@
+The difference between regular Rmd and Word.Rmd is that the kable_styling lines are deleted

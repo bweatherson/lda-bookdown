@@ -1,7 +1,6 @@
 ```{r t41a}
 jjj <- 41
 source('topic_comments/topic_summary_data.R') # Get data
-opts_knit$set(eval.after = "fig.cap")
 ```
 
 ```{r t41b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
@@ -29,6 +28,6 @@ cat("\n
 
 I've called this War, and that is mostly what it is, though there are two ways in which this is misleading. 
 
-One is that the topic is quite broadly about the ethics of what states do. For most of the period that we're looking at, the state action that philosophers were most interested in was the act of going to war. But the topic includes articles on the relationship between states and international institutions, as well as a few articles on voting and democracy. I suspect that some recent work on immigration, and whether states are permitted to point guns at people who have the temerity to move around the world, would end up here if we extended the study to 2020.
+One is that the topic is quite broadly about the ethics of what states do. For most of the period that we're looking at, the state action that philosophers were most interested in was the act of going to war. But the topic includes articles on the relationship between states and international institutions, as well as a few articles on voting and democracy. I suspect that some recent work on immigration, and whether states are permitted to point guns at people who have the temerity to move around the world, would end up here if we extended the study to the present day.
 
 The other, which is related, is that this topic is really focussed on state-level actions. Conteporary philosophers writing about war have spent more time focussing on what is permissible and impermissible for individual soldiers to do. And that work is classified with work on [Self-Defence](#topic71).

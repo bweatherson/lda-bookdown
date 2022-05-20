@@ -1,20 +1,20 @@
 # Methodology {#methodology-chapter}
 
-The point of this chapter is to explain the choices I made in building the model that the book is based around. But to understand the choices that I made, it helps to know a little bit about what a Latent Dirolecht Algorithm (LDA) does.
+The point of this chapter is to explain the choices I made in building the model that the book is based around. But to understand the choices that I made, it helps to know a little bit about what a latent Dirilecht algorithm (LDA) does.
 
-The inputs to the model are some texts, and a number. The model doesn't care about the ordering of words in the texts, so really the input isn't texts, but a list of lists of ordered pairs. Each ordered pair is a word and a number. In the version I'm using, the outer list is a list of philosophy articles. And each element of that list is a list of words in that article, along with the number of times the word appears.
+The inputs to the model are some texts and a number. The model doesn't care about the ordering of words in the texts, so really the input isn't texts but a list of lists of ordered pairs. Each ordered pair is a word and a number. In the version I'm using, the outer list is a list of philosophy articles. And each element of that list is a list of words in that article, along with the number of times the word appears.
 
 Along with that, you give the model a number. This is the number of _topics_ that you want the model to divide the texts into. I'll call this number $t$ in this introduction. And intuitively there is a function $T$ that maps articles into the $t$ topics. 
 
-What the model outputs is, for our purposes, a pair of probability functions - one for articles, and one for words.
+What the model outputs is, for our purposes, a pair of probability functions: one for articles and one for words.
 
-The probability function for articles gives, for each article $a$ and topic number $n \in \{1, \dots, t\}$, a probability for $T(a) = n$. That is, it gives a probability that the article is in that topic. Notably, it doesn't identify the topics with any more than numbers. I'm going to give names to the topics - this one is [Kant](#topic32), this one is [Composition and Constitution](#topic89), etc. - but the model doesn't do that. For it, the topics really are just integers between 1 and $t$.
+The probability function for articles gives, for each article $a$ and topic number $n \in \{1, \dots, t\}$, a probability for $T(a) = n$; that is, it gives a probability that the article is in that topic. Notably, it doesn't identify the topics with any more than numbers. I'm going to give names to the topics—this one is [Kant](#topic32); this one is [composition and constitution](#topic89), etc.—but the model doesn't do that. For it, the topics really are just integers between 1 and $t$.
 
-The probability function for words gives, for each word $w$ from any of the articles, and topic number $n \in \{1, \dots, t\}$, the probability that a randomly chosen word from the articles in that topic is $w$. So in the Kant topic, the probability that a randomly chosen word is 'Kant' is about 0.14. 
+The probability function for words gives, for each word $w$ from any of the articles, and topic number $n \in \{1, \dots, t\}$, the probability that a randomly chosen word from the articles in that topic is $w$. So in the Kant topic, the probability that a randomly chosen word is _Kant_ is about 0.14. 
 
-That number feels absurdly high, but it makes sense for a couple of reasons. One is that to make the models compile in even semi-reasonable time, I filtered out a lot of words. What's it's really saying is that the word 'Kant' produces about 1/7 of the tokens that remain. The other is that what it's really giving you here is the probability that a random word in an article is 'Kant' conditional on the probability of that article being in the [Kant](#topic32) is 1. And in fact the model is never that confident. Even for articles that you or I would say are unambiguously articles about Kant, the model is rarely more than 40% confident that that's what they are about. And this is for a good reason. Most articles about Kant in philosophy journals are, naturally enough, about Kantian philosophy. And any part of Kantian philosophy is, well, philosophy. So the model has a topic on [Beauty](#topic08), and when it sees an article on Kantian aesthetics, it gives some probability the correct classification of that article is in the topic on Beauty. So the word probabilities are quite abstract things - they are something like word frequencies in a certain kind of of stereotyped article. What the model really wants to do is find $t$ such stereotypes such that each article we started with is a linear mixture of the stereotypes. 
+That number feels absurdly high, but it makes sense for a couple of reasons. One is that to make the models compile in even semireasonable time, I filtered out a lot of words. What's it's really saying is that the word _Kant_ produces about 1/7 of the tokens that remain. The other is that what it's really giving you here is the probability that a random word in an article is _Kant_ conditional on the probability of that article being in the [Kant](#topic32) is 1. And in fact the model is never that confident. Even for articles that might be considered to be clearly articles about Kant, the model is rarely more than 40 percent confident that that's what they are about. And this is for a good reason. Most articles about Kant in philosophy journals are, naturally enough, about Kantian philosophy. And any part of Kantian philosophy is, well, philosophy. So the model has a topic on [beauty](#topic08), and when it sees an article on Kantian aesthetics, it gives some probability the correct classification of that article is in the topic on Beauty. So the word probabilities are quite abstract things—they are something like word frequencies in a certain kind of stereotyped article. What the model really wants to do is find $t$ stereotypes such that each real article is a linear mixture of the stereotypes. 
 
-The way the model approaches this goal is by building two probability of functions, checking how well they cohere, and recursively refining them in places that they don't cohere. The model wants, as much as possible, the word frequencies in the input to match the modelled frequencies you get by looking at the probability an article is in a particular topic, combined with the word frequencies for each of those topics. This is strictly speaking impossible; there aren't enough degrees of freedom. But it can minimise the error, and it does so recursively.
+The way the model approaches this goal is by building two probability functions, checking how well they cohere, and recursively refining them in places that they don't cohere. The model wants, as much as possible, the word frequencies in the input to match the modelled frequencies you get by looking at the probability an article is in a particular topic, combined with the word frequencies for each of those topics. This is strictly speaking impossible; there aren't enough degrees of freedom. But it can minimise the error, and it does so recursively.
 
 The process involved is slow. I was able to build all the models I'll discuss on personal computers, but it takes some processing time. The particular model I'm primarily using took about 20 hours to build, but I ran through many more hours than that building other models to compare it to.
 
@@ -304,7 +304,7 @@ The result of all this is a model with two giant probability functions. In this 
 
 The worked example involves David Makinson's article [The Paradox of the Preface](https://philpapers.org/rec/MAKTPO-9) [@Makinson1965]. The input to the model looks like this.
 
-```{r preface-words}
+```{r preface-words, cache=TRUE}
 preface_words <- word_list %>%
   filter(document == "10.2307_3326519") %>%
   arrange(-wordcount) %>%
@@ -321,7 +321,7 @@ That is, the word 'rational' appears 14 times, 'beliefs' appear 11 times, and so
 
 The model gives a probability to the article being in each of 90 topics. For this article, as for most articles, it just gives a residual probability to the vast majority of topics. So for 83 topics, the probability it gives to the article being in that topic is about 0.0003. The seven topics it gives a serious probability to are:
 
-```{r preface-topics}
+```{r preface-topics, cache=TRUE}
 preface_topics <- relabeled_gamma %>%
   select(document, topic, gamma) %>%
   filter(document == "10.2307_3326519") %>%
@@ -340,7 +340,7 @@ I'm going to spend a lot of time in [the next chapter](#all-90-topics) on what t
 
 The model also gives a probability to each word turning up in a paradigm article for each of the topics. So for those nineteen words that the model saw as input, we can look at how frequently the model thinks a word should turn up in each of these 7 topics.
 
-```{r preface-large-table}
+```{r preface-large-table, cache=TRUE}
 preface_large_table <- relabeled_topics %>%
   select(-date) %>%
   filter(term %in% preface_words$word) %>%
@@ -358,7 +358,7 @@ kable(preface_wide_table,
 
 But the model doesn't think that "The Paradox of the Preface" is a paradigm case of any one of these topics; it thinks it is a mix of seven. So we can work out what it thinks the word frequences in that article should be by taking weighted means of these columns, with the weights given by the topic probabilities. And we get the following results.
 
-```{r preface-cross-check}
+```{r preface-cross-check, cache=TRUE}
 overall_sum <- sum(preface_words$wordcount)
 
 preface_check_table <- preface_large_table %>%
@@ -381,7 +381,7 @@ The modelled frequency of 'rational' is given by multiplying, across seven topic
 
 The aim is that the two columns here would line up. And of course they don't. In fact, the model doesn't end up doing very well with this article; it is still a long way from equilibrium.
 
-```{r preface-graph, fig.cap = "Modelled and Measured Frequency for Makinson (1965)", fig.alt = alt_text}
+```{r preface-graph, fig.cap = "Modelled and Measured Frequency for Makinson (1965)", fig.alt = alt_text, cache=TRUE}
 cross_check_graph <- function(x){
   temp_gamma <- relabeled_gamma %>%
     select(document, gamma, topic) %>%
@@ -480,7 +480,7 @@ On that graph, every dot is a word type. The x-axis represents the frequency of 
 
 Actually, this is one of the least impressive jobs the model does. I measured the correlations between measured and modelled word frequency, i.e., what this graph represents, for 600 highly cited articles. Among those 600, this was the 23rd lowest correlation between measured and modelled frequency. But in many cases, that correlation was very strong. For example, here are the graphs for three more articles where the model manages to understand what's happening.
 
-```{r good-graph-1, fig.cap = "Modelled and Measured Frequency for Davidson (1990)", fig.alt = alt_text}
+```{r good-graph-1, fig.cap = "Modelled and Measured Frequency for Davidson (1990)", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2026863"
 cross_check_graph(x)
 
@@ -500,7 +500,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r good-graph-2, fig.cap = "Modelled and Measured Frequency for Edgington (1995)", fig.alt = alt_text}
+```{r good-graph-2, fig.cap = "Modelled and Measured Frequency for Edgington (1995)", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2254793"
 cross_check_graph(x)
 
@@ -520,7 +520,7 @@ alt_text <- paste0(
 
 ```
 
-```{r good-graph-3, fig.cap = "Modelled and Measured Frequency for Dworkin (1996)", fig.alt = alt_text}
+```{r good-graph-3, fig.cap = "Modelled and Measured Frequency for Dworkin (1996)", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2961920"
 cross_check_graph(x)
 
@@ -542,7 +542,7 @@ alt_text <- paste0(
 
 There are some articles that it doesn't manage as well, typically articles with unusual words. (It also does poorly with short articles, like "The Paradox of the Preface".)
 
-```{r bad-graph-1, fig.cap = "Modelled and Measured Frequency for Thomson (1998)", fig.alt = alt_text}
+```{r bad-graph-1, fig.cap = "Modelled and Measured Frequency for Thomson (1998)", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2671962"
 cross_check_graph(x)
 
@@ -561,7 +561,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r bad-graph-2, fig.cap = "Modelled and Measured Frequency for Elster (1990)", fig.alt = alt_text}
+```{r bad-graph-2, fig.cap = "Modelled and Measured Frequency for Elster (1990)", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2381783"
 cross_check_graph(x)
 
@@ -580,7 +580,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r bad-graph-3, fig.cap = "Modelled and Measured Frequency for Fara (2005)", fig.alt = alt_text}
+```{r bad-graph-3, fig.cap = "Modelled and Measured Frequency for Fara (2005)", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_3506173"
 
 cross_check_graph(x)
@@ -606,7 +606,7 @@ A few different things are going on here. In Elster's article, the model doesn't
 
 So it isn't perfect, but as we saw above, it does pretty well with some cases. The papers I've shown so far are pretty much outliers though; here are some more typical examples.
 
-```{r medium-graph-1, fig.cap = "Modelled and Measured Frequency for Lewis (1979)", fig.alt = alt_text}
+```{r medium-graph-1, fig.cap = "Modelled and Measured Frequency for Lewis (1979)", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2215339"
 cross_check_graph(x)
 
@@ -625,7 +625,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r medium-graph-2, fig.cap = "Modelled and Measured Frequency for Lakoff and Johnson (1980)", fig.alt = alt_text}
+```{r medium-graph-2, fig.cap = "Modelled and Measured Frequency for Lakoff and Johnson (1980)", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2025464"
 cross_check_graph(x)
 
@@ -645,7 +645,7 @@ alt_text <- paste0(
 )
 ```
 
-```{r medium-graph-3, fig.cap = "Modelled and Measured Frequency for Kelly (2003)", fig.alt = alt_text}
+```{r medium-graph-3, fig.cap = "Modelled and Measured Frequency for Kelly (2003)", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_20140564"
 cross_check_graph(x)
 

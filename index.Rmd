@@ -32,14 +32,16 @@ require(corrr)
 require(svglite)
 library(ggplot2); theme_set(theme_minimal())
 require(DT)
+require(english)
+require(tools)
 #library(webshot)
 #install_phantomjs()
-library(extrafont)
+require(extrafont)
 #loadfonts()
 options(dplyr.summarise.inform = FALSE)
 ```
 
-```{r loader, cache=FALSE}
+```{r loader, cache=TRUE}
 # Loads all the RData
 # Cached because this takes forever each step
 journal_short_names <- c(
@@ -59,6 +61,16 @@ journal_short_names <- c(
 
 # The list of articles
 load("fixed_articles.RData")
+
+# Change format to Michigan Publishing preferred style
+articles <- articles %>% 
+  mutate(citation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ ",vol,":",fpage-10000,"–",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ (Supplementary Volume) ",vol,":",fpage,"–",lpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ ",vol,":",fpage,"–",lpage,".")
+  )
+  )
 
 # The list of highly cited articles
 load("Highly_Cites_articles.RData")
@@ -83,14 +95,14 @@ thelda <- refinedlda
 load("imprint_lda.RData")
 ```
 
-```{r word_list_loader}
+```{r word_list_loader, cache=TRUE}
 # The long word list
 # This isn't on github because it might be proprietary
 # It's in a different module because (a) it isn't on github and (b) it is really slow
 load("all_journals_word_list.RData")
 ```
 
-```{r gamma_setup}
+```{r gamma_setup, cache=TRUE}
 # Gamma is the probability of article being in a topic
 # This retrieves it, and rearranges the topics chronologically
 
@@ -133,7 +145,7 @@ require(readr)
 the_categories <- read_csv("category-summary-22031848-90-r15.csv")
 ```
 
-```{r graphsetup}
+```{r graphsetup, cache=TRUE}
 # All the data for the big graphs in chapter 3
 # Gotta build them first because some of them get drawn on for the individual topics in chapter 2
   article_demonimator <-  relabeled_articles  %>%
@@ -217,7 +229,7 @@ journal_order <- c("Mind", "Proceedings of the Aristotelian Society", "Ethics", 
 journalgamma_frequency$journal <- factor(journalgamma_frequency$journal, levels = journal_order)
 ```
 
-```{r keywordsetup}
+```{r keywordsetup, cache=TRUE}
 # Generate two things for the topic summaries in chapter 2
 # First, the keywords, which are a complicated thing to make, since the beta matrix is huge
 # Second, the highly cited list, which is actually fairly easy -though have to check it is up to date
@@ -253,7 +265,7 @@ journalgamma_frequency$journal <- factor(journalgamma_frequency$journal, levels 
 
 ```
 
-```{r overall_stats}
+```{r overall_stats, cache=TRUE}
 # Put all the stats for chapter 2 into one table that I can draw out
 overall_stats <- tibble(
   the_topic = 1:90,
@@ -295,7 +307,7 @@ for (i in 1:90){
 }
 ```
 
-```{r cross-topic}
+```{r cross-topic, cache=TRUE}
 # Average gamma in topic y for articles in topic x
 # Useful quick-and-dirty overlap between topics measure
 cross_topic <- function(x, y){
@@ -305,7 +317,7 @@ cross_topic <- function(x, y){
 }
 ```
 
-```{r cross-topic-two}
+```{r cross-topic-two, cache=TRUE}
 # Create tables from the cross-topic function
 short_articles <- relabeled_articles %>%
   select(document, hometopic = topic)
@@ -339,7 +351,7 @@ furthest_neighbour_inverse <- cross_topic_tibble %>%
 ```
 
 
-```{r kable-for-article-probabilities}
+```{r kable-for-article-probabilities, cache=TRUE}
 # A function for making a quick table of an article's distribution over the 90 topics
 # This is first used in chapter 2
 individual_article <- function(x){
@@ -361,7 +373,7 @@ kable(temp_gamma,
 }
 ```
 
-```{r dt-for-author-articles}
+```{r dt-for-author-articles, cache=TRUE}
 author_dt <- function(x, y){
 datatable(relabeled_articles %>%
           filter(auth1 %in% x | auth2 %in% x | auth3 %in% x) %>%
@@ -380,7 +392,7 @@ datatable(relabeled_articles %>%
 } 
 ```
 
-```{r kable-for-author-articles}
+```{r kable-for-author-articles, cache=TRUE}
 author_kable <- function(x, y){
 kable(relabeled_articles %>%
           filter(auth1 %in% x | auth2 %in% x | auth3 %in% x) %>%
@@ -394,7 +406,7 @@ kable(relabeled_articles %>%
   } 
 ```
 
-```{r words-by-year}
+```{r words-by-year, cache=TRUE}
 # Use this to get words to graph
 # This gets used in chapter 7
 
@@ -414,7 +426,7 @@ word_year_journal_count <- all_journals_tibble %>%
 
 ```
 
-```{r word-frequency-graphs}
+```{r word-frequency-graphs, cache=TRUE}
 # A pair of functions that turn a string of words into a graph of each of their frequencies over time
 # Have to generate the data first, because would be enormous table to have it all stored
 # These get used in chapter 7
@@ -549,7 +561,7 @@ journal_word_frequency_graph_alt_text <- function(x, j){
 }
 ```
 
-```{r word-era-graphs}
+```{r word-era-graphs, cache=TRUE}
 word_era_graphs <- function(x, y){
   word_freq_data <- era_words %>%
     filter(word %in% slice(common_words, 1:x)$word) %>%
@@ -571,7 +583,7 @@ word_era_graphs_alt_text <- function(x, y){
 }
 ```
 
-```{r imprint-setup}
+```{r imprint-setup, cache=TRUE}
 # Extract the gammas from imprint_lda and renumber chronologically
 imprint_gamma<- as_tibble(imprint_lda$topics, rownames = NA) %>%
   rownames_to_column(var = "document") %>%
@@ -593,13 +605,13 @@ imprint_top_gamma <- imprint_gamma %>%
   top_n(1, gamma)
 ```
 
-```{r load-bad-lda}
+```{r load-bad-lda, cache=TRUE}
 # The LDA I use for the buzzwords section right at the end
 # Everything goes wrong when this is cached and doesn't load
 load("t90t100.RData")
 ```
 
-```{r setup-bad-lda}
+```{r setup-bad-lda, cache=TRUE}
 
 # Just replicate the normal setup, but with The Bad LDA
 bad_gamma <- tidy(refinedlda, matrix = "gamma") %>%
@@ -635,7 +647,7 @@ bad_beta <- tidy(refinedlda, matrix = "beta") %>%
   arrange(-y)
 ```
 
-```{r comparison-beta-tables}
+```{r comparison-beta-tables, cache=TRUE}
 good_beta <- relabeled_topics %>%
   filter(topic == 90) %>%
   filter(term %in% all_word_count$word) %>%
@@ -661,7 +673,7 @@ olp_beta <- relabeled_topics %>%
   arrange(-y)
 ```
 
-```{r category_gamma_setup}
+```{r category_gamma_setup, cache=TRUE}
 # I recreate category_gamma from inside the script
 # Need to build all_dtm because gotta assign probabilities from within the binary sorts to all articles
 word_list <- all_journals_tibble %>%
@@ -673,7 +685,7 @@ word_list <- all_journals_tibble %>%
 all_dtm <- cast_dtm(word_list, document, word, wordcount)
 ```
 
-```{r category_gamma_derive}
+```{r category_gamma_derive, cache=TRUE}
 split_check <- filter(the_categories, cat_num == 13)$topic
 
 category_gamma <- relabeled_gamma %>%
@@ -707,7 +719,7 @@ articles_by_category <- category_gamma %>%
   top_n(1, gamma) 
 ```
 
-```{r category_setup}
+```{r category_setup, cache=TRUE}
 category_gamma_graph <- category_gamma %>%
   inner_join(articles, by = "document") %>%
   select(journal, year, category = cat_name, gamma) %>%
@@ -732,36 +744,40 @@ Anglophone philosophy in the twentieth century was centered, to an unprecedented
 
 But looking at the journals is easier said than done. Most major journals have published thousands of articles. To get a guide to philosophy as a whole, and not just to one particular vision of it, it's necessary to look at several different journals, and tens of thousands of articles. This is impossible for any human to do.
 
-Fortunately, it's not necessary to rely on humans. Two technological developments have made it practical to use computers to do at least some of the reading for us.
+Fortunately, it's not necessary to rely on humans. Two technological developments have made it practical to use computers to do at least some of the reading.
 
-The first development was that JSTOR used optical character recognition (OCR) software to create text versions of many archived journals. They combined this with the original electronic versions of recent issues to create a full library of the text of many leading journals. And, crucially, they made this library available to the general public.
+The first development was that JSTOR used optical character-recognition (OCR) software to create text versions of many archived journals. They combined this with the original electronic versions of recent issues to create a full library of the text of many leading journals. And, crucially, they made this library available to the general public.
 
-The second development was that personal computers have gotten fast enough that it is (just barely) practical to run text mining algorithms over libraries as large as the ones JSTOR provides on personal computers.^['Practical' here is a relative term; the models I primarily use here took 8-10 hours to complete on pretty good computers. But that's fine if you can leave a computer running overnight.] So even without having to use tools beyond what's available in a typical university office, we can use these algorithms to see trends in the journal data. 
+The second development was that personal computers have gotten fast enough that it is (just barely) practical to run text-mining algorithms over libraries as large as the ones JSTOR provides on personal computers.^[_Practical_ here is a relative term; the models I primarily use here took eight to ten hours to complete on pretty good computers. But that's fine if a computer can be left running overnight.] So even without having to use tools beyond what's available in a typical university office, these algorithms can be used to see trends in the journal data. 
 
 This study focuses on the following twelve journals.
 
-```{r journal-table}
+```{r journal-table, cache=TRUE}
+options(dplyr.summarise.inform = FALSE)
+
 journals_summary <- articles %>%
   dplyr::group_by(journal) %>%
-  dplyr::summarise(fyear = min(year), art = n_distinct(document))
+  dplyr::summarise(fyear = min(year), art = n_distinct(document), .groups = "keep") %>% 
+  ungroup() %>% 
+  dplyr::mutate(journal = paste0("_",journal,"_"))
 
 kable(journals_summary, 
       col.names = c("Journal", "First Year", "Number of Articles"), 
       align=c("l", "c", "c"),
-      caption = "The twelve journals that this book talks about"
+      caption = "The twelve journals that this book talks about."
   )
     
 ```
 
-That table shows the twelve journals I'm using, the year they started publication, and how many articles from each journal I'm analysing. That doesn't include everything the journal published, since I'm only looking at the research articles they published in English. So I'm not looking at book reviews, but also not at editorials, introductions, corrections and the like. Because the text mining algorithms really require a single language, I'm also excluding everything that was published in languages other than English.^[I had no idea how many articles in French, German and Spanish were published in these journals over the years.] But even still, there are a lot of articles to look at, and they include many of the most important works in philosophy over that time period.
+That table shows the twelve journals I'm using, the year they started publication, and how many articles from each journal I'm analyzing. That doesn't include everything the journal published, since I'm only looking at the research articles they published in English. So I'm not looking at book reviews, but also not at editorials, introductions, corrections and the like. Because the text-mining algorithms really require a single language, I'm also excluding everything that was published in languages other than English.^[I had no idea how many articles in French, German and Spanish were published in these journals over the years.] But even still, there are a lot of articles to look at, and they include many of the most important works in philosophy over that time period.
 
-The data comes from JSTOR's [Data For Researchers](https://jstor.org/dfr/), which provides, for each article in these journals, a file with a list of the words in the article and the number of times those words appear. Though as will become important in what follows, this data separates hyphenated words, excludes various common words like 'and' and 'the', and also excludes all one and two letter words.
+The data comes from JSTOR's [Data for Researchers](https://jstor.org/dfr/), which provides, for each article in these journals, a file with a list of the words in the article and the number of times those words appear. Though as will become important in what follows, this data separates hyphenated words, excludes various common words like _and_ and _the_, and also excludes all one and two letter words.
 
-JSTOR has a moving window, which means it doesn't make available the latest issues of all of the journals. When I started this project, the last year that I could get access to all issues of all 12 journals was 2013. So this study stops in 2013. I make a number of anecdotal observations about what's happened since 2013 during this book. And at the end I come back to one study on work from 2019. But this is primarily a history of the years 1876-2013.
+JSTOR has a moving window, which means it doesn't make available the latest issues of all of the journals. When I started this project, the last year that I could get access to all issues of all twelve journals was 2013. So this study stops in 2013. I make a number of anecdotal observations about what's happened since 2013 during this book. And at the end I come back to one study on work from 2019. But this is primarily a history of the years 1876–2013.
 
-I used the data from JSTOR to build a Latent Dirichlet Allocation (LDA) model of the journals using the [topicmodels](https://cran.r-project.org/package=topicmodels) package written by [Bettina Grün](http://ifas.jku.at/gruen/) and [Kurt Hornik](http://statmath.wu.ac.at/~hornik/), and described by them in @GrunHornik2011.
+I used the data from JSTOR to build a Latent Dirichlet Allocation (LDA) model of the journals using the [_topicmodels_](https://cran.r-project.org/package=topicmodels) package written by [Bettina Grün](http://ifas.jku.at/gruen/) and [Kurt Hornik](http://statmath.wu.ac.at/~hornik/), and described by them in @GrunHornik2011.
 
-An LDA model takes the distribution of words in articles and comes up with a probabilistic assignment of each paper to one of a number of topics. The number of topics has to be set manually, and after some experimentation it seemed that the best results came from dividing the articles up into `r cats` topics. And a lot of this book discusses the characteristics of these `r cats` topics. But to give you a more accessible sense of what the data looks like, I'll start with a graph that groups those topics together into familiar contemporary philosophical subdisciplines, and displays their distributions in the 20th and 21st century journals.^[I'm leaving the 19th century off this graph because it is odd in various ways, and best treated separately. I'll say much more about it as we proceed.]
+An LDA model takes the distribution of words in articles and comes up with a probabilistic assignment of each paper to one of a number of topics. The number of topics has to be set manually, and after some experimentation it seemed that the best results came from dividing the articles up into `r as.english(cats)` topics. And a lot of this book discusses the characteristics of these `r as.english(cats)` topics. But to give you a more accessible sense of what the data looks like, I'll start with a graph that groups those topics together into familiar contemporary philosophical subdisciplines, and displays their distributions in the twentieth and twenty-first century journals.^[I'm leaving the nineteenth century off this graph because it is odd in various ways, and best treated separately. I'll say much more about it as we proceed.]
 
 ```{r initial-graph-style, cache = FALSE}
 facetstyle <-   theme_minimal() +
@@ -816,7 +832,7 @@ update_geom_defaults("text", list(family = "Lato"))
 update_geom_defaults("label", list(family = "Lato"))
 ```
 
-```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year", dev = 'png', fig.alt = alt_text}
+```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year", dev = 'png', fig.alt = alt_text, cache=TRUE}
 tt <- filter(category_frequency, year > 1899) # Remove 19th Century from graph
 category_graph_labels <- tt %>%
   group_by(category) %>%
@@ -846,61 +862,61 @@ alt_text <- paste0(
 )
 ```
 
-These graphs aren't smoothed - this is just a scatterplot of how prevalent each category is over time. The contintuity in the graphs comes from continuity in the underlying subject matter. Although philosophy changes over time, the changes tend to be small and smooth - at least at this level of resolution. 
+These graphs aren't smoothed—this is just a scatterplot of how prevalent each category is over time. The continuity in the graphs comes from continuity in the underlying subject matter. Although philosophy changes over time, the changes tend to be small and smooth—at least at this level of resolution. 
 
 There are, however, a few big trends that are visible even at this resolution. 
 
-The categories of Ethics and Philosophy of Science have fairly steady rises over the graphs. What primarily drives that is that journals we think of as specialist journals, like _Ethics_ and _Philosophy of Science_, became more and more specialised over time. There is much more topic overlap between these journals and so-called generalist journals in the 1940s and 1950s than in the 1990s and 2000s. 
+The categories of Ethics and Philosophy of Science have fairly steady rises over the graphs. What primarily drives that is that journals thought of as specialist journals, like _Ethics_ and _Philosophy of Science_, became more and more specialized over time. There is much more topic overlap between these journals and so-called generalist journals in the 1940s and 1950s than in the 1990s and 2000s. 
 
-For much of the history of these journals, they publish approximately zero articles that look anything like contemporary epistemology. Edmund Gettier's famous article [Is Justified True Belief Knowledge?](https://philpapers.org/rec/GETIJT-4) [@Gettier1963] doesn't advance an existing debate; it starts a debate. But that debate doesn't really get going for another decade or more.
+For much of the history of these journals, they publish approximately zero articles that look anything like contemporary epistemology. Edmund Gettier's famous article ["Is Justified True Belief Knowledge?"](https://philpapers.org/rec/GETIJT-4) [@Gettier1963] doesn't advance an existing debate; it starts a debate. But that debate doesn't really get going for another decade or more.
 
-On the other hand, in the middle of that graph above is a chart that does not reflect anything in contemporary philosophy: Idealism. The extent to which Idealism dominated philosophy before World War I, and continued to be a huge presence between the wars, quite astounded me. And the model is using a fairly narrow definition of Idealism here. Idealist influenced works on social and political philosophy, such as work that engages heavily with Bergson and Santayana, is another huge field, but it's included in Social and Political Philosophy above.
+On the other hand, in the middle of that graph above is a chart that does not reflect anything in contemporary philosophy: Idealism. The extent to which Idealism dominated philosophy before World War I, and continued to be a huge presence between the wars, quite astounded me. And the model is using a fairly narrow definition of Idealism here. Idealist-influenced works on social and political philosophy, such as work that engages heavily with Bergson and Santayana, is another huge field, but it's included in social and political philosophy above.
 
-The anecdote I'd always been told about the state of British philosophy in the early part of the century was that you could get a good sense of things by just looking at the issue of _Mind_ that included [On Denoting](https://philpapers.org/rec/RUSOD) [@Russell1905]. It's wedged between two big articles on Idealism. Indeed, the model classifies the articles just [before](https://philpapers.org/rec/RFAPVA-2) and just [after](https://philpapers.org/rec/GIBPAP) Russell's in the Idealism category. But I, at least, had no idea how dominated British philosophy was by Idealism, or how long this dominance lasted.
+The anecdote I'd always been told about the state of British philosophy in the early part of the century was that you could get a good sense of things by just looking at the issue of _Mind_ that included ["On Denoting"](https://philpapers.org/rec/RUSOD) [@Russell1905]. It's wedged between two big articles on Idealism. Indeed, the model classifies the articles just [before](https://philpapers.org/rec/RFAPVA-2) and just [after](https://philpapers.org/rec/GIBPAP) Russell's in the Idealism category. But I, at least, had no idea how dominated British philosophy was by Idealism, or how long this dominance lasted.
 
 This was far from the only thing that surprised me about the data. Some of these surprises probably reflect my ignorance, but some of them may be of wider interest.
 
-As you might have gathered from the quantity of work on Idealism, there just isn't much space for the work that we now think is most significant in late-nineteenth or early-twentieth century philosophy. Frege, Moore, Russell and even Wittgenstein have virtually zero impact on the journals at the time they publish. They do have an impact later, with the starting times of their influence being in more or less in reverse chronological order to when they actually wrote. But they are invisible in real time. This is especially striking for Moore, who does not seem to have used his influence as editor of _Mind_ to steer the journal particularly in the direction of his work. The contrast with the generation of editors who came after him, on either side of the Atlantic, will be striking.
+As you might have gathered from the quantity of work on Idealism, there just isn't much space for the work that we now think is most significant in late-nineteenth or early-twentieth century philosophy. Frege, Moore, Russell and even Wittgenstein have virtually zero impact on the journals at the time they publish. They do have an impact later, with the starting times of their influence being in more or less in reverse chronological order to when they actually wrote. But they are invisible in real time. This is especially striking for Moore, who does not seem to have used his influence as the editor of _Mind_ to steer the journal particularly in the direction of his work. The contrast with the generation of editors who came after him, on either side of the Atlantic, will be striking.
 
-As well as Idealism, two other broadly anti-realist schools make a major impact on the journals in the first half of the twentieth century: Pragmatism and Positivism. But the impacts differ greatly in size. Idealism has a much bigger impact than Pragmatism, and Pragmatism has a much bigger impact than Positivism. Indeed, the main way that Positivism is visible is that it has a very prominent decline phase. The 'one patch per puncture' period of attempts to save the verification principle is big enough that it is basically one of the `r cats` topics the model finds. But this model doesn't find a ton of work defending positivism turning up as a distinctive topic, nor does it find a notable falling away in the fields (like Metaphysics and Mind) that positivists railed against. It's possible that the focus on journals that primarily publish in English explains why I didn't see a 'rise of positivism' period, but its absence was striking.
+As well as Idealism, two other broadly antirealist schools make a major impact on the journals in the first half of the twentieth century: pragmatism and positivism. But the impacts differ greatly in size. Idealism has a much bigger impact than pragmatism, and pragmatism has a much bigger impact than positivism. Indeed, the main way that positivism is visible is that it has a very prominent decline phase. The 'one patch per puncture' period of attempts to save the verification principle is big enough that it is basically one of the `r as.english(cats)` topics the model finds. But this model doesn't find a ton of work defending positivism turning up as a distinctive topic, nor does it find a notable falling away in the fields (like metaphysics and mind) that positivists railed against. It's possible that the focus on journals that primarily publish in English explains why I didn't see a "rise of positivism" period, but its absence was striking.
 
-If there is no early analytic/logical atomism visible, and positivism is a small presence that shows up mainly as it is dying, what fields that are part of the standard story of the history of analytic philosophy do show up? Well, the first big one is [Ordinary Language Philosophy](#topic24). This is so big, especially in Britain, that it almost breaks the model. The big assumption that drives the kind of model I'm building is that there is a one-one mapping between classes of articles with a distinctive vocabulary, and classes of articles with a distinctive subject matter. That often holds true, but it breaks quite spectacularly in 1950s Britain. A new language, shorn of pomp and circumstance, takes over. And my poor model thinks that all the philosophers have moved on to a wholly new subject matter. But they largely have not - they are just discussing the old subjects using new words.
+If there is no early analytic/logical atomism visible, and positivism is a small presence that shows up mainly as it is dying, what fields that are part of the standard story of the history of analytic philosophy do show up? Well, the first big one is [ordinary language philosophy](#topic24). This is so big, especially in Britain, that it almost breaks the model. The big assumption that drives the kind of model I'm building is that there is a one-to-one mapping between classes of articles with a distinctive vocabulary, and classes of articles with a distinctive subject matter. That often holds true, but it breaks quite spectacularly in 1950s Britain. A new language, shorn of pomp and circumstance, takes over. And my poor model thinks that all the philosophers have moved on to a wholly new subject matter. But they largely have not—they are just discussing the old subjects using new words.
 
-There is one notable exception to this though. During the Ordinary Language phase we do see a lot of articles that are about language itself. This is a new thing - we don't see any such articles before then. That's an exaggeration of course - "On Denoting" really was published - but it's true as a generalisation. But all of a sudden in the middle of the century there is a spike in interest in [Wittgensteinian philosophy of language](#topic22). That spike falls away almost as quickly as it came, but it changes the field. The space that was taken up by Wittgensteinian philosophy of language is replaced by other work in philosophy of language, influenced in the first place by either Frege, Russell, Quine or Austin. 
+There is one notable exception to this though. During the ordinary language phase we do see a lot of articles that are about language itself. This is a new thing—we don't see any such articles before then. That's an exaggeration of course—"On Denoting" really was published—but it's true as a generalization. But all of a sudden in the middle of the century there is a spike in interest in [Wittgensteinian philosophy of language](#topic22). That spike falls away almost as quickly as it came, but it changes the field. The space that was taken up by Wittgensteinian philosophy of language is replaced by other work in philosophy of language, influenced in the first place by either Frege, Russell, Quine or Austin. 
 
-There is something about this story that we see repeated across the subjects. When one particular topic falls out of fashion, it is usually replaced by one from the same sub-discipline. That's how we get the very stable lines on the graphs above, although most categories are made up of topics that see sharp rises and falls in the amount of attention they are getting. But Philosophy of Language is a bit of an exception. Before the Wittgensteinian boom it was invisible in the journal; afterwards it routinely accounted for 10% of the published articles. And that 10% figure stayed stable across huge shifts in what philosophers of language were talking about. What surprised me was that the stability here was the norm - the sudden appearance of a new field taking up 10% of the journal space was what was unusual.
+There is something about this story that is repeated across the subjects. When one particular topic falls out of fashion, it is usually replaced by one from the same subdiscipline. That's how the very stable lines on the graphs above are generated, although most categories are made up of topics that see sharp rises and falls in the amount of attention they are getting. But philosophy of language is a bit of an exception. Before the Wittgensteinian boom it was invisible in the journal; afterwards it routinely accounted for 10 percent of the published articles. And that 10 percent figure stayed stable across huge shifts in what philosophers of language were talking about. What surprised me was that the stability here was the norm—the sudden appearance of a new field taking up 10 percent of the journal space was what was unusual.
 
-But what interests me as much as these big picture trends are the little trends underlying them. What particular topics do philosophers talk about, and when do they talk about them? The answer to the latter question is almost always several years later than I had expected. To take one dramatic example, I associate work on [Wide Content](#topic85) with Kripke and Putnam's work from the early 1970s, and hence with the 1970s as a whole. But it turns out this work is practically invisible in the 1970s journals. [Meaning and Reference](https://philpapers.org/rec/PUTMAR-2) [@Putnam1973] shows up, but almost nothing else does until a decade or more later. And that's the general pattern; if you associate a topic with its most famous papers, you'll be misled about when it primarily shows up in the journals.
+But what interests me as much as these big-picture trends are the little trends underlying them. What particular topics do philosophers talk about, and when do they talk about them? The answer to the latter question is almost always several years later than I had expected. To take one dramatic example, I associate work on [wide content](#topic85) with Kripke and Putnam's work from the early 1970s, and hence with the 1970s as a whole. But it turns out this work is practically invisible in the 1970s journals. ["Meaning and Reference"](https://philpapers.org/rec/PUTMAR-2) [@Putnam1973] shows up, but almost nothing else does until a decade or more later. And that's the general pattern; if you associate a topic with its most famous papers, you'll be misled about when it primarily shows up in the journals.
 
-So I'll spend some time in what follows looking at when familiar topics show up. But I'll also be looking at what shows up that isn't part of contemporary philosophy. I've spent a bit of time talking about Idealism, but it isn't the only thing missing from current journals. There used to be much more work on, broadly construed, [philosophy of history and of sociology](#topic10) than there is now. This has one particular impact that intersects with my other interests. Anglophone philosophers nowadays do spend a bit of time on philosophically significant work from the late eighteenth century. But not much of the work that they look at comes from Philadelphia, or Paris, let alone Cap-Haïtien. Although it's not like mid-century philosophers paid any attention to Cap-Haïtien in the late eighteenth century either, but they did think a bit more about the philosophical importance of what happened, and what was written, at that time in Philadelphia and Paris. And that seems like a good idea. Also, hopefully one of the benefits of the kind of retrospective I'm writing is it encourages people to look back and see what else we used to spend more time on, and could profitably spend more time on in the future.
+So I'll spend some time in what follows looking at when familiar topics show up. But I'll also be looking at what shows up that isn't part of contemporary philosophy. I've spent a bit of time talking about Idealism, but it isn't the only thing missing from current journals. There used to be much more work on, broadly construed, [philosophy of history and of sociology](#topic10) than there is now. This has one particular impact that intersects with my other interests. Anglophone philosophers nowadays do spend a bit of time on philosophically significant work from the late eighteenth century. But not much of the work that they look at comes from Philadelphia, United States, or Paris, France, let alone Cap-Haïtien, Haiti. Although it's not like midcentury philosophers paid any attention to Cap-Haïtien in the late eighteenth century either, but they did think a bit more about the philosophical importance of what happened, and what was written, at that time in Philadelphia and Paris. And that seems like a good idea. Also, hopefully one of the benefits of the kind of retrospective I'm writing is it encourages people to look back and see what else we used to spend more time on, and could profitably spend more time on in the future.
 
 ## Plan {-}
 
 The book has nine chapters, and it loosely divides into three parts, with three chapters in each part.
 
-The first part concerns the 90 topics that the model divides the articles into. Chapter \@ref(methodology-chapter) is about how and why I made the choices I did in providing the inputs to the model. Chapter \@ref(all-90-topics) goes through each of these 90 topics one at a time. As well as producing some automated statistics and graphs for each topic, and listing which articles are in each topic, I make some small comments about the topic. These are mostly about the content of the topic and its place in philosophical history, though I also spend a lot of time talking about how the model made its division into topics. Most of the comments here are short, though occasionally I decide that one topic needs 2500 words or more. Chapter \@ref(summary-graphs) is about my attempts to make a legible graph of all 90 topics through time. I run through a lot of different representations of the data; most of them are failures, but some of them are more interesting failures than others.
+The first part concerns the ninety topics that the model divides the articles into. Chapter \@ref(methodology-chapter) is about how and why I made the choices I did in providing the inputs to the model. Chapter \@ref(all-90-topics) goes through each of these ninety topics one at a time. As well as producing some automated statistics and graphs for each topic, and listing which articles are in each topic, I make some small comments about the topic. These are mostly about the content of the topic and its place in philosophical history, though I also spend a lot of time talking about how the model made its division into topics. Most of the comments here are short, though occasionally I decide that one topic needs 2500 words or more. Chapter \@ref(summary-graphs) is about my attempts to make a legible graph of all ninety topics through time. I run through a lot of different representations of the data; most of them are failures, but some of them are more interesting failures than others.
 
-The second part looks at what happens if instead of making a 90-way division into somewhat novel topics, we try a 12 way division into familiar topics. So I divide the articles up into common contemporary categories, like Epistemology, Ethics, Metaphysics, and Philosophy of Science, and look at the trends in these categories. Chapter \@ref(categorychapter) goes over the trends in the 12 categories. Chapter \@ref(sortingchapter) goes over how I made these divisions, with a special focus on where the categories do, and do not, run into each other. And Chapter \@ref(epistemologychapter) looks at one of these categories: Epistemology. This is in part for self-interested reasons; it's the field I work in. But it's in part because the data about Epistemology were so surprising. Epistemology, as it is currently practiced, is basically invisible in the journals before World War II. And the most famous part of contemporary Epistemology, the Gettier problem, plays a surprisingly small role in recent years.
+The second part looks at what happens if instead of making a ninety-way division into somewhat novel topics, a twelve-way division into familiar topics is tried. I divide the articles up into common contemporary categories, like epistemology, ethics, metaphysics, and philosophy of science, and I look at the trends in these categories. Chapter \@ref(categorychapter) goes over the trends in the twelve categories. Chapter \@ref(sortingchapter) goes over how I made these divisions, with a special focus on where the categories do, and do not, run into each other. And Chapter \@ref(epistemologychapter) looks at one of these categories: epistemology. This is in part for self-interested reasons; it's the field I work in. But it's in part because the data about epistemology were so surprising. Epistemology, as it is currently practiced, is basically invisible in the journals before World War II. And the most famous part of contemporary epistemology, the so-called Gettier problem about the relationship between knowledge, truth, justification, and belief, plays a surprisingly small role in recent years.
 
-The third part looks at further applications of the model. The first six chapters had used years as the main unit of temporal measurement. In Chapter \@ref(eraschapter), I use more coarse-grained measures. First I look at the trends over five 'eras' in philosophy, and then over twelve decades. One benefit of doing things this way is that as well as looking at what the model says, I can look at trends in the underlying data directly, and see how well the model is tracking reality. In Chapter \@ref(outliers), I look at outliers along various dimensions, both to see where extreme events have been happening, and to put some stress on the model. If its most outlandish claims are true, and I think several of them are, then we should have more confidence in its more mundane claims. And in Chapter \@ref(lookingoutward), I try to look beyond the model. I use the model to compare the early years of the journals with some famous books that were published around the same time. Then I look at how articles in Philosophers' Imprint in 2019 compare to what we saw before 2013. (The big story is the resurgence of interest in historical figures outside the standard canon.) And finally I look at something that almost blew up the project: the very distinctive vocabulary of 21st Century Philosophy.
+The third part looks at further applications of the model. The first six chapters had used years as the main unit of temporal measurement. In chapter \@ref(eraschapter), I use more coarse-grained measures. First I look at the trends over five "eras" in philosophy, and then over twelve decades. One benefit of doing things this way is that as well as looking at what the model says, I can look at trends in the underlying data directly, and see how well the model is tracking reality. In chapter \@ref(outliers), I look at outliers along various dimensions, both to see where extreme events have been happening and to put some stress on the model. If its most outlandish claims are true, and I think several of them are, then there is more confidence in its more mundane claims. And in chapter \@ref(lookingoutward), I try to look beyond the model. I use the model to compare the early years of the journals with some famous books that were published around the same time. Then I look at how articles in _Philosophers' Imprint_ in 2019 compare to what is seen before 2013. (The big story is the resurgence of interest in historical figures outside the standard canon.) And finally I look at something that almost blew up the project: the very distinctive vocabulary of twenty-first-century philosophy.
 
 ## Website Instructions {-}
 
-This book isn't meant to be read cover to cover; it's meant to be picked through like the proverbial box of chocolates. To make this easier, there is a full table of contents on the sidebar. If you click on any of the chapter headings, it take you to that chapter, and expand to list all the sections in that chapter. Then you can go directly to the section.
+This book isn't meant to be read cover to cover; it's meant to be picked through like the proverbial box of chocolates. To make this easier, there is a full table of contents on the sidebar. If you click on any of the chapter headings, it takes you to that chapter, and expands to list all the sections in that chapter. Then you can go directly to the section.
 
 The sidebar is also scrollable separately from the rest of the text. If you put the mouse in the sidebar and scroll, it will move the sidebar not the main text. This is particularly important in chapter 2, where there are more sections than will fit on most screens.
 
-But the sidebar takes up quite a bit of real estate, especially on a tablet. So if you want to hide it, either hit 's', or click the <i class="fa fa-align-justify"></i> button in the top left. If the sidebar is hidden, doing either of those things will restore it. If you're reading on a phone, the sidebar should be hidden by default.
+But the sidebar takes up quite a bit of real estate, especially on a tablet. So if you want to hide it, either hit _s_, or click the <i class="fa fa-align-justify"></i> button in the top left. If the sidebar is hidden, doing either of those things will restore it. If you're reading on a phone, the sidebar should be hidden by default.
 
 Next to <i class="fa fa-align-justify"></i>, the <i class="fa fa-search"></i> icon brings up a search box for searching the book. Though note that this only searches the text of the book; it doesn't search the various tables. Clicking 'f' also brings up, or hides if it is already present, the search box.
 
 The <i class="fa fa-font"></i> icon lets you adjust the appearance of the book. You can set the background to white (by default), sepia or dark. Unfortunately, this doesn't change the appearance of the graphs, which will be white no matter what you pick. So I don't love how it looks with different colors, but the option is there. You can also change the font so the body of the book is in the serif font that's used in the titles. And you can increase or decrease the font size.
 
-The <i class="fa fa-eye"></i> icon takes you to the GitHub source for the page you're reading. Except in chapter 2, the source documents are split by chapter not section. So if you click on it right now, it will take you to the source file for the whole introductory chapter. But you should still be able to find the part you are looking for reasonably quickly.
+The <i class="fa fa-eye"></i> icon takes you to the GitHub source for the page you're reading. Except in chapter 2, the source documents are split by chapter not section. So if you click on it right now, it will take you to the source file for the whole introductory chapter. But you should still be able to find the part you are looking for quickly.
 
 The <i class="fa fa-info"></i> icon provides some basic information about keyboard shortcuts you can use in the book.
 
-The <i class="fa fa-twitter"></i> icon takes you to Twitter with a pre-generated tweet about how wonderful this book is. It isn't working on all browsers yet - it seems rather buggy with Safari - but hopefully that will be fixed soon.
+The <i class="fa fa-twitter"></i> icon takes you to Twitter with a pregenerated tweet about how wonderful this book is.
 
 If you use any other social network, the <i class="fa fa-share-alt"></i> icon pulls up a list of other social networks you can share information about the book on. I don't suspect I'll end up with a lot of shares on LinkedIn or Weibo, but just in case that's the social media you most use, it's there.
 
@@ -912,23 +928,23 @@ This book relies on resources that a lot of people have made available, usually 
 
 The raw data comes from JSTOR's [Data for Research](https://www.jstor.org/dfr/) program. It wouldn't really be possible without the work they did to make that set available.
 
-I initially transformed the JSTOR Data into something that could be read in R via some scripts from John Bernau. His paper [Text Analysis with JSTOR Archives](https://doi.org/10.1177%2F2378023118809264) describes some techniques for modeling trends in sociology journals using the JSTOR archives.
+I initially transformed the JSTOR Ddta into something that could be read in R via some scripts from John Bernau. His paper [Text Analysis with JSTOR Archives](https://doi.org/10.1177%2F2378023118809264) describes some techniques for modeling trends in sociology journals using the JSTOR archives.
 
-Once I had the data in R, I analysed it using the **topicmodels** [package](https://cran.r-project.org/web/packages/topicmodels/index.html) by Bettina Grün and Kurt Hornik.
+Once I had the data in R, I analyed it using the **topicmodels** [package](https://cran.r-project.org/web/packages/topicmodels/index.html) by Bettina Grün and Kurt Hornik.
 
-The idea for analysing this data using topicmodels to analyse the data in this way comes from [What Is This Thing Called Philosophy of Science? A Computational Topic-Modeling Perspective, 1934–2015](https://doi.org/10.1086/704372), by Christophe Malaterre, Jean-François Chartier, and Davide Pulizzotto [@Malaterre2019].
+The idea for analyzing this data using topicmodels to analyze the data in this way comes from [What Is This Thing Called Philosophy of Science? A Computational Topic-Modeling Perspective, 1934–2015](https://doi.org/10.1086/704372), by Christophe Malaterre, Jean-François Chartier, and Davide Pulizzotto [-@Malaterre2019].
 
-As well as those sources, I learned a lot about how to use **topicmodels** from [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com) by Julia Silge and David Robinson, and from some articles in Towards Data Science, including those by [Shashank Kapadia](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0) and by [Farren tang](https://towardsdatascience.com/beginners-guide-to-lda-topic-modeling-with-r-e57a5a8e7a25). [@Kapadia2019; @tang2019].
+As well as those sources, I learned a lot about how to use the **topicmodels** package from [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com) by Julia Silge and David Robinson, and from some articles in Towards Data Science, including those by [Shashank Kapadia](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0) [-@Kapadia2019] and by [Farren tang](https://towardsdatascience.com/beginners-guide-to-lda-topic-modeling-with-r-e57a5a8e7a25). [-@tang2019].
 
-The citation data I use here are from [Google Scholar](http://scholar.google.com), and I accessed them via [Publish or Perish](https://harzing.com/resources/publish-or-perish) [@Harzing2007]. Happily, a Mac version of Publish or Perish came out just last year; in the past I had set up PC emulators just so I could run it.
+The citation data I use here are from [Google Scholar](http://scholar.google.com), and I accessed them via ["Publish or Perish"](https://harzing.com/resources/publish-or-perish) [@Harzing2007]. Happily, a Mac version of Publish or Perish came out recently; in the past I had set up PC emulators just so I could run it.
 
-Most of the graphics in this book are based on things I learned from Kieran Healy, either from his book [Data Visualization: A Practical Introduction](https://kieranhealy.org/publications/dataviz/) [@Healy2019] or from his [blog](https://kieranhealy.org/blog/).
+Most of the graphics in this book are based on things I learned from Kieran Healy, either from his book [_Data Visualization: A Practical Introduction_](https://kieranhealy.org/publications/dataviz/) [@Healy2019] or from his [blog](https://kieranhealy.org/blog/).
 
-The whole book was put together using the **bookdown** package, primarily built by Yihui Xie [@bookdown]. This in turn is built on the **Pandoc** language, which was originally built by John MacFarlane. And the code uses tools from the **tidyverse** package throughout, which was originally built by Hadley Wickham. 
+The whole book was put together using the **bookdown** package, primarily built by Yihui Xie [-@bookdown]. This in turn is built on the **Pandoc** language, which was originally built by John MacFarlane. And the code uses tools from the **tidyverse** package throughout, which was originally built by Hadley Wickham. 
 
-The design of the book is modeled on that of [rstudio4edu](https://rstudio4edu.github.io/rstudio4edu-book/) by Desirée De Leon and Alison Hill[@DeLeonHall2019], and I've used a lot of their CSS code under the hood here.
+The design of the book is modeled on that of [_rstudio4edu_](https://rstudio4edu.github.io/rstudio4edu-book/) by Desirée De Leon and Alison Hill[-@DeLeonHall2019], and I've used a lot of their CSS code under the hood here.
 
-And my daughter Nyaya has helped catch a lot of errors, though giving the way I write, this is an endless task.
+And my daughter Nyaya has helped catch a lot of errors, though given the way I write, this is an endless task.
 
 ## GitHub {-}
 
@@ -936,43 +952,43 @@ I've created a GitHub repository for this book. It's at
 
 > https://github.com/bweatherson/lda-bookdown
 
-Most of the code and data you need to recreate this book is there. The exception is that the data files that I downloaded from JSTOR are not there. That's for two reasons. One is that it wasn't 100% clear that the licence for them would allow redistribution. The other was that they would have been too big to put on GitHub anyway. So to recreate everything I'm doing here, you'll need to download them directly. 
+Most of the code and data you need to recreate this book is there. The exception is that the data files that I downloaded from JSTOR are not there. That's for two reasons. One is that it wasn't completely clear that the license for them would allow redistribution. The other was that they would have been too big to put on GitHub anyway. So to recreate everything I'm doing here, you'll need to download them directly. 
 
-In the ```notes``` directory of the GitHub repository there are some R scripts for converting downloaded JSTOR files into things that can be managed in R. A lot of the things I'm doing here are based on code that's in the code for the book. But it takes about 24-32 hours (on a reasonably fast personal computer) to build the model, so I don't build it anew each time I compile the book. The next section describes how to build a model like the one I'm using.
+In the ```notes``` directory of the GitHub repository there are some R scripts for converting downloaded JSTOR files into things that can be managed in R. A lot of the things I'm doing here are based on code that's in the code for the book. But it takes about twenty-four to thirty-two hours (on a reasonably fast personal computer) to build the model, so I don't build it anew each time I compile the book. The next section describes how to build a model like the one I'm using.
 
 If you want to go directly to the code for the chapter you're in, the eye icon in the top bar will take you there.
 
 ## Replication Instructions {-}
 
-One of the aims of this book is to encourage others to use similar tools to produce better books and papers. This book has lots of flaws, some of which come from me not knowing as much as I did when I started the project as I do now, and some of which are just my limitations. I'm sure others can do better. So I've tried throughout to be as clear as possible about my methodology, so as to provide an entry point for anyone who wants to set out on a similar project.
+One of the aims of this book is to encourage others to use similar tools to produce better books and papers. This book has many flaws, some of which come from me not knowing as much as I did when I started the project as I do now, and some of which are just my limitations. I'm sure others can do better. So I've tried throughout to be as clear as possible about my methodology, so as to provide an entry point for anyone who wants to set out on a similar project.
 
-This section contains step by step instructions for how to build a small scale model of the kind I'm using. The next chapter discusses the many choice points on the way from small scale models like this to the large scale model I use in the book, but it's helpful to have a small example to start with. I'm going to download the text for issues of _Journal of Philosophy_ in the 1970s, and build a small (10 topic) model on them. These instructions assume basic familiarity with R, and especially with **tidyverse**. If you don't have that basic familiarity, a good getting started guide is Jenny Bryan's https://stat545.com, especially chapters 1, 2, 5, 6, 7, 14 and 15. OK, I assume you've done that, and we're ready to do some basic text mining.
+This section contains step-by-step instructions for how to build a small-scale model of the kind I'm using. The next chapter discusses the many choice points on the way from small-scale models like this to the large-scale model I use in the book, but it's helpful to have a small example to start with. I'm going to download the text for issues of the _Journal of Philosophy_ in the 1970s, and build a small (ten-topic) model on them. These instructions assume basic familiarity with R, and especially with **tidyverse**. If you don't have that basic familiarity, a good getting-started guide for basic familiarity is Jenny Bryan's [STAT 545: Data wrangling, exploration, and analysis with R](https://stat545.com), especially chapters 1, 2, 5, 6, 7, 14 and 15. OK, I assume readers are familiar with the basics of R, it's time to do some basic text mining.
 
-Go to https://jstor.org/dfr, and set up a free account.
+Go to https://jstor.org/dfr and set up a free account.
 
 Download the [list of journals JSTOR has](https://www.jstor.org/kbart/collections/all-archive-titles?contentType=journals&fileFormat=xlsx). That link will take you to the Excel file; if you're dedicated to plain text there is [also a text version available](https://www.jstor.org/kbart/collections/all-archive-titles?contentType=journals&fileFormat=csv), but it isn't a lot of fun to use. The key part of that file is the column **title_id**. That gives you the code you need to refer to each journal.
 
-Back at https://jstor.org/dfr go to "Create a Dataset" and use "jcode:(jphilosophy)" (or whatever the title_id for your desired journal is) to get a data set.
+Back at https://jstor.org/dfr go to "Create a Dataset" and use "jcode:(jphilosophy)", or whatever the title_id for your desired journal is, to get a data set.
 
-![Finding all Journal of Philosophy Articles](instruct_1.png)
+![Finding all _Journal of Philosophy_ articles](instruct_1.png)
 
-We are going to restrict dates, so let's just do the 1970s - type in the years you want (for us it's 1970 to 1979) and click "Update Results".
+We are going to restrict dates, so let's just do the 1970s. Type in the years you want, for us it's 1970 to 1979, and click "Update Results".
 
 ![Restricting to the 1970s](instruct_2.png)
 
 Click "Request Dataset". You need the metadata and the unigrams, and you need to give it a name (but you won't use it at any time).
 
-![What data we want to get](instruct_4.png)
+![What data to get](instruct_4.png)
 
 Once again, click "Request Dataset". You'll get this somewhat less than reassuring popup.
 
-![Uh oh - waiting time](instruct_3.png)
+![Uh oh—waiting time](instruct_3.png)
 
 But despite it saying that it may take up to two hours, in fact you normally get the data in minutes, even seconds. You'll get an email (at the address you used for registration) saying it's ready. Clicking the link in that email will get you a zip file. And in that zip file there are two directories: ```ngram1``` and ```metadata```.
 
-We want to put these somewhat memorable. I'll put the first in ```data/ngram/jphil``` and the second in ```data/metadata/jphil```. (So **data** is a subdirectory of my main working directory. And it has two subdirectories in it, ```ngram``` and ```metadata```. And each of those have a subdirectory for each journal being analysed.) It's good to keep the ngrams and the metadata separate places, and it will be very useful (actually essential) to the code I'm about to run to use the same directory name for where a particular journal's metadata is, and where its words are.
+We want to put these somewhere memorable. I'll put the first in ```data/ngram/jphil``` and the second in ```data/metadata/jphil```. (So **data** is a subdirectory of my main working directory. And it has two subdirectories in it, ```ngram``` and ```metadata```. And each of those have a subdirectory for each journal being analyzed.) It's good to keep the ngrams and the metadata in separate places, and it will be very useful (actually essential) to the code I'm about to run to use the same directory name for where a particular journal's metadata is, and where its words are.
 
-There is a hitch here that I should be able to figure out in R, but I couldn't. As things come out, I ended up with names that didn't have spaces in them. So the author of [Should We Respond to Evil with Indifference](https://philpapers.org/rec/WEASWR) was 'BrianWeatherson', not 'Brian Weatherson'. There was probably a way to fix this at the importing stage, but doing so required more understanding of XML files than I have. So instead I came up with a hack. In each journal directory under inside ```metadata```, go to the terminal and run this command.
+There is a hitch here that I should be able to figure out in R, but I couldn't. As things come out, I ended up with names that didn't have spaces in them. So the author of ["Should We Respond to Evil with Indifference"](https://philpapers.org/rec/WEASWR) was BrianWeatherson, not Brian Weatherson. There was probably a way to fix this at the importing stage, but doing so required more understanding of XML files than I have. So instead I came up with a hack. In each journal directory under inside ```metadata```, go to the terminal and run this command:
 
 ```
 find . -name '*.xml' -print0 | xargs -0 sed -i "" "s/<surname>/<surname> /g"
@@ -980,9 +996,9 @@ find . -name '*.xml' -print0 | xargs -0 sed -i "" "s/<surname>/<surname> /g"
 
 This adds a space before each surname. So in the surname field, that article goes from having the value "Weatherson" to having the value “ Weatherson”. And now it can be concatenated with "Brian" to produce a reasonable looking name. It's not elegant, but it works.
 
-The next two steps are taken almost entirely from John A. Bernau's paper [Text Analysis with JSTOR Archives](https://doi.org/10.1177%2F2378023118809264) [@Bernau2018]. I've tinkered with the scripts a little, but if you go back to the supporting documents for his paper, you can see how much I've literally copied over. 
+The next two steps are taken almost entirely from John A. Bernau's paper ["Text Analysis with JSTOR Archives"](https://doi.org/10.1177%2F2378023118809264) [@Bernau2018]. I've tinkered with the scripts a little, but if you go back to the supporting documents for his paper, you can see how much I've literally copied over. 
 
-Anyway, here's the script I ran to convert the metadata files, with are in XML format, into something readable in R. The following file is called ```extract_metadata.R``` on the GitHub page. If you're working with more journals, you have to add the extra journals into the tibble near the start. The first column should be the name you gave to the directories for the journal's data; the second should be the name you want to appear in any part of the project being read by humans.
+Anyway, here's the script I ran to convert the metadata files, which are in XML format, into something readable in R. The following file is called ```extract_metadata.R``` on the GitHub page. If you're working with more journals, you have to add the extra journals into the tibble near the start. The first column should be the name you gave to the directories for the journal's data; the second should be the name you want to appear in any part of the project being read by humans.
 
 ```{r echo = T, eval = F}
 # Parsing out xml files
@@ -1197,7 +1213,8 @@ my_articles <- my_articles %>%
   mutate(citation = case_when(
     journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":S",fpage-10000,"-S",lpage-10000,"."),
     journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall," (",year,") \"", title,"\" ",journal," (Supplementary Volume) ",vol,":",fpage,"-",lpage,"."),
-    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ ",vol,":",fpage,"–",lpage,".")
   )
   )
 
@@ -1222,11 +1239,11 @@ my_articles <- my_articles %>%
 save(my_articles, file="my_articles.RData")
 ```
 
-The main thing I added to this was the ugly code for handling articles with **S** in their page number. This doesn't matter for _Journal of Philosophy_ in the 1970s. But two other journals have page numbers that look like 'S17', 'S145', etc. Treating these as numbers was a bit of a challenge, and the ugly code above is an attempt to handle it. As you can see, I've written distinct lines in for the two journals that I was looking at which did this; if you look at more journals you'll have to be careful with this.
+The main thing I added to this was the ugly code for handling articles with **S** in their page number. This doesn't matter for the _Journal of Philosophy_ in the 1970s. But two other journals have page numbers that look like S17, S145, etc. Treating these as numbers was a bit of a challenge, and the ugly code above is an attempt to handle it. As you can see, I've written distinct lines in for the two journals that I was looking at that did this; if you look at more journals you'll have to be careful with this.
 
-The other thing I did is right near the end, the **mutate** command that introduces the citation field. That's a really helpful way of referring to articles in a familiar human readable way. If you prefer a different citation format, that's the line you want to adjust.
+The other thing I did is right near the end, which is the **mutate** command that introduces the citation field. That's a really helpful way of referring to articles in a familiar, human, and readable way. If you prefer a different citation format, that's the line you want to adjust.
 
-We now have a tibble, called **my_articles** that has the metadata for all the articles. It's somewhat helpful in it's own right; I use the large one I generated from all 12 journals for looking up citations. But we also need the words. For this I use another script that I built off one from Bernau's paper.
+We now have a tibble, called **my_articles** that has the metadata for all the articles. It's somewhat helpful in its own right; I use the large one I generated from all twelve journals for looking up citations. But we also need the words. For this I use another script that I built off one from Bernau's paper.
 
 This is called ```extract_words.R``` on the GitHub page. And again, if you want to use more journals, you'll have to extend that tibble at the start.
 
@@ -1293,7 +1310,7 @@ my_wordlist$word <- as.character(my_wordlist$word)
 save(my_wordlist, file  = "my_wordlist.RData")
 ```
 
-Now with a tibble of all the articles, and another with all the words in each article, it's time to go to work. The next file is called ```create_lda.R``` on the GitHub page, and if you're doing a big project, it could take some time to run. This particular script takes less than a minute to run on my computer. But the equivalent step in the main project took over 8 hours on a pretty powerful laptop.
+Now with a tibble of all the articles, and another with all the words in each article, it's time to go to work. The next file is called ```create_lda.R``` on the GitHub page, and if you're doing a big project, it could take some time to run. This particular script takes less than a minute to run on my computer. But the equivalent step in the main project took over eight hours on a pretty powerful laptop.
 
 ```{r echo = T, eval = F}
 require(tidytext)
@@ -1303,6 +1320,7 @@ require(tidyverse)
 # This is redundant if you've just run the other scripts, but here for resilience
 load("my_wordlist.RData")
 load("my_articles.RData")
+
 source("short_words.R")
 
 # Filter out short words and words appearing 1-3 times
@@ -1327,9 +1345,9 @@ my_gamma <- tidy(my_lda, matrix = "gamma")
 my_beta <- tidy(my_lda, matrix = "beta")
 ```
 
-The big step is the one that calls the LDA command. That builds the topic model. From here on your job is to just do analysis. But just to demonstrate what this finds, here is a quick look at what we found. 
+The big step is the one that calls the LDA command. That builds the topic model. From here, your job is to just do analysis. But just to demonstrate what this finds, here is a quick look at what we found. 
 
-```{r analyse-dummy-lda}
+```{r analyse-dummy-lda, cache=TRUE}
 load("my_lda.RData")
 my_gamma <- tidy(my_lda, matrix = "gamma")
 
@@ -1342,12 +1360,12 @@ topic_three <- my_gamma %>%
 
 kable(topic_three,
       col.names = "Article",
-      caption = "Top articles in topic 3 in example LDA")
+      caption = "Top articles in topic 3 in example LDA.")
 ```
 
-These are the 10 articles that our little example LDA gives the highest probability to being in topic 3. What's topic 3? I guess ethics, from the look of those articles. We could check this by seeing which words have the highest probability of turning up in the topic.
+These are the ten articles that our little example LDA gives the highest probability to being in topic 3. What's topic 3? I guess ethics, from the look of those articles. We could check this by seeing which words have the highest probability of turning up in the topic.
 
-```{r analyse-dummy-lda-words}
+```{r analyse-dummy-lda-words, cache=TRUE}
 load("my_lda.RData")
 my_beta <- tidy(my_lda, matrix = "beta")
 
@@ -1359,15 +1377,15 @@ topic_three_words <- my_beta %>%
 
 kable(topic_three_words,
       col.names = "Word",
-      caption = "Topic 3 words") %>%
+      caption = "Topic 3 words.") %>%
    kable_styling(full_width = F)
 ```
 
-And that seems to back up our initial hunch that this is about ethics, or at least about morality. I'm going to stop the illustration here, because to go any further we'd have to do serious analysis on a model that probably doesn't deserve serious attention. But hopefully I've said enough here that anyone who wants to can get started on their own analysis.
+And that seems to back up my initial hunch that this is about ethics, or at least about morality. I'm going to stop the illustration here, because to go any further would mean doing serious analysis on a model that probably doesn't deserve serious attention. But hopefully I've said enough here that anyone who wants to can get started on their own analysis.
 
 ## Volumes {-}
 
-The portentious 'Volume 1' in the subtitle is because I have a number of ideas for how to think about the history of philosophy journals. My first project along these lines involved looking at citation patterns, and a version of that focusing on early 21st century journals should be Volume 2. When I started working on this what I really wanted to understand was the revolution in philosophy (at least as it appeared in journals) between 1968 an 1975, and maybe there will be a Volume 3 if I figure out something to say about that period. But Volume 2 is barely started and Volume 3 is for now vaporware. The subtitle is to leave options open, not to announce further work.
+The portentous "Volume 1" in the subtitle is because I have a number of ideas for how to think about the history of philosophy journals. My first project along these lines involved looking at citation patterns, and a version of that focusing on early twenty-first century journals should be volume 2. When I started working on this what I really wanted to understand was the revolution in philosophy (at least as it appeared in journals) between 1968 an 1975, and maybe there will be a volume 3 if I figure out something to say about that period. But volume 2 is barely started, and volume 3 is for now vaporware. The subtitle is to leave options open, not to announce further work.
 
 The current version of this book has been compiled on:
 
@@ -1384,7 +1402,7 @@ xfun::session_info()
 ```
 </details>
 
-```{r articles-with-word}
+```{r articles-with-word, cache=TRUE}
 articles_with_word <- function(x){
 t <- all_journals_tibble %>%
   filter(word == x) %>%

@@ -1,6 +1,6 @@
 # Methodology {#methodology-chapter}
 
-The point of this chapter is to explain the choices I made in building the model that the book is based around. But to understand the choices that I made, it helps to know a little bit about what a latent Dirilecht algorithm (LDA) does.
+The point of this chapter is to explain the choices I made in building the model that the book is based around. But to understand the choices that I made, it helps to know a little bit about what a Latent Dirilecht Algorithm (LDA) does.
 
 The inputs to the model are some texts and a number. The model doesn't care about the ordering of words in the texts, so really the input isn't texts but a list of lists of ordered pairs. Each ordered pair is a word and a number. In the version I'm using, the outer list is a list of philosophy articles. And each element of that list is a list of words in that article, along with the number of times the word appears.
 
@@ -192,27 +192,27 @@ Then to speed up processing, I deleted any word that appeared in any article thr
 
 ## Building a Model
 
-So at this stage we have a list of `r nrow(articles)` articles to include, and a list of several hundred words to exclude. JSTOR provides text files for each article that can easily be converted to a two column spreadsheet. The first column is a word, the second column is the number of times the word appears. I added a third column, for the code number of the article, and then merged all the spreadsheets for each article into one giant spreadsheet. (Not for the last time, I used code that was very closely based on code that [John Bernau](https://www.johnabernau.com/about/) built for a similar purpose [@Bernau2018].) Now I had a file that was 137MB large, and had the word counts of all the words in all the articles.
+So at this stage we have a list of `r nrow(articles)` articles to include, and a list of several hundred words to exclude. JSTOR provides text files for each article that can easily be converted into a two-column spreadsheet. The first column is a word; the second column is the number of times the word appears. I added a third column for the code number of the article and then merged all the spreadsheets for each article into one giant spreadsheet. (Not for the last time, I used code that was very closely based on code that [John Bernau](https://www.johnabernau.com/about/) built for a similar purpose [@Bernau2018].) Now I had a file that was 137MB large, and had the word counts of all the words in all the articles.
 
-I filtered out the words in all the lists above, and all the words that appeared in an article 1-3 times. And I filtered out all the articles that weren't on the list of `r nrow(articles)` research articles. This was the master word list I'd work with.
+I filtered out the words in all the lists above, and all the words that appeared in an article one to three times. And I filtered out all the articles that weren't on the list of `r nrow(articles)` research articles. This was the master word list I'd work with.
 
 I turned that word list, which at this stage looked like a regular spreadsheet, into something called a document-term-matrix using the ```cast_dtm``` command from Julia Slige and David Robinson's package [tidytext](https://www.rdocumentation.org/packages/tidytext/versions/0.1.3). The DTM format is important only because that's what the [topicmodels](https://cran.r-project.org/web/packages/topicmodels/index.html) package (written by Bettina Grün and Kurt Hornik) takes as input before producing an LDA model as output.
 
-I'm not going to go over the full details of how a Latent Dirichlet Allocation (LDA) model is built, because the description that [Grün and Hornik provide](https://cran.r-project.org/web/packages/topicmodels/topicmodels.pdf) is better than what I could do. (I'll just note that I'm using the default VEM algorithm.) 
+I'm not going to go over the full details of how a Latent Dirichlet Allocation (LDA) model is built, because the description that [Grün and Hornik provide](https://cran.r-project.org/web/packages/topicmodels/topicmodels.pdf) is better than what I could do. I'll just note that I'm using the default VEM algorithm.
 
-The basic idea is to use word frequency to estimate which words go in which topics. This makes some amount of sense. Every time the word 'Rawls' appears in an article, that increases the probability that the article is about political philosophy. And every time the word 'Bayesian' appears, that increases the probability that the article is about formal epistemology. These aren't sure-fire signs, but they are probabilistic signs, and by adding up all these signs, we can work out the probability that the article is in one topic rather than another.
+The basic idea is to use word frequency to estimate which words go in which topics. This makes some amount of sense. Every time the word _Rawls_ appears in an article, that increases the probability that the article is about political philosophy. And every time the word _Bayesian_ appears, that increases the probability that the article is about formal epistemology. These aren't surefire signs, but they are probabilistic signs, and by adding up all these signsthe probability that the article is in one topic rather than another can be worked out.
 
-But what's striking about the LDA method is that we don't specify in advance what the topics are. We don't tell it, "Hey, there's this thing called political philosophy, and here are some keywords for it." Rather, the algorithm itself comes up with the topics. This works a little bit by trial and error. The model starts off guessing at a distribution of articles into topics, then works out what words would be keywords for each of those topics, then sees if, given those keywords, it agrees with its own (probabilistic) assignment of articles into topics. It almost certainly doesn't, since the assignment was random, so it reassigns the articles, and repeats the process. And this process repeats until it is is reasonably satisfied with the (probabilistic) sorting. At that point, it tells us the assignment of articles, and keywords, to topics. (Really though, go see the link above for more details if you want to understand the math.)
+But what's striking about the LDA method is that the topics are not specified in advance. The model is not told, "Hey, there's this thing called political philosophy, and here are some keywords for it." Rather, the algorithm itself comes up with the topics. This works a little bit by trial and error. The model starts off guessing at a distribution of articles into topics, then works out what words would be keywords for each of those topics, then sees if, given those keywords, it agrees with its own (probabilistic) assignment of articles into topics. It almost certainly doesn't, since the assignment was random, so it reassigns the articles and repeats the process. And this process repeats until it is reasonably satisfied with the (probabilistic) sorting. At that point, it tells us the assignment of articles, and keywords, to topics. (Really though, go see the link above for more details if you want to understand the math.)
 
-The output provides topics, and keywords, but not any further description of the topics. They are just numbered. It might be that topic 52 has a bunch of articles about liberalism and democracy, broadly construed, and has words like 'Rawls', 'liberal', 'democracy', 'democratic', as keywords, and then we can recognise it as political philosophy. But to the model it's just topic 52.
+The output provides topics, and keywords, but not any further description of the topics. They are just numbered. It might be that topic 52 has a bunch of articles about liberalism and democracy, broadly construed, and has words like _Rawls_, _liberal_, _democracy_, and _democratic_ as keywords, and then we can recognize it as political philosophy. But to the model it's just topic 52.
 
-At this stage there are three big choices the modeller has.
+At this stage there are three big choices the modeler has:
 
-1. How many topics to divide the articles into.
-2. How satisfied the model should be with itself before it reports the data.
-3. What random assignment should be used to initialise the algorithm.
+1. How many topics should the articles be divided into?
+2. How satsfied shoudl the model be with itself before it reports the data?
+3. What random assignment should be used to initialize the algorithm?
 
-Although the algorithm can sort the articles into any number of topics one asks it to, it cannot tell you what makes for a natural number of topics to use. (There is a caveat to this that I'll get to.) That has to be hand-coded into the request for a model. And it's really the biggest decision that we have to make. The next section discusses how I eventually made it.
+Although the algorithm can sort the articles into any number of topics one asks it to, it cannot say what makes for a natural number of topics to use. (There is a caveat to this that I'll get to.) That has to be coded by hand into the request for a model. And it's really the biggest decision to make. The next section discusses how I eventually made it.
 
 ## Choosing the Number of Topics {#choose-topic-number}
 

@@ -7,7 +7,7 @@ source('topic_comments/topic_summary_data.R') # Get data
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t02c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal"), fig.alt = alt_text_journals}
+```{r t02c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -26,26 +26,26 @@ cat("\n
 	\n")
 ```
 
-The biggest topic of the 90, at least by number of articles, is one of the earliest. It was a huge surprise to me just how big this topic is, especially in Britain. I knew that idealism was important; I had no idea how important.
+The biggest topic of the ninety, at least by number of articles, is one of the earliest. It was a huge surprise to me just how big this topic is, especially in Britain. I knew that idealism was important; I had no idea how important.
 
-Note that the graphs shown above do not follow the conventions that I use for most of the 90 topics. The scale on the second graph is several times larger than the scale of its counterparts in other topics. I've left all those light gridlines in to make clear just how big this was in the early years. At times it is 30 times larger than the average of the other 89 topics.
+Note that the graphs shown above do not follow the conventions that I use for most of the ninety topics. The scale on the second graph is several times larger than the scale of its counterparts in other topics. I've left all those light gridlines in to make clear just how big this was in the early years. At times it is thirty times larger than the average of the other eight-nine topics.
 
-As you can see from the journal names just on the very top articles, this is very much a British topic. There is idealism, or at least idealist-adjacent work, in America. But it tends to end up either in [Pragmatism](#topic05), or [Life and Value](#topic03). The latter, as we'll see, is sort of idealist-friendly moral and political work. This topic is where the hardcore metaphysics lives.
+As is sen from the journal names just on the very top articles, this is very much a British topic. There is idealism, or at least idealist-adjacent work, in the United States. But it tends to end up either in [pragmatism](#topic05), or [life and value](#topic03). The latter is sort of idealist-friendly moral and political work. This topic is where hardcore metaphysics lives.
 
-While the topic doesn't contain much political philosophy, it contains a number of politically significant figures. One of these, who will turn up several times in this book, is Bertrand Russell. The articles of Russell's that turn up here aren't particularly idealist, but they do engage with idealism, which is what the model is picking up. In general, the model doesn't do a very good job at figuring out which side of a debate anyone is on - it does a better job of figuring out which debate they are talking about. That will be relevant as we move along, but it isn't particularly relevant here; most of these articles are examples of idealism, not merely discussions of it. The other politically significant figure is Arthur Balfour, later Prime Minister of the United Kingdom and (more significantly) its Foreign Secretary from 1916 to 1919. I don't think many of the folks currently writing in _Mind_ will go on to have as much influence on the world as Balfour did, but I guess you never know.
+While the topic doesn't contain much political philosophy, it contains a number of politically significant figures. One of these, who will turn up several times in this book, is Bertrand Russell. The articles of Russell's that turn up here aren't particularly idealist, but they do engage with idealism, which is what the model is picking up. In general, the model doesn't do a very good job at figuring out which side of a debate anyone is on—it does a better job of figuring out which debate they are talking about. That will be relevant as we move along, but it isn't particularly relevant here; most of these articles are examples of idealism, not merely discussions of it. The other politically significant figure is Arthur Balfour, later prime minister of the United Kingdom and (more significantly) its foreign secretary from 1916 to 1919. I don't think many of the folks currently writing in _Mind_ will go on to have as much influence on the world as Balfour did, but I guess one never knows.
 
 There are a handful of articles by Indian philosophers, or about Indian philosophy, that turn up in this topic. I don't know that this list is complete, but the Indian articles in this topic include:
 
-- Homo Leone (1912) "[The Vedantic Absolute](https://philpapers.org/rec/LEOTVA)" Mind 21:62-78.
-- A. R. Wadia (1919) "[Mr. Joachim's Coherence-Notion Of Truth](https://philpapers.org/rec/WADMJC)" Mind 28:427-435.
-- S. N. Dasgupta (1922) "[The Logic Of The Vedānta](https://philpapers.org/rec/DASVLO)" Proceedings of the Aristotelian Society 22:139-156.
-- E. J. Thomas (1923) "[Dasgupta's "History Of Indian Philosophy"](https://philpapers.org/rec/THODHO)" Mind 32:391-392.
-- A. K. Majumdar (1926) "[The Personalistic Conception Of Nature As Expounded In The Sānkhya Philosophy](https://philpapers.org/rec/MAJTPC)" Philosophical Review 35:53-63.
-- A. R. Wadia (1927) "[Is Change Ultimate?](https://philpapers.org/rec/WADICU)" Philosophical Review 36:338-345.
-- Nikunja Vihari Banerjee (1930) "[Some Suggestions Towards The Construction Of A Theory Of Sense-Perception](https://philpapers.org/rec/BANSST)" Philosophical Review 39:587-596.
-- Mahendranath Sircar (1933) "[Reality In Indian Thought](https://philpapers.org/rec/SIRRII)" Philosophical Review 42:249-271.
-- K. R. Srinivasa Iyengar (1939) "[The Notion Of Dependence](https://philpapers.org/rec/IYETNO)" Philosophical Review 48:506-524.
-- Pravas Jivan Chaudhury (1959) "[Vedanta As Transcendental Phenomenology](https://philpapers.org/rec/CHAVAT)" Philosophy and Phenomenological Research 20:252-263.
+- Homo Leone, 1912, "[The Vedantic Absolute,](https://philpapers.org/rec/LEOTVA)" _Mind_ 21:62–78.
+- A. R. Wadia, 1919, "[Mr. Joachim's Coherence-Notion Of Truth](https://philpapers.org/rec/WADMJC)" _Mind_ 28:427–35.
+- S. N. Dasgupta, 1922, "[The Logic Of The Vedānta](https://philpapers.org/rec/DASVLO)" Proceedings of the Aristotelian Society 22:139-56.
+- E. J. Thomas, 1923, "[Dasgupta's "History Of Indian Philosophy"](https://philpapers.org/rec/THODHO)" _Mind_ 32:391–92.
+- A. K. Majumdar, 1926, "[The Personalistic Conception Of Nature As Expounded In The Sānkhya Philosophy](https://philpapers.org/rec/MAJTPC)" _Philosophical Review_  35:53–63.
+- A. R. Wadia, 1927, "[Is Change Ultimate?](https://philpapers.org/rec/WADICU)" _Philosophical Review_  36:338–45.
+- Nikunja Vihari Banerjee, 1930, "[Some Suggestions Towards The Construction Of A Theory Of Sense-Perception](https://philpapers.org/rec/BANSST)" _Philosophical Review_ 39:587–96.
+- Mahendranath Sircar, 1933, "[Reality In Indian Thought](https://philpapers.org/rec/SIRRII)" _Philosophical Review_  42:249-71.
+- K. R. Srinivasa Iyengar, 1939, "[The Notion Of Dependence](https://philpapers.org/rec/IYETNO)" _Philosophical Review_  48:506–524.
+- Pravas Jivan Chaudhury, 1959, "[Vedanta As Transcendental Phenomenology](https://philpapers.org/rec/CHAVAT)" _Philosophy and Phenomenological Research_ 20:252–263.
 
 As well there are five articles by [Hiralal Haldar](https://philpapers.org/s/Hiralal%20Haldar), which are more squarely on European idealism.
 
@@ -53,19 +53,19 @@ As well there are five articles by [Hiralal Haldar](https://philpapers.org/s/Hir
 author_dt(c("Hiralal Haldar"), "Hiralal Haldar")
 ```
 
-Now you might think that fifteen articles out of 1600 is not a lot. And you'd be right. But it's a bit more than we see in other topics, so it seemed worth noting.
+One might think that fifteen articles out of 1600 is not a lot. And that might be right. But it's a bit more than is seen in other topics, so it seemed worth noting.
 
-Much of the story of Anglophone philosophy in the first half of the twentieth century involves disputes between two or more of the four schools mentioned in the first paragraph of Roy Wood Sellars's [A Correspondence Theory of Truth](https://philpapers.org/rec/SELACT): idealism, pragmatism, positivism, and realism [@Sellars1941, 645]. I've listed them in order of their influence on philosophy in the first half of the century. Or, you could just as well say, I've listed them in inverse order of their influence on philosophy in the second half of the century. 
+Much of the story of Anglophone philosophy in the first half of the twentieth century involves disputes between two or more of the four schools mentioned in the first paragraph of Roy Wood Sellars's "[A Correspondence Theory of Truth](https://philpapers.org/rec/SELACT)": idealism, pragmatism, positivism, and realism [@Sellars1941, 645]. I've listed them in order of their influence on philosophy in the first half of the century. Or, one could just as well say, I've listed them in inverse order of their influence on philosophy in the second half of the century. 
 
-Idealism, once the dominant force in Anglophone philosophy, simply stopped being part of the debate. It wasn't, I think, that any particular arguments eventually did it in. Rather, it was as [Wilfred Sellars said in 1948](https://philpapers.org/rec/SELRAT).
+Idealism, once the dominant force in Anglophone philosophy, simply stopped being part of the debate. It wasn't, I think, that any particular arguments eventually did it in. Rather, it was as [Wilfred Sellars said in 1948](https://philpapers.org/rec/SELRAT):
 
 > It has been said that a system of philosophy is not refuted, but becomes ignored. This is true. It is equally true (and for the same reason) that a clash of systems in the philosophical drama ends not in victory and defeat, but in a changing of the scene. Put from a somewhat different point of view, the historical development of philosophy is more truly conceived as the periodic formulation of new questions, than as a series of attempted answers to an enduring body of problems. To be sure, the new questions which appear in this process can be regarded, for the most part, as revisions or reformulations of earlier issues; however, the fact of revision and reformulation is of the essence of the matter, making new questions out of old. Put in these terms, a system dies when the questions it seeks to answer are no longer asked; and only where the questions are the same can there be a genuine clash of answers. [@Sellars1948, 601]
 
 Idealism became ignored.
 
-To get a sense of how dramatically it was ignored, let's look at some of the most prominent authors in this topic, and look at their later influence. I'd normally measure influence by citations, but citation practices have changed enough over time that this is a poor measure. Instead, for authors with distinctive enough names, I'll look at how frequently their names are used. 
+To get a sense of how dramatically it was ignored, I look at some of the most prominent authors in this topic, and look at their later influence. I'd normally measure influence by citations, but citation practices have changed enough over time that this is a poor measure. Instead, for authors with distinctive enough names, I'll look at how frequently their names are used. 
 
-These are the 20 authors with the most articles in this topic. (I'm individuating authors by name here, which is a bit sloppy since some people write under multiple names. But this gives you a rough idea of who is represented in this topic.)
+These are the twenty authors with the most articles in this topic. (I'm individuating authors by name here, which is a bit sloppy since some people write under multiple names. But this gives a rough idea of who is represented in this topic.)
 
 ```{r idealism_authors}
 idealism_authors <- relabeled_articles %>%
@@ -81,7 +81,7 @@ kable(idealism_authors, col.names = c("Author", "Number of Articles")) %>%
   kable_styling(full_width = F)
 ```
 
-Now let's look at how often some of these men (and they are all men) are mentioned in the twelve journals over the 138 years under discussion. (I'm leaving out the ones whose names are so common that we wouldn't learn much from seeing the frequency of that name appear; in later years it would usually mean someone else.) Note that I'm counting tokens here, so sometimes a name appears tens (or even hundreds) of times in an article. Also note that since there are more journals, and longer journals, in recent years, you'd expect graphs like these to trend upwards. (Later I'll measure word usage as a proportion of all words in a year to account for this, but for now the raw numbers are more informative.)
+Now I look at how often some of these men (and they are all men) are mentioned in the twelve journals over the 138 years under discussion. (I'm leaving out the ones whose names are so common that there's not much to learn from seeing the frequency of that name appear; in later years it would usually mean someone else.) Note that I'm counting tokens here, so sometimes a name appears tens (or even hundreds) of times in an article. Also note that since there are more journals, and longer journals, in recent years, graphs like these tend to trend upwards. (Later I'll measure word usage as a proportion of all words in a year to account for this, but for now the raw numbers are more informative.)
 
 ```{r idealism_author_graphs}
 word_year <- all_journals_tibble %>%
@@ -90,7 +90,7 @@ word_year <- all_journals_tibble %>%
   summarise(count = sum(wordcount))
 ```
 
-```{r idealism-author-facet, fig.height = 10.2, fig.cap = "Mentions of Idealist Philosophers in the journals", fig.alt = alt_text}
+```{r idealism-author-facet, fig.height = 10.2, fig.cap = "Mentions of idealist philosophers in the journals", fig.alt = alt_text}
 idealists <- c("bosanquet",
 "schiller",
 "shadworth",
@@ -108,6 +108,7 @@ idealists <- c("bosanquet",
 "loewenberg")
 
 idealist_data <- word_year %>%
+  ungroup() %>% 
   filter(word %in% idealists) %>%
   complete(year = 1876:2013, word, fill = list(count = 0))
 
@@ -141,15 +142,15 @@ alt_text <- paste0(
 )
 ```
 
-It's just staggering how low some of these numbers are. And remember some of the numbers are inflated because there are other uses of these names. More of the uses of 'Bradley' in recent philosophy are about Ben Bradley than F. H. Bradley. The uses of 'Hodgson' are mostly not about Shadworth Hodgson, as you can see from how few uses of 'Shadworth' there are. It's surprising how few uses of 'urban' there are either as a name or in its regular usage, but that's another story.
+It's just staggering how low some of these numbers are. And remember some of the numbers are inflated because there are other uses of these names. More of the uses of _Bradley_ in recent philosophy are about Ben Bradley than F. H. Bradley. The uses of _Hodgson_ are mostly not about Shadworth Hodgson, as you can see from how few uses of _Shadworth_ there are. It's surprising how few uses of _urban_ there are either as a name or in its regular usage, but that's another story.
 
 The point is not that most people don't believe in idealism any more. Views go in and out of fashion. But two things about the distribution really surprise me. 
 
-One is that some of these figures aren't even remembered as objects of scorn and derision any more. Maybe some people talk about Bosanquet as an example of how things were done in the Bad Old Days. But figures like Muirhead, and Wildon Carr, aren't even criticised.
+One is that some of these figures aren't even remembered as objects of scorn and derision an more. Maybe some people talk about Bosanquet as an example of how things were done in the Bad Old Days. But figures like Muirhead and Wildon Carr aren't even criticized.
 
-The other is that the interest in idealism hasn't just dropped, as the interest in positivism and pragmatism has, but that it's gone so close to zero. Most other philosophies that had this many adherents in the past would have still some people keeping the spirit alive, and complaining about the wickedness of the modern world. But I don't really see that in contemporary philosophy. Where is the Shadworth Hodgson Appreciation Consortium? 
+The other is that the interest in idealism hasn't just dropped, as the interest in positivism and pragmatism has, but that it's gone so close to zero. Most other philosophies that had this many adherents in the past would still have some people keeping the spirit alive, and who would be complaining about the wickedness of the modern world. But I don't really see that in contemporary philosophy. Where is the Shadworth Hodgson Appreciation Consortium? 
 
-We can see how far things have fallen by looking at how few articles on Idealism there have been in recent years. (You could do this for yourself by sorting the table of articles by year, but I'll list them here for completion.)
+It's easy to see how far things have fallen by looking at how few articles on idealism there have been in recent years. (This could be done by sorting the table of articles by year, but I'll list them here for completion.)
 
 ```{r recent-idealism}
 recent_idealism <- char_art %>%
@@ -168,7 +169,7 @@ datatable(select(recent_idealism, year, citation, gamma),
       formatStyle(1:3,`text-align` = 'left')
 ```
 
-The @Reinhardt2013 article is not really Idealism - it's a paradigm of [Ordinary Language Philosophy](#topic24). The next three articles are ones the model is not very confident in, and reading them over does not convince me the model was onto something. The latest article that to me seems really about Idealism is the Kekes contribution to a symposium on Rescher. After that there are nearly 20 years of virtually nothing about a topic that was once the center of all philosophical work.
+The @Reinhardt2013 article is not really idealism - it's a paradigm of [ordinary language philosophy](#topic24). The next three articles are ones the model is not very confident in, and reading them over does not convince me the model was picking up a resurgence of idealism. The latest article that to me seems really about idealism is the Kekes contribution to a symposium on Rescher. After that, there are nearly twenty years of virtually nothing about a topic that was once the center of all philosophical work.
 
-Just maybe there has been a little reversion to the mean recently. Later in the book I'll look at the [2019 articles in Philosophers' Imprint](#imprint-section). And there is an Idealism article there. One article doesn't make a resurgence, but it's one more than most other years have seen.
+Just maybe there has been a little reversion to the mean recently. Later in the book I'll look at the [2019 articles in Philosophers' Imprint](#imprint-section). And there is an idealism article there. One article doesn't make a resurgence, but it's one more than most other years have seen.
 

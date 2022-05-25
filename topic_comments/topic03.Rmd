@@ -7,7 +7,7 @@ source('topic_comments/topic_summary_data.R') # Get data
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t03c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal"), fig.alt = alt_text_journals}
+```{r t03c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -26,16 +26,16 @@ cat("\n
 	\n")
 ```
 
-I was very tempted to call this Idealist Ethics. It does, at first glance, seem to just be the ethics papers of the Idealism section. But this would be misleading for a few reasons. For one thing, the Idealism topic includes a non-trivial amount of ethics. For another, it's sort of more like social and political philosophy than ethics. For another, this includes some philosophers who are very much not idealists, like Margaret MacDonald.
+I was very tempted to call this idealist ethics. It does, at first glance, seem to just be the ethics papers of the idealism section. But this would be misleading for a few reasons. For one thing, the idealism topic includes a nontrivial amount of ethics. For another, it's sort of more like social and political philosophy than ethics. For another, this includes some philosophers who are very much not idealists, such as Margaret MacDonald.
 
-MacDonald is an important figure in the story of these twelve journals. Her notes made up a large part of Wittgenstein's _Lectures on Ethics_. She was a founder of, and the second editor of, _Analysis_. And she read this very important paper on natural rights to the Aristotelian Society in 1947. MacDonald is usually read as a critic of the notion of natural rights, though she might not have agreed with that formulation.
+MacDonald is an important figure in the story of these twelve journals. Her notes made up a large part of Wittgenstein's _Lectures on Ethics_. She was a founder of, and the second editor of, _Analysis_. And she read a very important paper on natural rights to the Aristotelian Society in 1947. MacDonald is usually read as a critic of the notion of natural rights, though she might not have agreed with that formulation.
 
-But note that while MacDonald is no idealist, and her paper is in this topic, it isn't particularly firmly in the topic. The model only gives it a probability of being in this topic of about 19.6%. So let's see where else it thinks MacDonald's paper might go. I'm going to present tables like the following for a number of papers in what follows. Although the model gives a non-zero chance to every paper being in each of the topics, the tables are going to be cut off at 2%. Sometimes that will make for a short table, especially when the model is quite confident in its assessment. Other times, we'll see a much longer list of topics.
+But note that while MacDonald is no idealist, and her paper is in this topic, it isn't particularly firmly _in_ the topic. The model only gives it a probability of being in this topic of about 19.6 percent. So let's see where else it thinks MacDonald's paper might go. I'm going to present tables like the following for a number of papers in what follows. Although the model gives a nonzero chance to every paper being in each of the topics, the tables are going to be cut off at 2 percent. Sometimes that will make for a short table, especially when the model is quite confident in its assessment. Other times, there will be a much longer list of topics.
 
 ```{r macdonald-natural-rights}
 individual_article("10.2307_4544427")
 ```
 
-And that's a sign that the model doesn't really know what to do with the paper. It's obviously a paper on normative philosophy, broadly construed. And MacDonald is sympathetic to both Ordinary Language Philosophy and Verificationism, so both of those topics turn up. But the model is really rather unsure which normative topic to place the paper in. That's fine; 90 topics is a lot, but it's still too few to capture all the nuances of philosophy.
+That's a sign that the model doesn't really know what to do with the paper. It's obviously a paper on normative philosophy, broadly construed. And MacDonald is sympathetic to both ordinary language philosophy and verificationism, so both of those topics turn up. But the model is really rather unsure which normative topic to place the paper in. That's fine; ninety topics is a lot, but it's still too few to capture all the nuances of philosophy.
 
 The common thread in this topic is that although it's rather large, most of the articles that the model confidently places in it are by people who are very much not household names nowadays. 

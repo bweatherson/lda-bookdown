@@ -209,7 +209,7 @@ The output provides topics, and keywords, but not any further description of the
 At this stage there are three big choices the modeler has:
 
 1. How many topics should the articles be divided into?
-2. How satsfied shoudl the model be with itself before it reports the data?
+2. How satisfied should the model be with itself before it reports the data?
 3. What random assignment should be used to initialize the algorithm?
 
 Although the algorithm can sort the articles into any number of topics one asks it to, it cannot say what makes for a natural number of topics to use. (There is a caveat to this that I'll get to.) That has to be coded by hand into the request for a model. And it's really the biggest decision to make. The next section discusses how I eventually made it.
@@ -306,7 +306,7 @@ Still, it turns out the refinements weren’t all a bad idea. After fifteen refi
 
 The result of all this is a model with two giant probability functions. In this section I'll talk through what those functions look like with  a worked example, and then some graphs about how well the models perform at their intended task.
 
-The worked example involves David Makinson's article ["The Paradox of the Preface""](https://philpapers.org/rec/MAKTPO-9) [@Makinson1965]. The input to the model looks like this.
+The worked example involves David Makinson's article ["The Paradox of the Preface"](https://philpapers.org/rec/MAKTPO-9) [@Makinson1965]. The input to the model looks like this.
 
 ```{r preface-words, cache=TRUE}
 preface_words <- word_list %>%
@@ -357,7 +357,7 @@ preface_wide_table <- preface_large_table %>%
 
 kable(preface_wide_table, 
       col.names = c("Word", "Topic 4", "Topic 15", "Topic 37", "Topic 39", "Topic 59", "Topic 76", "Topic 81"), 
-      caption = "Word frequencies for topics in \"The Paradox of the Preface\"")
+      caption = "Word frequencies for topics in \"The Paradox of the Preface.\"")
 ```
 
 But the model doesn't think that "The Paradox of the Preface" is a paradigm case of any one of these topics; it thinks it is a mix of seven. Therefore, what it thinks the word frequencies in that article should be can be worked out by taking weighted means of these columns, with the weights given by the topic probabilities. And that gives the following results:
@@ -420,10 +420,10 @@ print(  ggplot(temp_topics, aes(x = f, y=  proj)) +
     spaghettistyle +
     geom_point(size = 0.5, alpha = 0.5) +
     coord_fixed(xlim = c(0, high_number * 1.02), ylim = c(0, high_number * 1.02)) +
-    labs(caption = temp_gamma$citation[1],
+    labs(title = paste0(temp_gamma$authall[1], ", “", temp_gamma$title[1],"”"),
         x = "Measured Word Frequency",
         y = "Modeled Word Frequency")  +
-    ggrepel::geom_text_repel(data = salient_words, aes(label = term))
+    ggrepel::geom_text_repel(data = salient_words, aes(label = term)) 
 )
 }
 
@@ -458,7 +458,7 @@ salient_words <- function(x){
   paste(the_words$term, collapse = ", ")
 }
 
-# Burp
+# Burper
 
 x <- "10.2307_3326519"
 
@@ -485,6 +485,7 @@ On that graph, every dot is a word type. The x axis represents the frequency of 
 Actually, this is one of the least impressive jobs the model does. I measured the correlations between measured and modeled word frequency, i.e., what this graph represents, for six hundred highly cited articles. Among those six hundred, this was the twenty-third lowest correlation between measured and modeled frequency. But in many cases, that correlation was very strong. For example, here are the graphs for three more articles where the model manages to understand what's happening.
 
 ```{r good-graph-1, fig.cap = "Modeled and measured frequency for Davidson (1990).", fig.alt = alt_text, cache=TRUE}
+x <- 0
 x <- "10.2307_2026863"
 cross_check_graph(x)
 
@@ -505,6 +506,7 @@ alt_text <- paste0(
 ```
 
 ```{r good-graph-2, fig.cap = "Modeled and measured frequency for Edgington (1995).", fig.alt = alt_text, cache=TRUE}
+x <- 0
 x <- "10.2307_2254793"
 cross_check_graph(x)
 
@@ -525,6 +527,7 @@ alt_text <- paste0(
 ```
 
 ```{r good-graph-3, fig.cap = "Modeled and measured frequency for Dworkin (1996).", fig.alt = alt_text, cache=TRUE}
+x <- 0
 x <- "10.2307_2961920"
 cross_check_graph(x)
 
@@ -547,6 +550,7 @@ alt_text <- paste0(
 There are some articles that it doesn't manage as well—typically articles with unusual words. (It also does poorly with short articles, like "The Paradox of the Preface".)
 
 ```{r bad-graph-1, fig.cap = "Modeled and measured frequency for Thomson (1998).", fig.alt = alt_text, cache=TRUE}
+x <- 0
 x <- "10.2307_2671962"
 cross_check_graph(x)
 
@@ -566,6 +570,7 @@ alt_text <- paste0(
 ```
 
 ```{r bad-graph-2, fig.cap = "Modeled and measured frequency for Elster (1990).", fig.alt = alt_text, cache=TRUE}
+x <- 0
 x <- "10.2307_2381783"
 cross_check_graph(x)
 
@@ -585,6 +590,7 @@ alt_text <- paste0(
 ```
 
 ```{r bad-graph-3, fig.cap = "Modeled and measured frequency for Fara (2005).", fig.alt = alt_text, cache=TRUE}
+x <- 0
 x <- "10.2307_3506173"
 
 cross_check_graph(x)
@@ -611,6 +617,7 @@ A few different things are going on here. In Elster's article, the model doesn't
 It isn’t perfect, but as seen above, it does pretty well with some cases. The papers I’ve shown so far are pretty much outliers though; here are some more typical examples:
 
 ```{r medium-graph-1, fig.cap = "Modeled and measured frequency for Lewis (1979).", fig.alt = alt_text, cache=TRUE}
+x <- 0
 x <- "10.2307_2215339"
 cross_check_graph(x)
 
@@ -630,6 +637,7 @@ alt_text <- paste0(
 ```
 
 ```{r medium-graph-2, fig.cap = "Modeled and measured frequency for Lakoff and Johnson (1980).", fig.alt = alt_text, cache=TRUE}
+x <- 0
 x <- "10.2307_2025464"
 cross_check_graph(x)
 
@@ -650,6 +658,7 @@ alt_text <- paste0(
 ```
 
 ```{r medium-graph-3, fig.cap = "Modeled and measured frequency for Kelly (2003).", fig.alt = alt_text, cache=TRUE}
+x <- 0
 x <- "10.2307_20140564"
 cross_check_graph(x)
 

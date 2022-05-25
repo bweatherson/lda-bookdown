@@ -8,7 +8,7 @@ jjj <- 17
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t17c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal"), fig.alt = alt_text_journals}
+```{r t17c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
 jjj <- 17
 source('topic_comments/topic_summary_facet_graph.R')
 ```

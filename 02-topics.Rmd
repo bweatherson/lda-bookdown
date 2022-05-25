@@ -1,4 +1,4 @@
-# The 90 Topics {#all-90-topics}
+# The Ninety Topics {#all-90-topics}
 
 ```{r setup-alts}
 # Eval after doesn't seem to work if there is no value for these terms.
@@ -6,12 +6,11 @@
 alt_text <- ""
 alt_text_journals <- ""
 ```
+In this chapter I go through all ninety topics that the model generates. I’ll present a bunch of automatically generated facts about each topic, then say something about either the history of the topic or how it fits into the larger model. In this introduction I’ll explain how each of the automatically generated facts is in fact generated, using the example of [topic 21](#topic21).
 
-In this chapter I go through all 90 topics that the model generates. I'll present a bunch of automatically generated facts about each topic, then say something about either the history of the topic, or how it fits into the larger model. In this introduction I'll explain how each of the automatically generated facts is in fact generated, using the example of [Topic 21](#topic21).
+As can be seen in the sidebar, each topic has a number and a name. The numbers are taken from the age of the articles in the topic. Lower numbers pick out older topics. While working through the ninety topics, the closer and closer one gets to the present of philosophy. The names are things that I supplied. The statistics that follow are mostly the things I was looking at when I gave each topic its name.
 
-As you can see in the sidebar, each topic has a number and a name. The numbers are taken from the age of the articles in the topic. Lower numbers pick out older topics. So as we work through the 90, we'll move closer and closer to the present of philosophy. The names are things that I supplied. And the statistics that follow are mostly the things I was looking at when I gave each topic its name.
-
-I've put each topic into one (or sometimes two) **categories**. These are the familiar disciplines of contemporary philosophy: metaphysics, ethics, history and the like. For Early Modern, the categorisation was easy.
+I’ve put each topic into one (or sometimes two) **categories**. These are the familiar disciplines of contemporary philosophy: metaphysics, ethics, history, and the like. For early modern, the categorization was easy.
 
 ```{r example-category}
 jjj <- 21
@@ -29,13 +28,13 @@ if(the_categories$cat_num[jjj] == 13){
 cat("**Category**: ", cat_nam, "\n\n")
 ```
 
-For each topic, the model generates something like a probability of a word turning up given that an article is (certainly) in that topic. We can use that to generate keywords for each topic. But there are a couple of hitches.
+For each topic, the model generates something such as a probability of a word turning up given that an article is certainly) in that topic. That can be used to generate keywords for each topic. But there are a couple of hitches.
 
-The first thing I tried was to identify the keywords for a topic with the words that have the highest probability of turning up in articles in that topic. But that gives you the same keywords for most of the topics. Indeed, for every topic it gives you keywords that were borderline cases of being [stop words](#stop-words).
+The first thing I tried was to identify the keywords for a topic with the words that have the highest probability of turning up in articles in that topic. But that gives the same keywords for most of the topics. Indeed, for every topic it gives keywords that were borderline cases of being  [stop words](#stop-words).
 
-The second thing I tried was to identify the keywords with those words where the ratio between the probability the word turns up in this topic with the probability it turns up in an arbitrary article. This is better, but still not right. Doing this makes all the keywords be incredibly rare words, that essentially never turn up in any other topic. (Occasionally this would make 'weatherson' a keyword, for example, though not usually where I expected.)
+The second thing I tried was to identify keywords using those words where the ratio between the probability the word turns up in this topic with the probability it turns up in an arbitrary article. This is better but still not right. Doing this makes all the keywords incredibly rare words that essentially never turn up in any other topic. (Occasionally this would make _weatherson_ a keyword, for example, though not usually where I expected.)
 
-So what I settled on was to use that ratio, but only quantify over the words that are at least reasonably common across the data. Roughly, they are words that turn up at least once in every 20000 words (excluding stop words).^[More carefully, for any word $w$ and model $t_k$ the model provides something like $\Pr(w | t_k)$, the probability of word turning up in an article in that topic. We're looking for the words that maximise $\frac{\Pr(w | t_k)}{\sum \Pr(w | t_i)}$, where the sum is over the 90 topics, and the constraint is that the average value of $\Pr(w | t_i)$ is at least $\frac{1}{20000}$.] Applied to Early Modern, that gives us the following keywords.
+What I settled on was to use that ratio but only quantify the words that are at least reasonably common across the data. Roughly, they are words that turn up at least once in every twenty thousand words (excluding stop words).^[More carefully, for any word $w$ and model $t_k$ the model provides something like $\Pr(w | t_k)$, the probability of a word turning up in an article in that topic. I'm looking for the words that maximize $\frac{\Pr(w | t_k)}{\sum \Pr(w | t_i)}$, where the sum is over the ninety topics, and the constraint is that the average value of $\Pr(w | t_i)$ is at least $\frac{1}{20000}$.] Applied to early modern, that gives us the following keywords:
 
 ```{r example-keywords}
 distinctive <- distinctive_topics[(jjj-1)*15 + 1, 1]
@@ -46,11 +45,11 @@ for (jj in 2:15){
 cat("**Keywords**: ", distinctive, "\n\n")
 ```
 
-Hopefully it isn't too surprising now why I called this Early Modern. I don't know what 'vii' is doing there; arguably it should have been filtered out. 
+Hopefully it isn't too surprising now why I called this early modern. I don't know what _vii_ is doing there; arguably it should have been filtered out. 
 
 Next I'll look at the size of the topic. There are two ways of looking at this, and since I'm going to be using them a lot, it's worthwhile going over them at some length.
 
-The model assigns each article a probability of being in each topic. So for each article there is a topic with maximal probability. (In principle there could be ties, but in practice that doesn't seem to happen.) I'll follow a fairly standard practice and say that an article is **in a topic** if that topic has maximal probability. And then the number of articles in a topic is the number of articles such that this topic gets higher probability for that article than any other topic. We can count these up to get a sense of the size of the topic.
+The model assigns each article a probability of being in each topic. So for each article there is a topic with maximal probability. (In principle there could be ties, but in practice that doesn't seem to happen.) I'll follow a fairly standard practice and say that an article is **in a topic** if that topic has maximal probability. And then the number of articles in a topic is the number of articles such that this topic gets higher probability for that article than any other topic. These can be counted up to get a sense of the size of the topic.
 
 ```{r example-raw-count}
 require(toOrdinal)
@@ -60,9 +59,9 @@ cat("**Percentage of Total**: ", 100*overall_stats$r_percent[jjj], "%  \n", sep=
 cat("**Rank**: ", toOrdinal(overall_stats$r_rank[jjj]), "\n\n", sep="")
 ```
 
-So there are 398 articles that are in Early Modern (in this sense). That's slightly more than average, since there are about 360 articles in the average topic. It's 1.2% of the total; as you can calculate, the average topic would have 1.1%. And if we order the topics from largest to smallest, it makes Early Modern the 32nd largest of the topics.
+There are 398 articles that are in early modern in this sense). That’s slightly more than average, since there are about 360 articles in the average topic. It’s 1.2 percent of the total; as can be calculated, the average topic would have 1.1 percent. And if the topics are ordered from largest to smallest, it makes Early Modern the thirty-second largest of the topics.
 
-But this isn't the only way to measure the size of a topic. The model gives a probability of being in Early Modern to every article in the data set. We can simply add those probabilities up to get another way to measure topic size. Formally, this is the way to calculatte the _expected_ number of articles in that topic given the probability distribution, though I don't think thinking of these numbers as expected values is particularly helpful. If we do that, summing the probabilities of being in early modern across all articles, we get the following statistics.
+But this isn’t the only way to measure the size of a topic. The model gives a probability of being in early Mmodern to every article in the data set. Those probabilities can be added up to get another way to measure topic size. Formally, this is the way to calculate the _expected_ number of articles in that topic given the probability distribution, though I don’t believe thinking of these numbers as expected values is particularly helpful. If that is done, summing the probabilities of being in early modern across all articles, the following statistics are retrieved:
 
 ```{r example-weighted-count}
 cat("**Weighted Number of Articles**: ", overall_stats$w_count[jjj], "  \n", sep="")
@@ -70,7 +69,7 @@ cat("**Percentage of Total**: ", 100*overall_stats$w_percent[jjj], "%  \n", sep=
 cat("**Rank**: ", toOrdinal(overall_stats$w_rank[jjj]), "\n\n", sep="")
 ```
 
-I'll call this calculation the **weighted number** of articles in the topic. As I said, mathematically it's just the formula for expected value calculation, but I'm going to use it more like a weighted sum, hence the name. By this measure, Early Modern looks a little smaller. It's now only the 49th largest topic, and is under 1%. This is one of the larger gaps between the two ways of measuring the size of a topic; mostly they go together. (Though there is going to be one [special case](#topic55) where they come dramatically apart.)
+I'll call this calculation the **weighted number** of articles in the topic. As I said, mathematically it's just the formula for expected value calculation, but I'm going to use it more like a weighted sum, hence the name. By this measure, early modern looks a little smaller. It's now only the forty-ninth largest topic, and is under 1 percent. This is one of the larger gaps between the two ways of measuring the size of a topic; mostly they go together. (Though there is going to be one [special case](#topic55) where they come dramatically apart.)
 
 Next I'll look at some facts about the dates of articles in that topic.
 
@@ -81,9 +80,9 @@ cat("**Median Publication Year**: ", overall_stats$median_y[jjj], "  \n", sep=""
 cat("**Modal Publication Year**: ", overall_stats$modal_y[jjj], "\n\n", sep="")
 ```
 
-The first, third and fourth statistics there are easy to understand. I simply took the 398 articles in Early Modern, and found the mean, median and modal publication dates for them. The second is only a little trickier. I calculated the weighted average of the publication year of all articles in the data set, where the weights are given by the probability of being in Early Modern. As happens here, the first three numbers usually end up being very similar. The fourth can be quite random, and usually leans toward the present since there are more articles published now than in the past.
+The first, third and fourth statistics there are easy to understand. I simply took the 398 articles in early modern, and found the mean, median and modal publication dates for them. The second is only a little trickier. I calculated the weighted average of the publication year of all articles in the data set, where the weights are given by the probability of being in early modern. As happens here, the first three numbers usually end up being very similar. The fourth can be quite random and usually leans toward the present since there are more articles published now than in the past.
 
-The last statistics I'll look at, before going on to some graphs, concern how close Early Modern is to various neighbours. I'll present these then explain them.
+The last statistics I'll look at, before going on to some graphs, concern how close early modern is to various neighbours. I'll present these then explain them.
 
 ```{r example-neighbours}
 cat("**Topic with Most Overlap**: ",
@@ -92,7 +91,7 @@ cat("**Topic with Most Overlap**: ",
     round(closest_neighbour$g[jjj],4),
     ")  \n",
     sep="")
-cat("**Topic this Overlaps Most With**: ",
+cat("**Topic this Overlaps Most with**: ",
     the_categories$subject[closest_neighbour_inverse$topic[jjj]], 
     " (", 
     round(closest_neighbour_inverse$g[jjj],4),
@@ -104,7 +103,7 @@ cat("**Topic with Least Overlap**: ",
     round(furthest_neighbour$g[jjj],5),
     ")  \n",
     sep="")
-cat("**Topic this Overlaps Least With**: ",
+cat("**Topic this Overlaps Least with**: ",
     the_categories$subject[furthest_neighbour_inverse$topic[jjj]], 
     " (", 
     round(furthest_neighbour_inverse$g[jjj],5),
@@ -114,18 +113,21 @@ cat("**Topic this Overlaps Least With**: ",
 opts_knit$set(eval.after = "fig.cap") # Need this for next chunk
 ```
 
-Recall that each of the 398 articles in Early Modern is also assigned a probability of being in each of the other 89 topics. So I calculated the average probability of being in each of the 89 topics among these 398 articles. And the first line here reports that the highest average probability was for [Idealism](#topic02). It isn't huge - just 4.6%, but given we're only looking at non-maximal probabilities, and it's a 90-way partition, this isn't that small. The third line reports that the lowest of these average probabilities was for [Formal Epistemology](#topic84). Usually there is a group of 10-20 topics that have vanishingly small mean probabilities here, and it's a bit random which of them the model picks out.
+Recall that each of the 398 articles in early modern is also assigned a probability of being in each of the other eighty-nine topics. I then calculated the average probability of being in each of the eighty-nine topics among these 398 articles. And the first line here reports that the highest average probability was for [idealism](#topic02). It isn’t huge—just 4.6 percent, but given I’m only looking at nonmaximal probabilities, and it’s a ninety-way partition, this isn’t that small. The third line reports that the lowest of these average probabilities was for [formal epistemology](#topic84). Usually there is a group of ten to twenty topics that have vanishingly small mean probabilities here and it’s a bit random which of them the model picks out.
 
-We can also look through each of the other topics and ask, of the articles in those topics, what is the average probability the model gives to them being Early Modern articles? And which topic is such that this average is highest? If you do all 89 calculations, it turns out the answer is the topic about the [Ontological Argument](#topic29). This is one of the smaller topics, but the articles in it have on average a probability of just over 2% of being Early Modern Articles. On the other hand, the articles in [Game Theory](#topic75) have a mean probability of being Early Modern articles of only 0.01%. I suspect this is because the model separates out Early Modern from [Social Contract Theory](#topic31), and any paper on the intersection of 17th/18th century philosophy with game theory ends up classifed as a Social Contract paper.
+Each of the other topics could also be looked through and ask, Of the articles in those topics, what is the average probability the model gives to them being early modern articles? And which topic is such that this average is highest? If this is done to all eighty-nine calculations, it turns out the answer is the topic about the [ontological argument](#topic29). This is one of the smaller topics, but the articles in it have on average a probability of just over 2 percent of being early modern articles. On the other hand, the articles in [game theory](#topic75) have a mean probability of being early modern articles of only 0.01 percent. I suspect this is because the model separates out early modern from [social contract theory](#topic31), and any paper on the intersection of seventeenth-/eighteenth-century philosophy with game theory ends up classified as a social contract paper.
 
-That's enough statistics to get us started, let's move onto some nice graphs. First, I'll show the proportion of articles that are in that topic in each year. I'm using weighted sums for this. So really what each point here shows is the average probability that an article in this year is in this topic.
+That’s enough statistics to get started. I will move on to some nice graphs. First, I’ll show the proportion of articles that are in that topic in each year. I’m using weighted sums for this. So really what each point here shows is the average probability that an article in this year is in this topic.
 
-```{r exampleoverall, fig.cap = the_categories$subject[jjj], fig.height = 5.2, fig.alt = alt_text}
+
+
+
+```{r exampleoverall, fig.cap = str_to_sentence(the_categories$subject[jjj]), fig.height = 5.2, fig.alt = alt_text}
 source('topic_comments/topic_summary_overall_graph.R')
 alt_text <- paste0(
   "A scatterplot showing which proportion of articles each year are in the topic ", 
   the_categories$subject[jjj],
-  ". The x-axis shows the year, the y-axis measures the proportion of articles each year in this topic. There is one dot per year. The highest value is in ",
+  ". The x axis shows the year, the y axis measures the proportion of articles each year in this topic. There is one dot per year. The highest value is in ",
   max_year$year[1],
   " when ",
   scales::percent(max_year$y[1], accuracy = 0.1),
@@ -141,14 +143,14 @@ alt_text <- paste0(
 
 Next, I'll do the same thing but broken down by journals.
 
-```{r examplefacet, fig.cap = paste(the_categories$subject[jjj], "Articles in Each Journal"), fig.alt = alt_text_journals}
+```{r examplefacet, fig.cap = paste(str_to_sentence(the_categories$subject[jjj]), "articles in each journal"), fig.alt = alt_text_journals}
 jjj <- 21
 source('topic_comments/topic_summary_facet_graph.R')
 alt_text_journals <- paste0(
   "A set of twelve scatterplots showing the proportion of articles in each journal in each year that are in the topic ",
   the_categories$subject[jjj],
   ". There is one scatterplot for each of the twelve journals that are the focus of this book.",
-  " In each scatterplot, the x-axis is the year, and the y-axis is the proportion of articles in that year in that journal in this topic.",
+  " In each scatterplot, the x axis is the year, and the y axis is the proportion of articles in that year in that journal in this topic.",
   " Here are the average values for each of the twelve scatterplots - these tell you on average how much of the journal is dedicated to this topic. ",
   temp_by_journal_summary,
   "The topic reaches its zenith in year ",
@@ -163,9 +165,9 @@ alt_text_journals <- paste0(
 )
 ```
 
-As you can see, this has years on the x-axis, and ratios on the y-axis, and 12 'facets'. What each dot represents is average probability for an article in a particular year-journal pair being in this topic. It helps to understand what this means by working through an example.
+As you can see, this has years on the x axis, and ratios on the y axis, and twelve "facets". What each dot represents is an average probability for an article in a particular year-journal pair being located in this topic. It helps to understand what this means by working through an example.
 
-Look in the facet for _Philosophical Review_. There are two dots that are much higher than the rest, both of them around 0.15. The left-hand one, which is just under 0.15, is from the early 1930s. The right-hand one, just over 0.15, is from 1999. And I'm going to talk through this one for a bit. Here are the 11 articles in _Philosophical Review_ that year, along with their probability of being in topic 21.^[The automatically generated citations includes messy things like "Sleighjr", and I just haven't corrected them - I'm just going with what JSTOR feeds me.]
+Look in the facet for _Philosophical Review_. There are two dots that are much higher than the rest, both of them around 0.15. The left-hand one, which is just under 0.15, is from the early 1930s. The right-hand one, just over 0.15, is from 1999. And I'm going to talk through this one for a bit. Here are the eleven articles in _Philosophical Review_ that year, along with their probability of being in topic 21.^[The automatically generated citations include messy things like "Sleighjr", and I just haven't corrected them - I'm just going with what JSTOR feeds me.]
 
 ```{r prexample1}
 phil_review_1999 <- relabeled_gamma %>%
@@ -175,41 +177,39 @@ phil_review_1999 <- relabeled_gamma %>%
   select(citation, gamma)
 
 kable(phil_review_1999, 
-	col.names = c("Article", "Probability of being Early Modern"),
+	col.names = c("Article", "Probability of Being Early Modern"),
 	caption = "Articles in Philosophical Review, 1999")
 ```
 
-If you sum these 11 probabilities, you get `r sum(phil_review_1999$gamma)`. And dividing by 11 to get the average, you get `r mean(phil_review_1999$gamma)`. And that's where the dot I was pointing out comes from.
+If these eleven probabilities are summed, the answer  `r sum(phil_review_1999$gamma)`. And dividing by eleven to get the average, the answer is  `r mean(phil_review_1999$gamma)`. And that's where the dot I was pointing out comes from.
 
-Note that this might feel a little light. Topic 21 is, more or less, early modern metaphysics and epistemology. And that looks like it should be 3 or 4 out of the 11 topics, which is much more than 0.15. What's gone on?
+Note that this might feel a little light. Topic 21 is, more or less, early modern metaphysics and epistemology. And that looks like it should be three or four out of the eleven topics, which is much more than 0.15. What’s going on?
 
-One thing that's happened is somewhat inevitable when dealing with history. The article by Michael Griffin [-@Griffin1999] is definitely about Leibniz, which is why you see a probability well above 0, but it's also about modals and counterfactuals. And we have another topic that's all about [Modality](#topic80), so a bunch of the probability went there. (Indeed, it is officially in that topic because that probability was maximal.) And it's about God, and we have two topics about God in the model, and some of the probability went there. This is the general case. History of philosophy articles involve a lot of philosophy, and whatever kind of philosophy they involve, the model will want to put them with other philosophy articles discussing those points.
+One thing that's happened is somewhat inevitable when dealing with history. The article by Michael Griffin [-@Griffin1999] is definitely about Leibniz, which is why a probability well above 0 is seen, but it’s also about modals and counterfactuals. And there is another topic that’s all about [modality](#topic80), so a bunch of the probability went there. (Indeed, it is officially in that topic because that probability was maximal.) And it’s about God, and there are two topics about God in the model, and some of the probability went there. This is the general case. History of philosophy articles involve a lot of philosophy, and whatever kind of philosophy they involve, the model will want to put them with other philosophy articles discussing those points.
 
-But how does that explain the article by Dugald Murdoch [-@Murdoch1999]? Surely that's an early modern article. And it surely is. The simplest thing to say there is that when you've got 90 exclusive hypotheses, ending up with a probability of 0.6 for one of them is actually a lot. And some of the remaining probability also makes sense. We have a topic for the [Ontological Argument](#topic29), and some of the probability for Murdoch's article goes there. And we have a topic on [Arguments](#topic55), and the articles in that topic are mostly about how to understand circularity, so some of the probability goes there. And there is a topic for [Ordinary Language Philosophy](#topic24), and it turns out there are a lot of articles the model gives non-trivial probability to being in it. This topic causes some complications, because it's as much a style as a topic, and I'll come back to it a lot in what follows.
+But how does that explain the article by Dugald Murdoch [-@Murdoch1999]? Surely that’s an early modern article. And it surely is. The simplest thing to say there is that when there are ninety exclusive hypotheses, ending up with a probability of 0.6 for one of them is actually a lot. And some of the remaining probability also makes sense. There is a topic for the [ontological argument](#topic29), and some of the probability for Murdoch's article goes there. And there is a topic on [arguments](#topic55), and the articles in that topic are mostly about how to understand circularity, so some of the probability goes there. And there is a topic for [ordinary language philosophy](#topic24), and most articles use some ordinary language, and hence are given a non-trivial probability of being in it. That topic causes some complications, because it's as much a style as a topic, and I'll come back to it a lot in what follows.
 
-So that's how the facet graphs are constructed. Apart from the _Mind_ facet,the graphs do not start all the way to the left edge, because those journals didn't start publishing until after _Mind_ did. The color of the dots is taken from the color the topic has in the big graphs we will do later when all 90 topics are presented on one graph.
+In essence, that’s how the facet graphs are constructed. Apart from the Mind facet, the graphs do not start all the way to the left edge, because those journals didn’t start publishing until after Mind did. The color of the dots is taken from the color the topic has in the big graphs done later when all ninety topics are presented on one graph.
+I need to add a few words about the scale of these graphs. There were two competing considerations when setting the scale. On the one hand, it would be good to have the scale of the Y-axis be the same for all topics. That way, when flipping through the pages, there is an immediate visual sense of how big the topic is. On the other hand, that approach forces us to set the scale to accommodate outliers. And if that is done, the vast majority of the graphs are just dots that bounce on or just above the x axis.
 
-I need to add a few words about the scale of these graphs. There were two competing considerations when setting the scale. On the one hand, it would be good to have the scale of the y-axis be the same for all topics. That way when you're flipping through the pages, you get an immediate visual sense of how big the topic is. On the other hand, that approach forces us to set the scale to accommodate outliers. And if we do that, the vast majority of the graphs are just dots that bounce on or just above the x-axis.
+To deal with both these concerns, I’ve split the difference somewhat. On the one hand, the vast majority of the overall graphs—the ones that show the prevalence of the topic across all journals—are set to a common scale. I’ve adjusted the scale a little for the really big topics, such as [idealism](#topic02) and [ordinary language philosophy](#topic24), but mostly the scale is the same. On the other hand, the scales for the graphs that break things up by journal vary a lot. So, when trying to get a quick visual impression from the graphs, the first graph says something about the size of the topic, and the second graph says something about the distribution of the topic over the journals. But the second graph doesn’t say, unless one looks closely at the labeling on the y axis, how big the topic is in each journal.
 
-So to deal with both these concerns I've split the difference somewhat. The vast majority of the overall graphs - the ones that show the prevalance of the topic across all journals, are set to a common scale. I've adjusted the scale a little for the really big topics, like [Idealism](#topic02) and [Ordinary Language Philosophy](#topic24), but mostly the scale is the same. On the other hand, the scales the for the graphs that break things up by journal vary a lot. So if you are trying to get a quick visual impression from the graphs, the first graph tells you something about the size of the topic, and the second graph tells you something about the distribution of the topic over the journals. But the second graph doesn't tell you, unless you look closely at the labelling on the y-axis, how big the topic is in each journal.
+I have made one other visual note to help read the graphs. The gridlines in each graph are at the same places. Therefore, if the scale is increased for a large topic, there will be lots of gridlines in the background, and that’s a sign that it’s a bigger topic as well. I’m not sure this is an ideal solution, but it seemed less bad than the others I tried.
 
-I have made one other visual note to help read the graphs. The gridlines in each graph are at the same places. So if the scale is increased for a large topic, you'll see lots of gridlines in the background, and that's a sign that it's a bigger topic as well. I'm not sure this is an ideal solution, but it seemed less bad than the others I tried.
-
-After these graphs, there are two tables of the articles that are in the topic. Here is the first.
+After these graphs, there are two tables of the articles that are in the topic. Here is the first:
 
 ```{r examplecharart}
 cat("<br/>")
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```
+This table actually lists all 398 articles in early modern. By default it displays ten at a time. It's possible to move through the list by the numbers at the bottom, or extend it using the dropdown menu in the top left.
 
-This table actually lists all 398 articles in Early Modern. By default it displays 10 at a time. You can move through the list by the numbers at the bottom, or extend it using the dropdown menu in the top left.
+The search box in the upper right will search for any text in the citation. This is helpful either for finding title words (e.g., _Spinoza_), or author names (e.g., _Curley_).
 
-The search box in the upper right will search for any text in the citation. This is helpful either for finding title words (e.g., 'Spinoza'), or author names (e.g., 'Curley').
+The year and citation columns are self-explanatory. The probability column gives the probability that the article is actually in early modern. This is helpful to check when finding an article that looks misclassified. If the number is under about 0.25, that means the model is fairly undecided about what to do with the article, and it ended up here for want of somewhere better to put it.
 
-The year and citation columns are self-explanatory. The probability column gives the probability that the article is actually in Early Modern. This is helpful to check when you see an article that looks misclassified. If the number is under about 0.25, that means the model is fairly undecided about what to do with the article, and it ended up here for want of somewhere better to put it.
-
-The table is sortable by any of those three columns. But it's default sort order is by what I'll call typicality. This is the product of its probability of being in the topic, with the log of its length in pages. I'm using this complicated formula because for most topics, the high probability articles are short discussion notes where the model doesn't see anything to offset its initial judgment about where the article should go. Using this (totally made up) typicality measure as the initial sort meant that the articles that turned up here were more familiar, and gave me a better sense of what was, well, typical for the topic.
+The table is sortable by any of those three columns. But its default sort order is by what I'll call _typicality_. This is the product of its probability of being in the topic, with the log of its length in pages. I'm using this complicated formula because for most topics, the high-probability articles are short discussion notes where the model doesn't see anything to offset its initial judgment about where the article should go. Using this (totally made up) typicality measure as the initial sort meant that the articles that turned up here were more familiar and gave me a better sense of what was, well, typical for the topic.
 
 The second table is a list of highly cited articles in the topic.
 
@@ -218,12 +218,11 @@ cat("<br/>")
 source('topic_comments/topic_summary_high_cites.R')
 high_table
 ```
+I used ["Publish or Perish"](https://harzing.com/resources/publish-or-perish) [@Harzing2007] to download the fifty most cited articles from each of the twelve journals according to Google Scholar. I do _not_ stand by these lists as being particularly accurate. I tried a couple of obvious ways to download the data, and they had obvious shortcomings, which I corrected. And then I thought the lists I had were good enough for illustrative purposes, so I stopped. But there were so many obvious things to correct that I'm sure there were also nonobvious things to correct. But the point is not to do a citation study; it's to list some familiar articles that are in the topic.
 
-I used [Publish or Perish](https://harzing.com/resources/publish-or-perish) [@Harzing2007] to download the 50 most cited articles from each of our 12 journals according to Google Scholar. I do _not_ stand by these lists as being particularly accurate. I tried a couple of obvious ways to download the data, and they had obvious shortcomings, which I corrected. And then I thought the lists I had were good enough for illustrative purposes, so I stopped. But there were so many obvious things to correct that I'm sure there were also non-obvious things to correct. But the point is not to do a citation study; it's to list some articles you've probably heard of that are in the topic.
+The order of this list is most to least Google Scholar citations. Note that it is not the six hundred most cited articles in the twelve journals; the fiftieth most cited _Journal of Philosophy_ article is cited more than practically any _Philosophical Quarterly_ article. ^[With one [notable exception](https://philpapers.org/rec/JACEQ).] But again, the point is not to measure how well cited the topics are; it's to list some familiar articles in the topics. And I felt that spreading around the journals was best for that purpose.
 
-The order of this list is most to least Google Scholar citations. Note that it is not the 600 most cited articles in the 12 journals; the 50th most cited Journal of Philosophy articles is cited more than practically any Philosophical Quarterly article. ^[With one [notable exception](https://philpapers.org/rec/JACEQ).] But again, the point is not to measure how well cited the topics are; it's to list some familiar articles in the topics. And I felt that spreading around the journals was best for that purpose.
+Google Scholar isn't particularly reliable at distinguishing between articles with the same title, year, and publication venue. So there is the occasional doubling up as with the two Spitzer articles that are the highly cited articles here. As I said, I don't stand behind the accuracy of these lists; they are there to illustrate the topic.
 
-Google Scholar isn't particularly reliable at distinguishing between articles with the same title, year and publication venue. So you see the occasional doubling up like with the two Spitzer articles that are the highly cited articles here. As I said, I don't stand behind the accuracy of these lists; they are there to illustrate the topic.
-
-You'll often see some very low probabilities turning up in these tables. Note that the first of the two Spitzer articles only has a probability of being in Early Modern of about 0.21. But that's higher than its probability of being in any other topic. Sometimes the most influential articles in philosophy are ones that don't neatly fit into one topic or another. Indeed, one of the themes of this book is that by highlighting where the most work has been done, we can see more clearly what areas are left open. They'll probably be the areas that produce highly cited articles of the next 138 years.
+Some very low probabilities turning up in these tables will be noticeable. Note that the first of the two Spitzer articles only has a probability of being in early modern of about 0.21. But that's higher than its probability of being in any other topic. Sometimes the most influential articles in philosophy are ones that don't neatly fit into one topic or another. Indeed, one of the themes of this book is that by highlighting where the most work has been done, it's possible to see more clearly what areas are left open. They'll probably be the areas that produce highly cited articles of the next 138 years.
 

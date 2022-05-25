@@ -7,7 +7,7 @@ source('topic_comments/topic_summary_data.R') # Get data
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t78c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal"), fig.alt = alt_text_journals}
+```{r t78c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 

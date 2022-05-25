@@ -7,7 +7,7 @@ source('topic_comments/topic_summary_data.R') # Get data
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t04c, fig.cap=paste(the_categories$subject[jjj], "Articles in Each Journal"), fig.alt = alt_text_journals}
+```{r t04c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -26,22 +26,22 @@ cat("\n
 	\n")
 ```
 
-The faceted graph here is thrown off by a single data point from _Philosophical Quarterly_; it's the dot just above the 's' in _Philosophical_. This is a downside of trying to graph all the data!
+The faceted graph here is thrown off by a single data point from _Philosophical Quarterly_; it's the dot just above the _s_ in _Philosophical_. This is a downside of trying to graph all the data!
 
-This is the only topic of the 90 that I think best gets a negative characterisation; it's history articles on figures who don't fit into the other history categories. So it's what's left after you take out [Pragmatists](#topic05), [Ancient Greeks](#topic13), [Early Moderns](#topic21), [Heidegger and Husserl](#topic27), [Social Contract Theorists](#topic31), [Kant](#topic32) and [Hume](#topic45). That leaves a lot, and it's a bit of a grab bag of figures who are left. 
+This is the only topic of the ninety that I think best gets a negative characterization; it's history articles on figures who don't fit into the other history categories. So it's what's left after you take out [pragmatists](#topic05), [ancient Greeks](#topic13), [early moderns](#topic21), [Heidegger and Husserl](#topic27), [social contract theorists](#topic31), [Kant](#topic32) and [Hume](#topic45). That leaves a lot, and it's a bit of a grab bag of figures who are left. 
 
-But yet, as you can see from the graphs above, they collectively make almost no impact on the journals from about 1970-2013. History of philosophy, at least as represented in these journals, got really narrow for several decades. I'll return [much later in the book](#imprint-section) to some evidence that things have changed since 2013, but it's a little shocking how small this category gets for the last 40-odd years I'm studying.
+But yet, as can be seen from the graphs above, they collectively make almost no impact on the journals from about 1970–2013. History of philosophy, at least as represented in these journals, got really narrow for several decades. I'll return [much later in the book](#imprint-section) to some evidence that things have changed since 2013, but it's a little shocking how small this category gets for the last forty-odd years I'm studying.
 
-This is especially striking when you consider that as well as some of the more surprising figures to turn up here, like Arnold Geulincx and James Marsh, we also see Nietzsche, James,Mill and, when the article is particularly historical, Wittgenstein. I'd have thought those three alone would have made more impact than the under 1% numbers we see for many recent decades. (And they are very much part of the resurgence I alluded to just above.)
+This is especially striking when considering that as well as some of the more surprising figures to turn up here, like Arnold Geulincx and James Marsh, we also see Nietzsche, James, Mill, and at least some historical articles on Wittgenstein. I'd have thought those three alone would have made more impact than the under 1 percent numbers we see for many recent decades. (And they are very much part of the resurgence I alluded to just above.)
 
-So who does fit into this mixture of a category? The following table gives us some clues. I've generated it by looking at the words that appeared more than 50 times in a single article somewhere in the topic. I then split out the names from that list, as well as the word 'revolution' which seemed interesting. And in each row I listed four things.
+So who _does_ fit into this mixture of a category? The following table gives us some clues. I've generated it by looking at the words that appeared more than fifty times in a single article somewhere in the topic. I then split out the names from that list, as well as the word _revolution_ which seemed interesting. And in each row I listed four things.
 
-- First, how often within the topic the word appears 50 or more times in an article.
-- Second, how often within the topic the word appears 10 or more times in an article.
+- First, how often within the topic the word appears fifty or more times in an article.
+- Second, how often within the topic the word appears ten or more times in an article.
 - Third, how often within the topic the word appears at all in an article.
-- And fourth, how often within the whole study the word appears 50 or more times in an article.
+- And fourth, how often within the whole study the word appears fifty or more times in an article.
 
-The first three give us some sense of the spread of the term around a topic. A word that appears 50 or more times in an article is going to be more or less the subject of the article. A word that appears 10 or more times is a focus of some sustained discussion in the article. And a word that appears at all is, at least, mentioned. And the last column is to give you a sense of how often this figure (or at least their name) shows up in the broader data set, so you can get a better sense of what's distinctive about this topic.
+The first three give us some sense of the spread of the term around a topic. A word that appears fifty or more times in an article is going to be more or less the subject of the article. A word that appears ten or more times is a focus of some sustained discussion in the article. And a word that appears at all is, at least, mentioned. And the last column is to give you a sense of how often this figure (or at least their name) shows up in the broader data set, so there's a better sense of what's distinctive about this topic.
 
 ```{r history-setup}
 history_articles <- articles %>%
@@ -86,27 +86,27 @@ history_names <- history_names %>%
 
 ```{r history-table}
 kable(history_names, 
-      col.names = c("Name", "50 usages (in topic)", "10 usages", "1 usage", "50 usages (anywhere)"), 
-      caption = "Names in Topic 4",
+      col.names = c("Name", "50 Usages (in Topic)", "10 Usages", "1 Usage", "50 Usages (Anywhere)"), 
+      caption = "Names in topic 4",
       align=c("l", "c", "c", "c", "c"))
 ```
 
-Nietzsche is the big stand-out here, being a focus of 17 of the articles. (And that's not because he is widely discussed elsewhere.) I really would have expected there to have been more Nietzsche in the journals, but he still makes up a big part of this topic.
+Nietzsche is the big standout here, being a focus of seventeen of the articles. (And that's not because he is widely discussed elsewhere.) I really would have expected there to have been more Nietzsche in the journals, but he still makes up a big part of this topic.
 
-You can see from this table, and from the characteristic articles above, that Mill is quite the focus of attention here, even though he also gets discussed a lot elsewhere. But note how little attention Harriet Taylor gets. The uses of 'Taylor' cover a fairly wide range of people, so 'Harriet' is the more useful clue. And the only time she is mentioned more than in passing, at least in this topic, is in L. W. Sumner's [More Light on the Later Mill](https://philpapers.org/rec/SUMMLO) [-@Sumner1974]. It does say that the word 'Harriet' turns up in 5 other articles, but it turns up a total of 6 times across those 5. Until Sumner, she is bascially erased from the historical discussion.
+As can be seen from this table, and from the characteristic articles above, Mill gets a lot of attention here, even though he also gets discussed a lot elsewhere. But note how little attention Harriet Taylor gets. The uses of _Taylor_ cover a fairly wide range of people, so _Harriet_ is the more useful clue. And the only time she is mentioned more than in passing, at least in this topic, is in L. W. Sumner's "[More Light on the Later Mill](https://philpapers.org/rec/SUMMLO)" [-@Sumner1974]. It does say that the word 'Harriet' turns up in five other articles, but it turns up a total of six times across those five. Until Sumner, she is bascially erased from the historical discussion.
 
 Otherwise there is a pleasingly eclectic grab-bag of philosophers here.
 
-- [James Marsh](https://philpapers.org/rec/NICJMA) was an early 19th century transcendentalist who tried to popularise Coleridge among the New England transcendentalists. [@nicolson1925a]
+- [James Marsh](https://philpapers.org/rec/NICJMA) was an early nineteenth-century transcendentalist who tried to popularize Coleridge among the New England transcendentalists. [@nicolson1925a]
 - Marsh's attempts didn't really succeed, but there remained some philosophical interest in Coleridge. He is the focus of two _Philosophical Review_ papers, one in [1919](https://philpapers.org/rec/WILTDO-5) and the other in [1936](https://philpapers.org/rec/MOSCAB). [@mossner1936a; @wilde1919a]
 - [Henry Thomas Buckle](https://philpapers.org/rec/BENBAT) was an early exponent of the view that history has laws, and that differences in either the character of great men, or of nations, make less difference to historical development than facts about geography. This has all sorts of echoes in work since, from Marx to [Walter Schiedel](https://press.princeton.edu/books/hardcover/9780691172187/escape-from-rome) [-@Scheidel2019], but Buckle's own work has fallen well out of fashion. [@benn1881a]
-- [Antoine Augustin Cournot](https://philpapers.org/rec/MOOTPO-5) anticipated many of the key ideas in 20th century economics, including the notion of equilibrium, and the idea of supply and demand graphs, but it's tricky to say just how causally significant he ended up being. His work on duopoly and oligopoly is still the foundation for how we think about those matters today. And, perhaps more relevant to philosophy, he made a number of contribtions to the study of probability. [@moore1934a]
-- [Denis Diderot](https://philpapers.org/rec/BECTDO-2) could hardly be summarised in the little capsules I'm doing here. It is a great mystery to me how he hasn't had more direct influence on the philosophy journals. [@becker1915a]
-- [Jonathan Edwards](https://philpapers.org/rec/EWOJE) is one of the most important ever American theologians. (And grandfather of Aaron Burr.) But most of the philosophical attention to him comes during the idealist period, and is interested in how his work relates to idealism. [@e1904a]
-- [Antonio Rosmini](https://philpapers.org/rec/BARPII) and [Vincenzo Gioberti](https://philpapers.org/rec/BARPII) are two of the most important Italian philosophers and theologians of the 19th century. They both played significant roles in the revolutions of 1848. [@barzellotti1878a]
-- [José Vasconcelos](https://philpapers.org/rec/ROMBIM) was the most important philosophical figure in the Mexican Revolution, and an important figure in the Revolution itself. Given everything that was happening around him, it is mildly surprising that he survived until 1920. But he did, and became Rector of UNAM and Secretary of Education in Obregón's government. [@romanell1960a]
+- [Antoine Augustin Cournot](https://philpapers.org/rec/MOOTPO-5) anticipated many of the key ideas in twentieth-century economics, including the notion of equilibrium, and the idea of supply and demand graphs, but it's tricky to say just how causally significant he ended up being. His work on duopoly and oligopoly is still the foundation for how we think about those matters today. And, perhaps more relevant to philosophy, he made a number of contributions to the study of probability. [@moore1934a]
+- [Denis Diderot](https://philpapers.org/rec/BECTDO-2) could hardly be summarzsed in the little capsules I'm doing here. It is a great mystery to me how he hasn't had more direct influence on the philosophy journals. [@becker1915a]
+- [Jonathan Edwards](https://philpapers.org/rec/EWOJE) is one of the most important US theologians in history. (And grandfather of Aaron Burr.) But most of the philosophical attention to him comes during the idealist period, and is interested in how his work relates to idealism. [@e1904a]
+- [Antonio Rosmini](https://philpapers.org/rec/BARPII) and [Vincenzo Gioberti](https://philpapers.org/rec/BARPII) are two of the most important Italian philosophers and theologians of the nineteenth-century. They both played significant roles in the revolutions of 1848. [@barzellotti1878a]
+- [José Vasconcelos](https://philpapers.org/rec/ROMBIM) was the most important philosophical figure in the Mexican Revolution and an important figure in the Revolution itself. Given everything that was happening around him, it is mildly surprising that he survived until 1920. But he did, and became Rector of UNAM (Universidad Nacional Autónoma de México) and Secretary of Education in Obregón's government. [@romanell1960a]
 
-There is one last article in this topic that needs some comment. It is the one and only article of the 566 to get onto our highly cited list. And it is cited not so much because of its content, but because of its author: Charles Darwin.
+There is one last article in this topic that needs some comment. It is the one and only article of the 566 to get onto the highly cited list. And it is cited not so much because of its content, but because of its author: Charles Darwin.
 
-The article itself is like nothing else I've seen in these twelve journals [@Darwin1877]. Darwin was, as we all know, an incredibly astute biological observer. So when his first son was born, he had a new subject to observe. And so he dispassionately observed his development, and took meticulous notes. Then, some years later, he published the notebooks. In _Mind_. There is very little attempt at developing much of a theory here. Indeed, the text doesn't have anything like the form of what we'd think of as an article. It really is just a lightly edited version of the notes Darwin took while observing his child's development. I've seen it claimed that this is a significant document in the history of developmental psychology. And while I'm no expert on the history of developmental psychology, I find this very hard to believe. Again, it is really just a single case study, and it's not clear what you could in principle learn about developmental psychology from one case. But it's a fascinating insight into what kind of parent Darwin was.
+The article itself is like nothing else I've seen in these twelve journals [@Darwin1877]. Darwin was, as is well known, an incredibly astute biological observer. So when his first son was born, he had a new subject to observe. And he dispassionately observed his development, and took meticulous notes. Then, some years later, he published the notebooks—in _Mind_. There is very little attempt at developing much of a theory here. Indeed, the text doesn't have anything like the form of what we'd think of as an article. It really is just a lightly edited version of the notes Darwin took while observing his child's development. I've seen it claimed that this is a significant document in the history of developmental psychology. And while I'm no expert on the history of developmental psychology, I find this very hard to believe. Again, it is really just a single case study, and it's not clear what could be learned in principle about developmental psychology from one case. But it's a fascinating insight into what kind of parent Darwin was.
 

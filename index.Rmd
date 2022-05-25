@@ -34,6 +34,7 @@ library(ggplot2); theme_set(theme_minimal())
 require(DT)
 require(english)
 require(tools)
+require(ggtext)
 #library(webshot)
 #install_phantomjs()
 require(extrafont)
@@ -59,25 +60,6 @@ journal_short_names <- c(
   "The Philosophical Quarterly" = "Philosophical Quarterly"
 )
 
-# The list of articles
-load("fixed_articles.RData")
-
-# Change format to Michigan Publishing preferred style
-articles <- articles %>% 
-  mutate(citation = case_when(
-    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ ",vol,":",fpage-10000,"–",lpage-10000,"."),
-    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ (Supplementary Volume) ",vol,":",fpage,"–",lpage,"."),
-#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
-    TRUE ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ ",vol,":",fpage,"–",lpage,".")
-  )
-  )
-
-# The list of highly cited articles
-load("Highly_Cites_articles.RData")
-
-highly_cited <- highly_cited %>% 
-  mutate(document = file)
-
 # The list of commonly used words (could calculate this from below)
 load("common_words.RData")
 source("short_words.R")
@@ -93,7 +75,11 @@ thelda <- refinedlda
 
 # The application of the LDA to the 2019 Imprint articles
 load("imprint_lda.RData")
+
+all_journals_gamma <- tidy(thelda, matrix = "gamma")
+
 ```
+
 
 ```{r word_list_loader, cache=TRUE}
 # The long word list
@@ -106,7 +92,38 @@ load("all_journals_word_list.RData")
 # Gamma is the probability of article being in a topic
 # This retrieves it, and rearranges the topics chronologically
 
-all_journals_gamma <- tidy(thelda, matrix = "gamma")
+# The list of articles
+load("fixed_articles.RData")
+
+# Change format to Michigan Publishing preferred style
+articles <- articles %>% 
+  mutate(adjlpage = case_when(floor(fpage/10) == floor(lpage/10) & fpage < 10000 ~ lpage - 10*floor(lpage/10),
+                              floor(fpage/100) == floor(lpage/100) & fpage < 10000 ~ lpage - 100*floor(lpage/100),
+                              TRUE ~ lpage)) %>% 
+  mutate(citation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” ",journal," ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” ",journal," (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(title),",” ",journal," ",vol,":",fpage,"–",adjlpage,".")
+  )
+  )
+
+# The list of highly cited articles
+load("Highly_Cites_articles.RData")
+
+highly_cited <- highly_cited %>% 
+  mutate(document = file) %>% 
+  mutate(adjlpage = case_when(floor(fpage/10) == floor(lpage/10) & fpage < 10000 ~ lpage - 10*floor(lpage/10),
+                              floor(fpage/100) == floor(lpage/100) & fpage < 10000 ~ lpage - 100*floor(lpage/100),
+                              TRUE ~ lpage)) %>% 
+  mutate(citation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(Title),",” ",journal," ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(Title),",” ",journal," (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(Title),",” ",journal," ",vol,":",fpage,"–",adjlpage,".")
+  )
+  )
+
 
 all_journals_classifications <- all_journals_gamma %>%
   group_by(document) %>%
@@ -123,6 +140,9 @@ year_topic_mean <- all_journals_titles_and_topics %>% ungroup() %>%
 relabeled_articles <- merge(all_journals_titles_and_topics, year_topic_mean) %>% 
   select(-topic) %>% 
   dplyr::rename(topic = rank)
+
+high_cite_gamma <- merge(highly_cited, relabeled_articles, by = "document") %>% arrange(desc(Cites))
+
 
 relabeled_gamma <- merge(all_journals_gamma, year_topic_mean) %>%
   as_tibble() %>%
@@ -233,6 +253,7 @@ journalgamma_frequency$journal <- factor(journalgamma_frequency$journal, levels 
 # Generate two things for the topic summaries in chapter 2
 # First, the keywords, which are a complicated thing to make, since the beta matrix is huge
 # Second, the highly cited list, which is actually fairly easy -though have to check it is up to date
+# Burp
   phil_topics <- tidy(thelda, matrix = "beta")
 
   relabeled_topics <- merge(phil_topics, year_topic_mean) %>%
@@ -261,7 +282,6 @@ journalgamma_frequency$journal <- factor(journalgamma_frequency$journal, levels 
  short_keywords <- tribble(
    ~topic, ~distinctive_words)
   
-  high_cite_gamma <- merge(highly_cited, relabeled_articles, by = "document") %>% arrange(desc(Cites))
 
 ```
 
@@ -367,7 +387,7 @@ temp_gamma <- relabeled_gamma %>%
 
 kable(temp_gamma, 
       col.names = c("Subject", "Probability"), 
-      caption = temp_article$citation[1],
+      caption = paste0(temp_article$authall[1], ", “", temp_article$title[1], ".”"),
       digits = c(0, 4)) %>% 
   kable_styling(full_width = F)
 }
@@ -1208,13 +1228,15 @@ my_articles <- my_articles %>%
     TRUE ~ paste0(auth1, " et al")
   ))
 
-# Code for handling page numbers starting with S
+# Code for handling page numbers starting with S, and for just listing last two digits in last page when that's all that is needed
 my_articles <- my_articles %>% 
+  mutate(adjlpage = case_when(floor(fpage/100) == floor(lpage/100) & fpage < 10000 ~ lpage - 100*floor(lpage/100),
+                              TRUE ~ lpage)) %>% 
   mutate(citation = case_when(
     journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":S",fpage-10000,"-S",lpage-10000,"."),
-    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall," (",year,") \"", title,"\" ",journal," (Supplementary Volume) ",vol,":",fpage,"-",lpage,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall," (",year,") \"", title,"\" ",journal," (Supplementary Volume) ",vol,":",fpage,"-",adjlpage,"."),
 #    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
-    TRUE ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ ",vol,":",fpage,"–",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ ",vol,":",fpage,"–",adjlpage,".")
   )
   )
 

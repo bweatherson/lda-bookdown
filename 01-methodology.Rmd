@@ -196,7 +196,7 @@ So at this stage we have a list of `r nrow(articles)` articles to include, and a
 
 I filtered out the words in all the lists above, and all the words that appeared in an article one to three times. And I filtered out all the articles that weren't on the list of `r nrow(articles)` research articles. This was the master word list I'd work with.
 
-I turned that word list, which at this stage looked like a regular spreadsheet, into something called a document-term-matrix using the ```cast_dtm``` command from Julia Slige and David Robinson's package [tidytext](https://www.rdocumentation.org/packages/tidytext/versions/0.1.3). The DTM format is important only because that's what the [topicmodels](https://cran.r-project.org/web/packages/topicmodels/index.html) package (written by Bettina Grün and Kurt Hornik) takes as input before producing an LDA model as output.
+I turned that word list, which at this stage looked like a regular spreadsheet, into something called a document-term-matrix using the ```cast_dtm``` command from Julia Slige and David Robinson's package [tidytext](https://www.rdocumentation.org/packages/tidytext/versions/0.1.3). The DTM format is important only because that's what the [**topicmodels**](https://cran.r-project.org/web/packages/topicmodels/index.html) package (written by Bettina Grün and Kurt Hornik) takes as input before producing an LDA model as output.
 
 I'm not going to go over the full details of how a Latent Dirichlet Allocation (LDA) model is built, because the description that [Grün and Hornik provide](https://cran.r-project.org/web/packages/topicmodels/topicmodels.pdf) is better than what I could do. I'll just note that I'm using the default VEM algorithm.
 
@@ -248,7 +248,7 @@ Despite the number of topics being set, there are still a lot of ways that the m
 
 Rather than walk through the mathematics of why this is so, I find it more helpful to think about what the model is trying to achieve and why it is such a hard thing to achieve. Let’s just focus on one subject matter in philosophy, friendship, and think about how it could be classified it if were trying to divide all of philosophy up into sixty to ninety topics.
 
-It’s too small a subject to be its own topic. It’s best if the topics are roughly equal size, and discussions that are primarily about friendship are, I’d guess, about 0.001 to 0.002 percent of the articles in these twelve journals. It’s an order of magnitude short of being its own topic. It has to be grouped in with neighboring subjects. But which ones? For some subjects, the problem is that there aren’t enough natural neighbors. This is why the models never quite know what to do with vagueness, or feminism, or Freud. But here the problem is that there are too many.
+It’s too small a subject to be its own topic. It’s best if the topics are roughly equal size, and discussions that are primarily about friendship are, I’d guess, about 0.1 to 0.2 percent of the articles in these twelve journals. It’s an order of magnitude short of being its own topic. It has to be grouped in with neighboring subjects. But which ones? For some subjects, the problem is that there aren’t enough natural neighbors. This is why the models never quite know what to do with vagueness, or feminism, or Freud. But here the problem is that there are too many.
 
 One natural thing to do is to group papers on friendship with papers on love and both of them with papers on other emotions or perhaps with papers on other reactive attitudes. That groups a nice set of papers about aspects of the mental lives of humans that are central to actually being human but not obviously well captured by simple belief-desire models.
 
@@ -288,7 +288,7 @@ Eventually I settled on ninety topics. There were a bit more than I wanted, and 
 
 Once I had the ninety-topic model, it still wasn’t perfect. There were a few places where it looked like the model had put some things in very odd spots. Some of this remains in the finished product—the model bundles together some work on probability and coherence with historical work on Hume, and it puts one-half of the Freud papers with medical ethics and the other half of them with intention. But at this stage there were more of these overlaps than I liked.
 
-I relied on one last feature of the **topicmodels** package. The algorithm doesn’t stop when it reaches an equilibrium; it stops when it sees insufficient progress toward equilibrium. One thing to do would be to refine what counts as “insufficient,” but I found this hard to control. A similar approach is to start not with a random distribution but with a finished model and then ask the algorithm to approach equilibrium from that starting point. It won't go very far; the model was finished to start with. But it will end up with a model that the algorithm likes slightly better. (The model will, for example, have a lower perplexity score.) I'll call the resulting model a _refinement_.
+I relied on one last feature of the topicmodels package. The algorithm doesn’t stop when it reaches an equilibrium; it stops when it sees insufficient progress toward equilibrium. One thing to do would be to refine what counts as “insufficient,” but I found this hard to control. A similar approach is to start not with a random distribution but with a finished model and then ask the algorithm to approach equilibrium from that starting point. It won't go very far; the model was finished to start with. But it will end up with a model that the algorithm likes slightly better. (The model will, for example, have a lower perplexity score.) I'll call the resulting model a _refinement_.
 
 The refinement process takes a model as input and returns a model as output, so it can be iterated.^[If you're interested in doing this yourself, the magic code looks like ```refinedlda <- LDA(all_dtm, k = 90, model = refinedlda, control = list(seed = 22031848, verbose = 1, initialize = "model"))```. That is ```refinedlda``` is an LDA that takes the DTM I started with, and has nineity topics, and is based on a model, where that model is ```refinedlda``` itself. If loops don't scare you, you can simply loop this process to get as many iterations of refinement as you like. They took about forty-five minutes each to run when I did them.] And at this stage I had a clever thought. Since the refinement process improves the model, and it can be iterated, I should just iterate it as often as I can to get a better and better model. At the back of my mind, I had two worries at this point: one was that this was a bit like tightening a string, and if done too much the string will just snap. The other was that I had lost my mind and was fretting about mathematical models of large text libraries using half-baked metaphors concerning the physics of everyday objects.
 
@@ -304,9 +304,9 @@ Still, it turns out the refinements weren’t all a bad idea. After fifteen refi
 
 ## The Output
 
-The result of all this is a model with two giant probability functions. In this section I'll talk through what those functions look like with first a worked example, and then some graphs about how well the models perform at their intended task.
+The result of all this is a model with two giant probability functions. In this section I'll talk through what those functions look like with  a worked example, and then some graphs about how well the models perform at their intended task.
 
-The worked example involves David Makinson's article [The Paradox of the Preface](https://philpapers.org/rec/MAKTPO-9) [@Makinson1965]. The input to the model looks like this.
+The worked example involves David Makinson's article ["The Paradox of the Preface""](https://philpapers.org/rec/MAKTPO-9) [@Makinson1965]. The input to the model looks like this.
 
 ```{r preface-words, cache=TRUE}
 preface_words <- word_list %>%
@@ -315,15 +315,15 @@ preface_words <- word_list %>%
   select(word, wordcount)
 
 kable(preface_words, 
-      col.names = c("Word", "Wordcount"), 
-      caption = "Words in The Paradox of the Preface",
+      col.names = c("Word", "Word Count"), 
+      caption = "Words in \"The Paradox of the Preface.\"",
       digits = c(0, 0)) %>% 
   kable_styling(full_width = F)
 ```
 
-That is, the word 'rational' appears 14 times, 'beliefs' appear 11 times, and so on. This is a list of all of the words in the article, excluding the various stop words described above, and the words that appear one to three times.
+That is, the word _rational_ appears fourteen times, _beliefs_ appears eleven times, and so on. This is a list of all of the words in the article, excluding the various stop words described above and the words that appear one to three times.
 
-The model gives a probability to the article being in each of 90 topics. For this article, as for most articles, it just gives a residual probability to the vast majority of topics. So for 83 topics, the probability it gives to the article being in that topic is about 0.0003. The seven topics it gives a serious probability to are:
+The model gives a probability to the article being in each of ninety topics. For this article, as for most articles, it just gives a residual probability to the vast majority of topics. For eighty-three topics, the probability it gives to the article being in that topic is about 0.0003. The seven topics it gives a serious probability to are:
 
 ```{r preface-topics, cache=TRUE}
 preface_topics <- relabeled_gamma %>%
@@ -335,14 +335,14 @@ preface_topics <- relabeled_gamma %>%
 
 kable(preface_topics, 
       col.names = c("Topic", "Probability"), 
-      caption = "Topic Probabilities for The Paradox of the Preface",
+      caption = "Topic Probabilities for \"The Paradox of the Preface.\"",
       digits = c(0, 4)) %>% 
   kable_styling(full_width = F)
 ```
 
-I'm going to spend a lot of time in [the next chapter](#all-90-topics) on what these topics are. For now I'll just refer to them by number.
+I'm going to spend a lot of time in [the next chapter](#all-90-topics) on what these topics are. For now, I'll just refer to them by number.
 
-The model also gives a probability to each word turning up in a paradigm article for each of the topics. So for those nineteen words that the model saw as input, we can look at how frequently the model thinks a word should turn up in each of these 7 topics.
+The model also gives a probability to each word turning up in a paradigm article for each of the topics. For those nineteen words that the model saw as input, we can look at how frequently the model thinks a word should turn up in each of these seven topics.
 
 ```{r preface-large-table, cache=TRUE}
 preface_large_table <- relabeled_topics %>%
@@ -357,10 +357,10 @@ preface_wide_table <- preface_large_table %>%
 
 kable(preface_wide_table, 
       col.names = c("Word", "Topic 4", "Topic 15", "Topic 37", "Topic 39", "Topic 59", "Topic 76", "Topic 81"), 
-      caption = "Word Frequencies for topics in The Paradox of the Preface")
+      caption = "Word frequencies for topics in \"The Paradox of the Preface\"")
 ```
 
-But the model doesn't think that "The Paradox of the Preface" is a paradigm case of any one of these topics; it thinks it is a mix of seven. So we can work out what it thinks the word frequences in that article should be by taking weighted means of these columns, with the weights given by the topic probabilities. And we get the following results.
+But the model doesn't think that "The Paradox of the Preface" is a paradigm case of any one of these topics; it thinks it is a mix of seven. Therefore, what it thinks the word frequencies in that article should be can be worked out by taking weighted means of these columns, with the weights given by the topic probabilities. And that gives the following results:
 
 ```{r preface-cross-check, cache=TRUE}
 overall_sum <- sum(preface_words$wordcount)
@@ -376,16 +376,16 @@ preface_check_table <- preface_large_table %>%
   arrange(-wordcount)
 
 kable(preface_check_table,
-      col.names = c("Word", "Wordcount", "Measured Frequency", "Modelled Frequency"),
+      col.names = c("Word", "Wordcount", "Measured Frequency", "Modeled Frequency"),
       digits = c(0, 0, 4, 4),
-      caption = "Measured and Modelled Frequencies for The Paradox of the Preface")
+      caption = "Measured and modeled frequencies for \"The Paradox of the Preface.\"")
 ```
 
-The modelled frequency of 'rational' is given by multiplying, across seven topics, the probability of the article being in that topic, by the expected frequency of the word given it is in that topic. And the same goes for the other words. What I'm giving here as the measured frequency of a word is not its frequency in the original article; it is its frequency among the words that survive the various filters I described above. In general that will be two to three times as large as its original frequency.
+The modeled frequency of _rational_ is given by multiplying, across seven topics, the probability of the article being in that topic, by the expected frequency of the word given it is in that topic. And the same goes for the other words. What I'm giving here as the measured frequency of a word is not its frequency in the original article; it is its frequency among the words that survive the various filters I described above. In general that will be two to three times as large as its original frequency.
 
-The aim is that the two columns here would line up. And of course they don't. In fact, the model doesn't end up doing very well with this article; it is still a long way from equilibrium.
+The aim is that the two columns here would line up. And, of course they don't. In fact, the model doesn't end up doing very well with this article; it is still a long way from equilibrium.
 
-```{r preface-graph, fig.cap = "Modelled and Measured Frequency for Makinson (1965)", fig.alt = alt_text, cache=TRUE}
+```{r preface-graph, fig.cap = "Modeled and measured frequency for Makinson (1965).", fig.alt = alt_text, cache=TRUE}
 cross_check_graph <- function(x){
   temp_gamma <- relabeled_gamma %>%
     select(document, gamma, topic) %>%
@@ -422,7 +422,7 @@ print(  ggplot(temp_topics, aes(x = f, y=  proj)) +
     coord_fixed(xlim = c(0, high_number * 1.02), ylim = c(0, high_number * 1.02)) +
     labs(caption = temp_gamma$citation[1],
         x = "Measured Word Frequency",
-        y = "Modelled Word Frequency")  +
+        y = "Modeled Word Frequency")  +
     ggrepel::geom_text_repel(data = salient_words, aes(label = term))
 )
 }
@@ -465,262 +465,262 @@ x <- "10.2307_3326519"
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are rarely met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Each of them is well below the 45 degree line. ",
+  " are highlighted. Each of them is well below the forty-five degree line. ",
   "That means they appear in the article more often than the model expects. ",
   "The word belief only appears a bit more often than expected, then others appear much more often."
 )
 ```
 
-On that graph, every dot is a word type. The x-axis represents the frequency of that word type in the article (after excluding the stop words and so on), and the y-axis represents how frequently the model thinks the word 'should' appear, given its classification of the article into 90 topics, and the frequency of words in those topics. Ideally, all the dots would be on the 45 degree line coming north-east out of the origin. Obviously, that doesn't happen. It can't really, because, to a very rough approximation, I've only given the model 90 degrees of freedom, and I've asked it to approximate over 32,000 data points.
+On that graph, every dot is a word type. The x axis represents the frequency of that word type in the article (after excluding the stop words and so on), and the y axis represents how frequently the model thinks the word 'should' appear, given its classification of the article into ninety topics, and the frequency of words in those topics. Ideally, all the dots would be on the forty-five degree line coming northeast out of the origin. Obviously, that doesn't happen. It can't really, because, to a very rough approximation, I've only given the model ninety degrees of freedom, and I've asked it to approximate over 32,000 data points.
 
-Actually, this is one of the least impressive jobs the model does. I measured the correlations between measured and modelled word frequency, i.e., what this graph represents, for 600 highly cited articles. Among those 600, this was the 23rd lowest correlation between measured and modelled frequency. But in many cases, that correlation was very strong. For example, here are the graphs for three more articles where the model manages to understand what's happening.
+Actually, this is one of the least impressive jobs the model does. I measured the correlations between measured and modeled word frequency, i.e., what this graph represents, for six hundred highly cited articles. Among those six hundred, this was the twenty-third lowest correlation between measured and modeled frequency. But in many cases, that correlation was very strong. For example, here are the graphs for three more articles where the model manages to understand what's happening.
 
-```{r good-graph-1, fig.cap = "Modelled and Measured Frequency for Davidson (1990)", fig.alt = alt_text, cache=TRUE}
+```{r good-graph-1, fig.cap = "Modeled and measured frequency for Davidson (1990).", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2026863"
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are usually met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Each of them is close to the 45 degree line. ",
+  " are highlighted. Each of them is close to the forty-five degree line. ",
   "That means they appear in the article about as often than the model expects. ",
-  "The word truth appears a lot; it is 6% of the words in the article. The model expects a little less; around 5%. The others are very close to the 45 degree line."
+  "The word truth appears a lot; it is 6% of the words in the article. The model expects a little less; around 5%. The others are very close to the forty-five degree line."
 )
 ```
 
-```{r good-graph-2, fig.cap = "Modelled and Measured Frequency for Edgington (1995)", fig.alt = alt_text, cache=TRUE}
+```{r good-graph-2, fig.cap = "Modeled and measured frequency for Edgington (1995).", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2254793"
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are usually met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Each of them is close to the 45 degree line. ",
+  " are highlighted. Each of them is close to the forty-five degree line. ",
   "That means they appear in the article about as often than the model expects."
 )
 
 ```
 
-```{r good-graph-3, fig.cap = "Modelled and Measured Frequency for Dworkin (1996)", fig.alt = alt_text, cache=TRUE}
+```{r good-graph-3, fig.cap = "Modeled and measured frequency for Dworkin (1996).", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2961920"
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are usually met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Each of them is close to the 45 degree line. ",
+  " are highlighted. Each of them is close to the forty-five degree line. ",
   "That means they appear in the article about as often than the model expects.",
   " The word moral appears a lot, about 4% of all words in the article. And the model predicts this correctly."
 )
 ```
 
-There are some articles that it doesn't manage as well, typically articles with unusual words. (It also does poorly with short articles, like "The Paradox of the Preface".)
+There are some articles that it doesn't manage as well—typically articles with unusual words. (It also does poorly with short articles, like "The Paradox of the Preface".)
 
-```{r bad-graph-1, fig.cap = "Modelled and Measured Frequency for Thomson (1998)", fig.alt = alt_text, cache=TRUE}
+```{r bad-graph-1, fig.cap = "Modeled and measured frequency for Thomson (1998).", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2671962"
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are rarely met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Each of them is far frothe 45 degree line. ",
+  " are highlighted. Each of them is far from the forty-five degree line. ",
   "The model expects the words property and properties will appear a lot, 3-4% of the time, but they make up only about 1% of the words. It does not expect the words time, part and, especially, clay, to appear as often as they do."
 )
 ```
 
-```{r bad-graph-2, fig.cap = "Modelled and Measured Frequency for Elster (1990)", fig.alt = alt_text, cache=TRUE}
+```{r bad-graph-2, fig.cap = "Modeled and measured frequency for Elster (1990).", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2381783"
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are rarely met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Each of them is far from to the 45 degree line. ",
+  " are highlighted. Each of them is far from the forty-five degree line. ",
   "The model expects the words society and social to appear more often than they do. But it is very surprised at how often the words honor, norms, and revenge, appear."
 )
 ```
 
-```{r bad-graph-3, fig.cap = "Modelled and Measured Frequency for Fara (2005)", fig.alt = alt_text, cache=TRUE}
+```{r bad-graph-3, fig.cap = "Modeled and measured frequency for Fara (2005).", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_3506173"
 
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are rarely met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Four of them are far from the 45 degree line. ",
+  " are highlighted. Four of them are far from the forty-five degree line. ",
   "The model expects the words possible, worlds and, especially, world, to appear much more often than they do.",
   " But it expects the word disposition to appear much less. ",
   "The model does correctly predict that the word true will appear about 2% of the time."
 )
 ```
 
-A few different things are going on here. In Elster's article, the model doesn't expect any philosophy article to use the word 'revenge' as much as he does. In Fara's article, the model lumps articles about modality (especially possible worlds) in with articles on dispositions. (This ends up being [Topic 80](#topic80).) And so it expected that Fara will talk about worlds, given he is also talking about dispositions, but he doesn't. Thomson's article has both of these features. The model is surprised that anyone is talking about clay so much. And it expects that a metaphysics article like Thomson's will talk about properties more than Thomson does.
+A few different things are going on here. In Elster's article, the model doesn't expect any philosophy article to use the word _revenge_ as much as the author does. In Fara's article, the model lumps articles about modality (especially possible worlds) in with articles on dispositions. (This ends up being [topic 80](#topic80).) And so it expected that Fara will talk about worlds, given he is also talking about dispositions, but he doesn't. Thomson's article has both of these features. The model is surprised that anyone is talking about clay so much. And it expects that a metaphysics article like Thomson's will talk about properties more than Thomson does.
 
-So it isn't perfect, but as we saw above, it does pretty well with some cases. The papers I've shown so far are pretty much outliers though; here are some more typical examples.
+It isn’t perfect, but as seen above, it does pretty well with some cases. The papers I’ve shown so far are pretty much outliers though; here are some more typical examples:
 
-```{r medium-graph-1, fig.cap = "Modelled and Measured Frequency for Lewis (1979)", fig.alt = alt_text, cache=TRUE}
+```{r medium-graph-1, fig.cap = "Modeled and measured frequency for Lewis (1979).", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2215339"
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are mostly met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Four of them are close to the 45 degree line. ",
+  " are highlighted. Four of them are close to the forty-five degree line. ",
   "But the model expects the word laws to appear much more often than it does."
 )
 ```
 
-```{r medium-graph-2, fig.cap = "Modelled and Measured Frequency for Lakoff and Johnson (1980)", fig.alt = alt_text, cache=TRUE}
+```{r medium-graph-2, fig.cap = "Modeled and measured frequency for Lakoff and Johnson (1980).", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_2025464"
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are mostly met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Four of them are close to the 45 degree line. ",
+  " are highlighted. Four of them are close to the forty-five degree line. ",
   "That means they appear in the article about as often than the model expects.",
   " But the model does not expect the word metaphor to appear so often."
 )
 ```
 
-```{r medium-graph-3, fig.cap = "Modelled and Measured Frequency for Kelly (2003)", fig.alt = alt_text, cache=TRUE}
+```{r medium-graph-3, fig.cap = "Modeled and measured frequency for Kelly (2003).", fig.alt = alt_text, cache=TRUE}
 x <- "10.2307_20140564"
 cross_check_graph(x)
 
 alt_text <- paste0(
-  "A scatterplot where the x-axis shows how often each word appears in ",
+  "A scatterplot where the x axis shows how often each word appears in ",
   (relabeled_gamma %>%
     select(document, gamma, topic) %>%
     filter(document == x) %>%
     inner_join(articles, by = c("document")))$citation[1],
-  ", and the y-axis shows how often the model anticipated that word to appear. ",
+  ", and the y axis shows how often the model anticipated that word to appear. ",
   "Here the expectations are rarely met. ",
   "The words ",
   salient_words(x),
-  " are highlighted. Belief and reason are far above the 45 degree line, epistemic and rationality far below it. ",
+  " are highlighted. Belief and reason are far above the forty-five degree line, epistemic and rationality far below it. ",
   "The model expects the word reasons to make up 2% of the words in the article, and in fact it makes up 3%."
 )
 ```
 
-It's not perfect, but the general picture is that the model does a pretty good job of modeling 32000 articles given the tools we offered it. And, more importantly from the perspective of this book, the way it models them ends up grouping like articles together. And that's what I'll use for describing trends in the journals over their first 138 years.
+It's not perfect, but the general picture is that the model does a pretty good job of modeling 32000 articles given the tools it has. And, more importantly from the perspective of this book, the way it models them ends up grouping like articles together. And that's what I'll use for describing trends in the journals over their first 138 years.
 
 ## Strengths and Weaknesses {#strengths-and-weaknesses-section}
 
-The benefit of using this kind of modeling is that it allows you to take every article into account. This is the history of philosophy (in these journals) without any gaps whatsoever.
+The benefit of using this kind of modeling is that it allows every article to be taken into account. This is the history of philosophy (in these journals) without any gaps whatsoever.
 
-And this is no small feat. Remember that there are `r nrow(articles)` articles that we're looking at. Let's say that you could dedicate 8 hours a day, 5 days a week, just to reading these articles, and that you could on average read an article per hour. Some, to be sure, would take less than an hour even to read closely. But just one hour is an optimistic reading time for the longer articles. Still, let's make the optimistic assumption. That would mean `r round(nrow(articles)/40, 0)` weeks of just to read through them all. If you take 2 weeks a year off, you would take `r round(nrow(articles)/2000, 0)`  years just to do the reading. And at the end of that time, you'd at best have some sketchy notes on the articles, not anything you can use for an analysis.
+And this is no small feat. Remember that there are 32,261 articles that are being looked at. Let’s say that eight hours a day, five days a week, could be dedicated just to reading these articles, and that one could on average read an article per hour. Some, to be sure, would take less than an hour, even to read closely. But just one hour is an optimistic reading time for the longer articles. Still, let’s make the optimistic assumption. That would mean 807 weeks of just reading through them all. If one takes two weeks a year off, it would take sixteen years just to do the reading. And at the end of that time, one would, at best, have some sketchy notes on the articles and not anything that could be used for an analysis.
 
-If you want to analyse all the articles, if you want to really have no gaps, then the only way to do it is by machine.
+To analyze all the articles, to really have no gaps, then the only way is by machine.
 
-But there are a number of downsides to this algorithmic approach, all of which come from the fact that the machine is just doing string recognition. The algorithm doesn't know any semantics, just syntax. And this causes some complications. I'll mention five here, along with a brief discussion of how badly they impacted the model I ended up using.
+But there are a number of downsides to this algorithmic approach, all of which come from the fact that the machine is just doing string recognition. The algorithm doesn’t know any semantics—just syntax. And this causes some complications. I’ll mention five here, along with a brief discussion of how badly they impacted the model I ended up using.
 
-One problem that turned out not to be too big a deal was that the algorithm has a hard time distinguishing different uses of the same word. But while this is hard, it isn't impossible. The model seems, for example, to understand the difference between how 'function' is used in philosophy of biology, to how it is used in logic and mathematics. It didn't run together the different uses of 'realism', or 'internalism'/'externalism', like I would have expected. There is a hint of running together 'scepticism' in the sense most relevant to epistemology with other kinds of philosophical scepticism. (Someone who is a free will sceptic doesn't say we don't know whether free will exists, but that we know it doesn't.) But maybe this isn't too much of a problem, since the views aren't that separate.
+One problem that turned out not to be too big a deal was that the algorithm has a hard time distinguishing between different uses of the same word. But while this is hard, it isn’t impossible. The model seems, for example, to understand the difference between how _function_ is used in philosophy of biology versus how it is used in logic and mathematics. It didn’t run together the different uses of _realism_ or _internalism_ and _externalism_ in a way that I would have expected. There is a hint of running together _scepticism_ in the sense most relevant to epistemology with other kinds of philosophical scepticism. (Someone who is a free-will sceptic doesn’t say that people don’t know whether free will exists but that people know it doesn’t.) But maybe this isn’t too much of a problem, since the views aren’t that separate.
 
-The one time that this particular model seems to have gotten confused over the two related meanings of a word concerned 'free'. [Topic 35](#topic35) is a mishmash of work on free will, with work on political freedom. Now you might think this isn't too bad, since the subjects are somewhat connected. But it's not optimal, and we'll eventually work out a way to separate out free will and political freedom. But the big picture is that something that seemed likely to be a problem turned out, pleasingly, to not be that bad.
+The one time that this particular model seems to have gotten confused over the two related meanings of a word concerned _free_. [Topic 35](#topic35) is a mishmash of work on free will, with work on political freedom. It’s possible to think this isn’t too bad, since the subjects are somewhat connected. But it’s not optimal, and eventually it’s necessary to separate out free will and political freedom. But the big picture is that something that seemed likely to be a problem turned out, pleasingly, to not be that bad.
 
-A second problem comes from the reverse direction. Sometimes the differences in topics just come from a change in terminology. You can see this most clearly, I think, in the logic topics in the model. Papers about sequents get put in a different topic to papers about syllogisms. Papers about implications get put in a different topic from papers about validities. Now there is a sense in which that's a good thing, and the model is picking up a philosophically significant change. But it's a relatively minor change compared to what the model thinks. Still, this isn't a particularly serious problem. The worst case scenario is that we have to come back in after and manually note that we should put together the papers on validities and papers on implications when we're doing analysis. That's a bit of work but it isn't too bad, we just have to remember that it happens.
+A second, opposing problem  is that sometimes the differences in topics come from a change in terminology. This can be seen most clearly, I think, in the logic topics in the model. Papers about sequents are put in a different topic than papers about syllogisms. Papers about implications are put in a different topic than papers about validities. Now there is a sense in which that’s a good thing, and the model is picking up a philosophically significant change. But it’s a relatively minor change compared to what the model thinks. Still, this isn’t a particularly serious problem. The worst-case scenario is that one has to come back in later and manually note that the papers on validities and papers on implications need to be put back together when we’re doing analysis. That’s a bit of work but it isn’t too bad—just remember that it happens.
 
-A third, and related, problem, comes from when the model makes fine-grained distinctions within a subject. I mentioned earlier that I saw several models that ended up separating out work on causation that didn't discuss counterfactuals (like Mackie's work) from post-Lewisian work where counterfactuals are front and center. That's not great - these really are on the same topic - but it isn't too bad. Again, worst case scenario is you combine these topics by hand when doing analysis. But in practice I don't think we really saw this problem arise in this particular run of the model.
+A third, and related, problem comes from the model making fine-grained distinctions within a subject. I mentioned earlier that I saw several models that ended up separating out work on causation that didn’t discuss counterfactuals (such as that of Mackie) from post-Lewisian work, where counterfactuals are front and center. That’s not great—these really are on the same topic—but it isn’t too bad. Again, the worst-case scenario is that these topics need to be combined by hand when doing analysis. But in practice I don’t think I really saw this problem arise in this particular run of the model.
 
-A potentially bigger problem is the converse, which I already discussed when talking about choosing the number of topics. Sometimes the topics are just disjunctive. For example, [Topic 37](#topic37) ends up being half about sets, and half about the grue paradox. Now there is a connection of sorts here - Nelson Goodman is kind of important to both literatures. But really this shouldn't be a single topic. As I already noted, this is a hard problem to fix. If you increase the number of topics, the model becomes harder to read, and you're just as likely to split a coherent topic (like causation) as to split a disjunctive topic.
+A potentially bigger problem is the converse, which I already discussed when talking about choosing the number of topics. Sometimes the topics are just disjunctive. For example, [topic 37](#topic37) ends up being half about sets and half about the grue paradox. There is a connection of sorts here—Nelson Goodman is kind of important to both literatures. But really this shouldn’t be a single topic. As I already noted, this is a hard problem to fix. If the number of topics are increased, the model becomes harder to read, and it’s just as likely to split a coherent topic like causation) as it is to split a disjunctive topic.
 
-I did three things here to address these disjunctive topics. One, that I've already mentioned, was to keep running refinements until the worst of the disjunctiveness was polished away. (Before the refinements, some papers on probabilistic epistemology got classified in with papers on Hume, and I don't know what the computer was thinking. A handful ended up there after the refinements, but not nearly as many.) A second is to use very clear labels for the topics, like "Sets and Grue", to indicate that it is a disjunctive topic. And a third is to run a further analysis on articles in that topic to divide up the sets articles from the grue articles. Eventually there ended up being 10 topics where I felt this kind of split was worthwhile.
+I did three things here to address these disjunctive topics. One, that I’ve already mentioned, was to keep running refinements until the worst of the disjunctiveness was polished away. Before the refinements, some papers on probabilistic epistemology got classified in with papers on Hume, and I don’t know what the computer was thinking. A handful ended up there after the refinements, but not nearly as many.) A second is to use very clear labels for the topics, like “Sets and Grue,” to indicate that it is a disjunctive topic. And a third is to run a further analysis on articles in that topic to divide up the sets of articles from the grue articles. Eventually there ended up being ten topics where I felt this kind of split was worthwhile.
 
-The fifth and final problem is that the algorithm can't tell changes of topic apart from changes in style. If it becomes a requirement on all right-thinking philosophers to express onself more or less exclusively in monosyllables, as seems to have been the case in mid-century Britain, then the algorithm will think that there is a new topic that is being discussed right then. I'm exaggerating of course about mid-century Britain, but there is a trend that matters, and that I'll talk much more about later. 
+The fifth and final problem is that the algorithm can’t tell changes of topic apart from changes in style. If it becomes a requirement on all right-thinking philosophers to express oneself more or less exclusively in monosyllables, as seems to have been the case in midcentury Britain, then the algorithm will think that there is a new topic that is being discussed right then. I’m exaggerating of course about midcentury Britain, but there is a trend that matters, and that I’ll talk much more about later.
 
-Or imagine what would happen if every philosopher all at once decided that you shouldn't respond to objections with a new theory that has distinctive consequences, but instead you should respond to *worries* with a new *account* that has distinctive *commitments*. Well, the model will think that there is this cool new subject about 'worries', 'accounts', and 'commitments', and that you're all talking about it. And if this stylistic change happens all at once across philosophy, the model will think that the generalist journals, the philosophy of science journals, and the moral and political journals, are all obsessed all of a suddent with the worry/account/commitment subject. Of course, philosophy couldn't be so caught up chasing trends that something like this would all happen at once, could it? Could it? Let's return to this issue [at the very end](#buzzwords-section), and see how bad things got.
+Or imagine what would happen if every philosopher all at once decided that objections shouldn’t be responded to with a new theory that has distinctive consequences but instead one should respond to _worries_ with a new _account_ that has distinctive _commitments_. Well, the model will think that there is this cool new subject about “worries,” “accounts,” and “commitments,” and that they’re being talked about. And if this stylistic change happens all at once across philosophy, the model will think that the generalist journals, the philosophy of science journals, and the moral and political journals are suddenly obsessed with the worry/account/commitment subject. Of course, philosophy couldn’t be so caught up chasing trends that something like this would happen all at once, could it? Could it? Let's return to this issue [at the very end](#buzzwords-section) and see how bad things got.
 
 ## Regrets {#regrets-section}
 
-So that's the methodology I used. Now that I've written the whole thing up, there are a few things I wish I'd done differently. This wish clearly isn't strong enough to make me scrap the project and start again.^[I did in fact scrap several versions of this when writing up the model revealed mistakes in the model building. This is the model that resulted from acting on the lessons of those mistakes.] But I hope that others will learn from what I've done, and to that end I want to be upfront about things I could have done differently.
+Now that I’ve written the whole methodology that I used, there are a few things I wish I’d done differently. This wish clearly isn’t strong enough to make me scrap the project and start again.^[I did in fact scrap several versions of this when writing up the model revealed mistakes in the model building. This is the model that resulted from acting on the lessons of those mistakes.] But I hope that others will learn from what I’ve done, and to that end, I want to be up front about things I could have done differently.
 
-First, I should have filtered even more words. There are four kinds of words I wish I'd been more aggressive about filtering out.
+First, I should have filtered even more words. There are four kinds of words I wish I’d been more aggressive about filtering out:
 
-- There are some systematic OCR errors in the early articles. I caught 'anid', which appears over 3000 times. (It's almost always meant to be 'and', I think.) But I missed 'aind', which appears about 1500 times. And there are other less common words that are also OCR errors and should be filtered out.
-- I caught a lot of latex words, but somehow missed 'rightarrow', as well as a few much rarer words.
-- If a word is hyphenated in the original journal, each half appears as a word in this data set. (At least if the data was generated by OCR.) I caught a few of the prefixes and suffixes that turn up for that reason, but missed 'ity', which ends up being a reasonably common word.
-- And I caught a lot of words that almost always appear in bibliographies, headers or footers, but missed 'basil' (which turns up on a table later) and 'noûs' (though I caught 'nous').
+- There are some systematic OCR errors in the early articles. I caught _anid_, which appears over three thousand times. (It’s almost always meant to be _and_, I think.) But I missed _aind_, which appears about 1,500 times. And there are other less common words that are also OCR errors and should be filtered out.
+- I caught a lot of latex words but somehow missed _rightarrow_, as well as a few rarer words.
+- If a word is hyphenated in the original journal, each half appears as a word in this data set. (At least if the data was generated by OCR.) I caught a few of the prefixes and suffixes that turn up for that reason, but missed _ity_, which ends up being a reasonably common word.
+- And I caught a lot of words that almost always appear in bibliographies, headers, or footers but missed _basil_ (which turns up on a table later) and _noûs_ (though I caught _nous_).
 
-In general I could have been way more aggressive filtering words like these out.
+In general, I could have been way more aggressive filtering words like these out.
 
-But second, I think it was a mistake to filter out words that appear 1-3 times in articles. This actually makes perfect sense for long articles, and for some really long articles you could get rid of words that appear 4 or 5 times as well. But it's too aggressive for short articles. I needed some kind of rule like filtering out words that appear less than 1 time in 2000 in the article. It is important, I think, to filter out the words that appear just once, or else you have to be perfect in catching OCR errors and weird latex code. But after that you need some kind of sliding scale.
+But second, I think it was a mistake to filter out words that appear one to three times in articles. This actually makes perfect sense for long articles, and for some really long articles words that appear four or five times could be eliminated as well. But it’s too aggressive for short articles. I needed some kind of rule such as filtering out words that appear less than one time in two thousand in the article. It is important, I think, to filter out the words that appear just once or else it’s easy to miss OCR errors and weird latex code. But after that there needs to be some kind of sliding scale.
 
 The next three things are much more systematic, though also less clearly errors.
 
-The third problem was that my model selection was too stepwise, and not holistic enough. I found the best 60 topic model I could find. Then I increased the topics on it (eventually to 90) until the topics looked as good as they could get holding fixed the seed number from the search through 60 topics. Then I ran refinements on it until the refinements looked like they were damaging the model. Then I split some of the topics up for categorisation. What I didn't do at any step was look back and ask, for example, how would the other 60 topic models look if I applied these adjustments to them?
+The third problem was that my model selection was too stepwise and not holistic enough. I found the best sixty topic model I could find. Then I increased the topics on it (eventually to ninety) until the topics looked as good as they could get while holding a fixed seed number from the search through sixty topics. Then I ran refinements on it until the refinements looked like they were damaging the model. Then I split some of the topics up for categorization. What I didn’t do at any time was look back and ask, for example, how the other sixty topic models would look if I applied these adjustments to them.
 
-Now there was a reason for that. Each of those adjustments cost quite a lot of my time, and even more computer time. Doing the best you can at each step and then locking in the result makes the process at least a bit manageable. But I should (a) have been a bit more willing to revisit earlier decisions, and (b) more forward looking when making each of those intermediate decisions. I was a bit forward looking at one point; one of my criteria for choosing between 60 topic models was a preference for unwanted conflations over unwanted splits. And that was because I knew I could fix conflations various ways. But I should have been both more forward looking, and more willing to take a step or two backwards. And maybe I could have stuck much closer to 60 topics if I had.
+There was a reason for that. Each of those adjustments cost quite a lot of my time, and even more computer time. Doing the best at each step and then locking in the result makes the process at least a bit manageable. But I should have been (a) a bit more willing to revisit earlier decisions and (b) more forward looking when making each of those intermediate decisions. I was a bit forward looking at one point; one of my criteria for choosing between sixty topic models was a preference for unwanted conflations over unwanted splits. And that was because I knew I could fix conflations in various ways. But I should have been both more forward looking and more willing to take a step or two backward. And maybe I could have stuck much closer to sixty topics if I had.
 
-The fourth problem was that I didn't realise how bad a topic [Arguments](#topic55) would turn out to be. For the purposes of the kind of study I'm doing, it's really important that the topics really be _topics_ in the ordinary sense, and not tools or methods. Now this is hard in philosophy, because philosophy is so methodologically self-conscious that there are articles that really are about all the tools and methods you might care about. But I wish I'd avoided having a topic about a tool. (I'll come back in section \@ref(raw-weight-count) to a formal method one can use for detecting these kinds of topics early in the process.)
+The fourth problem was that I didn't realize how bad a topic [arguments](#topic55) would turn out to be. For the purposes of the kind of study I'm doing, it's really important that the topics really be _topics_ in the ordinary sense, and not tools or methods. Now this is hard in philosophy, because philosophy is so methodologically self-conscious that there are articles that really are about all the tools and methods one might care about. But I wish I'd avoided having a topic about a tool. (I'll come back in section \@ref(raw-weight-count) to a formal method one can use for detecting these kinds of topics early in the process.)
 
-The fifth problem, if it is a problem, is that I wasn't more aggressive about expanding the list of stop words. This model has a topic on [Ordinary Language Philosophy](#topic24). Actually, _all_ the models I built had a topic like this (at least once they had at least 15 or so topics). But the keywords characteristic of this topic are words that really could have been included on a stop words list. They are words like 'ask' and 'try'. And one side-effect of this is that the model keeps thinking a huge proportion of the articles in the data set are maybe kind of Ordinary Language Philosophy articles.
+The fifth problem, if it is a problem, is that I wasn't more aggressive about expanding the list of stop words. This model has a topic on [ordinary language philosophy](#topic24). Actually, _all_ the models I built had a topic like this (at least once they had at least fifteen or so topics). But the keywords characteristic of this topic are words that really could have been included on a stop words list. They are words like _ask_ and _try_. And one side-effect of this is that the model keeps thinking a huge proportion of the articles in the data set are, perhaps,  ordinary language philosophy articles.
 
-Another way to put this is that the boundary between a stop word and a contentful word (in this context) is pretty vague. And given that Ordinary Language Philosophy was a thing that happened, and that affected how everyone (at least in the UK) was writing for a while, there is a good case for taking a very expansive understanding of what the stop words were.
+Another way to put this is that the boundary between a stop word and a substantive word (in this context) is pretty vague. And given that ordinary language philosophy was a thing that happened and that affected how everyone (at least in the United Kingdom) was writing for a while, there is a good case for taking a very expansive understanding of what the stop words were.
 
-The choice I made was to not lean on the scales at all, and just use the most common off-the-shelf list of stop words. And there was a good reason for that; I wanted the model to not simply replicate my prejudices. But I half-think I made the wrong call here, and that the model would be more useful if I had filtered out more 'ordinary language'.
+The choice I made was to not lean on the scales at all, and just use the most common off-the-shelf list of stop words. And there was a good reason for that: I wanted the model to not simply replicate my prejudices. But I half-think I made the wrong call here, and that the model would be more useful if I had filtered out more "ordinary language".

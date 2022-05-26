@@ -28,24 +28,25 @@ cat("\n
 
 This is a large and long-lasting topic. And it is somewhat disjunctive.
 
-It includes some metaphysics. Indeed some of the things I'd think of as paradigmatic to early analytic metaphysics, such as Russell's [On the Relations of Universals and Particulars](https://philpapers.org/rec/RUSOTR-3) and Ramsey's [Universals](https://philpapers.org/rec/RAMU). And it includes their contemporary successors, such as Fraser MacBride's [Could Armstrong Have Been a Universal?](https://philpapers.org/rec/MACCAH).
+It includes some metaphysics and, indeed some of the things I'd think of as paradigmatic to early analytic metaphysics, such as Russell's "[On the Relations of Universals and Particulars](https://philpapers.org/rec/RUSOTR-3)" and Ramsey's "[Universals](https://philpapers.org/rec/RAMU)". And it includes their contemporary successors, such as Fraser MacBride's "[Could Armstrong Have Been a Universal?](https://philpapers.org/rec/MACCAH)".
 
-It includes some philosophy of language, though surprisingly less than I would have guessed from the keywords. It includes, for example, Wilfrid Sellars's [Naming and Saying](https://philpapers.org/rec/SELNAS), and David Liebesman's [Simple Generics](https://philpapers.org/rec/LIESG).
+It includes some philosophy of language, though surprisingly less than I would have guessed from the keywords. It includes, for example, Wilfrid Sellars's "[Naming and Saying](https://philpapers.org/rec/SELNAS)", and David Liebesman's "[Simple Generics](https://philpapers.org/rec/LIESG)".
 
-It includes a large amount of Peircean pragmatics. Here is a list just of the articles in the topic with "Peirce" in the title.
+It includes a large amount of Peircean pragmatics. Here is a list just of the articles in the topic with "Peirce" in the title:
 
 ```{r peirce-universals}
 peirce_universals <- relabeled_articles[grep("Peirce", relabeled_articles$title),] %>%
   as_tibble() %>%
   filter(topic == 14) %>%
   arrange(year) %>%
-  select(citation)
+  select(mcitation)
+  
 for (jj in 1:nrow(peirce_universals)){
-  cat(jj,". ", peirce_universals$citation[jj], " \n", sep="")
+  cat(jj,". ", peirce_universals$mcitation[jj], " \n", sep="")
 }
 ```
 
-And there are other articles too that are about Peirce, or Peircean thought, without including the string 'Peirce' in the title.
+And there are other articles too that are about Peirce, or Peircean thought, without including the string _Peirce_ in the title.
 
 But ultimately it is largely a topic about logic. It starts off with articles about Aristotelian logic, then moves into discussions of the role of subject and predicate in contemporary (broadly Fregean) logic. And that's where the model places it.
 

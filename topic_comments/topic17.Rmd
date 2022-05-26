@@ -28,12 +28,12 @@ cat("\n
 	\n")
 ```
 
-This is a hard to classify topic. On the one hand, it's clearly about logic, so that's easy enough. But everything else about it is a little odd. The graphs don't show much life after 1920. But it ends up being either the 27th or 15th largest topic, depending on how you measure things. And the measure that makes it 15th is the one the graphs are showing. Its top keyword is syllogism, but most of the characteristic articles are very modern pieces that barely mention the word. In fact, the word mostly vanishes frm the journals after the 1960s.
+This is a hard to classify topic. On the one hand, it's clearly about logic, so that's easy enough. But everything else about it is a little odd. The graphs don't show much life after 1920. But it ends up being either the twenty-seventh or fifteenth largest topic, depending on which measure is used. The measure that makes it fifteenth is the one the graphs are showing. Its top keyword is _syllogism_, but most of the characteristic articles are very modern pieces that barely mention the word. In fact, the word mostly vanishes from the journals after the 1960s.
 
-```{r syllogism-graph, fig.height = 5, fig.cap = "How frequently does 'syllogism' appear in the journals", fig.alt = alt_text}
+```{r syllogism-graph, fig.height = 5, fig.cap = "How frequently does _syllogism_ appear in the journals?", fig.alt = alt_text}
 word_frequency_graphs(c("syllogism"))
 alt_text <- word_frequency_graph_alt_text(c("syllogism"))
 ```
 
-Part of what's happened here is that while the model has decided to treat talk of 'implication' back in [Topic 7](#topic07) differently to talk here of validity, it's thrown some very old notions in with this topic. That's not absurd, but it does lead to some od results.
-if you squint you can see a brief uptick at the end of the graph. But a big part of the story here is that this kind of work, to the extent that its supported by the discipline at all, has largely moved to more specialist journals. So we don't see as much of it in these journals as we use to. And it would take a broader study to see what happens when you add the specialist logic journals to the mix.
+Part of what's happened here is that while the model has decided to treat talk of _implication_ back in [topic 7](#topic07) differently to talk here of validity, it's thrown some very old notions in with this topic. That's not absurd, but it does lead to some odd results.
+If squinting, a brief uptick can be seen at the end of the graph. But a big part of the story here is that this kind of work, to the extent that it's supported by the discipline at all, has largely moved to more specialist journals. So not as much of it is seen in these journals as in the past. And it would take a broader study to see what happens when specialist logic journals are added to the mix.

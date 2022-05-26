@@ -26,14 +26,15 @@ cat("\n
 	\n")
 ```
 
-Note that the scale in the second graph is thrown off by the very high numbers from the early years of _Analysis_. This is, as you can see at the top of the page, one of the larger topics in the study, despite the graphs looking quite low. 
+Note that the scale in the second graph is thrown off by the very high numbers from the early years of _Analysis_. This is, as seen at the top of the page, one of the larger topics in the study, despite the graphs looking quite low.
 
-This overlaps a lot with [Deduction](#topic17). Indeed, it is possibly best to simply regard them as part of the same topic. Fortunately if you want to do that, you don't have to do much more than change the scales on the graphs, because their distribution over time, and over journals, is pretty similar.
+This overlaps a lot with [deduction](#topic17). Indeed, it is possibly best to simply regard them as part of the same topic. Fortunately, to do that one doesn’t have to do much more than change the scales on the graphs, because their distribution over time, and over journals, is pretty similar.
 
-This topic gets 'implication' rather than 'validity' (which is moved to deduction). And so the logical works in it are a touch earlier. But it also gets 'proposition', so it picks up a bit more weight from more contemporary work on propositions. Here, for instance, is the table for Jeff King's paper "Designating Propositions".
+This topic gets _implication_ rather than _validity_, which is moved to [deduction](#topic17). Therefore, the logical works in it are a touch earlier. But it also gets _proposition_, so it picks up a bit more weight from more contemporary work on propositions. Here, for instance, is the table for Jeff King’s paper “Designating Propositions.”
+
 
 ```{r king-designating}
 individual_article("10.2307_3182547")
 ```
 
-It mostly goes with Sense and Reference. That topic, despite its Fregean name, appears much later in our story. But note that the model can't quite shake the idea that it should be placed in this topic. It's this kind of assessment that keeps the graphs for this topic from really collapsing.
+It mostly goes with [sense and reference](#topic64). That topic, despite its Fregean name, appears much later in our story. But note that the model can't quite shake the idea that it should be placed in this topic. It's this kind of assessment that keeps the graphs for this topic from really collapsing.

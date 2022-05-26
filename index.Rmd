@@ -139,7 +139,14 @@ year_topic_mean <- all_journals_titles_and_topics %>% ungroup() %>%
 
 relabeled_articles <- merge(all_journals_titles_and_topics, year_topic_mean) %>% 
   select(-topic) %>% 
-  dplyr::rename(topic = rank)
+  dplyr::rename(topic = rank) %>% 
+  mutate(mcitation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":",fpage,"–",adjlpage,".")
+  )
+  )
 
 high_cite_gamma <- merge(highly_cited, relabeled_articles, by = "document") %>% arrange(desc(Cites))
 

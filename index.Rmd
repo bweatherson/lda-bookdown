@@ -8,6 +8,7 @@ link-citations: yes
 site: bookdown::bookdown_site
 description: Building models of the trends in philosophy journals using LDA.
 bibliography: topic.bib
+nocite: '@*'
 always_allow_html: true
 ---
 

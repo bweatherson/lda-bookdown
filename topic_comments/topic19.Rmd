@@ -26,6 +26,6 @@ cat("\n
 	\n")
 ```
 
-I've called this _temporal paradoxes_, though that should be read  a bit disjunctively. The core of the topic is articles about Zeno's paradoxes. But there are some other articles about paradoxes. Carroll's paper (both the original and the repeat) is there I suspect because of the words _Achilles_ and _tortoise_. And there are several other articles about the passage of time that aren't connected to the paradoxes. Some of the recent work on temporal parts is in here, though more of it appears much later in [composition and constitution](#topic89)
+I've called this _temporal paradoxes_, though that should be read  a bit disjunctively. The core of the topic is articles about Zeno's paradoxes. But there are some other articles about paradoxes. Carroll's paper (both the original and the repeat) is there I suspect because of the words _Achilles_ and _tortoise_. And there are several other articles about the passage of time that aren't connected to the paradoxes. Some of the recent work on temporal parts is in here, though more of it appears much later in [composition and constitution](#topic89).
 
 The steady pace of articles here is quite striking, and maybe a touch ironic given the subject matter.

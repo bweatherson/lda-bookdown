@@ -427,10 +427,10 @@ kable(relabeled_articles %>%
           arrange(year) %>%
         mutate(gamma = round(gamma, 4)) %>%
          inner_join(the_categories, by = "topic") %>%
-          select(year, citation, subject, gamma),           
+          select(year, mcitation, subject, gamma),           
           col.names = c("Year", "Article", "Subject", "Probability"), 
 #          caption = paste0("Articles with Author ",y), style = "font-weight: bold")
-          caption = paste0("Articles with Author ",y))
+          caption = paste0("Articles with author ",y))
   } 
 ```
 
@@ -1440,7 +1440,7 @@ t <- all_journals_tibble %>%
   arrange(-wordcount) %>%
   top_n(10, wordcount) %>%
   inner_join(the_categories, by = "topic") %>%
-  select(citation, subject, wordcount)
+  select(mcitation, subject, wordcount)
 kable(t, 
       col.names = c("Article", "Subject", "Word Count"), 
       caption = paste0("Articles in which the word \'",x,"\' appears most often")

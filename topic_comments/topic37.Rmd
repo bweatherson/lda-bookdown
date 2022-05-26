@@ -30,9 +30,9 @@ This is just about the paradigm example of the model finding a disjunctive topic
 
 The two topics aren't wholly unconnected; they are both problems for the kind of philosophical world view that Nelson Goodman wanted to endorse. And, of course, Goodman himself had important views on how to solve each of them. But we shouldn't go overboard trying to figure out why the model put them in one place. Most model runs had these topics separated.
 
-You can see from the highly cited articles list that the model also put some articles on puzzles about verisimilitude in here. That makes more sense. Like the grue paradox, that's a puzzle about how to manage ampliative reasoning using just the tools of formal logic.
+As can be seen from the highly cited articles list the model also put some articles on puzzles about verisimilitude in here. That makes more sense. Like the grue paradox, that's a puzzle about how to manage ampliative reasoning using just the tools of formal logic.
 
-Because the topic is so disjunctive, it lends itself reasonably well to a binary sort. So I took the 555 articles the model found, and generated a 2-topic LDA from just those articles. 
+Because the topic is so disjunctive, it lends itself reasonably well to a binary sort. So I took the 555 articles the model found, and generated a two-topic LDA from just those articles. 
 
 ```{r binary-grue}
 load("binary_lda/lda_37.RData")
@@ -46,7 +46,7 @@ grue_years <- grue_gamma %>%
   filter(year > 1929)
 ```
 
-Here are the top 50 articles in what it called Topic 1.
+Here are the top fifty articles in what it called topic 1.
 
 ```{r binary-grue-table-one}
 grue_gamma_table_one <- grue_gamma %>%
@@ -67,7 +67,7 @@ datatable(grue_gamma_table_one,
       formatStyle(1:2,`text-align` = 'left')
 ```
 
-It's very confident about its binary sort, as you can see. (I've normally been doing these to four significant figures, but I needed 6 here just to get any distinctions.) But some of these are articles that it was not confident were in the category in the first place. Let's instead sort articles by the product of their probability of being in topic 37 (i.e., Sets and Grue) and their probability of being in subtopic 1 (which is starting to look like Grue).
+It's very confident about its binary sort, as is clear from the probabilities. (I've normally been doing these to four significant figures, but I needed six here just to get any distinctions.) But some of these are articles that it was not confident were in the category in the first place. Let's instead sort articles by the product of their probability of being in topic 37 (i.e., sets and grue) and their probability of being in subtopic 1 (which is starting to look like grue).
 
 ```{r binary-grue-table-two}
 grue_gamma_table_two <- grue_gamma %>%
@@ -88,7 +88,7 @@ datatable(grue_gamma_table_two,
       formatStyle(1:2,`text-align` = 'left')
 ```
 
-The first page here leads to things downstream of the grue paradox that I wasn't particularly familiar with: work on the proper formalisation of scientific theories, and on the foundations of learning algorithms. If you click onto page 2 you get more articles by Ullian and by Zabludowski, so we're in the mainstream of grue articles. Let's do the same thing for articles in sub-topic 2.
+The first page here leads to things downstream of the grue paradox that I wasn't particularly familiar with: work on the proper formalisation of scientific theories, and on the foundations of learning algorithms. Click onto page 2 and there are more articles by Ullian and by Zabludowski, so we're in the mainstream of grue articles. Let's do the same thing for articles in subtopic 2.
 
 ```{r binary-grue-table-three}
 grue_gamma_table_one <- grue_gamma %>%
@@ -109,7 +109,7 @@ datatable(grue_gamma_table_one,
       formatStyle(1:2,`text-align` = 'left')
 ```
 
-These aren't a million miles from set theory, but in some cases they are a little bit distinct. Let's have a look at what happens if we cross the probability of being in sub-topic 2 with the probability of being in topic 37.
+These aren't a million miles from set theory, but in some cases they are a little bit distinct. Let's have a look at what happens when crossing the probability of being in sub-topic 2 with the probability of being in topic 37.
 
 ```{r binary-grue-table-four}
 grue_gamma_table_two <- grue_gamma %>%
@@ -132,11 +132,11 @@ datatable(grue_gamma_table_two,
 
 And here we are looking at something very much like set theory.
 
-The point of all this was to demonstrate something of the power of this method of analysis. Even when the model does something that seems wrong - like smushing together two topics that don't really belong - we can use the very same tools to undo the mistake. Now that we've separated out the topics, we can look at their frequency over time.
+The point of all this was to demonstrate something of the power of this method of analysis. Even when the model does something that seems wrong—like smushing together two topics that don't really belong—we can use the very same tools to undo the mistake. Now that the topics are separated their frequency over time can be seen.
 
 This is a graph of the distribution of those 555 articles into the two buckets (grue and sets) over time.
 
-```{r grue-binary-graph, fig.height=5, fig.cap = "Articles on Sets and Articles on Grue", fig.alt = alt_text}
+```{r grue-binary-graph, fig.height=5, fig.cap = "Articles on sets and articles on grue", fig.alt = alt_text}
 grue_years <- grue_years %>%
   mutate(topic.x = as.factor(topic.x))
 ggplot(grue_years, aes(x = year, y = g, group = topic.x, color = topic.x)) + 
@@ -149,5 +149,5 @@ ggplot(grue_years, aes(x = year, y = g, group = topic.x, color = topic.x)) +
 alt_text <- "A scatterplot showing how the model divides up articles into sets and grue. It is described briefly in the text below."
 ```
 
-You can see that both of the topics peak in the late 1960s and early 1970s. And set theory doesn't fall away quite as quickly as grue. But I had expected the difference between the two topics to get rather dramatic after 2000, and it doesn't really. The model, somewhat sensibly, puts other work on formal learning in with grue, and this means the topic doesn't crash away.
+One can see that both of the topics peak in the late 1960s and early 1970s. And set theory doesn't fall away quite as quickly as grue. But I had expected the difference between the two topics to get rather dramatic after 2000, and it doesn't really. The model, somewhat sensibly, puts other work on formal learning in with grue, and this means the topic doesn't crash away.
 

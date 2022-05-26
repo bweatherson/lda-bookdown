@@ -26,6 +26,6 @@ cat("\n
 	\n")
 ```
 
-The bulk of this topic is issues about punishment. And it's striking just how little coverage this gets in the 'generalist' journals. This particular gap wasn't the reason that I included _Ethics_ and _Philosophy and Public Affairs_ in the study, but it would have done just as well as a reason. Punishment is a really important philosophical topic, and most philosophy journals simply don't talk about it.
+The bulk of this topic is issues about punishment. And it's striking just how little coverage this gets in the "generalist" journals. This particular gap wasn't the reason that I included _Ethics_ and _Philosophy and Public Affairs_ in the study, but it would have done just as well as a reason. Punishment is a really important philosophical topic, and most philosophy journals simply don't talk about it.
 
 This topic also picks up some recent topics that are not, or at least not entirely, about laws and institutions. Instead they are about the role of mercy and forgiveness in personal interactions. These were best classed as ethics papers rather than social and political papers. A binary sort was able to find these papers as a separate category, so I was able to sort those papers into ethics. But the vast bulk of the papers are about legal punishment (and legal forgiveness and legal mercy), and those are put into social and political.

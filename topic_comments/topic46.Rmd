@@ -26,21 +26,21 @@ cat("\n
 	\n")
 ```
 
-This looks like a small topic, but that's largely because it gets squeezed between so many other topics. It ends up as a natural Philosophy of Science topic, though most of the topics around it are in Metaphysics. The weighted number of articles is so much higher than the raw number because so many papers in other topics are also in large part about laws.
+This looks like a small topic, but that's largely because it gets squeezed between so many other topics. It ends up as a natural philosophy of science topic, though most of the topics around it are in metaphysics. The weighted number of articles is so much higher than the raw number because so many papers in other topics are also in large part about laws.
 
-For instance, papers about explanation in a broadly Hempelian tradition are often classified as being about [Explanation](#topic61), even if they are in no small part about laws as well. See, for example, this paper which is very squarely in the Hempelian tradition.
+For instance, papers about explanation in a broadly Hempelian tradition are often classified as being about [explanation](#topic61), even if they are in no small part about laws as well. See, for example, this paper which is very squarely in the Hempelian tradition.
 
 ```{r hempel-history}
 individual_article("10.2307_2017635")
 ```
 
-And some papers about the necessity of laws get classified as either papers about [Modality](#topic80) or, less commonly, [Chemistry](#topic30).
+And some papers about the necessity of laws get classified as either papers about [modality](#topic80) or, less commonly, [chemistry](#topic30).
 
 ```{r bird-necessity-laws}
 individual_article("10.2307_3329211")
 ```
 
-Some papers that are largely about laws are also largely about [Chances](#topic44) and get put there.
+Some papers that are largely about laws are also largely about [chances](#topic44) and get put there.
 
 ```{r lange-chance}
 individual_article("10.2307_3873472")

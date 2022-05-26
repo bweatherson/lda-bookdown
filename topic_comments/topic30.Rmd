@@ -26,6 +26,6 @@ cat("\n
 	\n")
 ```
 
-I've called this Philosophy of Chemistry, but it could just as easily be described as non-fundamental physics. So any kinds of discussion of physics beyond the most fundamental is a candidate for ending up here.
+I've called this _philosophy of chemistry_, but it could just as easily be described as nonfundamental physics. Any kinds of discussion of physics beyond the most fundamental is a candidate for ending up here.
 
-But note this could easily be merged with the later topic on [Thermodynamics](#topic73), which captures a lot of recent work on philosophical issues arising out of the study of entropy. Looking at these graphs gives you a slight underestimate of how much time philosophers of physics (broadly construed) spend looking at anything other than maximally fundamental issues in physics. 
+But note this could easily be merged with the later topic on [thermodynamics](#topic73), which captures a lot of recent work on philosophical issues arising out of the study of entropy. Looking at these graphs gives a slight underestimate of how much time philosophers of physics (broadly construed) spend looking at anything other than maximally fundamental issues in physics. 

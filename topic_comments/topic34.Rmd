@@ -26,11 +26,11 @@ cat("\n
 	\n")
 ```
 
-A very small topic on the analytic/synthetic distinction. It's small because so many of the papers that you might have thought would end up in here are instead in [Radical Translation](#topic60), which is all about Quinean philosophy of language. So what we get here is a combination of four overlapping discussion threads.
+A very small topic on the analytic/synthetic distinction. It's small because so many of the papers that one might have thought would end up in here are instead in [radical translation](#topic60), which is all about Quinean philosophy of language. What we get here instead is a combination of four overlapping discussion threads.
 
 - A handful of early, Kant-influenced works.
 - A much larger number of works in or about positivism, with Carnap as the primary figure.
 - The distinction between two kinds of analyticity introduced by Boghossian.
 - Works in or about the Canberra plan, with Jackson and especially Chalmers as the central figures.
 
-The second of those is the largest, which is why this topic is turning up so early in our story. But the latter two are sizable as well, which is why this is turning up much later than the discussions of definitions or of verification.
+The second of those is the largest, which is why this topic is turning up so early in the story. But the latter two are sizable as well, which is why this is turning up much later than the discussions of definitions or of verification.

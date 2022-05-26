@@ -26,9 +26,9 @@ cat("\n
 	\n")
 ```
 
-I've called this Intention, but I might have been less misleading to call it Bratman studies. If you're looking at work in English in the last few decades on intention, there are two people who seem like they can't be left out: Michael Bratman, and Elizabeth Anscombe. And this topic certainly doesn't leave out Bratman - as you can see from the tables above. But it does leave out Anscombe.
+I've called this _intention_, but I might have been less misleading to call it _Bratman studies_. If you're looking at work in English in the last few decades on intention, there are two people who seem like they can't be left out: Michael Bratman, and Elizabeth Anscombe. And this topic certainly doesn't leave out Bratman—as can be seen from the tables above. But it does leave out Anscombe.
 
-Of course, it wasn't asked to place Anscombe's book; we're only doing journals. But there are a couple of articles that one might have hoped would be grouped together with these pieces.
+Of course, it wasn't asked to place Anscombe's book _Intention_; we're only doing journals. But there are a couple of articles that one might have hoped would be grouped together with these pieces.
 
 ```{r anscombe-intention-pas}
 individual_article("10.2307_4544583")
@@ -40,12 +40,12 @@ individual_article("10.2307_3326788")
 
 In both cases it thinks about putting the article in this topic, but decides against it. That's too bad. I'll leave it for readers to decide whether putting such a sharp gap between Bratman and Anscombe's work is a sign the model doesn't understand philosophy, or that it understands it all too well.
 
-Although there are some articles about Anscombe in this topic - just type 'Anscombe' into the search box above and you'll get a few - the model puts none of her own articles in here. In general it doesn't really feel like the model knows what to do with Anscombe. Here are the articles of hers that it analyses, along with the topic they most probably ended up in, and the probability that they are in that topic.
+Although there are some articles about Anscombe in this topic—just type 'Anscombe' into the search box above and it will return a few—the model puts none of her own articles in here. In general it doesn't really feel like the model knows what to do with Anscombe. Here are the articles of hers that it analyzes, along with the topic they most probably ended up in and the probability that they are in that topic.
 
 ```{r anscombe-author-table}
 author_dt(c("G. E. M. Anscombe"), "G. E. M. Anscombe")
 ```
 
-There are a couple of articles that it is reasonably confident about, it knows that papers with Anselm in the title are going to have to do with the ontological argument, but mostly it isn't very sure. 
+There are a couple of articles that it is reasonably confident about; it knows that papers with "Anselm" in the title are going to have to do with the ontological argument, but mostly it isn't very sure. 
 
-This topic also finds some of the articles that confused the algorithm on every single run of the model - articles about Freud. This is a tricky topic for the model because the Freud articles are so distinctive that it wants to put them together, yet they are so few that they never make a topic of their own. Over a bunch of model runs I saw the algorithm try putting the Freud articles together with just about anything you could think of. Here they ended up with Intention. Don't think too hard about why it might have done that; it feels completely random. The good news from my perspective is that for purposes of categorising the topic I didn't have to worry, since both Bratman-inspired work on Intention, and Freudian influenced philosophy both feel like Philosophy of Mind.
+This topic also finds some of the articles that confused the algorithm on every single run of the model—articles about Freud. This is a tricky topic for the model because the Freud articles are so distinctive that it wants to put them together, yet they are so few that they never make a topic of their own. Over a bunch of model runs I saw the algorithm try putting the Freud articles together with just about anything one could think of. Here they ended up with intention. Don't think too hard about why it might have done that; it feels completely random. The good news from my perspective is that for purposes of categorizing the topic I didn't have to worry, since both Bratman-inspired work on intention, and Freudian influenced-philosophy both feel like philosophy of mind.

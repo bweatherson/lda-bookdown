@@ -26,7 +26,7 @@ cat("\n
 	\n")
 ```
 
-This is a bit of a grab-bag of papers, loosely connected to the idea of depiction. I've classified it as Aesthetics because it includes papers like
+This is a bit of a grab-bag of papers, loosely connected to the idea of depiction. I've classified it as aesthetics because it includes papers like
 
 - [Analysis of the Poetic Similie](https://philpapers.org/rec/RIEAOT) by Max Reiser.
 - [On What A Painting Represents](https://philpapers.org/rec/ZIFOWA) by Paul Ziff.
@@ -35,7 +35,7 @@ This is a bit of a grab-bag of papers, loosely connected to the idea of depictio
 But it also includes papers that seem less neatly classed as Aesthetics, like
 
 - [You Can Call Me 'Stupid', ... Just Don't Call Me Stupid](https://philpapers.org/rec/FARYCC) by Delia Graff Fara.
-- [Self To Self](https://philpapers.org/rec/VELSTS) by David Velleman.
+- [Self to Self](https://philpapers.org/rec/VELSTS) by David Velleman.
 - [On the New Riddle of Induction](https://philpapers.org/rec/BAROTN-2) by S. F. Barker and Peter Achinstein.
 
-Still, the aesthetics papers predominate, so that's the category I've gone with. Very often these models would locate the Aesthetics papers quite neatly and put them in a category. But this model has separated out these papers on depiction from the larger category of papers on beauty. And the result is that the topic is fairly small.
+Still, the aesthetics papers predominate, so that's the category I've gone with. Very often these models would locate the aesthetics papers quite neatly and put them in a category. But this model has separated out these papers on depiction from the larger category of papers on beauty. And the result is that the topic is fairly small.

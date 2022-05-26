@@ -26,11 +26,11 @@ cat("\n
 	\n")
 ```
 
-You can see from the facet graphs that Perception has been a much bigger focus of some journals (e.g., _Proceedings of the Aristotelian Society_ and _Philosophy and Phenomenological Research_) than others (e.g., _Journal of Philosophy_ and _Analysis_). This sounds plausible to me, though it wasn't something I had realised until running the study.
+One can see from the facet graphs that perception has been a much bigger focus of some journals (e.g., _Proceedings of the Aristotelian Society_ and _Philosophy and Phenomenological Research_) than others (e.g., _Journal of Philosophy_ and _Analysis_). This sounds plausible to me, though it wasn't something I had realized until running the study.
 
-Perception has been a recurrent interest of philosophers throughout this period. It feels like there is something distinctive about this; very few topics have so much interest across such a long time. Here's one way to test whether that is true. If something is discussed a lot over a long time, it should do well on a maximin measure - it should have a high lower bound. The data here is a bit noisy to trust that measure though; some wide-ranging topics might have a single down year. So instead I'll use the following measure.
+Perception has been a recurrent interest of philosophers throughout this period. It feels like there is something distinctive about this; very few topics have so much interest across such a long time. Here's one way to test whether that is true. If something is discussed a lot over a long time, it should do well on a maximin measure—it should have a high lower bound. The data here is a bit noisy to trust that measure though; some wide-ranging topics might have a single down year. Instead I'll use the following measure.
 
-For each topic-year pair, I'll look at what proportion of the articles in that year are in that topic. (Using weighted sums here, not raw sums.) Then within each topic I'll rank the years from highest to lowest proportion. Then in those lists I'll find the 100th highest (i.e., the 39th lowest) proportion. This should give us a pretty good breadth measure while filtering out some noise. And here is what we get if we rank the topics that way.
+For each topic-year pair, I'll look at what proportion of the articles in that year are in that topic. (Using weighted sums here, not raw sums.) Then within each topic I'll rank the years from highest to lowest proportion. Then in those lists I'll find the one hundredth highest (i.e., the thirty-ninth lowest) proportion. This should give us a pretty good breadth measure while filtering out some noise. And here is what we get if we rank the topics that way.
 
 ```{r breadth-measure}
 breadth_measure <- weight_ratio %>%
@@ -44,10 +44,10 @@ breadth_measure <- weight_ratio %>%
   left_join(the_categories, by = "topic") %>%
   select(subject, y)
 
-kable(breadth_measure, col.names = c("Subject", "Proportion"), caption = "100th Highest Proportion for Each Topic") 
+kable(breadth_measure, col.names = c("Subject", "Proportion"), caption = "One hundredth highest proportion for each topic") 
 ```
 
-And we get the result that Perception is indeed a topic of continuing interest. The only ones ahead of it are [Ordinary Language](#topic24), which is a style as much as a topic, and [Methodology of Science](#topic26), which is obviously also something of continuiting interest to philosophers.
+And we get the result that perception is indeed a topic of continuing interest. The only ones ahead of it are [ordinary language philosophy](#topic24), which is a style as much as a topic, and [methodology of science](#topic26), which is obviously also something of continuiting interest to philosophers.
 
-Most of the others are not surprising, except perhaps for [Life and Value](#topic03). Part of what this shows is that that topic isn't quite as closely tied to [Idealism](#topic02) as it looks at first; it persists long after Idealism falls away.
+Most of the others are not surprising, except perhaps for [life and value](#topic03). Part of what this shows is that that topic isn't quite as closely tied to [idealism](#topic02) as it looks at first; it persists long after idealism falls away.
 

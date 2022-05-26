@@ -26,14 +26,14 @@ cat("\n
 	\n")
 ```
 
-It's basically _On Denoting_.
+It's basically "On Denoting".
 
-_Mind_ reprinted _On Denoting_ for its 100th anniversary, and the model provides slightly different probabilities for it. Partially this is because this is a non-deterministic model, and partially it's because there was a little bit of editorial introduction that made it into the 2005 text.
+_Mind_ reprinted "On Denoting" for its one hundredth anniversary, and the model provides slightly different probabilities for it. Partially this is because this is a nondeterministic model, and partially it's because there was a little bit of editorial introduction that made it into the 2005 text.
 
-Some of the papers in here are best thought of as history papers. This is one of the challenges with these topics from early analytic work. We're covering such a long range that we include papers that were not at all history papers, like say _On Denoting_, as well as historical work on those papers. But I think it makes much more sense to call this a history topic.
+Some of the papers in here are best thought of as history papers. This is one of the challenges with these topics from early analytic work. We're covering such a long range that we include papers that were not at all history papers, like say "On Denoting", as well as historical work on those papers. But I think it makes much more sense to call this a history topic.
 
-_On Denoting_ is one of the most important papers in the history of analytic philosophy, so it makes sense that it would be a topic of its own, that its importance would be recognised immediately, and that it would lead the citation counts. Except only the first of those three things is true. 
+"On Denoting" is one of the most important papers in the history of analytic philosophy, so it makes sense that it would be a topic of its own, that its importance would be recognized immediately, and that it would lead the citation counts. Except only the first of those three things is true. 
 
-You do see a bit of attention paid to it in 1911 and 1912 - there is an important exchange between Russell and [Emily Elizabeth Constance Jones](https://plato.stanford.edu/entries/emily-elizabeth-constance-jones/) - but then it is basically invisible from the start of World War One to the end of World War Two. This pattern, Russell writes a super important paper but it only gets proper attention decades later, will repeat itself a bit, though this is the paradigm case.
+A bit of attention paid to it in 1911 and 1912—there is an important exchange between Russell and [Emily Elizabeth Constance Jones](https://plato.stanford.edu/entries/emily-elizabeth-constance-jones/)—but then it is basically invisible from the start of World War I to the end of World War II. This pattern—Russell writes a super important paper but it only gets proper attention decades later—will repeat itself a bit, though this is the paradigm case.
 
-And I was a little surprised which papers are cited more often than _On Denoting_. According to Google, at least, _What Is It Like to Be a Bat?_ has twice its citations. _What Is It Like to Be a Bat?_ is an important paper too, but still this was a bit of a shock.
+And I was a little surprised at which papers are cited more often than "On Denoting". According to Google, at least, "What Is It Like to Be a Bat?" has twice its citations. "What Is It Like to Be a Bat?" is an important paper too, but still this was a bit of a shock.

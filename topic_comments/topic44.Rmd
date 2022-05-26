@@ -26,11 +26,11 @@ cat("\n
 	\n")
 ```
 
-I've called this Chance, and it does have a lot to do with chance, but a more perspicuous name would be Philosophers of Science talk about Probability. Because the big difference between this and [Formal Epistemology](#topic84) is that the folks here are philosophers of science, and the folks there are epistemologists. There are a lot of papers about chance in here - the second characteristic article is Michael Strevens responding to David Lewis's revision of the Principal Principle - but there are also a lot of papers about probabilistic reasoning in scientific methdology.
+I’ve called this _chance_, and it does have a lot to do with chance, but a more perspicuous name would be _philosophers of science talk about probability_ because the big difference between this and [formal epistemology](#topic84) is that the folks here are philosophers of science, and the folks there are epistemologists. There are a lot of papers about chance in here—the second characteristic article is Michael Strevens responding to David Lewis’s revision of the “Principal Principle”—but there are also a lot of papers about probabilistic reasoning in scientific methodology.
 
-Now I was very surprised that the model could tell the difference between the philosophy of science articles and the epistemology articles. I have a reasonably strong "know-it-when-I-see-it" sense of how philosophy of probability gets divided up into philosophy of science and epistemology. But I wasn't sure it was anything more than a set of gut reactions/prejudices, and I would not have expected at all that a machine learning algorithm could replicate it. Yet here we are - the model really did do a very good job of splitting them up.
+Now, I was very surprised that the model could tell the difference between the philosophy of science articles and the epistemology articles. I have a reasonably strong “know-it-when-I-see-it” sense of how philosophy of probability gets divided up into philosophy of science and epistemology. But I wasn’t sure it was anything more than a set of gut reactions/prejudices, and I would not have expected at all that a machine-learning algorithm could replicate it. Yet here we are—the model really did do a very good job of splitting them up.
 
-It's not like it doesn't think the two are connected. This topic and Formal Epistemology are two of the closest connected topics. But it does just enough to tell them apart. We can see this by looking at two David Lewis articles. 
+It’s not like it doesn’t think the two are connected. This topic and formal epistemology are two of the closest connected topics. But it does just enough to tell them apart. We can see this by looking at two David Lewis articles.
 
 ```{r lewis-bug}
 individual_article("10.2307_2254396")

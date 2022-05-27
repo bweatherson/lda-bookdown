@@ -26,6 +26,6 @@ cat("\n
 	\n")
 ```
 
-Given how big a topic this was when I was a graduate student, I was very surprised that it wasn't bigger than it turned out to be. But a look at the overall graph explains why I got this wrong. The high water mark for this topic was from about 1985-1995. When I was in graduate school, it really was over all the journals that we were reading. We couldn't have predicted that it would fall from nearly 2% of the articles to under 1%.
+Given how big a topic this was when I was a graduate student, I was very surprised that it wasn't bigger than it turned out to be. But a look at the overall graph explains why I got this wrong. The high water mark for this topic was from about 1985–1995. When I was in graduate school, it really was all over the journals that we were reading. We couldn't have predicted that it would fall from nearly 2 percent of the articles to under 1 percent.
 
-One of the upsides of having a computer model analyse the data rather than going with one's own impressions is that it reduces the impact of having an idiosyncratic set of experiences in cases like this one.
+One of the upsides of having a computer model analyze the data rather than going with one's own impressions is that it reduces the impact of having an idiosyncratic set of experiences in cases like this one.

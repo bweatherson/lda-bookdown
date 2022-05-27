@@ -26,6 +26,6 @@ cat("\n
 	\n")
 ```
 
-The smallest of our topics, and a sign that at least in philosophy of biology, the model had to carve things really finely to come up with 90 topics. One of the big challenges with setting the number of topics is that a choice that ends up with a relatively natural division in some fields can leave you with a very coarse grained, or, as in this case, a very fine grained division in other fields. This probably could have been put together with work on [Mechanisms](#topic18) without a great deal of loss.
+The smallest of our topics, and a sign that at least in philosophy of biology, the model had to carve things really finely to come up with ninety topics. One of the big challenges with setting the number of topics is that a choice that ends up with a relatively natural division in some fields can produce a very coarse-grained, or, as in this case, a very fine-grained division in other fields. This probably could have been put together with work on [mechanisms](#topic18) without a great deal of loss.
 
-The thing that jumps out to me about this topic is how much impact it had on the citation measures. There are only 84 articles in the topic, so you'd expect only 1-2 to show up in the highly cited articles, but instead we get 5. This is a measure of the influence of Millikan on philosophy, since so much of this topic is organised around her work.
+The thing that jumps out to me about this topic is how much impact it had on the citation measures. There are only eighty-four articles in the topic, so you'd expect only one to two to show up in the highly cited articles, but instead we get five. This is a measure of the influence of Ruth Millikan on philosophy, since so much of this topic is organized around her work.

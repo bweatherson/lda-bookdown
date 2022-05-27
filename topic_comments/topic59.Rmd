@@ -26,7 +26,7 @@ cat("\n
 	\n")
 ```
 
-The graphs by journal do not make this look like a particularly big topic, but as you can see from the numbers at the top, it's the 8th biggest by weighted count. And that's not surprising - I would have guessed that theories of truth would be a big deal. And so they are, except they aren't a particularly big part of any journal in any year except for _Mind_ in the early 2000s.
+The graphs by journal do not make this look like a particularly big topic, but the numbers at the top show, it's the eighth biggest by weighted count. And that's not surprising—I would have guessed that theories of truth would be a big deal. And so they are, except they aren't a particularly big part of any journal in any year except for _Mind_ in the early 2000s.
 
 The spike in the late 1900s and early 1910s is due to an interest in theories of truth in pragmatist and voluntarist philosophical theories. Some of these papers involved early contributions from Susan Stebbing, who would go on to contribute many papers to the British journals we're looking at.
 
@@ -40,6 +40,6 @@ The only one of these 27 articles that is actually in this topic is the earliest
 individual_article("10.2307_4543842")
 ```
 
-Unlike almost every other topic with a notable presence in pre-war philosophy, Truth was undergoing a resurgence towards the end of the period I'm looking at. It's moved from being a metaphysical (or perhaps epistemological) concern to a more distinctively logical one. That is, most of those articles on the right of the graph are about paradoxes, and about how and whether classical logic should be revised to handle them. That's a somewhat different subject matter to what, say, Stebbing and Schiller were debating, but I think the model got it right in linking them together. 
+Unlike almost every other topic with a notable presence in prewar philosophy, truth was undergoing a resurgence towards the end of the period I'm looking at. It's moved from being a metaphysical (or perhaps epistemological) concern to a more distinctively logical one. That is, most of those articles on the right of the graph are about paradoxes, and about how and whether classical logic should be revised to handle them. That's a somewhat different subject matter to what, say, Stebbing and Schiller were debating, but I think the model got it right in linking them together. 
 
-And between them we see a lot of articles on Tarskian and Davidsonian theories of truth. A perhaps surprising result of this is that 'snow' is a keyword for the topic. I'm a little surprised that 'white' doesn't come with it.
+And between them there are a lot of articles on Tarskian and Davidsonian theories of truth. A perhaps surprising result of this is that _snow_ is a keyword for the topic. I'm a little surprised that _white_ doesn't come with it.

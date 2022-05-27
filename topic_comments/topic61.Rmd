@@ -26,8 +26,8 @@ cat("\n
 	\n")
 ```
 
-I've called this _Explanation_, but that's potentially misleading. It's really focussed on non-causal approaches to explanation. I suspect that's less because non-causal theories of explanation are distictive, and more because there are so many other topics that discuss causation.
+I've called this _explanation_, but that's potentially misleading. It's really focussed on noncausal approaches to explanation. I suspect that's less because noncausal theories of explanation are distictive, and more because there are so many other topics that discuss causation.
 
-This topic ends up being somewhat squeezed, so the numbers here understate the importance of Explanation as a topic. Some papers you might intuitively classify as being about explanation end up in [Causation](#topic55). Others end up in [Laws](#topic46). Yet others end up in [Theories and Realism](#topic67). So the numbers here are more of a lower bound for the importance of explanation than anything else.
+This topic ends up being somewhat squeezed, so the numbers here understate the importance of explanation as a topic. Some papers you might intuitively classify as being about explanation end up in [causation](#topic55). Others end up in [laws](#topic46). Yet others end up in [theories and realism](#topic67). So the numbers here are more of a lower bound for the importance of explanation than anything else.
 
-That said, the upwards trend here is a bit interesting to me. I wouldn't have expected that just from the topic. Part of the story is that this topic also includes papers on reduction (at least if they didn't get classified in Laws or in Theories and Realism), and there was a bit of a regrowth of interest in that in the 2000s and early 2010s.
+That said, the upward trend here is a bit interesting to me. I wouldn't have expected that just from the topic. Part of the story is that this topic also includes papers on reduction (at least if they didn't get classified in laws or in theories and realism), and there was a bit of a regrowth of interest in that in the 2000s and early 2010s.

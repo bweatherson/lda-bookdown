@@ -26,13 +26,13 @@ cat("\n
 	\n")
 ```
 
-This feels like a narrow topic to me, but the numbers suggest it is almost exactly the median size of topic. I think this is because the _Journal of Philosophy_ published a lot of articles on Indeterminacy of Translation from the 1950s all the way through at least the 1990s. Indeed, 111 of the 342 articles in this topic are from _Journal of Philosophy_.
+This feels like a narrow topic to me, but the numbers suggest it is almost exactly the median size of topic. I think this is because the _Journal of Philosophy_ published a lot of articles on indeterminacy of translation from the 1950s all the way through at least the 1990s. Indeed, 111 of the 342 articles in this topic are from the _Journal of Philosophy_.
 
-Within philosophy of language, this topic feels like a bridge between the Wittgensteinian work done before and immediately after the war, and the work post-Montague that is more continuous with linguistics. You obviously see some level of formalism in the papers here, but nothing like the Montagovian works.
+Within philosophy of language, this topic feels like a bridge between the Wittgensteinian work done before and immediately after the war, and the work post-Montague that is more continuous with linguistics. There is some level of formalism in the papers here, but nothing like the Montagovian works.
 
-The core figure in this topic is clearly Quine, but you see the topic get a second burst of life in the mid-1970s. That slowly fades away, but never quite ends.
+The core figure in this topic is clearly Quine, but the topic gets a second burst of life in the mid-1970s. That slowly fades away, but never quite ends.
 
-And it is possible that Robbie Williams's work will lead to a reversal of the downward trend. Indeed, if you squint you can almost make out that it had already reversed the trend by the late 2000s. Here are the papers Robbie had in the data-set as of 2013, though he has published much more in these journals since then.
+And it is possible that Robbie Williams's work will lead to a reversal of the downward trend. Indeed, one could squint and almost make out that it had already reversed the trend by the late 2000s. Here are the papers Robbie had in the data-set as of 2013, though he has published much more in these journals since then.
 
 ```{r robbie-williams-papers}
 author_kable(c("J. R. G. Williams", "J. Robert G. Williams"), "Robbie Williams")

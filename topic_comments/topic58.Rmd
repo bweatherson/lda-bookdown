@@ -26,6 +26,6 @@ cat("\n
 	\n")
 ```
 
-This is another topic that came in a little smaller than I expected, perhaps in part because the model was construing it slightly more narrowly than I was. I certainly would have guessed that articles about Minds and Machines would be much more than 0.6-0.8% of the articles.
+This is another topic that came in a little smaller than I expected, perhaps in part because the model was construing it slightly more narrowly than I was. I certainly would have guessed that articles about minds and machines would be much more than 0.6–0.8 percent of the articles.
 
-The explanation here is that the topic got squeezed from all sides. There are topics about [Physicalism](#topic09), [Conceivability Arguments](#topic55), [Wide Content](#topic85) and [Cognitive Science](#topic87). What's left here are articles on a very specific range of arguments about whether minds are best thought of as machines. Put that way, the real surprise is that it hasn't faded more. You can see a small downward trajectory towards the right-hand edge, but only a small one. Issues that Turing, Gödel, Searle and others raised continue to fascinate philosophers.
+The explanation here is that the topic got squeezed from all sides. There are topics about [physicalism](#topic09), [conceivability arguments](#topic55), [wide content](#topic85) and [cognitive science](#topic87). What's left here are articles on a very specific range of arguments about whether minds are best thought of as machines. Put that way, the real surprise is that it hasn't faded more. There is a small downward trajectory towards the right-hand edge, but only a small one. Issues that Turing, Gödel, Searle and others raised continue to fascinate philosophers.

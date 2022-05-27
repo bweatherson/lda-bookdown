@@ -26,20 +26,20 @@ cat("\n
 	\n")
 ```
 
-When I did a new model run, one of the first things I checked was whether the model had found the philosophy of mathematics topic. And the quickest way to check for that was whether it had clearly put the two big Benacerraf papers in the same topic. Most models passed this test, but some of them did so less clearly than others. This model run just passes the test. Here are the probability distributions over the 90 topics for the two articles.^[Remember that these tables are cropped at 2%; the model assigns probabilities to all 90 topics but I'm not showing them all here.]
+When I did a new model run, one of the first things I checked was whether the model had found the philosophy of mathematics topic. And the quickest way to check for that was whether it had clearly put the two big Benacerraf papers in the same topic. Most models passed this test, but some of them did so less clearly than others. This model run just passes the test. Here are the probability distributions over the ninety topics for the two articles.^[Remember that these tables are cropped at 2%; the model assigns probabilities to all 90 topics but I'm not showing them all here.]
 
 ```{r benacerraf-one}
 individual_article("10.2307_2183530")
 ```
 
-That makes sense - it is a Philosophy of Mathematics article, but it is largely about sets, and it can't escape the fact that it's written during the era of Ordinary Language Philosophy. But the second table is a closer run thing.
+That makes sense—it is a philosophy of mathematics article, but it is largely about sets, and it can't escape the fact that it's written during the era of ordinary language philosophy. But the second table is a closer run thing.
 
 ```{r benacerraf-two}
 individual_article("10.2307_2025075")
 ```
 
-Again, this sort of makes sense - the article is about truth. But the model is much less sure how to classify this article, as evidenced by the number of topics that get a probability between 4.6% and 7.4%.
+Again, this sort of makes sense—the article is about truth. But the model is much less sure how to classify this article, as evidenced by the number of topics that get a probability between 4.6 percent and 7.4 percent.
 
-What the model is working with is a conception of philosophy of mathematics that is centered around two debates. One is the nature of infinity, the other is the nature of proof. That's not a terrible take on twentieth century philosophy of mathematics, but it does mean that papers like [Mathematical Truth](https://philpapers.org/rec/BENMT) get treated as less than fully paradigmatic.
+What the model is working with is a conception of philosophy of mathematics that is centered around two debates. One is the nature of infinity, the other is the nature of proof. That's not a terrible take on twentieth-century philosophy of mathematics, but it does mean that papers like "[Mathematical Truth](https://philpapers.org/rec/BENMT)" get treated as less than fully paradigmatic.
 
-I mostly look at how big a topic is by eyeballing the 12 journal graph. But in this case that would be highly misleading. Because this topic is spread across many journals, and many years, those twelve lines look like they barely have a pulse. But the tables show that, depending on how you measure size, this is the 23rd or 40th biggest topic. So many other topics are concentrated in a small number of journals or times, and they make a bigger visual impact than topics like this that keep chugging along.
+I mostly look at how big a topic is by eyeballing the twelve journal graph. But in this case that would be highly misleading. Because this topic is spread across many journals, and many years, those twelve lines look like they barely have a pulse. But the tables show that, depending on size is measured, this is the twenty-third or fourtieth biggest topic. So many other topics are concentrated in a small number of journals or times, and they make a bigger visual impact than topics like this that keep chugging along.

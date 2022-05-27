@@ -26,15 +26,15 @@ cat("\n
 	\n")
 ```
 
-For a topic that I thought was one of the central, even dominant, topics in twentieth century metaphysics, this ended up having a smaller presence in the data than I expected. It's not tiny, either 36th or 27th depending on which measurement you use. But the graphs don't jump up nearly as much as I expected.
+For a topic that I thought was one of the central, even dominant, topics in twentieth century metaphysics, this ended up having a smaller presence in the data than I expected. It's not tiny, either thirty-sixty or twenty-seventy depending on which measurement is used. But the graphs don't jump up nearly as much as I expected.
 
 Partially this is because it's kind of hard to get the boundaries of discussions of causation right. Here are three things that different models struggled with.
 
 1. A lot of models wanted to separate out pre-Lewisian work on causation, often centered around Mackie, from Lewisian work. This model decided (correctly I think) that they belong together.
-2. The boundary between work on Causation, and work on [Laws](#topic46) is pretty blurry. The boundary between work on Causation and work on [Explanation](#topic61) might be even blurrier.
-3. A lot of recent work on causal models looks distinctive enough that it can get carved off, as it does here into a topic on [Models](#topic88).
+2. The boundary between work on causation, and work on [laws](#topic46) is pretty blurry. The boundary between work on causation and work on [explanation](#topic61) might be even blurrier.
+3. A lot of recent work on causal models looks distinctive enough that it can get carved off, as it does here into a topic on [models](#topic88).
 
-This model is very confident that Lewis's two _Journal of Philosophy_ articles belong either in Causation or in Laws, but it's not completely sold on them being causation articles.
+This model is very confident that Lewis's two _Journal of Philosophy_ articles belong either in causation or in laws, but it's not completely sold on them being causation articles.
 
 ```{r lewis-causation-one}
 individual_article("10.2307_2025310")
@@ -44,7 +44,7 @@ individual_article("10.2307_2025310")
 individual_article("10.2307_2678389")
 ```
 
-And this isn't a shortcoming of the models, I think. These topics really do blend together, and it's hard to say where one starts and the other ends. One advantage of using a probabilistic model like this is that we can model blurred boundaries as intermediate probabilities, and still get a sense of the size of each topic without making arbitrary distinctions. The three problems above still remain, and you could put the boundary between Causation and Laws, Explanation and Models at very different places. But I think this is a decent picture of the size of discussions of Causation over time.
+And this isn't a shortcoming of the models, I think. These topics really do blend together, and it's hard to say where one starts and the other ends. One advantage of using a probabilistic model like this is that blurred boundaries can be modeled as intermediate probabilities, and it is still possible to roughly measure the size of each topic without making arbitrary distinctions. The three problems above still remain, and one could put the boundary between causation and laws, explanation and models at very different places. But I think this is a decent picture of the size of discussions of causation over time.
 
 Note one other thing about this topic. There is an [early Russell paper](https://philpapers.org/rec/RUSOTN-7) that is (just barely) in the topic.
 
@@ -52,4 +52,4 @@ Note one other thing about this topic. There is an [early Russell paper](https:/
 individual_article("10.2307_4543833")
 ```
 
-But it barely shows up in the graphs. This is such a common phenomenon; topics that are huge parts of late twentieth century philosophy are also the topic of early Russell papers. But the Russell papers made next to no impact in these journals at the time he wrote them.
+But it barely shows up in the graphs. This is such a common phenomenon; topics that are huge parts of late twentieth-century philosophy are also the topic of early Russell papers. But the Russell papers made next to no impact in these journals at the time he wrote them.

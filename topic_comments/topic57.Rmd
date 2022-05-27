@@ -26,8 +26,8 @@ cat("\n
 	\n")
 ```
 
-I'm going to say a bit more in Chapter \@ref(sortingchapter) about why this is in Ethics, because it turned out to be one of the hardest topics to classify. Note for now that the keywords suggest that the focus of this topic is on the utility end of the probability-and-utility model of choice, and that suggests it naturally fits with value theory.
+I'm going to say a bit more in chapter \@ref(sortingchapter) about why this is in ethics, because it turned out to be one of the hardest topics to classify. Note for now that the keywords suggest that the focus of this topic is on the utility end of the probability-and-utility model of choice, and that suggests it naturally fits with value theory.
 
-The graph that runs through each journal separately shows that this topic is more prevalent in _Ethics_ than any other journal, which is consistent with classifying the topic in Ethics. _Journal of Philosophy_ started taking an interest in the late 1970s, but it's hard to see a trend after this. Some years there is a lot of decision theory work in _Analysis_, but some years there is not. And there was a flood of work, mostly centered around the [Pasadena Game](https://philpapers.org/rec/NOVVE) in _Mind_ in the 2000s. 
+The graph that runs through each journal separately shows that this topic is more prevalent in _Ethics_ than any other journal, which is consistent with classifying the topic in ethics. _Journal of Philosophy_ started taking an interest in the late 1970s, but it's hard to see a trend after this. Some years there is a lot of decision theory work in _Analysis_, but some years there is not. And there was a flood of work that was mostly centered around the [Pasadena game](https://philpapers.org/rec/NOVVE) in _Mind_ in the 2000s. 
 
-But mostly there is a little less here than I expected. I think part of what's happened is that some work I was mentally classifying as Decision Theory the model instead treated as [Formal Epistemology](#topic84). And that's why this is mostly sitting at or even under 1% frequency.
+But mostly there is a little less here than I expected. I think part of what's happened is that some work I was mentally classifying as decision theory the model instead treated as [formal epistemology](#topic84). And that's why this is mostly sitting at or even under 1 percent frequency.

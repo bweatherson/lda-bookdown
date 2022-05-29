@@ -175,15 +175,15 @@ It is also somewhat useful to see the graph animated. This shows all the lines o
 
 ## Graph Choices {#graph-choices}
 
-In the previous [section](#main-summary-graph) I presented one way of graphing the trends in these ninety topics. In making that graph I made three major choices, each of which I can see good arguments either way. In this section I'm going to say what these choices are, and in the subsequent sections I'll show you what the graphs look like with the other choices. This is getting particularly deep in the weeds, and you wouldn't lose a lot by jumping ahead to the next chapter rather than going over these three questions.
+In the previous [section](#main-summary-graph) I presented one way of graphing the trends in these ninety topics. In making that graph I made three major choices, and in each case there is a good argument for doing things the other way. In this section I'm going to say what these choices are, and in the subsequent sections I'll show what the graphs look like with the other choices. This is getting particularly deep in the weeds, and one wouldn't lose a lot by jumping ahead to the next chapter rather than going over these three questions.
 
-First, should the y-axis be a probability sum, or a count? That is, for each topic-year pair, do work out the expected number of articles in that topic from that year (given the LDA-generated probability function), or do we count the number of articles from that year whose probability of being in this topic is maximal? I'll call these options the weighted count and raw count respectively.
+First, should the Y-axis be a probability sum, or a count? That is, for each topic-year pair, do we work out the expected number of articles in that topic from that year (given the LDA-generated probability function), or do we count the number of articles from that year whose probability of being in this topic is maximal? I'll call these options the weighted count and raw count respectively.
 
-Second, do we present the result as a sum, or do we normalise the result by presenting it as a ratio of the total number of articles from that year? I'll call these the sum and frequency options.
+Second, do we present the result as a sum, or do we normalize the result by presenting it as a ratio of the total number of articles from that year? I'll call these the sum and frequency options.
 
-Third, do we take articles or pages to be the basic unit? In practice, that means do we simply add up how many articles are in a topic, or do we weight the articles by their page length. (And, if we're using frequencies, suitably increase the denominator we're using for normalisation.)
+Third, do we take articles or pages to be the basic unit? In practice, taking articles as the basic unit means adding up how many articles are in a topic, while taking pages as the basic unit involves weighting each article by its page length. (And, if using frequencies, suitably increasing the denominator being used for normalization.)
 
-These three choices totally cross-cut each other, so we get eight possible things to go on the y-axis.
+These three choices totally cross-cut each other, so we get eight possible things to go on the Y-axis.
 
 | Number | Short Description | Long Description |
 | -----: | :---------------- | :----------------|
@@ -196,26 +196,26 @@ These three choices totally cross-cut each other, so we get eight possible thing
 | 7      | Weighted frequency of pages | The value in 5, divided by the total number of pages in that year |
 |  8     | Raw frequency of pages | The value in 6, divided by the total number of pages in that year |
 
-Table: (\#tab:eight-types) Eight Types of Graph
+Table: (\#tab:eight-types) Eight types of graph.
 
 So why did I go with option 1? Well, all of the other options have flaws that made me want to try something different.
 
-The raw counts are too uneven, and require trendlines to be added to the graph. And they are fairly arbitrary. If the model says that something has probability 0.21 of being in topic X, and 0.18 of being in topic Y, and 0.16 of being in topic Z, and so on for several other topics, it feels like throwing away information to simply classify it in X. This is especially true if Y and Z are very similar topics, and the model could easily have merged them, while X is fairly different.
+The raw counts are too uneven, and require trendlines to be added to the graph. And they are fairly arbitrary. If the model says that something has probability 0.21 of being in topic X, 0.18 of being in topic Y,  0.16 of being in topic Z, and so on for several other topics, it feels like throwing away information to simply classify it in X. This is especially true if Y and Z are very similar topics, and the model could easily have merged them, while X is fairly different.
 
-Given the variation in the number of articles and pages being published each year, it makes sense to express trends as a proportion of the annual whole, rather than as a count. The problem is that there is too much of a mono-culture (or perhaps bi-culture) in the early years of the data. Idealism and Psychology routinely account for more than 30% of the articles (or pages) in a year. So any graph we have would have to have a y-axis that stretches that high. But post-1970, the difference between the prominent and less prominent topics is the difference between being 1% and 3% of the total. There is no natural way to represent those things on a single graph.
+Given the variation in the number of articles and pages being published each year, it makes sense to express trends as a proportion of the annual whole, rather than as a count. The problem is that there is too much of a monoculture (or perhaps biculture) in the early years of the data. Idealism and psychology routinely account for more than 30% of the articles (or pages) in a year. So any graph we have would have to have a Y-axis that stretches that high. But post-1970, the difference between the prominent and less prominent topics is the difference between being 1 percent and 3 percent of the total. There is no natural way to represent those things on a single graph.
 
-There are a few ways around this, and the proportion based measures make so much sense that I'll use most of the following tricks somewhere in the book.
+There are a few ways around this, and the proportion-based measures make so much sense that I'll use most of the following tricks somewhere in the book.
 
-- We can present the different topics on different charts, and hope that a combination of labelling the axes carefully and putting reminders about the axis labels in the text will make the differences apparent. I did that in the previous [chapter](#all-90-topics).
-- We can separate out the journals, so prominent modern topics are a reasonable percentage of a particular journal. I did that in the previous [chapter](#all-90-topics) too.
-- We can leave off the early years of the data set, so the outliers go away. That works, but it literally involves removing data, and by the time we're done, the quantity of articles and pages has stabilised enough that it's less important to normalise.
-- We can literally leave off some data points, setting the limit to the y-axis below where outlier points are, and just list the outlier points in the text. For the purposes of these eight graphs there are too many points for that to be feasible, but I will use this trick from time to time later in the book.
+- We can present the different topics on different charts and hope that a combination of labelling the axes carefully and putting reminders about the axis labels in the text will make the differences apparent. I did that in the previous [chapter](#all-90-topics).
+- We can separate out the journals so prominent modern topics are a reasonable percentage of a particular journal. I did that in the previous [chapter](#all-90-topics) too.
+- We can leave off the early years of the data set, so the outliers go away. That works, but it literally involves removing data, and by the time we're done, the quantity of articles and pages has stabilized enough that it's less important to normalize.
+- We can literally leave off some data points, setting the limit to the Y-axis below where outlier points are, and just list the outlier points in the text. For the purposes of these eight graphs there are too many points for that to be feasible, but I will use this trick from time to time later in the book.
 
 While all of these work, none of them seem perfect, especially if we want a single graph to show everything. So I think it's best, at least for this chapter, to use sums not frequencies.
 
 Third, it is much simpler to use article counts, but there is some value to using pages as well. If one topic is frequently the subject of very short articles, especially in _Analysis_, and another topic is never discussed in short articles, then the difference between the article count and the page count will be substantial. And there is a sense in which the page count more reflects what is going on in the journal as a whole.
 
-To give you a sense of how this can happen, here are the weighted article counts and page counts for two topics just restricting attention to the 2000s (i.e., 2000-2009).
+To give you a sense of how this can happen, here are the weighted article counts and page counts for two topics just restricting attention to the 2000s (i.e., 2000–2009).
 
 ```{r pages-and-articles}
 page_ratio <- inner_join(weight_numerator, page_weight_numerator, by = c("year", "topic")) %>%
@@ -233,18 +233,18 @@ page_ratio_summary <- page_ratio %>%
   mutate(a = round(a, 2), p = round(p, 2)) %>%
   select(Subject = subject, Articles = a, Pages = p)
 
-kable(slice(page_ratio_summary, c(52, 59)), caption = "Article and Page Counts") %>% kable_styling(full_width = F)
+kable(slice(page_ratio_summary, c(52, 59)), caption = "Article and page counts.") %>% kable_styling(full_width = F)
 ```
 
-The articles on Truth were largely (though not exclusively) in _Analysis_. The articles on Liberal Democracy were largely (though again not exclusively) in _Philosophy and Public Affairs_. And as you can see, which of these two has a bigger presence in the journals in the 2000s is very much a function of whether you count by articles or pages. If you have a strong view about the journals in the 2000s, you might be able to use this to test which of the two is a more accurate measure.
+The articles on truth were largely (though not exclusively) in _Analysis_. The articles on liberal democracy were largely (though again not exclusively) in _Philosophy and Public Affairs_. Which of these is said to have a bigger presence in the journals in the 2000s is very much a function of whether the measure used is based on articles or pages. If one has a strong view about the journals in the 2000s, one might be able to use this to test which of the two is a more accurate measure.
 
-For my money, both seem like reasonably interesting facts about the journals. There were more articles about Truth, and more pages about Liberal Democracy, and that's all there is to say. If you worked on one but not the other, you would probably feel like it was a bigger deal, because both of them were very important in the 2000s. But otherwise it seems to me like both measures are useful.
+For my money, both seem like reasonably interesting facts about the journals. There were more articles about truth, and more pages about liberal democracy, and that's all there is to say. A philosopher working on one of these topics but not the other would probably feel their home topic was the bigger deal. But it seems to me like both measures are useful.
 
 I've usually used articles not pages though for a few reasons. 
 
-One is that the LDA assigns probabilities to articles, not individual pages, and it seems potentially misleading to use these article-based measures to implicitly say that there were, say, 1369 journal pages on Liberal Democracy in the 2000s. If my data included not just words in articles, but words on pages, I could have set the LDA up to assign topics to each page, and then it would have made more sense to count the pages. But that's not the data available.
+One is that the LDA assigns probabilities to articles, not individual pages, and it seems potentially misleading to use these article-based measures to implicitly say that there were, say, 1,369 journal pages on liberal democracy in the 2000s. If my data included not just words in articles, but words on pages, I could have set the LDA up to assign topics to each page, and then it would have made more sense to count the pages. But that's not the data available.
 
-Another is that the number of journal pages has been growing more rapidly than the number of journal articles. So if you measure by pages, the case for normalising, i.e., showing frequencies not counts, is even stronger. But the problems with normalising remain.
+Another is that the number of journal pages has been growing more rapidly than the number of journal articles. So if we measure by pages, the case for normalizing (i.e., showing frequencies not counts) is even stronger. But the problems with normalizing remain.
 
 These aren't super conclusive reasons, but they were enough that I'm mostly using article-based, rather than page-based, measures in this book.
 
@@ -266,7 +266,7 @@ facetgraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Ea
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 ```
 
-Note a couple of things about this as compared to the graphs back in section \@ref(main-summary-graph). One is that the y-axis is much higher. The raw count measure tends to amplify trends. Another is that the graphs are much noisier. There are still enough trends that I don't think it would really help to add trend-lines, but there are a lot more graphs that look just like scattered points, especially over ten-twenty year patches. I think this is basically a flaw in the underlying measure being amplified.
+Note a couple of things about this as compared to the graphs back in section \@ref(main-summary-graph). One is that the Y-axis is much higher. The raw count measure tends to amplify trends. Another is that the graphs are much noisier. There are still enough trends that I don't think it would really help to add trend-lines, but there are a lot more graphs that look just like scattered points, especially over ten-to-twenty year patches. I think this is basically a flaw in the underlying measure being amplified.
 
 The animation makes things a bit clearer here because the original features so many overlapping dots.
 
@@ -289,9 +289,9 @@ alt_text <- "The same data as above, but with each topic shown as a separate fac
 
 ```
 
-You get a slightly more readable graph if you focus just on the last 75 years of the graph, so 1939-2013.
+In this case, cutting down the to the last seventy-five years produces a much more readable graph.
 
-```{r graph3c, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Weighted Frequency of Articles", fig.alt = alt_text}
+```{r graph3c, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted frequency of articles.", fig.alt = alt_text}
 #Burper
 spaghettigraph(filter(weight_ratio, year > 1938), "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
 ```
@@ -302,7 +302,7 @@ There are too many overlapping dots here to see much, but the animation is a lit
   <source src="wfa.mp4" type="video/mp4">
 </video>
 
-And now you get an animated version of some graphs that you saw a lot in the previous chapter.
+And the result is an animated version of some graphs that appeared a lot in the previous chapter.
 
 ## Raw Frequency of Articles {#graph-rfa}
 

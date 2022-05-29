@@ -313,15 +313,15 @@ spaghettigraph(count_ratio, "Raw Frequency of Articles", "Raw Frequency of Artic
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw frequency. The underlying data is in Table B.4. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 ```
 
-```{r graph4b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Raw Frequency of Articles (Faceted)", fig.alt = alt_text}
+```{r graph4b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—raw frequency of articles (faceted).", fig.alt = alt_text}
 facetgraph(count_ratio, "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
-alt_text <- "The same data as above, but with each topic shown as a separate facet"
+alt_text <- "The same data as above, but with each topic shown as a separate facet."
 
 ```
 
-All this tells us is that there is a lot more diversity, and a lot more specialisation, in journals in the last 30 years than there was 120 years ago. Everything else gets lost in the noise.
+All this tells us is that there is a lot more diversity, and a lot more specialization, in journals in the last thirty years than there was 120 years ago. Everything else gets lost in the noise.
 
-It's only a little clearer if you filter down even to the last 75 years.
+It's only a little clearer in the graph that only shows the last seventy-five years.
 
 ```{r graph4c, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Raw Frequency of Articles", fig.alt = alt_text}
 spaghettigraph(filter(count_ratio, year > 1938), "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
@@ -333,23 +333,23 @@ The animation is a bit more revealing.
   <source src="rfa.mp4" type="video/mp4">
 </video>
 
-But what it reveals is primarily that these raw counts are very unstable. That's because the measure they are built on is subject to severe tipping point effects. Whether an article gets probability 0.26 for being in one category and probability 0.25 for being in another, or the other way around, really just depends on where we stopped the algorithm. (It's bob of the head stuff in horse racing terms.) But it makes all the difference to these raw counts. This is why I've tried, contrary to most work that I've seen that uses topic modeling, to de-emphasise these raw counts in favor of the weighted counts.
+But what it reveals is primarily that these raw counts are very unstable. That's because the measure they are built on is subject to severe tipping-point effects. Whether an article gets probability 0.26 for being in one category and probability 0.25 for being in another, or the other way around, really just depends on where the algorithm is stopped. (It's bob-of-the-head stuff in horse racing terms.) But it makes all the difference to these raw counts. This is why I've tried, contrary to most work that I've seen that uses topic modeling, to deemphasize these raw counts in favor of the weighted counts.
 
-The rest of the graphs look at what happens when we focus on pages rather than articles. I'm using articles as the basic unit of measure for everything else in this book, but it's worth spending a little time seeing how things look if you focus on pages instead.
+The rest of the graphs look at what happens when focusing on pages rather than articles. I'm using articles as the basic unit of measure for everything else in this book, but it's worth spending a little time seeing how things look if focusing on pages instead.
 
 ## Weighted Sum of Pages {#graph-wsp}
 
-This is probably the second best graph. Even the graph with ninety dots on it shows some trends.
+This is probably the second-best graph. Even the graph with ninety dots on it shows some trends.
 
-```{r graph5a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Weighted Sum of Pages", fig.alt = alt_text}
+```{r graph5a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted sum of pages.", fig.alt = alt_text}
 spaghettigraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted sum of pages. The underlying data is in Table B.5. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
 ```
 
-Interestingly, the growing length of articles takes away the bump that is visible in figure \@ref(fig:graph1a); now it seems like all topics get 10-15 weighted pages (at least) every year. The increase length is itself quite remarkable. Here's the average article length over years. 
+Interestingly, the growing length of articles takes away the bump that is visible in figure \@ref(fig:graph1a); now it seems like all topics get ten to fifteen weighted pages (at least) every year. The length increase is itself quite remarkable. Here's the average article length over years. 
 
-```{r page-average, fig.cap = "Average Article Length", fig.height=6, fig.width=7.5, out.width = '80%', fig.alt = alt_text}
+```{r page-average, fig.cap = "Average article length.", fig.height=6, fig.width=7.5, out.width = '80%', fig.alt = alt_text}
 page_average <- inner_join(page_demonimator, article_demonimator, by = "year") %>%
   mutate(y = d.x/d.y) %>%
   select(year, y)
@@ -362,23 +362,23 @@ ggplot(page_average, aes(x = year, y = y)) +
 alt_text <- "The average number of pages in articles over time. It starts around 12, then rises unevenly to a peak of around 19 around 1910. It then falls almost linearly to around 9 in the mid-1960s. The it bounces, rising linearly at almost the same rate it fell. The new peak is around 20 at the end of the data in 2013, but it doesn't look like a peak; it looks like that's just where the data ends, and the trend would probably continue into the future."
 ```
 
-And that same effect means that some of the big 21st century topics are now outpacing Ordinary Language philosophy. I'll come back to this article length increase in a bit, but first let's see what this graph looks like with every topic having its own facet.
+And that same effect means that some of the big twenty-first-century topics are now outpacing ordinary language philosophy. I'll come back to this article length increase in a bit, but first let's see what this graph looks like with every topic having its own facet.
 
-```{r graph5b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Weighted Sum of Pages (Faceted)", fig.alt = alt_text}
+```{r graph5b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—weighted sum of pages (faceted).", fig.alt = alt_text}
 facetgraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
-alt_text <- "The same data as above, but with each topic shown as a separate facet"
+alt_text <- "The same data as above, but with each topic shown as a separate facet."
 
 ```
 
-The acceleration in thelast fifteen topics is much more pronounced. And Ordinary Language doesn't look like it has a rise and fall any more - it has a rise that it holds on to. Norms looks like it is about to eat everything, and maybe it is. This is even more vivid in the animated version of the graph.
+The acceleration in thelast fifteen topics is much more pronounced. And ordinary language doesn't look like it has a rise and fall any more—it has a rise that it holds on to. Norms looks like it is about to eat everything, and maybe it is. This is even more vivid in the animated version of the graph.
 
 <video width="800" height="800" controls>
   <source src="wsp.mp4" type="video/mp4">
 </video>
 
-It's worth pausing for a minute about what's driving this. As I showed above, page lengths increased substantially over the last few decades of the data set. That graph is fairly noisy at first, then a sharp dip takes us to a minimum in the early 1960s, and from then it is a steep rise. (One that is not, in my experience, abating any time soon.) But an average covers up a lot of things. For instance, _Noûs_ used to publish absracts of APA presentations as research papers. These were often one page, and could really pull down averages. Here is a slightly more instructive way of looking at the data. The following graph shows various deciles of lengths over time. So the bottom line is the length such that 10% of articles are shorter than (or equal to) its length, the top line is the length such that 90% of articles are short than (or equal to) its lengths, and so on for the in between lines.
+It's worth pausing for a minute about what's driving this. As I showed above, page lengths increased substantially over the last few decades of the data set. That graph is fairly noisy at first, then a sharp dip takes us to a minimum in the early 1960s, and from then it is a steep rise. (One that is not, in my experience, abating anytime soon.) But an average covers up a lot of things. For instance, _Noûs_ used to publish abstracts of APA presentations as research papers. These were often one page, and could really pull down averages. Here is a slightly more instructive way of looking at the data. The following graph shows various deciles of lengths over time. So the bottom line is the length such that 10 percent of articles are shorter than (or equal to) its length, the top line is the length such that 90 percent of articles are short than (or equal to) its lengths, and so on for the in between lines.
 
-```{r length-distribution, fig.cap = "Distribution of Article Lengths", fig.height=6, fig.width=7.5, out.width = '80%', fig.alt = alt_text}
+```{r length-distribution, fig.cap = "Distribution of article lengths.", fig.height=6, fig.width=7.5, out.width = '80%', fig.alt = alt_text}
 p <- ((1:5)/5) - 0.1
 p_names <- map_chr(p, ~paste0("d.", .x*100, "%"))
 p_funs <- map(p, ~partial(quantile, probs = .x, na.rm = TRUE)) %>% 
@@ -397,13 +397,13 @@ ggplot(length_deciles, aes(x = year, y = length, color = decile)) +
 alt_text <- "Another graph of article lengths over time. This shows the 10th, 30th, 50th, 70th and 90th percentile of page lengths in each year. All five graphs have the same shape, though they are much noisier than the previous graph. They all rise to an initial peak around 1910, then fall through the 1960s, then increase fairly rapidly through the end of the data period in 2013."
 ```
 
-Some of this could be explained by having a bunch of one page notes, but not all of it. For much of the 1950s and 1960s, fewer than 10% of papers were over 20 pages. Now 20 pages is the median article length, in a universe of journals that includes _Analysis_. For that to be explained by having a bunch of very short articles, the olive line (at 30%) would have to be hugging the bottom of the graph, and clearly it isn't. 
+Some of this could be explained by having a bunch of one-page notes, but not all of it. For much of the 1950s and 1960s, fewer than 10 percent of papers were over twenty pages. Now twenty pages is the median article length, in a universe of journals that includes _Analysis_. For that to be explained by having a bunch of very short articles, the olive line (at 30 percent) would have to be hugging the bottom of the graph, and clearly it isn't. 
 
 Articles are getting much much longer.
 
 ## Raw Sum of Pages {#graph-rsp}
 
-```{r graph6a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Raw Sum of Pages", fig.alt = alt_text}
+```{r graph6a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—raw sum of pages.", fig.alt = alt_text}
 spaghettigraph(page_count_numerator, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw sum of pages. The underlying data is in Table B.6. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
@@ -417,7 +417,7 @@ alt_text <- "The same data as above, but with each topic shown as a separate fac
 
 ```
 
-Now Ordinary Language philosophy has a boom and bust pattern again. There are a few topics, of which it is the most prominent, where the model sees them never quite going away, but not being the centre of attention once their peak passes. Oddly it also sees this pattern for Wide Content (which I sort of get), and Causation (which I don't). None of these see a fall in the weighted graphs, but they do in the raw graphs. I guess I think the weighted graphs are more aptly reflecting the real trends here.
+Now ordinary language philosophy has a boom and bust pattern again. There are a few topics, of which it is the most prominent, where the model sees them never quite going away, but not being the center of attention once their peak passes. Oddly it also sees this pattern for wide content (which I sort of get), and causation (which I don't). None of these see a fall in the weighted graphs, but they do in the raw graphs. I guess I think the weighted graphs are more aptly reflecting the real trends here.
 
 It's much easier to see the later topics on the animation.
 
@@ -425,19 +425,19 @@ It's much easier to see the later topics on the animation.
   <source src="rsp.mp4" type="video/mp4">
 </video>
 
-One interesting thing that is visible here (and also in the facet graph), is that [Norms](#topic90) doesn't really explode at the end as it does on the weighted graph. This is related to something I'll return to in the last chapter of the book; that topic is picking up a little on changes in linguistic fashion in the literature.
+One interesting thing that is visible here (and also in the facet graph), is that [norms](#topic90) doesn't really explode at the end as it does on the weighted graph. This is related to something I'll return to in the last chapter of the book; that topic is picking up a little on changes in linguistic fashion in the literature.
 
 ## Weighted Frequency of Pages {#graph-wfp}
 
 Again, the frequency graphs are dominated by the topics popular with _Mind_ in its early years.
 
-```{r graph7a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Weighted Frequency of Pages", fig.alt = alt_text}
+```{r graph7a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted frequency of pages.", fig.alt = alt_text}
 spaghettigraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted frequency of pages. The underlying data is in Table B.7. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
 ```
 
-There is Psychology, then Idealism dominates, then there is Ordinary Language philosophy, and the rest is almost all just noise. (Except for a burst of interest in Norms at the end.) It's a bit clearer if we graph the ninety topics distinctly, but not a lot.
+There is psychology, then idealism dominates, then there is ordinary language philosophy, and the rest is almost all just noise. (Except for a burst of interest in norms at the end.) It's a bit clearer if we graph the ninety topics distinctly, but not a lot.
 
 ```{r graph7b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Weighted Frequency of Pages (Faceted)", fig.alt = alt_text}
 facetgraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
@@ -445,7 +445,7 @@ alt_text <- "The same data as above, but with each topic shown as a separate fac
 
 ```
 
-And it's a bit clearer still if we restrict to the last 75 years and animate it, but still not particularly useful.
+And it's a bit clearer still if we restrict to the last seventy-five years and animate it, but still not particularly useful.
 
 <video width="800" height="800" controls>
   <source src="wfp.mp4" type="video/mp4">
@@ -455,7 +455,7 @@ These graphs aren't particularly informative, but we'll end with some graphs tha
 
 ## Raw Frequency of Pages {#graph-rfp}
 
-```{r graph8a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Raw Frequency of Pages", fig.alt = alt_text}
+```{r graph8a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—raw frequency of pages.", fig.alt = alt_text}
 spaghettigraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw frequency of pages. The underlying data is in Table B.8. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
@@ -463,13 +463,13 @@ alt_text <- "A plot showing the importance of all topics over time on a single g
 
 As always, moving from the weighted count to the raw count just exacerbates the trends. Here are the individual topics; there are a lot of low lines here.
 
-```{r graph8b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Raw Frequency of Pages (Faceted)", fig.alt = alt_text}
+```{r graph8b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—raw frequency of pages (faceted).", fig.alt = alt_text}
 facetgraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
 ```
 
-And we'll end with the animated version, again restricted to the last 75 years.
+And we'll end with the animated version, again restricted to the last seventy-five years.
 
 <video width="800" height="800" controls>
   <source src="rfp.mp4" type="video/mp4">

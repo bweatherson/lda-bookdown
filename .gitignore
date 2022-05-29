@@ -24,3 +24,7 @@ covid.csv
 wsa.gif
 .DS_Store
 _book copy
+bib_generator.R
+temp.bib
+temp.bib.zip
+cache

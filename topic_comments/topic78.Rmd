@@ -26,6 +26,6 @@ cat("\n
 	\n")
 ```
 
-Given the importance of Concepts to late twentieth century philosophy, this is a surprisingly small topic. I think that what's happened here is that it has just gotten squeezed by other topics. There isn't a single article that's more than 10 pages long with a probability of being in this topic of over 0.5.
+Given the importance of concepts to late twentieth-century philosophy, this is a surprisingly small topic. I think that what's happened here is that it has just gotten squeezed by other topics. There isn't a single article that's more than ten pages long with a probability of being in this topic of over 0.5.
 
-Part of the story about this topic is similar to the story with the topic on [Arguments](#topic55). More philosophers write about concepts in papers on other topics than write papers directly about concepts. This isn't surprising, but it did surprise me a bit that there aren't more papers directly about concepts in the journals. There are several important books on concepts, and there are papers in specialist journals like _Mind and Language_, and that led me to expect that there would be more here than turned out to be the case.
+Part of the story about this topic is similar to the story with the topic on [arguments](#topic55). More philosophers write about concepts in papers on other topics than write papers directly about concepts. This isn't surprising, but it did surprise me a bit that there aren't more papers directly about concepts in the journals. There are several important books on concepts, and there are papers in specialist journals like _Mind and Language_, and that led me to expect that there would be more here than turned out to be the case.

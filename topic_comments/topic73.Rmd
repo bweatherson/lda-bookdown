@@ -26,8 +26,8 @@ cat("\n
 	\n")
 ```
 
-The story of philosophy of science over the past several decades was one of increasing specialisation. First we saw work on philosophy of science as a general category replaced by work in the separate sciences, especially physics and biology. As we'll see in chapter \@ref(sortingchapter), the model thinks of work in philosophy of physics and philosophy of biology as having less in common with each other than they have with other areas of philosophy.
+The story of philosophy of science over the past several decades was one of increasing specialization. First work on philosophy of science as a general category was replaced by work in the separate sciences, especially physics and biology. As I'll discuss in chapter \@ref(sortingchapter), the model thinks of work in philosophy of physics and philosophy of biology as having less in common with each other than they have with other areas of philosophy.
 
-The existence of this topic is a sign that in recent years we're starting to carve things up even further. The model sees work on thermodynamics as separate from other work in philosophy of physics. And this is separate from work on space and time, and from work on quantum mechanics.
+The existence of this topic is a sign of yet more specialization in recent years. The model sees work on thermodynamics as separate from other work in philosophy of physics. And this is separate from work on space and time, and from work on quantum mechanics.
 
-It also is the first topic we've seen that has a fairly unambiguous upward trajectory through 2013. A lot of topics we've seen recently, and indeed several we'll see in what follows, felt like they had reached a plateau that they were still holding into 2013. But this looks to me like it's going up. It will be interesting to look back in a few years and see if that's still the case.
+It also is the first topic that has a fairly unambiguous upward trajectory through 2013. A lot of topics I've discussed recently, and indeed several I'll discuss in the next few sections, felt like they had reached a plateau that they were still holding into 2013. But this looks to me like it's going up. It will be interesting to look back in a few years and see if that's still the case.

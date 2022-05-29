@@ -26,7 +26,7 @@ cat("\n
 	\n")
 ```
 
-The common theme to most of these articles is that they live at the overlap between philosophy and cognitive science. There is a big focus on the nature of computation, and this occasionally means the model gets confused and pulls in articles that aren't really about cognitive science, like Nick Bostrom's [Are We Living in a Computer Simulation?](https://philpapers.org/rec/BOSAWL-4). But most of them, tracing back to Kitcher's discussion of Marr's theory of vision, are safely inside cognitive science.
+The common theme to most of these articles is that they live at the overlap between philosophy and cognitive science. There is a big focus on the nature of computation, and this occasionally means the model gets confused and pulls in articles that aren't really about cognitive science, like Nick Bostrom's "[Are We Living in a Computer Simulation?](https://philpapers.org/rec/BOSAWL-4)". But most of them, tracing back to Kitcher's discussion of Marr's theory of vision, are safely inside cognitive science.
 
 As someone who is involved with the [Weinberg Institute for Cognitive Science](https://lsa.umich.edu/weinberginstitute) at the University of Michigan, I'm pleased to see this work get this level of attention from the model.
 

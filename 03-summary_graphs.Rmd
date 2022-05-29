@@ -1,8 +1,8 @@
 # Summary Graphs {#summary-graphs}
 
-In the previous [chapter](#all-90-topics) I discussed the 90 topics one at a time. The aim of this chapter is to find some way to graph them all at once. The short version of the chapter is that it's an impossible task, and there is too much data to really show all of the trends on one graph. The longer version is that there are a few graphs that are flawed in different ways, and between them they might help give some sense to what the trends where in the philosophy journals over this time.
+In the previous [chapter](#all-90-topics) I discussed the ninety topics one at a time. The aim of this chapter is to find some way to graph them all at once. The short version of the chapter is that it's an impossible task, and there is too much data to really show all of the trends on one graph. The longer version is that there are a few graphs that are flawed in different ways, and between them they might help give some sense to what the trends were in the philosophy journals over this time.
 
-In the first [section](#main-summary-graph) I'll present the (pair of) graphs that do the best job of showing what the trends were. In the second [section](#graph-choices) I'll go over the three binary choices that we have in thinking about how to present the data, leading to eight possible graphs. One of these is the one presented in the first section, but there are cases to be made for each of the other 7 as well. So in the remaining sections, I'll go over each of those seven possible graphs.
+In the first [section](#main-summary-graph) I'll present the (pair of) graphs that do the best job of showing what the trends were. In the second [section](#graph-choices) I'll go over the three binary choices that we have in thinking about how to present the data, leading to eight possible graphs. One of these is the one presented in the first section, but there are cases to be made for each of the other seven as well. So in the remaining sections, I'll go over each of those seven possible graphs.
 
 <!-- Weight vs Raw -->
 <!-- Sum vs Frequency -->
@@ -56,7 +56,7 @@ facetgraph <- function(datainput, ylabel, titlelabel){
   
   # Now the graph
   ggplot(datainput, aes(x = year, y = y, color=topic, group=topic))  +
-# Use loess curves to create 90 background lines
+# Use loess curves to create ninety background lines
     geom_smooth(data = bg, 
                 aes(group=subject), 
                 size = 0.1, 
@@ -87,37 +87,37 @@ facetgraph <- function(datainput, ylabel, titlelabel){
 }
 ```
 
-```{r graph1a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Sum of Articles", fig.alt = alt_text}
+```{r graph1a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted sum of articles.", fig.alt = alt_text}
 spaghettigraph(weight_numerator, "Weighted Number of Articles", "Weighted Sum of Articles in Each Topic Per Year")  
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted sum. The underlying data is in Table B.1. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 ```
 
-Now there is too much data there to take all of it in. And if your eyes can correlate the colours on key with colours on the graph, they are keener than mine. But still there are some things we can take away from the graph. And I want to stress that these things are really very resilient. I ran a lot of these models to find one that best reflects the trends in the journals, and all of the following features were stably true across the model runs.
+Now there is too much data there to take all of it in. And if your eyes can correlate the colors on key with colors on the graph, they are keener than mine. But still there are some things we can take away from the graph. And I want to stress that these things are really very resilient. I ran a lot of these models to find one that best reflects the trends in the journals, and all of the following features were stably true across the model runs.
 
 First, the colors change over the course of the graph. The topics that are big deals in the early years are very different to the topics that are big deals in the later years.
 
-Second, there are a lot more articles being published in recent years than in earlier years. This is in part because the universe of journals has grown, and in part because I focussed on journals that are alive today. But it's significant, and a point that I'll have cause to return to several times this chapter.
+Second, there are a lot more articles being published in recent years than in earlier years. This is in part because the universe of journals has grown, and in part because I focused on journals that are alive today. But it's significant and a point that I'll have cause to return to several times in this chapter.
 
-Third, there is nothing like the dominance of Ordinary Language philosophy in the mid-century. If you cut down the number of topics to under 30, then something like Idealism becomes a single topic that is similarly large in the early years. (It basically collapses Idealism and Life and Value here, and adds a bunch of pragmatism too.) And if you keep the number of topics under about 50 (or even 60), then sometimes the model will put all of Epistemology into a single topic, and its size in the 2000s is as big as ordinary language philosophy in the 1950s. But in this model - and in the vast majority of other models I looked at - Ordinary Language philosophy after the war is bigger than any other model at any time.
+Third, there is nothing like the dominance of ordinary language philosophy in the mid-century. If you cut down the number of topics to under thirty, then something like idealism becomes a single topic that is similarly large in the early years. (It basically collapses idealism and life and value from the main model of this book, and adds a bunch of pragmatism too.) And if you keep the number of topics under about fifty (or even sixty), then sometimes the model will put all of epistemology into a single topic, and its size in the 2000s is as big as ordinary language philosophy in the 1950s. But in this model—and in the vast majority of other models I looked at—ordinary language philosophy after the war is bigger than any other model at any time.
 
-But the fourth result is the one that surprised me most of all, and one that I don't really have a simple story about. There is a white triangle toward the bottom right corner of the graph, starting around 1960, peaking around 1980, and ending around 2000. This is again a very resilient result - almost all the model runs I did had something similar. Around 1980, the model sees all the topics being at least somewhat represented in the journals. But the further from 1980 you get, in either direction, the less likely it is to think that all the topics are there. 
+But the fourth result is the one that surprised me most of all, and one that I don't really have a simple story about. There is a white triangle toward the bottom right corner of the graph, starting around 1960, peaking around 1980, and ending around 2000. This is again a very resilient result—almost all the model runs I did had something similar. Around 1980, the model sees all the topics being at least somewhat represented in the journals. But the farther from 1980 one gets, in either direction, the less likely it is to think that all the topics are there. 
 
 I'm going to [come back to this much later in the book](#the-bump), because I think it's fascinating. But apart from making this rise in the minimal values visible, this graph is otherwise something of a mess. Things are a bit clearer if we view the individual topics separately.
 
-```{r graph1b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Sum of Articles (Faceted)", fig.alt = alt_text}
+```{r graph1b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—weighted sum of articled (faceted).", fig.alt = alt_text}
 facetgraph(weight_numerator, "Weighted Number of Articles", "Weighted Sum of Articles in Each Topic Per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 ```
 
 This is a bit clearer on the relative scale of the different topics over time. There are four notable shapes of graph here.
 
-One is the graph with a high peak, but a rapid rise and fall either side of it. Some of these are predictable, like Verification, or Meaning and Use. Others are more surprising, like Promises and Imperatives. I expected Ordinary Language to be like this, but it isn't. The stylistic changes that were brought about didn't totally stick - the graph does go down a little bit - but they don't totally go away either.
+One is the graph with a high peak, but a rapid rise and fall either side of it. Some of these are predictable, like verification, or meaning and use. Others are more surprising, like promises and imperatives. I expected ordinary language to be like this, but it isn't. The stylistic changes that were brought about didn't totally stick - the graph does go down a little bit - but they don't totally go away either.
 
-A second is the graph with a sudden rise to a new equilibria. There are a few of these in this model, such as Explanations, Population Ethics and Personal Identity. Other models had a much larger number of these graphs, but maybe once we've gone as high as 90 topics they start to get less common.
+A second is the graph with a sudden rise to a new equilibria. There are a few such topics in the model used in this book, such as explanations, population ethics and personal identity. Other models had a much larger number of these graphs, but once there are as many as ninety topics they start to get less common.
 
-A third is the graph that just rises and rises as the years go along. That's almost all of the last 15 graphs here.
+A third is the graph that just rises and rises as the years go along. That's almost all of the last fifteen graphs here.
 
-A fourth, which is almost non-existent, is the graph that is such a mess that you need to fit a curve to it to see any trends. I'll do some graphs with trendlines in a bit, but for now I want to note how little need we have for them. Although the model wasn't told about the age of different articles, and was just trying to classify them as best it could, it mostly came up with totals for each topic per year that were approximately continuous. That's interesting, and tells us something about the way in which debates in journals really do seem to follow trends.
+A fourth, which is almost nonexistent, is the graph that is such a mess that you need to fit a curve to it to see any trends. I'll do some graphs with trendlines in a bit, but for now I want to note how little there is for them. Although the model wasn't told about the age of different articles, and was just trying to classify them as best it could, it mostly came up with totals for each topic per year that were approximately continuous. That's interesting, and tells us something about the way in which debates in journals really do seem to follow trends.
 
 It is also somewhat useful to see the graph animated. This shows all the lines one at a time.
 
@@ -175,7 +175,7 @@ It is also somewhat useful to see the graph animated. This shows all the lines o
 
 ## Graph Choices {#graph-choices}
 
-In the previous [section](#main-summary-graph) I presented one way of graphing the trends in these 90 topics. In making that graph I made three major choices, each of which I can see good arguments either way. In this section I'm going to say what these choices are, and in the subsequent sections I'll show you what the graphs look like with the other choices. This is getting particularly deep in the weeds, and you wouldn't lose a lot by jumping ahead to the next chapter rather than going over these three questions.
+In the previous [section](#main-summary-graph) I presented one way of graphing the trends in these ninety topics. In making that graph I made three major choices, each of which I can see good arguments either way. In this section I'm going to say what these choices are, and in the subsequent sections I'll show you what the graphs look like with the other choices. This is getting particularly deep in the weeds, and you wouldn't lose a lot by jumping ahead to the next chapter rather than going over these three questions.
 
 First, should the y-axis be a probability sum, or a count? That is, for each topic-year pair, do work out the expected number of articles in that topic from that year (given the LDA-generated probability function), or do we count the number of articles from that year whose probability of being in this topic is maximal? I'll call these options the weighted count and raw count respectively.
 
@@ -254,14 +254,14 @@ But that said, I think all eight graphs are interesting, and in the rest of this
 
 Here is what it looks like if we just count how many articles are in each topic each year.
 
-```{r graph2a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Sum of Articles", fig.alt = alt_text}
+```{r graph2a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—raw sum of articles.", fig.alt = alt_text}
 spaghettigraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw sum. The underlying data is in Table B.2. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 ```
 
 There are so many overlapping dots that it isn't that helpful a graph. It's a bit clearer when the topics are broken out.
 
-```{r graph2b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Sum of Articles (Faceted)", fig.alt = alt_text}
+```{r graph2b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—raw sum of articles (faceted).", fig.alt = alt_text}
 facetgraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Each Topic Per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 ```
@@ -276,14 +276,14 @@ The animation makes things a bit clearer here because the original features so m
 
 ## Weighted Frequency of Articles {#graph-wfa}
 
-```{r graph3a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Frequency of Articles", fig.alt = alt_text}
+```{r graph3a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted frequency of articles.", fig.alt = alt_text}
 spaghettigraph(weight_ratio, "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted frequency. The underlying data is in Table B.3. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 ```
 
 There are some dots in the upper-left quadrant, and then a bunch of dots bouncing along the bottom tenth of the graph. It isn't very informative, and breaking it out by topic doesn't help a lot.
 
-```{r graph3b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Frequency of Articles (Faceted)", fig.alt = alt_text}
+```{r graph3b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—weighted frequency of articles (faceted).", fig.alt = alt_text}
 facetgraph(weight_ratio, "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
@@ -291,7 +291,7 @@ alt_text <- "The same data as above, but with each topic shown as a separate fac
 
 You get a slightly more readable graph if you focus just on the last 75 years of the graph, so 1939-2013.
 
-```{r graph3c, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Frequency of Articles", fig.alt = alt_text}
+```{r graph3c, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Weighted Frequency of Articles", fig.alt = alt_text}
 #Burper
 spaghettigraph(filter(weight_ratio, year > 1938), "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
 ```
@@ -308,12 +308,12 @@ And now you get an animated version of some graphs that you saw a lot in the pre
 
 The problems of the previous section are just exacerbated if we go to raw frequencies.
 
-```{r graph4a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Frequency of Articles", fig.alt = alt_text}
+```{r graph4a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Raw Frequency of Articles", fig.alt = alt_text}
 spaghettigraph(count_ratio, "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw frequency. The underlying data is in Table B.4. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 ```
 
-```{r graph4b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Frequency of Articles (Faceted)", fig.alt = alt_text}
+```{r graph4b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Raw Frequency of Articles (Faceted)", fig.alt = alt_text}
 facetgraph(count_ratio, "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
@@ -323,7 +323,7 @@ All this tells us is that there is a lot more diversity, and a lot more speciali
 
 It's only a little clearer if you filter down even to the last 75 years.
 
-```{r graph4c, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Frequency of Articles", fig.alt = alt_text}
+```{r graph4c, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Raw Frequency of Articles", fig.alt = alt_text}
 spaghettigraph(filter(count_ratio, year > 1938), "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
 ```
 
@@ -339,9 +339,9 @@ The rest of the graphs look at what happens when we focus on pages rather than a
 
 ## Weighted Sum of Pages {#graph-wsp}
 
-This is probably the second best graph. Even the graph with 90 dots on it shows some trends.
+This is probably the second best graph. Even the graph with ninety dots on it shows some trends.
 
-```{r graph5a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Sum of Pages", fig.alt = alt_text}
+```{r graph5a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Weighted Sum of Pages", fig.alt = alt_text}
 spaghettigraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted sum of pages. The underlying data is in Table B.5. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
@@ -364,7 +364,7 @@ alt_text <- "The average number of pages in articles over time. It starts around
 
 And that same effect means that some of the big 21st century topics are now outpacing Ordinary Language philosophy. I'll come back to this article length increase in a bit, but first let's see what this graph looks like with every topic having its own facet.
 
-```{r graph5b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Sum of Pages (Faceted)", fig.alt = alt_text}
+```{r graph5b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Weighted Sum of Pages (Faceted)", fig.alt = alt_text}
 facetgraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
@@ -403,7 +403,7 @@ Articles are getting much much longer.
 
 ## Raw Sum of Pages {#graph-rsp}
 
-```{r graph6a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Sum of Pages", fig.alt = alt_text}
+```{r graph6a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Raw Sum of Pages", fig.alt = alt_text}
 spaghettigraph(page_count_numerator, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw sum of pages. The underlying data is in Table B.6. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
@@ -411,7 +411,7 @@ alt_text <- "A plot showing the importance of all topics over time on a single g
 
 As always, moving from the weighted count to the raw count just exacerbates the trends. Let's see that broken out into topics.
 
-```{r graph6b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Sum of Pages (faceted)", fig.alt = alt_text}
+```{r graph6b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Raw Sum of Pages (faceted)", fig.alt = alt_text}
 facetgraph(page_count_numerator, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
@@ -431,15 +431,15 @@ One interesting thing that is visible here (and also in the facet graph), is tha
 
 Again, the frequency graphs are dominated by the topics popular with _Mind_ in its early years.
 
-```{r graph7a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Weighted Frequency of Pages", fig.alt = alt_text}
+```{r graph7a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Weighted Frequency of Pages", fig.alt = alt_text}
 spaghettigraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted frequency of pages. The underlying data is in Table B.7. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
 ```
 
-There is Psychology, then Idealism dominates, then there is Ordinary Language philosophy, and the rest is almost all just noise. (Except for a burst of interest in Norms at the end.) It's a bit clearer if we graph the 90 topics distinctly, but not a lot.
+There is Psychology, then Idealism dominates, then there is Ordinary Language philosophy, and the rest is almost all just noise. (Except for a burst of interest in Norms at the end.) It's a bit clearer if we graph the ninety topics distinctly, but not a lot.
 
-```{r graph7b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Weighted Frequency of Pages (Faceted)", fig.alt = alt_text}
+```{r graph7b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Weighted Frequency of Pages (Faceted)", fig.alt = alt_text}
 facetgraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
@@ -455,7 +455,7 @@ These graphs aren't particularly informative, but we'll end with some graphs tha
 
 ## Raw Frequency of Pages {#graph-rfp}
 
-```{r graph8a, fig.height=11.4, fig.width = 7.5, fig.cap = "All 90 topics - Raw Frequency of Pages", fig.alt = alt_text}
+```{r graph8a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Raw Frequency of Pages", fig.alt = alt_text}
 spaghettigraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw frequency of pages. The underlying data is in Table B.8. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
@@ -463,7 +463,7 @@ alt_text <- "A plot showing the importance of all topics over time on a single g
 
 As always, moving from the weighted count to the raw count just exacerbates the trends. Here are the individual topics; there are a lot of low lines here.
 
-```{r graph8b, fig.height=18.2, fig.width = 7.5, fig.cap = "The 90 topics - Raw Frequency of Pages (Faceted)", fig.alt = alt_text}
+```{r graph8b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Raw Frequency of Pages (Faceted)", fig.alt = alt_text}
 facetgraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 

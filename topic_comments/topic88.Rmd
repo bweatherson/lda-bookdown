@@ -26,7 +26,7 @@ cat("\n
 	\n")
 ```
 
-The general theme here is models in philosophy of science. And I'm not completely sure whether this is a good topic my model to have landed on, or whether it has gotten confused by the polysyemous nature of 'model'.
+The general theme here is models in philosophy of science. And I'm not completely sure whether this is a good topic my model to have landed on, or whether it has gotten confused by the polysemous nature of "model".
 
 Some of the articles here are on causal modeling, and that's certainly an important topic in philosophy of science. And one of the interesting stories of the period this topic is centered on is the drift of causation from being a metaphysics topic to a philosophy of science topic.
 
@@ -36,4 +36,4 @@ And some of the articles are about objectivist versus Bayesian approaches to sta
 
 And all of these have things in common. Indeed, any two of them could naturally be put into a topic together. Still, I can't quite shake the feeling that it is the word 'model', rather than any one meaning for that word, that is holding these papers together.
 
-This wouldn't be the worst thing to happen - text-mining like this is always susceptible to getting confusing results when there are polysyemous terms around. And it's kind of striking how little that has affected our story to date.
+This wouldn't be the worst thing to happen—text-mining like this is always susceptible to getting confusing results when there are polysemous terms around. And it's kind of striking how little that has affected our story to date.

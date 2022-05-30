@@ -169,6 +169,7 @@ relabeled_gamma <- merge(relabeled_gamma, articles, by = "document") %>%
 ```{r import_categories, cache=FALSE}
 # The big category csv
 # Could type this in from R, but easier to edit as CSV
+# Burp
 require(readr)
 the_categories <- read_csv("category-summary-22031848-90-r15.csv")
 ```

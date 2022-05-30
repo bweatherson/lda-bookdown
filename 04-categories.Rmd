@@ -1,13 +1,14 @@
 # Categories {#categorychapter}
 
-The 90 topics we've looked at so far are informative, but they are arguably too detailed to provide a useful big picture view of what's happening in philosophy. To do that I divided up the 90 topics into 12 categories. Or, to be more precise, I divided 80 of them up into categories, and the other 10 were split between two categories. I'll return in the next chapter to how this division was made, and in particular how the splitting was done. For now, let's look at the categories, and then look at their representation in the literature over time.
+The ninety topics we've looked at so far are informative, but they are arguably too detailed to provide a useful big-picture view of what's happening in philosophy. To do that I divided up the ninety topics into 12 categories. Or, to be more precise I divided eighty of them up into categories, and the other ten were split between two categories. I'll return in the next chapter to how this division was made, and in particular how the splitting was done. For now, let's look at the categories and then look at their representation in the literature over time.
 
 ```{r category_setup_local, fig.height=12, fig.width = 10}
+# Burp
 require(readr)
 the_categories <- read_csv("category-summary-22031848-90-r15.csv")
 
 category_table <- tribble(
-  ~topic, ~category, ~subject, ~keywords
+  ~topic, ~subject, ~category, ~keywords
 )
 
 for (j in 1:90){
@@ -17,8 +18,8 @@ for (j in 1:90){
   if (!the_categories$cat_num[j] == 13){
     category_table <- category_table %>%
       add_row(topic = j, 
-              category = the_categories$cat_name[j], 
-              subject = the_categories$subject[j], 
+              category = str_to_lower(the_categories$cat_name[j]), 
+              subject = the_categories$sub_lower[j], 
               keywords = keywords_for_table)
   }
   if (the_categories$cat_num[j] == 13){
@@ -26,25 +27,26 @@ for (j in 1:90){
       topic = (j*100+1):(j*100+2))
     temp_category_tibble <- temp_category_tibble %>%
       inner_join(the_categories, by = "topic")
-    temp_category <- paste(temp_category_tibble$cat_name, sep = "/", collapse = "/")
+    temp_category <- str_to_lower(paste(str_to_lower(temp_category_tibble$cat_name), sep = "/", collapse = "/"))
     category_table <- category_table %>%
       add_row(topic = j, 
               category = temp_category,
-              subject = the_categories$subject[j], 
+              subject = the_categories$sub_lower[j], 
               keywords = keywords_for_table)
     
   }
 }
 
 kable(category_table,  
-	col.names = c("Topic", "Category", "Subject", "Keywords"))
+	col.names = c("Topic", "Subject", "Category", "Keywords"))
 ```
 
 ## Graphs
 
-First, let's look at how many articles are in each category in each year. I'll say an article is 'in' a category if the probability the model gives to the article being from that category is greater than the probability it gives to the article being from any other category. And the probability an article is from a category is just the sum of the probability that it is from one of the topics (or subtopics) that make up the category. (What's a subtopic? I'll get to that in [the next chapter](#subtopics-section).)
+First, let's look at how many articles are in each category in each year. I'll say an article is "in" a category if the probability the model gives to the article being from that category is greater than the probability it gives to the article being from any other category. And the probability an article is from a category is just the sum of the probability that it is from one of the topics (or subtopics) that make up the category. (What's a subtopic? I'll get to that in [the next chapter](#subtopics-section).)
 
-```{r category-count, fig.cap = "Number of articles in each of the twelve categories over time", fig.alt = alt_text}
+```{r category-count, fig.cap = "Number of articles in each of the twelve categories over time.", fig.alt = alt_text}
+# Burp
 category_count <- category_gamma %>%
   group_by(document, cat_name) %>%
   dplyr::summarise(n = sum(gamma)) %>%
@@ -79,7 +81,7 @@ alt_text <- "A scatterplot showing the raw number of articles in each year in ea
 
 That's a lot of dots, and I'm not sure it's easy to see a trendline in there. Let's add some automatic trendlines to see if it's any clearer.
 
-```{r category-count-trends, fig.cap = "Number of articles in each of the twelve categories over time (with trendlines)", fig.alt = alt_text}
+```{r category-count-trends, fig.cap = "Number of articles in each of the twelve categories over time (with trendlines).", fig.alt = alt_text}
 category_count_graph + 
   geom_point(size = 0.5, alpha = 0.2) +
   geom_smooth(se=F, method = "loess", formula = "y ~ x", size = 0.2)
@@ -87,7 +89,7 @@ category_count_graph +
 alt_text <- "A version of the previous scatterplot with trendlines added. The pattern in the trendlines is described in the text."
 ```
 
-That's a bit clearer, but only a bit. Most categories are growing, which isn't surprising because there are more and more articles each year. Philosophy of Science starts rising early and keeps on rising. Ethics shoots up in the post-war years, and gets to a high point around 1980. Mind grows, but loses rank. Metaphysics and Epistemology both grow, though Metaphysics's growth comes earlier. Logic and Mathematics is strongest in mid-century. History gets smaller over time. (This certainly tells us more about the journals than the field.) And Idealism grows until at least WWI, then falls dramatically.
+That's a bit clearer, but only a bit. Most categories are growing, which isn't surprising because there are more and more articles each year. Philosophy of science starts rising early and keeps on rising. Ethics shoots up in the postwar years, and gets to a high point around 1980. Mind grows, but loses rank. metaphysics and epistemology both grow, though metaphysics's growth comes earlier. Logic and mathematics is strongest in mid-century. History gets smaller over time. (This certainly tells us more about the journals than the field.) And idealism grows until at least World War I, then falls dramatically.
 
 In principle it's better to do this with probabilities rather than just these counts though, to reflect the fact that the model itself is probabilistic. So next I'll show the expected number of articles in each category in each year. That is, for each category and year, I'll take the sum across all articles from that year of the probability that the article is in that category. And the probability that an article is in a category is just the sum of the probabilities of it being in the topics and subtopics that make up the category.
 
@@ -137,7 +139,7 @@ alt_text <- "A scatterplot showing the weighted number of articles in each year 
 
 That's also a bunch of dots, though interestingly the trends are more visible without trend lines. Let's see what happens when we add the trend lines back in.
 
-```{r category-weight-graph-trendlines, fig.cap = "Weighted number of articles in each of the twelve categories over time (with trendlines)", fig.alt = alt_text}
+```{r category-weight-graph-trendlines, fig.cap = "Weighted number of articles in each of the twelve categories over time (with trendlines).", fig.alt = alt_text}
 category_weight_graph + 
   geom_point(size = 0.5, alpha = 0.2) +
   geom_smooth(se=F, 
@@ -150,9 +152,9 @@ alt_text <- "A version of the previous scatterplot with trendlines added. The pa
 
 That's pretty similar to the other trendline graph. The big difference is that the lines are more compressed. (This is most visible in the scales.) But the rank at any given time is fairly similar.
 
-The big challenge here is seeing which rises are due to a category getting more prominent, and which are due to the field getting bigger. So let's take that graph and divide all the values by the number of articles in a given year. What we end up with, for each year-category pair, is the average probability an article from a year falls into that category. The numbers are thrown off a fair bit by the presence of a lot of psychology articles in Mind before 1900, so I'll start in 1900.
+The big challenge here is seeing which rises are due to a category getting more prominent, and which are due to the field getting bigger. So let's take that graph and divide all the values by the number of articles in a given year. What we end up with, for each year-category pair, is the average probability an article from a year falls into that category. The numbers are thrown off a fair bit by the presence of a lot of psychology articles in _Mind_ before 1900, so I'll start in 1900.
 
-```{r category-frequency-graph, fig.cap = "Proportion of articles in each Category each year", fig.alt = alt_text}
+```{r category-frequency-graph, fig.cap = "Proportion of articles in each category each year.", fig.alt = alt_text}
 category_frequency_graph <- ggplot(filter(category_frequency, year > 1899), 
                                    aes(x = year, y = f, color=category, group=category)) +
     labs(x = element_blank(), y = "Proportion of Articles") +
@@ -175,7 +177,7 @@ alt_text <- "A scatterplot showing the weighted frequency of articles in each ye
 
 It's striking how many trendlines are already visible, but it's clearer with actual trendlines added.
 
-```{r category-frequency-graph-trendlines, fig.cap = "Proportion of articles in each Category each year (with trendlines)", fig.alt = alt_text}
+```{r category-frequency-graph-trendlines, fig.cap = "Proportion of articles in each category each year (with trendlines).", fig.alt = alt_text}
 category_frequency_graph + 
   geom_point(size = 0.5, alpha = 0.2) + 
   geom_smooth(se=F, method = "loess", formula = "y ~ x", size = 0.2) 
@@ -185,24 +187,24 @@ alt_text <- "A version of the previous scatterplot with trendlines added. The pa
 
 And it's really striking how many of the graphs are relatively simple to describe.
 
-- Aesthetics is always low, though it's high point is mid-century.
-- Epistemology is almost invisible until 1950, then rises linearly afterwards.
-- Ethics has a low equilibrium before 1930, and a high equilibrium after 1970, and rises rapidly between those points.
+- Aesthetics is always low, though it's high point is midcentury.
+- Epistemology is almost invisible until 1950, then rises linearly afterward.
+- Ethics has a low equilibrium before 1930, a high equilibrium after 1970, and rises rapidly between those points.
 - History of philosophy falls from 1930 to 2000, though maybe it has stopped falling.
-- Idealism falls rapidly until it hits 0 around 1980. (Though note that this is a consequence of my excluding the 19th Century data points - it arguably rises in the early 20th century.)
-- Logic and Mathematics reaches a high point around 1955, with a striking rise before then and fall afterwards.
+- Idealism falls rapidly until it hits 0 around 1980. (Though note that this is a consequence of my excluding the nineteenth-century data points - it arguably rises in the early twentieth-century.)
+- Logic and mathematics reaches a high point around 1955, with a striking rise before then and fall afterwards.
 - Metaphysics has a steady base through the early 1960s, and then a steady rise after that. (This is not remotely in keeping with my prior view about metaphysics in the journals, and we'll come back to how plausible this is.)
-- Apart from a small blip around 1930, Philosophy of Language has a low equilibrium before 1950, and a higher equilibrium afterwards.
-- Philosophy of Mind falls as the psychology articles gradually fade (and the relative size of Mind fades) but is very constant from 1940 or so onwards.
-- Philosophy of Religion is very small, but probably gradually falling.
-- Philosophy of Science rises rapidly through 1940, then hits an equilibrium, then rises rapidly again after 1970.
-- Social and Political has a peak around 1920, then a dip and another peack 1940, then gradually fades. (Again, this is not remotely like what I expected, though the explanation isn't that hard.)
+- Apart from a small blip around 1930, philosophy of language has a low equilibrium before 1950, and a higher equilibrium afterwards.
+- Philosophy of mind falls as the psychology articles gradually fade (and the relative size of _Mind_ fades) but is very constant from 1940 or so onwards.
+- Philosophy of religion is very small, but probably gradually falling.
+- Philosophy of science rises rapidly through 1940, then hits an equilibrium, then rises rapidly again after 1970.
+- Social and political has a peak around 1920, then a dip and another peack 1940, then gradually fades. (Again, this is not remotely like what I expected, though the explanation isn't that hard.)
 
-In the next chapter I'll go over how the categories were constructed, which in turn will explain some of these trends. But some of them are just interesting facts about the nature of philosophy in these 12 journals.
+In the next chapter I'll go over how the categories were constructed, which in turn will explain some of these trends. But some of them are just interesting facts about the nature of philosophy in these twelve journals.
 
 It might be easier to see these twelve categories separated out.
 
-```{r category-frequency-graph-facet, fig.cap = "Proportion of articles in each Category (with facets)", fig.alt = alt_text}
+```{r category-frequency-graph-facet, fig.cap = "Proportion of articles in each category (with facets).", fig.alt = alt_text}
 tt <- filter(category_frequency, year > 1899)
 category_graph_labels <- tt %>%
   group_by(category) %>%
@@ -226,13 +228,13 @@ ggplot(tt,
 alt_text <- "A version of Figure 4.5 where each category is shown on a separate graph. The data is in Table C.4 in appendix C, and the trends are described in the text below."
 ```
 
-It's really striking how continuous these graphs are. This is not something that's programmed in - we're just seeing one data point after another rather than trend-lines. The numbers here are sums across journals, and acros topics/sub-topics. And within each of those components, you do not see anything like this continuity. But the large year to year variation mostly washes away when you look at the category level.
+It's really striking how continuous these graphs are. This is not something that's programmed in—we're just seeing one data point after another rather than trendlines. The numbers here are sums across journals, and across topics/subtopics. And within each of those components, there is nothing like this continuity. But the large year-to-year variation mostly washes away at the category level.
 
 ## Split Topics
 
 Normally at this point I would include a long discussion of the methodology that produced graphs like this. But the methodology is so complicated that I put it in a whole separate [chapter](#sortingchapter). But there is one point I need to clarify before discussing the individual topics.
 
-Several topics didn't easily fit into one or other category. For several of them, I just had to choose the least bad category to put it in. But for some, it turned out to be possible to split the topic into two **sub-topics**, and categorise the sub-topics. I somewhat arbitrarily imposed a limit on myself of doing this 10 times, so the following ten topics got broken into two sub-topics each.
+Several topics didn't easily fit into one or other category. For several of them, I just had to choose the least bad category to put it in. But for some, it turned out to be possible to split the topic into two **subtopics**, and categorize the subtopics. I somewhat arbitrarily imposed a limit on myself of doing this ten times, so the following ten topics got broken into two subtopics each.
 
 ```{r sub-topic-list}
 subtopic_table <- the_categories %>%
@@ -245,15 +247,16 @@ kable(subtopic_kable,
 	col.names = c("Original Topic", "First Subtopic", "Second Subtopic"))
 ```
 
-So we end up with 100 topics and subtopics to classify; the 80 original topics that weren't split, and the 20 sub-topics just generated. How I split them up is a bit of a saga, and I'll run through it in the next [chapter](#sortingchapter).
+So we end up with one hundred topics and subtopics to classify; the eighty original topics that weren't split, and the twenty subtopics just generated. How I split them up is a bit of a saga, and I'll run through it in the next [chapter](#sortingchapter).
 
 In what remains of this chapter, I'll go one by one through eight of the twelve topics. For each topic, I'll look at its trends, and how those are generated by its constituent topics, and by the twelve journals. I'm leaving out four categories from this discussion.
 
 - Idealism is a single topic, and I've already discussed it.
-- Aesthetics and Philosophy of Religion are just a pair of topics, and there isn't much to say that isn't in the discussion of their constituent parts.
+- Aesthetics and philosophy of religion are just a pair of topics, and there isn't much to say that isn't in the discussion of their constituent parts.
 - I'm doing a deeper look at epistemology in [a later chapter](#epistemologychapter), so there's no need for another discussion here.
 
 ```{r tables_for_category_individual_sections}
+# Burp
 category_section_main_tibble <- category_gamma %>%
   inner_join(articles, by = "document") %>%
   select(document, topic, gamma, journal, year)
@@ -263,7 +266,7 @@ category_by_topic <- category_section_main_tibble %>%
   dplyr::summarise(g = sum(gamma)) %>%
   ungroup() %>%
   inner_join(the_categories, by = "topic") %>%
-  select(topic, year, g, category = cat_name, name = subject) %>%
+  select(topic, year, g, category = cat_name, name = subject, name_lower = sub_lower) %>%
   inner_join(year_denominator, by = "year") %>%
   mutate(f = g/d)
 
@@ -289,6 +292,7 @@ category_by_journal$journal <- factor(category_by_journal$journal, levels = jour
 ```
 
 ```{r graph-style-for-categories}
+# Burp
 cg <- function(cate, cate_num){
   yupper <- max(category_by_journal$f, na.rm=TRUE)
 
@@ -317,6 +321,7 @@ ggplot(data = filter(category_by_journal, category == cate), aes(x = year, y = f
 }
 
 cg_alt_text <- function(cate, cate_num){
+cate_lower <- str_to_lower(cate)
 temp <- category_by_journal %>% 
   filter(category == cate) %>% 
   group_by(journal) 
@@ -335,7 +340,7 @@ temp_main <- temp_mean %>%
   left_join(temp_min, by = "journal")
   ttt <- paste0(
     "Twelve scatterplots showing which percentage of the articles in each journal in each year are in the category ",
-    cate,
+    cate_lower,
     ". A brief summary of the data follows. "
   )
   for (ijk in 1:12){
@@ -345,9 +350,9 @@ temp_main <- temp_mean %>%
                   ", ",
                   temp_main$m[ijk],
                   " of the articles are in the category ",
-                  cate,
+                  cate_lower,
                   ". ",
-                  cate,
+                  str_to_sentence(cate),
                   " is most prevalent in ",
                   temp_main$journal[ijk],
                   " in ",
@@ -399,7 +404,7 @@ print(
 if (max(filter(category_by_topic, category == cate, year > 1900)$f > 0.0601)){
 print(
      kable(filter(category_by_topic, category == cate, f > 0.0601, year > 1900) %>%
-          select(name, year, f) %>%
+          select(name_lower, year, f) %>%
           mutate(f= round(f, 4)),
         caption = paste0("Points excluded from topic graph for ",cate),
         col.names = c("Subject", "Year", "Frequency"))
@@ -409,22 +414,23 @@ print(
 }
 
 cgt_alt_text <- function(cate, cate_num){
+cate_lower <- str_to_lower(cate)
 temp <- category_by_topic %>% 
   filter(category == cate) %>% 
   filter(year > 1900) %>% 
-  group_by(name) 
+  group_by(name_lower) 
 temp_mean <- temp %>% 
   summarise(m = percent(mean(f), accuracy = 0.1))
 temp_max <- temp %>% 
   slice_max(f, n = 1) %>% 
   mutate(maxf = percent(f, accuracy = 0.1)) %>% 
-  select(name, maxf, maxyear = year)
+  select(name_lower, maxf, maxyear = year)
 temp_main <- temp_mean %>% 
-  left_join(temp_max, by = "name")
+  left_join(temp_max, by = "name_lower")
   ttt <- paste0(
     nrow(temp_main),
     " scatterplots showing which percentage of the articles in all journals in each year from 1900 onwards are in the each of the topics category ",
-    cate,
+    str_to_lower(cate),
     ". A brief summary of the data follows. "
   )
   for (ijk in 1:nrow(temp_main)){
@@ -432,9 +438,10 @@ temp_main <- temp_mean %>%
                   "In an average year, ",
                   temp_main$m[ijk],
                   " of the articles are in the topic ",
-                  temp_main$name[ijk],
+                  temp_main$name_lower[ijk],
                   ". ",
-                  temp_main$name[ijk],
+                  str_to_upper(str_sub(temp_main$name_lower[ijk],1,1)),
+                  substring(temp_main$name_lower[ijk],2),
                   " is most prevalent in ",
                   temp_main$maxyear[ijk],
                   " when it accounts for ",
@@ -448,72 +455,73 @@ temp_main <- temp_mean %>%
 
 ## Ethics {#ethics-category-section}
 
-```{r ethics-journals, fig.cap = "Proportion of each journal's yearly publications in Ethics", fig.alt = alt_text}
+```{r ethics-journals, fig.cap = "Proportion of each journal's yearly publications in Ethics.", fig.alt = alt_text}
 cg("Ethics", 3)
 alt_text <- cg_alt_text("Ethics", 3)
 ```
 
-There are a lot of Ethics articles in _Ethics_. That's not surprising. But what's really the story here is that the proportion of _Ethics_ that is devoted to Ethics keeps rising. The two most recently added journals, _Noûs_ and _Philosophy and Public Affairs_, respectively have good and great Ethics coverage, so that helps the upward trend as well. But the big story here is the consolidation of the key specialist journal. We will see this trend a few times as we move along.
+There are a lot of ethics articles in _Ethics_. That's not surprising. But what's really the story here is that the proportion of _Ethics_ that is devoted to ethics keeps rising. The two most recently added journals, _Noûs_ and _Philosophy and Public Affairs_, respectively have good and great ethics coverage, so that helps the upward trend as well. But the big story here is the consolidation of the key specialist journal. We will see this trend a few times as we move along.
 
 Let's look at how this is broken up into individual topics. I'm going to do a graph like this for every category, and they will all have the following restrictions.
 
-- The 19th Century is excluded, and the years start in 1901.
-- The y-axis is capped at 0.06, i.e., 6%, and if there are points that are thereby excluded, I'll list them separately in a table.
+- The nineteenth-century is excluded, and the years start in 1901.
+- The Y-axis is capped at 0.06, i.e., 6 percent, and if there are points that are thereby excluded, I'll list them separately in a table.
 
-Both restrictions are motivated by the problems that affected the frequency graphs in the previous chapter. (What I'm doing here is a topic-by-topic version of the [Weighted Frequency of Articles]({#graph-wfa}) graph.) There isn't enough diversity in the early years, so some topics can be 10, 20, even 30% of the total. And there isn't a good way to represent those numbers on a graph while also making the differences between 1% and 3% (which is what we care most about here) particularly visible. So I'll just list separately the problematic data points.
+Both restrictions are motivated by the problems that affected the frequency graphs in the previous chapter. (What I'm doing here is a topic-by-topic version of the [weighted frequency of articles]({#graph-wfa}) graph.) There isn't enough diversity in the early years, so some topics can be 10, 20, even 30 percent of the total. And there isn't a good way to represent those numbers on a graph while also making the differences between 1 percent and 3 percent (which is what we care most about here) particularly visible. So I'll just list separately the problematic data points.
 
-```{r ethics-topics, fig.height=10.2, fig.cap = "Topics in Ethics", fig.alt = alt_text}
+```{r ethics-topics, fig.height=10.2, fig.cap = "Topics in ethics.", fig.alt = alt_text}
 cgt("Ethics", 3)
 alt_text <- cgt_alt_text("Ethics", 3)
 ```
 
-A quick note about the he sub-topic "OLP Ethics". The "OLP" here is for ordinary language philosophy. So this subtopic is the ethics part of ordinary language philosophy. I'm moderately confident that this really is part of ethics - it includes papers like Philippa Foot's [Moral Beliefs](https://philpapers.org/rec/FOOVB). But I'm not 100% sure about this, since it includes a lot of things that don't feel exactly like ethics papers as we'd currently understand that. In general, ordinary language philosophy makes this kind of analysis hard.
+A quick note about the he subtopic "OLP Ethics". The "OLP" here is for ordinary language philosophy. So this subtopic is the ethics part of ordinary language philosophy. I'm moderately confident that this really is part of ethics—it includes papers like Philippa Foot's "[Moral Beliefs](https://philpapers.org/rec/FOOVB)". But I'm not 100 percent sure about this, since it includes a lot of things that don't feel exactly like ethics papers as we'd currently understand that. In general, ordinary language philosophy makes this kind of analysis hard.
 
-Note how there are a few topics that peak one after the other: first Value, then Promises and Imperatives, then Duties, and now Norms. But none of this rise and fall is visible in the overall graph, which is fairly steady. Some of these rises and falls comes from changing interests among folks in the field, but some I think comes from simply change in fashionable terminology.
+Note how there are a few topics that peak one after the other: first value, then promises and imperatives, then duties, and now norms. But none of this rise and fall is visible in the overall graph, which is fairly steady. Some of these rises and falls comes from changing interests among folks in the field, but some I think comes from simply changes in fashionable terminology.
 
 ## History {#history-category-section}
 
-```{r history-journals, fig.cap = "Proportion of each journal's yearly publications in History of Philosophy", , fig.alt = alt_text}
+```{r history-journals, fig.cap = "Proportion of each journal's yearly publications in history of philosophy.", , fig.alt = alt_text}
+# Burp
 cg("History of Philosophy", 4)
 alt_text <- cg_alt_text("History of Philosophy", 4)
-
 ```
 
 None of these lines seem to be trending up, and several of them are trending down. But there are differences in the ways that they are trending.
 
 - _Ethics_ is a slow, steady decline.
 - _Journal of Philosophy_ is a very rapid decline over the 1960s, between a high equilibrium before that, and a much lower equilibrium after.
-- _Mind_ falls off a cliff around WWII, possibly due to Ryle taking over in 1947.
-- _Philosophy and Phenomenological Research_ falls away around 1990, as they stop taking quite as seriously the part of their name that says 'phenomenological'. (I don't know how closely this tracks with Ernest Sosa becoming editor of PPR.)
+- _Mind_ falls off a cliff around World War II, around the same time Ryle takes over.
+- _Philosophy and Phenomenological Research_ falls away around 1990, as they stop taking quite as seriously the part of their name that says "phenomenological". (I don't know how closely this tracks with Ernest Sosa becoming editor of PPR.)
 
-So part of what's going on is what I mentioned in the previous section. Specialist journals are focussing more on their speciality, and this means doing less of everything else. And in part this feels like the long influence of Gilbert Ryle. This might seem odd given that Ryle published in ancient philosophy, but there is some independent evidence of this. This is from an article his successor as _Mind_ editor, D. M. Hamlyn, [wrote about Ryle's editorship](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents).
+So part of what's going on is what I mentioned in the previous section. Specialist journals are focusing more on their specialty, and this means doing less of everything else. And in part this feels like the long influence of Gilbert Ryle. This might seem odd given that Ryle published in history of philosophy, but there is some independent evidence of this. This is from an article his successor as _Mind_ editor, D. M. Hamlyn, [wrote about Ryle's editorship](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents).
 
 > [Ryle] said, for example, that, except for Greek Philosophy, he tended to not accept papers on the history of philosophy, and he also said something about what was normally the desirable maximum length for papers. I must say that I found what he had to say on the first point rather odd, though he was absolutely right on the second. [@Hamlyn2003, 5-12]
 
-Whatever Hamlyn thought, it doesn't seem to have affected the publications much. You can't see his ascension (in 1971) in the data here. And I think this decision of Ryle's had a large impact on the role of journal articles in history of philosophy. (Though note Hamlyn says in that paper that Ryle left him a backlog of 2 years' material to publish. So any break would be 1973 not 1971. Both these facts, that _Mind_ was only publishing its backlog in 1972 and 1973, and that they were still papers accepted by Ryle, are quite interesting in the context of the differences in citation rates between _Mind_ and its American counterparts in those years. But that's a story for another study.)
+Whatever Hamlyn thought, it doesn't seem to have affected the publications much. You can't see his ascension (in 1971) in the data here. And I think this decision of Ryle's had a large impact on the role of journal articles in history of philosophy. (Though note Hamlyn says in that paper that Ryle left him a backlog of 2 years' material to publish. So any break would be 1973 not 1971. Both these facts, that _Mind_ was only publishing its backlog in 1972 and 1973, and that they were still papers accepted by Ryle, are quite interesting in the context of the differences in citation rates between _Mind_ and its US counterparts in those years. But that's a story for another study.)
 
-```{r history-topics, fig.height=6.2, fig.cap = "Topics in History of Philosophy", fig.alt = alt_text}
+```{r history-topics, fig.height=6.2, fig.cap = "Topics in history of philosophy.", fig.alt = alt_text}
+# Burp
 cgt("History of Philosophy", 4)
 alt_text <- cgt_alt_text("History of Philosophy", 4)
 ```
 
 Two things jump out here. 
 
-One is that when history of philosophy was a major part of the journals, it was driven by the weird mix from [Other History](#topic04), not the big names. Remember that the paradigm article from Topic 4 was about James Marsh. 
+One is that when history of philosophy was a major part of the journals, it was driven by the weird mix from [other history](#topic04), not the big names. Remember that the paradigm article from Topic 4 was about James Marsh. 
 
-The other is that [Dewey and Pragmatism](#topic05) is also a big part of the story, at least when history is prominent in the journals.
+The other is that [Dewey and pragmatism](#topic05) is also a big part of the story, at least when history is prominent in the journals.
 
-But note that both of these things suggest that to some extent the strength of history pre-Ryle is a touch overstated. Other History includes a bunch of papers that are, if history, very much the first draft of history. For example, for several decades _Philosophical Review_ published an annual piece on philosophy in France, usually written by André Lalande. (You can get to a bunch of these papers [via PhilPapers](https://philpapers.org/s/%22Philosophy%20in%20France%22%20Lalande), but I haven't looked at many of them personally.) It's kind of history - it surveys what has happened in a place in a historical period. It's just that the period was, you know, the year that just passed. So not really that historical. All of these articles are classed as history by the algorithm. That doesn't explain what happened with _Mind_, of course, but there is stuff there that is only history for want of somewhere else to put it.
+But note that both of these things suggest that to some extent the strength of history before World War II is a touch overstated. Other History includes a bunch of papers that are, if history, very much the first draft of history. For example, for several decades _Philosophical Review_ published an annual piece on philosophy in France, usually written by André Lalande. (A bunch of these papers can be accessed [via PhilPapers](https://philpapers.org/s/%22Philosophy%20in%20France%22%20Lalande), but I haven't looked at many of them personally.) It's kind of history—it surveys what has happened in a place in a historical period. It's just that the period was, you know, the year that just passed. So not really that historical. All of these articles are classed as history by the algorithm. That doesn't explain what happened with _Mind_, of course, but there is stuff there that is only history for want of somewhere else to put it.
 
-And while many of the pragmatism papers are genuinely history papers - they are about works by Dewey several decades after those works were written - some of them are simply works of pragmatist philosophy. (And of course Dewey is still alive, and even publishing, into the 1940s. I think you can do historical work on a figure while they are still alive, but it's a bit odd.)
+And while many of the pragmatism papers are genuinely history papers—they are about works by Dewey several decades after those works were written—some of them are simply works of pragmatist philosophy. (And of course Dewey is still alive, and even publishing, into the 1940s. I think it's possible to do historical work on a figure while they are still alive, but it's a bit odd.)
 
 So I don't think we should think there was really a golden age for publishing history of philosophy in these journals that has now ceased. They did publish things that were historical. And papers on Marsh or on Geulincx are really a kind of history that we just don't see in the current journals. Maybe we need to bring back that kind of history of philosophy. (As I'll discuss at the [end of the book](#imprint-section), there is some evidence that we are bringing that kind of history back.)
 
 ## Logic and Mathematics
 
 
-```{r lm-journals, fig.cap = "Proportion of each journal's yearly publications in Logic and Mathematics", fig.alt = alt_text}
-cg("Logic and Mathematics", 6)
+```{r lm-journals, fig.cap = "Proportion of each journal's yearly publications in logic and mathematics.", fig.alt = alt_text}
+cg("logic and mathematics", 6)
 alt_text <- cg_alt_text("Logic and Mathematics", 6)
 ```
 
@@ -676,4 +684,4 @@ cgt("Social and Political", 12)
 alt_text <- cgt_alt_text("Social and Political", 12)
 ```
 
-This, I think makes the story about what happened from 1950-2013 make more sense. There was a Rawlsian boom - it shows up clearly in Egalitarainism and Liberal Democracy. There was even a small bit of interest in Feminism. But the drop-off of interest in Marx, and in History and Culture, more than made up for it. Given how often I've heard people complain about the excessive amount of Rawlsiana in the late 20th Century journals, this was rather of a surprise. Of course, you may think that Marxism, and the French Revolution, were slightly more important subjects of detailed study than _A Theory of Justice_, no matter how good a book it is.
+This, I think makes the story about what happened from 1950-2013 make more sense. There was a Rawlsian boom - it shows up clearly in Egalitarainism and Liberal Democracy. There was even a small bit of interest in Feminism. But the drop-off of interest in Marx, and in History and Culture, more than made up for it. Given how often I've heard people complain about the excessive amount of Rawlsiana in the late twentieth-century journals, this was rather of a surprise. Of course, you may think that Marxism, and the French Revolution, were slightly more important subjects of detailed study than _A Theory of Justice_, no matter how good a book it is.

@@ -18,8 +18,8 @@ for (j in 1:90){
   if (!the_categories$cat_num[j] == 13){
     category_table <- category_table %>%
       add_row(topic = j, 
-              category = str_to_lower(the_categories$cat_name[j]), 
-              subject = the_categories$sub_lower[j], 
+              category = fcap(str_to_lower(the_categories$cat_name[j])), 
+              subject = fcap(the_categories$sub_lower[j]), 
               keywords = keywords_for_table)
   }
   if (the_categories$cat_num[j] == 13){
@@ -27,11 +27,11 @@ for (j in 1:90){
       topic = (j*100+1):(j*100+2))
     temp_category_tibble <- temp_category_tibble %>%
       inner_join(the_categories, by = "topic")
-    temp_category <- str_to_lower(paste(str_to_lower(temp_category_tibble$cat_name), sep = "/", collapse = "/"))
+    temp_category <- fcap(paste(str_to_lower(temp_category_tibble$cat_name), sep = "/", collapse = "/"))
     category_table <- category_table %>%
       add_row(topic = j, 
               category = temp_category,
-              subject = the_categories$sub_lower[j], 
+              subject = fcap(the_categories$sub_lower[j]), 
               keywords = keywords_for_table)
     
   }
@@ -60,7 +60,7 @@ category_count <- category_gamma %>%
   ungroup() %>%
   complete(year, category, fill = list(n= 0))
 
-category_count_graph <- ggplot(category_count, aes(x = year, y = n, color=category, group=category)) +
+category_count_graph <- ggplot(category_count, aes(x = year, y = n, color=fcap(str_to_lower(category)), group=fcap(str_to_lower(category)))) +
     labs(x = element_blank(), y = "Number of Articles") +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
 #                     minor_breaks = scales::breaks_pretty(n = 15),
@@ -82,6 +82,7 @@ alt_text <- "A scatterplot showing the raw number of articles in each year in ea
 That's a lot of dots, and I'm not sure it's easy to see a trendline in there. Let's add some automatic trendlines to see if it's any clearer.
 
 ```{r category-count-trends, fig.cap = "Number of articles in each of the twelve categories over time (with trendlines).", fig.alt = alt_text}
+# Burp
 category_count_graph + 
   geom_point(size = 0.5, alpha = 0.2) +
   geom_smooth(se=F, method = "loess", formula = "y ~ x", size = 0.2)
@@ -405,8 +406,9 @@ if (max(filter(category_by_topic, category == cate, year > 1900)$f > 0.0601)){
 print(
      kable(filter(category_by_topic, category == cate, f > 0.0601, year > 1900) %>%
           select(name_lower, year, f) %>%
-          mutate(f= round(f, 4)),
-        caption = paste0("Points excluded from topic graph for ",cate),
+          mutate(f= round(f, 4)) %>% 
+          mutate(name_lower = fcap(name_lower)),
+        caption = paste0("Points excluded from topic graph for ",str_to_lower(cate)),
         col.names = c("Subject", "Year", "Frequency"))
 )
 }
@@ -481,7 +483,6 @@ Note how there are a few topics that peak one after the other: first value, then
 ## History {#history-category-section}
 
 ```{r history-journals, fig.cap = "Proportion of each journal's yearly publications in history of philosophy.", , fig.alt = alt_text}
-# Burp
 cg("History of Philosophy", 4)
 alt_text <- cg_alt_text("History of Philosophy", 4)
 ```
@@ -500,7 +501,6 @@ So part of what's going on is what I mentioned in the previous section. Speciali
 Whatever Hamlyn thought, it doesn't seem to have affected the publications much. You can't see his ascension (in 1971) in the data here. And I think this decision of Ryle's had a large impact on the role of journal articles in history of philosophy. (Though note Hamlyn says in that paper that Ryle left him a backlog of 2 years' material to publish. So any break would be 1973 not 1971. Both these facts, that _Mind_ was only publishing its backlog in 1972 and 1973, and that they were still papers accepted by Ryle, are quite interesting in the context of the differences in citation rates between _Mind_ and its US counterparts in those years. But that's a story for another study.)
 
 ```{r history-topics, fig.height=6.2, fig.cap = "Topics in history of philosophy.", fig.alt = alt_text}
-# Burp
 cgt("History of Philosophy", 4)
 alt_text <- cgt_alt_text("History of Philosophy", 4)
 ```

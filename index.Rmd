@@ -336,6 +336,19 @@ for (i in 1:90){
 }
 ```
 
+```{r first-cap, cache=TRUE}
+# A function for capitalising first letter of string and leaving everything else as is
+# Str_to_sentence makes the names lower case, so doesn't work for this purpose
+require(stringr)
+fcap <- function(x){
+  paste0(
+    str_to_upper(str_sub(x, 1,1)),
+    str_sub(x, 2, nchar(x))
+  )
+}
+```
+
+
 ```{r cross-topic, cache=TRUE}
 # Average gamma in topic y for articles in topic x
 # Useful quick-and-dirty overlap between topics measure

@@ -212,19 +212,19 @@ datatable(binary_split_table %>% slice(c(24, 35,36,37,77,79, 90)),
       formatStyle(1:5,`text-align` = 'left') 
 ```
 
-[Ordinary Language](#topic24) is a mess, and the Confidence measure isn't as high as I'd like to make a division, but the subtopics look pretty clearly disjoint. The first is about Ethics, the second is about Mind. And since we already have a separate topic for [contemporanous British philosophy of language](#topic22), splitting this topic into Ethics and Mind seems like a sensible plan.
+[Ordinary language](#topic24) is a mess, and the Confidence measure isn't as high as I'd like to make a division, but the subtopics look pretty clearly disjoint. The first is about ethics, the second is about mind. And since we already have a separate topic for [contemporanous British philosophy of language](#topic22), splitting this topic into ethics and mind seems like a sensible plan.
 
-[Freedom and Free Will](#topic35) is really the one case where the model got thrown by the fact that two different philosophical debates use a common word. But the subtopics bail us out here, splitting it into debates about free will and debates about political freedom.
+[Freedom and free will](#topic35) is really the one case where the model got thrown by the fact that two different philosophical debates use a common word. But the subtopics bail us out here, splitting it into debates about free will and debates about political freedom.
 
-[Crime and Punishment](#topic36) could arguably have been left alone. But it looked to me like the first subtopic concerns issues in Ethics, and especially about forgiveness as an inter-personal relationship, and the second is about Social and Political Philosophy.
+[Crime and Ppnishment](#topic36) could arguably have been left alone. But it looked to me like the first subtopic concerns issues in ethics, and especially about forgiveness as an inter-personal relationship, and the second is about social and political philosophy.
 
-I've already gone over [Sets and Grue](#topic37) at some length.
+I've already gone over [sets and grue](#topic37) at some length.
 
-I don't quite know what happened in the original model with [Frankfurt Cases](#topic77). Most of the models I built had a topic centered around Frankfurt cases. (And the ones that didn't had a distinct topic for free will, it was just that Frankfurt wasn't especially central to them.) But no model other than this one threw stuff about fiction in with them. (There was one time when the model insisted on putting works about fiction in with philosophy of biology work on function. And I spent a lot of time worrying that it was being overly influenced by the overlapping letters.) Anyway, the subtopics bail us out here - philosophy of fiction has little to do with the free will debates that this topic is primarily about.
+I don't quite know what happened in the original model with [Frankfurt cases](#topic77). Most of the models I built had a topic centered around Frankfurt cases. (And the ones that didn't had a distinct topic for free will, it was just that Frankfurt wasn't especially central to them.) But no model other than this one threw stuff about fiction in with them. (There was one time when the model insisted on putting works about fiction in with philosophy of biology work on function. And I spent a lot of time worrying that it was being overly influenced by the overlapping letters.) Anyway, the subtopics bail us out here - philosophy of fiction has little to do with the free will debates that this topic is primarily about.
 
-[Races and DNA](#topic79) makes a bit more sense as a topic, but is still hard to classify. But the subtopics are easy to classify; the first is about Philosophy of Science, the second about Social and Political Philosophy.
+[Races and DNA](#topic79) makes a bit more sense as a topic, but is still hard to classify. But the subtopics are easy to classify; the first is about philosophy of science, the second about social and political philosophy.
 
-And the work on [Norms](#topic90) divides reasonably neatly into Language norms and Ethical norms. Possibly if we ran the clock forward and included papers after 2013 we'd see more papers on epistemic norms here, and that would complicate the neat division.
+And the work on [norms](#topic90) divides reasonably neatly into language norms and ethical norms. Possibly if we ran the clock forward and included papers after 2013 we'd see more papers on epistemic norms here, and that would complicate the neat division.
 
 So those are the divisions I made. It's helpful to have them as a table, not least because I've already been using their names in the previous chapter.
 
@@ -237,7 +237,7 @@ for (j in 1:10){
   kt <- round(the_categories$topic[90+2*j]/100)
   new_subtopic_row <- tribble(
       ~topic, ~subject, ~sub_one, ~sub_two,
-      the_categories$topic[kt], the_categories$subject[kt], the_categories$subject[89+2*j], the_categories$subject[90+2*j]
+      the_categories$topic[kt], fcap(the_categories$sub_lower[kt]), fcap(the_categories$sub_lower[89+2*j]), fcap(the_categories$sub_lower[90+2*j])
   )
   subtopic_table <- bind_rows(subtopic_table,new_subtopic_row)
 }
@@ -277,7 +277,7 @@ articles_by_category <- category_gamma %>%
 cat_check <- function(x, y){
 # First a line break because Kable needs it
 cat("\n\n")
-cat("### ",cat_names$cat_name[x]," - ",cat_names$cat_name[y], " {-#catbound", x, y, "}", sep="")
+cat("### ",str_to_sentence(cat_names$cat_name[x])," vs. ",str_to_sentence(cat_names$cat_name[y]), " {-#catbound", x, y, "}", sep="")
 cat("\n\n")
   
 # Retrieve the two category LDA
@@ -311,8 +311,8 @@ temp_output <-  temp_article_list %>%
 # Output to a kable
 
 print(kable(temp_output, 
-      col.names = c("Catgeory", "Subject", "Mean Probability"),
-      caption = paste("Comparing articles in",cat_names$cat_name[x],"and",cat_names$cat_name[y]),
+      col.names = c("Category", "Subject", "Mean Probability"),
+      caption = paste0("Comparing articles in ",str_to_lower(cat_names$cat_name[x])," and ",str_to_lower(cat_names$cat_name[y]), "."),
       align=c("l", "l", "l")) %>% kable_styling(full_width = F)
       )
 }
@@ -374,52 +374,52 @@ Fifth, I'm not applying this to three categories: Idealism, Aesthetics and Philo
 
 So I'm looking at 9 categories to check that the boundaries between them are drawn roughly correctly. And that means there are 9 choose 2, i.e., 36, boundaries to look at. These are in subsections, not sections, so they don't show up in the sidebar. So I've included links here to the list of boundaries that I'll survey.
 
-1. [Epistemology-Ethics](#catbound23)
-2. [Epistemology-History of Philosophy](#catbound24)
-3. [Epistemology-Logic and Mathematics](#catbound26)
-4. [Epistemology-Metaphysics](#catbound27)
-5. [Epistemology-Philosopy of Language](#catbound28)
-6. [Epistemology-Philosopy of Mind](#catbound29)
-7. [Epistemology-Philosopy of Science](#catbound211)
-8. [Epistemology-Social and Political](#catbound212)
-9. [Ethics-History of Philosophy](#catbound34)
-10. [Ethics-Logic and Mathematics](#catbound36)
-11. [Ethics-Metaphysics](#catbound37)
-12. [Ethics-Philosopy of Language](#catbound38)
-13. [Ethics-Philosopy of Mind](#catbound39)
-14. [Ethics-Philosopy of Science](#catbound311)
-15. [Ethics-Social and Political](#catbound312)
-16. [History of Philosophy-Logic and Mathematics](#catbound46)
-17. [History of Philosophy-Metaphysics](#catbound47)
-18. [History of Philosophy-Philosopy of Language](#catbound48)
-19. [History of Philosophy-Philosopy of Mind](#catbound49)
-20. [History of Philosophy-Philosopy of Science](#catbound411)
-21. [History of Philosophy-Social and Political](#catbound412)
-22. [Logic and Mathematics-Metaphysics](#catbound67)
-23. [Logic and Mathematics-Philosopy of Language](#catbound68)
-24. [Logic and Mathematics-Philosopy of Mind](#catbound69)
-25. [Logic and Mathematics-Philosopy of Science](#catbound611)
-26. [Logic and Mathematics-Social and Political](#catbound612)
-27. [Metaphysics-Philosopy of Language](#catbound78)
-28. [Metaphysics-Philosopy of Mind](#catbound79)
-29. [Metaphysics-Philosopy of Science](#catbound711)
-30. [Metaphysics-Social and Political](#catbound712)
-31. [Philosopy of Language-Philosopy of Mind](#catbound89)
-32. [Philosopy of Language-Philosopy of Science](#catbound811)
-33. [Philosopy of Language-Social and Political](#catbound812)
-34. [Philosopy of Mind-Philosopy of Science](#catbound911)
-35. [Philosopy of Mind-Social and Political](#catbound912)
-36. [Philosopy of Science-Social and Political](#catbound1112)
+1. [Epistemology vs. Ethics](#catbound23)
+2. [Epistemology vs. History of philosophy](#catbound24)
+3. [Epistemology vs. Logic and mathematics](#catbound26)
+4. [Epistemology vs. Metaphysics](#catbound27)
+5. [Epistemology vs. Philosophy of language](#catbound28)
+6. [Epistemology vs. Philosophy of mind](#catbound29)
+7. [Epistemology vs. Philosophy of science](#catbound211)
+8. [Epistemology vs. Social and political](#catbound212)
+9. [Ethics vs. History of philosophy](#catbound34)
+10. [Ethics vs. Logic and mathematics](#catbound36)
+11. [Ethics vs. Metaphysics](#catbound37)
+12. [Ethics vs. Philosophy of language](#catbound38)
+13. [Ethics vs. Philosophy of mind](#catbound39)
+14. [Ethics vs. Philosophy of science](#catbound311)
+15. [Ethics vs. Social and political](#catbound312)
+16. [History of philosophy vs. Logic and mathematics](#catbound46)
+17. [History of philosophy vs. Metaphysics](#catbound47)
+18. [History of philosophy vs. Philosophy of language](#catbound48)
+19. [History of philosophy vs. Philosophy of mind](#catbound49)
+20. [History of philosophy vs. Philosophy of science](#catbound411)
+21. [History of philosophy vs. Social and political](#catbound412)
+22. [Logic and mathematics vs. Metaphysics](#catbound67)
+23. [Logic and mathematics vs. Philosophy of language](#catbound68)
+24. [Logic and mathematics vs. Philosophy of mind](#catbound69)
+25. [Logic and mathematics vs. Philosophy of science](#catbound611)
+26. [Logic and mathematics vs. Social and political](#catbound612)
+27. [Metaphysics vs. Philosophy of language](#catbound78)
+28. [Metaphysics vs. Philosophy of mind](#catbound79)
+29. [Metaphysics vs. Philosophy of science](#catbound711)
+30. [Metaphysics vs. Social and political](#catbound712)
+31. [Philosophy of language vs. Philosophy of mind](#catbound89)
+32. [Philosophy of language vs. Philosophy of science](#catbound811)
+33. [Philosophy of language vs. Social and political](#catbound812)
+34. [Philosophy of mind vs. Philosophy of science](#catbound911)
+35. [Philosophy of mind vs. Social and political](#catbound912)
+36. [Philosophy of science vs. Social and political](#catbound1112)
 
 ```{r cat-sort-01}
 cat_check(2, 3)
 ```
 
-I'm doing these in alphabetical order, and that means the first cab off the rank is one of the most tricky. Three of the Epistemology topics: [Formal Epistemology](#topic84), [Knowledge](#topic74) and [Justification](#topic76) are clear enough. And most of the Ethics topics are clear enough. But there are two that are hard.
+I'm doing these in alphabetical order, and that means the first cab off the rank is one of the most tricky. Three of the Epistemology topics: [formal epistemology](#topic84), [knowledge](#topic74) and [justification](#topic76) are clear enough. And most of the Ethics topics are clear enough. But there are two that are hard.
 
-One is [Arguments](#topic55). Why should this go with Epistemology? Everyone uses arguments. I've put it in Epistemology for three reasons. First, as you can see, the model puts it there. (And we'll keep seeing that as we look through the comparisons between Epistemology and other categories.) Second, once you extract the dualism arguments from the topic, what's left are primarily papers about what we can learn from arguments. And those feel like Epistemology papers to me. And third, there are a few other close calls where I put something that could go in Epistemology elsewhere, and getting the overall shape of the graphs right felt like I needed to have one close call go this way.
+One is [arguments](#topic55). Why should this go with Epistemology? Everyone uses arguments. I've put it in Epistemology for three reasons. First, as you can see, the model puts it there. (And we'll keep seeing that as we look through the comparisons between Epistemology and other categories.) Second, once you extract the dualism arguments from the topic, what's left are primarily papers about what we can learn from arguments. And those feel like Epistemology papers to me. And third, there are a few other close calls where I put something that could go in Epistemology elsewhere, and getting the overall shape of the graphs right felt like I needed to have one close call go this way.
 
-The other strange one is [Decision Theory](#topic57). You might have thought that would simply go with the other probability papers in Epistemology or maybe Philosophy of Science. But it's ended up in Ethics for two reasons. One is that, as you can see from the table, that's where the automatic sorter put it. But the other comes from thinking about what articles are left in that topic. Given that Formal Epistemology exists as a topic, and that [Theory Testing](#topic56) also exists, there isn't as much directly about probability in this topic. What is left is primarily papers about value functions. They are very technical questions about value functions, to be sure, but the papers actually in this topic on the whole are more about the 'value' part of expected value than the 'expected' part. And that isn't absurd to group in with Ethics. Put another way, what we really have in this topic is _Formal Ethics_, and it makes sense that goes with Ethics.
+The other strange one is [decision theory](#topic57). You might have thought that would simply go with the other probability papers in Epistemology or maybe Philosophy of Science. But it's ended up in Ethics for two reasons. One is that, as you can see from the table, that's where the automatic sorter put it. But the other comes from thinking about what articles are left in that topic. Given that Formal Epistemology exists as a topic, and that [Theory Testing](#topic56) also exists, there isn't as much directly about probability in this topic. What is left is primarily papers about value functions. They are very technical questions about value functions, to be sure, but the papers actually in this topic on the whole are more about the 'value' part of expected value than the 'expected' part. And that isn't absurd to group in with Ethics. Put another way, what we really have in this topic is _Formal Ethics_, and it makes sense that goes with Ethics.
 
 ```{r cat-sort-02}
 cat_check(2, 4)
@@ -621,7 +621,7 @@ One is that the division here isn't really between Philosophy of Science and Log
 
 Another is that the model, quite understandably, has a tendency to put any subject matter that includes lots of discussion of conjunctions and disjunctions in with Logic. This isn't entirely wrong, but it is overkill I think. And that's part of what is driving the classification of Grue.
 
-And a third is that the model never really likes splitting up these subtopics, and Sets is clearly a Logic and Mathematics topic, not a Philosopy of Science topic.
+And a third is that the model never really likes splitting up these subtopics, and Sets is clearly a Logic and Mathematics topic, not a Philosophy of Science topic.
 
 So I'm happy to think there are reasons that the model gets this one case wrong, and also happy that it basically agreed with me on the other 25 cases.
 

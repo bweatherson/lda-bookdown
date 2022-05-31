@@ -525,12 +525,12 @@ cg("logic and mathematics", 6)
 alt_text <- cg_alt_text("Logic and Mathematics", 6)
 ```
 
-The story of this category is a rise until mid-century and a fall afterwards. The journals start to give us a few clues as to what happened.
+The story of this category is a rise until midcentury and a fall afterwards. The journals start to give us a few clues as to what happened.
 
-- _Analysis_ starts off being very welcoming to Logic and Mathematics - so much so that it messes up the scales for these graphs a bit, but gets progressively less so over time.
+- _Analysis_ starts off being very welcoming to logic and mathematics—so much so that it messes up the scales for these graphs a bit—but gets progressively less so over time.
 - _Noûs_ follows the same pattern.
 - _Mind_ under Hamlyn really stops doing any of this kind of work, though it returns in a hurry once Hamlyn leaves.
-- _Philosophy of Science_ moves strongly away from doing Logic and Mathematics work. And given the number of papers _Philosophy of Science_ publishes in the 1990s and 2000s, this affects the numbers a lot.
+- _Philosophy of Science_ moves strongly away from doing logic and mathematics work. And given the number of papers _Philosophy of Science_ publishes in the 1990s and 2000s, this affects the numbers a lot.
 
 So part of the story here, perhaps a large part, is a familiar refrain. The specialist journals are getting more specialist, and this is crowding out other things. But the downward trajectory in _Analysis_ and _Noûs_ matters too. Let's look by topics.
 
@@ -539,11 +539,11 @@ cgt("Logic and Mathematics", 6)
 alt_text <- cgt_alt_text("Logic and Mathematics", 6)
 ```
 
-That makes a bit clearer what happened. Two topics associated with positivism - Definitions and Verification - are in the category. And they peaked in mid-century and then fell.
+That makes a bit clearer what happened. Two topics associated with positivism—[definitions](#topic06) and [verification](#topic15)—are in the category. And they peaked in midcentury and then fell.
 
-They peaked at slightly different times, which I wouldn't have expected. I guess a lot of the work in Definitions is really trying to make positivism work, by getting a working account of definitions. And once verification itself becomes a topic, it's because people are starting to think that the verification principle doesn't have a defensible disambiguation. It's not so much logic fell away, as that _logical_ positivism did. And we knew that would happen.
+They peaked at slightly different times, which I wouldn't have expected. I guess a lot of the work in definitions is really trying to make positivism work, by getting a working account of definitions. And once verification itself becomes a topic, it's because people are starting to think that the verification principle doesn't have a defensible disambiguation. It's not so much logic fell away, as that _logical_ positivism did. And we knew that would happen.
 
-It's only up to 2%, but there is an interestingly steady rise in work on theories of truth. These play an important role in contemporary theories of logic, especially in motivating non-classical theories. The optimistic take on this category is that the topics that have fallen are now basically at 0, so they can't fall further, while other topics are steadily rising. I'm not sure I buy that - I suspect we'll see more falls if we extend this study beyond 2013 - but it's one reason for optimism.
+It's only up to 2 percent, but there is an interestingly steady rise in work on theories of [truth](#topic59). These play an important role in contemporary theories of logic, especially in motivating nonclassical theories. The optimistic take on this category is that the topics that have fallen are now basically at 0, so they can't fall farther, while other topics are steadily rising. I'm not sure I buy that—I suspect we'll see more falls if we extend this study beyond 2013—but it's one reason for optimism.
 
 ## Metaphysics {#metaphysics-category-section}
 
@@ -552,18 +552,18 @@ cg("Metaphysics", 7)
 alt_text <- cg_alt_text("Metaphysics", 7)
 ```
 
-The short version is that metaphysics is at worst flat in every journal, and rising rapidly in _Analysis_, _Philosophical Quarterly_ and _Philosophy and Phenomenological Research_. That's fine, but shouldn't we see positivism showing up somewhere the put downward pressure on metaphysics at least somewhere? If that happens, it isn't visible in the journal-level data. What happens at the topic-level?
+The short version is that metaphysics is at worst flat in every journal, and rising rapidly in _Analysis_, _Philosophical Quarterly_ and _Philosophy and Phenomenological Research_. That's fine, but shouldn't we see positivism showing up somewhere that put downward pressure on metaphysics at least somewhere? If that happens, it isn't visible in the journal-level data. What happens at the topic-level?
 
 ```{r metaphysics-topics, fig.height = 6.2, fig.cap = "Topics in Metaphysics", fig.alt = alt_text}
 cgt("Metaphysics", 7)
 alt_text <- cgt_alt_text("Metaphysics", 7)
 ```
 
-So there are two big topics - Modality, and Composition and Constitution - that only take off after positivism goes away. The same is probably true of Causation as well, but it's much smaller. I was surprised that causation was so much smaller than the other very modern categories; maybe that's in part because some of the causation work ended up getting classified as philosophy of science.
+So there are two big topics—[modality](#topic80), and [composition and constitution](#topic89)-that only take off after positivism goes away. The same is probably true of [causation](#topic54) as well, but it's much smaller. I was surprised that causation was so much smaller than the other very modern categories; maybe that's in part because some of the causation work ended up getting classified as philosophy of science.
 
-But we still haven't answered the question about where positivism shows up. I thought that the graph here would be U-shaped, with lots of metaphysics either side of a positivism-driven dip in the middle. We can recreate that gap if we declare that all the work in idealism is really metaphysics.
+But we still haven't answered the question about where positivism shows up. I thought that the graph here would be U-shaped, with lots of metaphysics on either side of a positivism-driven dip in the middle. We can recreate that gap if we declare that all the work in idealism is really metaphysics.
 
-```{r metaphysics-and-idealism-frequency, fig.cap = "Proportion of each year's articles that are in Idealism or Metaphysics", fig.height = 5, fig.alt = alt_text}
+```{r metaphysics-and-idealism-frequency, fig.cap = "Proportion of each year's articles that are in idealism or metaphysics.", fig.height = 5, fig.alt = alt_text}
 cate_num <- 7
 m_and_i_table <- category_frequency %>%
   filter(category == "Metaphysics" | category == "Idealism") %>%
@@ -579,12 +579,12 @@ m_and_i_graph <- ggplot(data = m_and_i_table, aes(x = year, y = f)) +
   
 m_and_i_graph
 
-alt_text <- "A scatterplot showing the proportion of articles that are in either Idealism or Metaphysics. It starts around 10%, rises to over 30% in the early 20th century, then falls very linearly back to around 10% by 1940. It is then fairly stable, with perhaps a small upwards trend over the last 50 years that isn't obviously significant."
+alt_text <- "A scatterplot showing the proportion of articles that are in either idealism or metaphysics. It starts around 10%, rises to over 30% in the early 20th century, then falls very linearly back to around 10% by 1940. It is then fairly stable, with perhaps a small upwards trend over the last 50 years that isn't obviously significant."
 ```
 
-That's more like what I expected, though the post-positivism rise is much smaller than the pre-positivism fall. It obviously looks different if you use counts rather than proportions.
+That's more like what I expected, though the postpositivism rise is much smaller than the prepositivism fall. It obviously looks different if using counts rather than proportions.
 
-```{r metaphysics-and-idealism-count, fig.cap = "Weighted number of each year's articles that are in Idealism or Metaphysics", fig.height = 5, fig.alt = alt_text}
+```{r metaphysics-and-idealism-count, fig.cap = "Weighted number of each year's articles that are in idealism or metaphysics.", fig.height = 5, fig.alt = alt_text}
 m_and_i_count_table <- category_frequency %>%
   filter(category == "Metaphysics" | category == "Idealism") %>%
   group_by(year) %>%
@@ -603,9 +603,9 @@ alt_text <- "The same graph as the previous one, but showing the number of artic
 
 And now we're back to a steady rise, with no obvious place to locate the rise of positivism.
 
-I think the big story here is that positivism has much less impact on the journals than you might think from the standard story about the history of 20th century philosophy. If you give positivists credit for killing idealism, then it has an enormous influence. But I'm not sure what the case is for that. It's not like Moore was a card carrying positivist, and he surely had something to do with the downfall of idealism.
+I think the big story here is that positivism has much less impact on the journals thanoneyou might think from the standard story about the history of twentieth century philosophy. If positivists are given credit for killing idealism, then positivism has an enormous influence. But I'm not sure what the case is for that. It's not like Moore was a card-carrying positivist, and he surely had something to do with the downfall of idealism.
 
-Anyway, let's keep track of this when we look at subsequent topics, because it would be very surprising to see no impact from positivism on the literature.
+Anyway, let's keep track of this when looking at subsequent topics, because it would be very surprising to see no impact from positivism on the literature.
 
 ## Philosophy of Language
 
@@ -614,7 +614,7 @@ cg("Philosophy of Language", 8)
 alt_text <- cg_alt_text("Philosophy of Language", 8)
 ```
 
-There isn't much trend there. Within _Analysis_ I guess there is a downward trend, though it's so random before its wartime hiatus that it's hard to say. _Philosophical Review_ starts publishing philosophy of language articles in the 1940s then especially the 1950s. (This is probably connected to Norman Malcolm moving to Ithaca.) Afterwards there is a bit of year-to-year variation, largely because the Review publishes so few articles. Before Ryle takes over there isn't a lot of philosophy of language in _Mind_, then it is fairly steady apart from a blip upwards in the 1990s. But otherwise there isn't much trend here to speak of. Let's instead look at the topics.
+There isn't much trend there. Within _Analysis_ I guess there is a downward trend, though it's so random before its wartime hiatus that it's hard to say. _Philosophical Review_ starts publishing philosophy of language articles in the 1940s then especially in the 1950s. (This is probably connected to Norman Malcolm moving to Ithaca.) Afterwards there is a bit of year-to-year variation, largely because the Review publishes so few articles. Before Ryle takes over there isn't a lot of philosophy of language in _Mind_, then it is fairly steady apart from a blip upward in the 1990s. But otherwise there isn't much trend here to speak of. Let's instead look at the topics.
 
 
 ```{r language-topics, fig.height = 6.2, fig.cap = "Topics in Philosophy of Language", fig.alt = alt_text}
@@ -622,13 +622,13 @@ cgt("Philosophy of Language", 8)
 alt_text <- cgt_alt_text("Philosophy of Language", 8)
 ```
 
-That's more interesting. Four of the topics are almost absent before 1940. A fifth, centered around [On Denoting](https://philpapers.org/rec/RUSOD), has a flurry of early century activity, then picks back up again in the 1950s. All five of them continue to be important to the present day, though a few of them look slightly down from their peaks.
+That's more interesting. Four of the topics are almost absent before 1940. A fifth, centered around [On "Denoting](https://philpapers.org/rec/RUSOD)", has a flurry of early century activity, then picks back up again in the 1950s. All five of them continue to be important to the present day, though a few of them look slightly down from their peaks.
 
-But the dominant theme here is Wittgensteinian philosophy of language. It has a remarkable rise and then an equally remarkable fall. What surprises me is how much work on this topic the model finds pre-1900. It could just be noise - we're talking at most 2% of a small number of articles. But the model doesn't think that Fregean or Quinean philosophy of language turns up in these articles, so it's a bit interesting that it sees some Wittgensteinian work there.
+But the dominant theme here is Wittgensteinian philosophy of language. It has a remarkable rise and then an equally remarkable fall. What surprises me is how much work on this topic the model finds pre-1900. It could just be noise—we're talking at most 2 percent of a small number of articles. But the model doesn't think that Fregean or Quinean philosophy of language turns up in these articles, so it's a bit interesting that it sees some Wittgensteinian work there.
 
-The rise and fall of Wittgensteinian philosophy of language is not symmetric. The rise took away from other parts of philosophy, but when the fall happened the interest simply shifted to other areas in philosophy of language. The result was that philosophy of language was stronger afterwards than before, though the work that ended up being central was not the work that made philosophers take philosophy of language seriously.
+The rise and fall of Wittgensteinian philosophy of language is not symmetric. The rise took away from other parts of philosophy, but when the fall happened the interest simply shifted to other areas in philosophy of language. The result was that philosophy of language was stronger afterward than before, though the work that ended up being central was not the work that made philosophers take philosophy of language seriously.
 
-There would be more topics here, and the overall graph would trend more sharply upwards, except the model itself thought that some topics that could have been in Philosophy of Language are better placed in Logic and Mathematics. I'll come back to that in the next chapter.
+There would be more topics here, and the overall graph would trend more sharply upwards, except the model itself thought that some topics that could have been in philosophy of language are better placed in logic and mathematics. I'll come back to that in the next chapter.
 
 ## Philosophy of Mind
 
@@ -637,22 +637,22 @@ cg("Philosophy of Mind", 9)
 alt_text <- cg_alt_text("Philosophy of Mind", 9)
 ```
 
-Again, it's hard to see much of a trend here. _Mind_ stops publishing work that is (by contemporary standards) more psychology than philosophy, and that leads to a bit of a fall. Then there is an odd fall in the 1990s, simultaneous with an upsurge in how many philosophy of language papers _Mind_ publishes. But otherwise it's like every journal decided at its foundation what proportion of its space will go to Philosophy of Mind, and it has stuck to that pretty closely ever since. Just what topics in Philosophy of Mind that they've covered is much less stable. 
+Again, it's hard to see much of a trend here. _Mind_ stops publishing work that is (by contemporary standards) more psychology than philosophy, and that leads to a bit of a fall. Then there is an odd fall in the 1990s, simultaneous with an upsurge in how many philosophy of language papers _Mind_ publishes. But otherwise it's like every journal decided at its foundation what proportion of its space will go to philosophy of mind, and it has stuck to that pretty closely ever since. Just what topics in philosophy of mind that they've covered is much less stable. 
 
 ```{r mind-topics, fig.height = 10.2, fig.cap = "Topics in Philosophy of Mind", fig.alt = alt_text}
 cgt("Philosophy of Mind", 9)
 alt_text <- cgt_alt_text("Philosophy of Mind", 9)
 ```
 
-The Psychology topic, which I had always associated with _Mind_ pre-1900, hangs around into the 1930s. It doesn't make up a big portion of what _Mind_ does in the 20th century, but it is an important part of the early years of _Philosophical Review_. Some of the other topics are arguably papers that could just have easily be classified with Psychology. That's true for the handful of Color papers in the 1880s and the pre-1900 work on Emotions. It's also somewhat true of the early work on Self-Consciousness, though some of that work is also idealist influenced.
+The [psychology](#topic01) topic, which I had always associated with _Mind_ pre-1900, hangs around into the 1930s. It doesn't make up a big portion of what _Mind_ does in the twentieth century, but it is an important part of the early years of _Philosophical Review_. Some of the other topics are arguably papers that could just have easily been classified with Psychology. That's true for the handful of [color/colour](#topic40) papers in the 1880s and the pre-1900 work on [emotions](#topic28). It's also somewhat true of the early work on [self-consciousness](#topic12), though some of that work is also idealist influenced.
 
-I've already talked about the Physicalism topic at some length and won't repeat it here; this was a very large surprise.
+I've already talked about the [physicalism](#topic09) topic at some length and won't repeat it here; this was a very large surprise.
 
-OLP Mind is the part of Ordinary Language Philosophy dealing with Philosophy of Mind. Unlike the Ethics part of Ordinary Language Philosophy, the model thinks this was just picking up on an existing trend, rather than building something wholly new.
+OLP mind is the part of [ordinary Language philosophy](#topic24) dealing with philosophy of mind. Unlike the ethics part of ordinary language philosophy, the model thinks this was just picking up on an existing trend, rather than building something wholly new.
 
-The more recent topics are not too surprising. Thankfully journals are now publishing more work on Cognitive Science. I would have guessed that the graph for Minds and Machines would have started earlier, and stayed higher, than the graphs for Conceivability Arguments and for Concepts, but it's not too surprising.
+The more recent topics are not too surprising. Thankfully journals are now publishing more work on [cognitive science](#topic87). I would have guessed that the graph for [minds and machines](#topic58) would have started earlier, and stayed higher, than the graphs for conceivability arguments and for [concepts](#topic78), but it's not too surprising.
 
-The Freud subtopic is tiny, but that's in part because some of the Freud articles got slid over into Intention. I don't know what the model was thinking there, but it didn't affect the overall category graphs.
+The Freud subtopic is tiny, but that's in part because some of the Freud articles got slid over into [intention](#topic48). I don't know what the model was thinking there, but it didn't affect the overall category graphs.
 
 ## Philosophy of Science
 
@@ -661,14 +661,14 @@ cg("Philosophy of Science", 11)
 alt_text <- cg_alt_text("Philosophy of Science", 11)
 ```
 
-The trend here is fairly simple, and it resembles what I said about the [ethics category](#ethics-category-section). The specialist journals have become more specialised, and the other journals haven't changed a lot. Now in this case, that's in part because most of the journals were doing very little of (what we'd now call) Philosophy of Science. I think they would have disagreed with that description; some of what I've called Metaphysics, and some of what I've called Logic and Mathematics, they would have called Philosophy of Science. But by modern lights they weren't going very much of it, and they still aren't. The big, and important, exception is _Journal of Philosophy_, and it hasn't cut back its Philosophy of Science coverage.
+The trend here is fairly simple, and it resembles what I said about the [ethics category](#ethics-category-section). The specialist journals have become more specialized, and the other journals haven't changed a lot. Now in this case, that's in part because most of the journals were doing very little of (what we'd now call) philosophy of science. I think they would have disagreed with that description; some of what I've called metaphysics, and some of what I've called logic and mathematics, they would have called philosophy of science. But by modern lights they weren't doing very much of it, and they still aren't. The big, and important, exception is _Journal of Philosophy_, and it hasn't cut back its philosophy of science coverage.
 
 ```{r science-topics, fig.height = 12.2, fig.cap = "Topics in Philosophy of Science", fig.alt = alt_text}
 cgt("Philosophy of Science", 11)
 alt_text <- cgt_alt_text("Philosophy of Science", 11)
 ```
 
-The model carves up the philosophy of science topics very finely, and so it's hard to eyeball a lot of trends. Quantum goes up rapidly to a peak in the 1990s. (I did not realise it wasn't still growing.) Evolutionary Bioligy starts later, and maybe is still growing. The Realism wars of the 1980s didn't quite end, but maybe they are fading away. On the other hand, there is more attention being paid to Models, and some of that is related to the Realism wars.
+The model carves up the philosophy of science topics very finely, and so it's hard to eyeball a lot of trends. [Quantum](#topic66) goes up rapidly to a peak in the 1990s. (I did not realise it wasn't still growing.) [Evolutionary biology](#topic82) starts later, and maybe is still growing. The [realism](#topic67) wars of the 1980s didn't quite end, but maybe they are fading away. On the other hand, there is more attention being paid to [models](#topic88), and some of that is related to the realism wars.
 
 ## Social and Political
 
@@ -677,11 +677,11 @@ cg("Social and Political", 12)
 alt_text <- cg_alt_text("Social and Political", 12)
 ```
 
-With the exception of _Philosophy and Public Affairs_, the trend seems to be down in every journal. This surprised me a lot. In part this was because the journals stopped publishing work on [History and Culture](#topic10). In part it was because the model insisted that [Life and Value](#topic03), what I thought of as Idealist Ethics, was really a topic in Social and Political, not ethics. But in part it was because the study ended before the boom in social and political work in the mid-2010s.
+With the exception of _Philosophy and Public Affairs_, the trend seems to be down in every journal. This surprised me a lot. In part this was because the journals stopped publishing work on [history and culture](#topic10). In part it was because the model insisted that [life and value](#topic03), what I thought of as idealist ethics, was really a topic in social and political, not ethics. But in part it was because the study ended before the boom in social and political work in the mid-2010s.
 
 ```{r social-topics, fig.cap = "Topics in Social and Political", fig.alt = alt_text}
 cgt("Social and Political", 12)
 alt_text <- cgt_alt_text("Social and Political", 12)
 ```
 
-This, I think makes the story about what happened from 1950-2013 make more sense. There was a Rawlsian boom - it shows up clearly in Egalitarainism and Liberal Democracy. There was even a small bit of interest in Feminism. But the drop-off of interest in Marx, and in History and Culture, more than made up for it. Given how often I've heard people complain about the excessive amount of Rawlsiana in the late twentieth-century journals, this was rather of a surprise. Of course, you may think that Marxism, and the French Revolution, were slightly more important subjects of detailed study than _A Theory of Justice_, no matter how good a book it is.
+This, I think makes the story about what happened from 1950-2013 make more sense. There was a Rawlsian boom—it shows up clearly in [egalitarainism](#topic65) and [liberal democracy](#topic52). There was even a small bit of interest in [feminism](#topic69). But the drop-off of interest in [Marx](#topic23), and in history and culture, more than made up for it. Given how often I've heard people complain about the excessive amount of Rawlsiana in the late twentieth-century journals, this was rather of a surprise. Of course, you may think that Marxism, and the French Revolution, were slightly more important subjects of detailed study than _A Theory of Justice_, no matter how good a book it is.

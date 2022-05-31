@@ -304,9 +304,10 @@ temp_output <-  temp_article_list %>%
       inner_join(the_categories, by = "topic") %>%
       filter(btopic == 1) %>%
       arrange(m) %>%
-  ungroup() %>%
-  select(cat_name, subject, m) %>%
-  mutate(m = round(m, 3))
+      mutate(cat_name = str_to_sentence(cat_name), sub_lower = str_to_sentence(sub_lower)) %>% 
+      ungroup() %>%
+      select(cat_name, sub_lower, m) %>%
+      mutate(m = round(m, 3))
 
 # Output to a kable
 
@@ -354,9 +355,10 @@ temp_output <-  temp_article_list %>%
 # Output to a kable
 
 print(kable(temp_output, 
-      col.names = c("Catgeory", "Subject", "Mean Probability"),
-      caption = paste("Comparing articles in",cat_names$cat_name[x],"and",cat_names$cat_name[y]),
-      align=c("l", "l", "l")))
+      col.names = c("Category", "Subject", "Mean Probability"),
+      caption = paste0("Comparing articles in ",str_to_lower(cat_names$cat_name[x])," and ",str_to_lower(cat_names$cat_name[y]), "."),
+      align=c("l", "l", "l")) %>% kable_styling(full_width = F)
+      )
 ```
 
 So that works pretty well. There is a very clean split between the Ethics subjects and the Metaphysics subjects. (I'll use 'subject' from now on to refer to both the topics and the subtopics that are being classified.) The only one vaguely in between is Frankfurt cases, and that even makes sense; until recently Free Will was a subject in Metaphysics textbooks as much as Ethics textbooks.

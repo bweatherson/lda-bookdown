@@ -3,11 +3,11 @@ jjj <- 24
 source('topic_comments/topic_summary_data.R') # Get data
 ```
 
-```{r t24b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
+```{r t24b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t24c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
+```{r t24c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 

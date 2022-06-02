@@ -1,4 +1,4 @@
-# Eras And Decades {#eraschapter}
+# Eras and Decades {#eraschapter}
 
 All of the analysis so far has been done by year. But sometimes it is helpful to look at a number of years at once. In this chapter I do this twice over. 
 
@@ -28,24 +28,24 @@ era_table <- era_articles %>%
   bind_cols(start = c(1876, 1946, 1966, 1982, 1999), end = c(1945, 1965, 1981, 1998, 2013)) %>%
   select(era = epoch, start, end, n)
 
-era_headers <- c("1876-1945", "1946-1965", "1966-1981", "1982-1998", "1999-2013")
+era_headers <- c("1876–1945", "1946–1965", "1966–1981", "1982–1998", "1999–2013")
 
 kable(era_table, 
       col.names = c("Era", "First Year", "Last Year", "Number of Articles"), 
-      align=rep('c', 4), caption = "The Five Eras")
+      align=rep('c', 4), caption = "The five eras.")
 ```
 
 Intuitively, I'm thinking of the eras the following way.
 
 - Era 1 covers everything from idealism though positivism and World War 2.
-- Era 2 is the post-war period, i.e., ordinary language philosophy in Britain and Quinean post-positivism in America.
-- Era 3 is where the classic works of contemporary analytic philosophy were written by writers like Kripke, Lewis, Putnam, Rawls, Thomson, Singer and Frankfurt.
-- Era 4 is the one I have the hardest time conceptualising, as it seems to me something of a period of consolidation between the revolutionary developments of the 1970s, and the series of new debates that open up in the 2000s.
+- Era 2 is the postwar period, i.e., ordinary language philosophy in Britain and Quinean postpositivism in America.
+- Era 3 is where the classic works of contemporary analytic philosophy were written by writers such as Kripke, Lewis, Putnam, Rawls, Thomson, Singer and Frankfurt.
+- Era 4 is the one I have the hardest time conceptualizing, as it seems to me something of a period of consolidation between the revolutionary developments of the 1970s, and the series of new debates that open up in the 2000s.
 - Era 5 is the first part of the current century, and is dominatedby a number of distinctive topics, such as reasons, vagueness, contextualism and Williamsonian epistemology and metaphysics.
 
-In the second half of the chapter, I look at what happens when we break the data down by decades. This has the advantage of corresponding to time periods that people naturally understand, but two disadvantages. One is that data gets lost from either end of the data set. Before 1890 there are too few articles to do a useful analysis, and 2010-2013 isn't a complete decade. The other is that the number of articles is very uneven across the decades. But despite these disadvantages, I think it's helpful to get a decade-by-decade view at what was happening in the philosophy journals.
+In the second half of the chapter, I look at what happens when we break the data down by decades. This has the advantage of corresponding to time periods that people naturally understand, but two disadvantages. One is that data gets lost from either end of the data set. Before 1890 there are too few articles to do a useful analysis, and 2010–2013 isn't a complete decade. The other is that the number of articles is very uneven across the decades. But despite these disadvantages, I think it's helpful to get a decade-by-decade view at what was happening in the philosophy journals.
 
-Within each of these parts, I'm going to run three studies. First, I'll look at the distribution of the 90 topics across the eras and decades. Second, I'll look at the distribution of the 12 categories across the eras and decades. And third, I'll look at the distribution of individual words across the eras and decades. The latter is useful because it doesn't involve processing everything that happened through a black box of an LDA implementation; we can just see what words were and weren't being used. As well as being interesting in its own right, this helps us check the plausibility of what the LDA comes up with.
+Within each of these parts, I'm going to run three studies. First, I'll look at the distribution of the ninety topics across the eras and decades. Second, I'll look at the distribution of the twelve categories across the eras and decades. And third, I'll look at the distribution of individual words across the eras and decades. The latter is useful because it doesn't involve processing everything that happened through a black box of an LDA implementation; we can just see what words were and weren't being used. As well as being interesting in its own right, this helps us check the plausibility of what the LDA comes up with.
 
 ```{r era_and_decade_setup}
 # General setup tables that I'll use a lot
@@ -366,13 +366,13 @@ late_decade_words_by_limit <- function(x)
 
 ## Topics and Eras
 
-I'll start by simply listing the ten most popular topics (out of the 90) in each of the five eras. The popularity metric I'm using is the expected number of articles in that topic from that era. So for each era-topic combination, we look at all articles in that era, and sum the probabilities that the article is in that topic. Then we rank the topics by this probability sum, to get the following table.
+I'll start by simply listing the ten most popular topics (out of the ninety) in each of the five eras. The popularity metric I'm using is the expected number of articles in that topic from that era. For each era-topic combination, I look at all articles in that era, and sum the probabilities that the article is in that topic. Then I rank the topics by this probability sum to get the following table:
 
 ```{r eratopicsa}
-kable(era_wide_top, col.names = era_headers, caption = "Most popular topics in each era")
+kable(era_wide_top, col.names = era_headers, caption = "Most popular topics in each era.")
 ```
 
-The striking thing is that Ordinary Language Philosophy comes out top in each era after World War II. This is related to the fact that it is as much a style as a topic, and the style never really went away.
+The striking thing is that ordinary language philosophy comes out top in each era after World War II. This is related to the fact that it is as much a style as a topic, and the style never really went away.
 
 We can also look at the bottom ten topics in each era, by the same metric. (The lowest ranked topics are at the top of this list. Any time I'm listing the lowest ranked anything, I'll put the lowest at the top.)
 
@@ -382,162 +382,162 @@ kable(era_wide_bottom, col.names = era_headers, caption = "Least popular topics 
 
 That's not too surprising. Formal epistemology was not a big deal in philosophy pre-1945; Heidegger and Husserl haven't had much presence in these journals in this century.
 
-But both of these tables, while somewhat useful, have a flaw. The 90 topics aren't all the same size. So this table is telling us as much about how the model carved up different parts of philosophy, as it is telling us about trends in the field. Here's a better approach. Take the probablistic measure we just used, and divide it by the size of the topic as a whole. (That is, the expected number of articles in the topic across the whole data set from 1876-2013.) And use that to rank the topics. In effect, within each era we're ranking the topics by what propoportion of the work on that topic was in that era. So it's a measure of what were the distinctive topics within each era. Here is what we get.
+But both of these tables, while somewhat useful, have a flaw. The ninety topics aren't all the same size. So this table is telling us as much about how the model carved up different parts of philosophy, as it is telling us about trends in the field. Here's a better approach. Take the probabilistic measure I just used, and divide it by the size of the topic as a whole. (That is, the expected number of articles in the topic across the whole data set from 1876-2013.) And use that to rank the topics. In effect, within each era we're ranking the topics by what propoportion of the work on that topic was in that era. So it's a measure of what were the distinctive topics within each era. Here is what we get.
 
 ```{r eratopicsc}
-kable(era_distinctive_wide_top, col.names = era_headers, caption = "Most distinctive topics in each era")
+kable(era_distinctive_wide_top, col.names = era_headers, caption = "Most distinctive topics in each era.")
 ```
 
-And that was a little surprising to me. I had not realised how much the work on Crime and Punishment (in these 12 journals) was concentrated in 1966-1981. If you'd given me 20 guesses for what would be the distinctive topic of this era, probably the era I care most about in all of philosophy, I wouldn't have guessed this. And I would not have guessed that Promises and Imperatives (which remember includes a lot of deontic logic), and Sets and Grue, would have been second and third.
+And that was a little surprising to me. I had not realised how much the work on crime and punishment (in these twelve journals) was concentrated in 1966–1981. If you'd given me twenty guesses for what would be the distinctive topic of this era, probably the era I care most about in all of philosophy, I wouldn't have guessed this. And I would not have guessed that promises and imperatives (which remember includes a lot of deontic logic), and sets and grue, would have been second and third.
 
-In general, most of the topics turn up 1-2 eras later than the most famous works in those eras. This makes some sense; the secondary literature has to come after the primary literature. But it means that if your history of philosophy is driven by the great works, you might get a wrong sense of when certain things were being discussed.
+In general, most of the topics turn up one to two eras later than the most famous works in those eras. This makes some sense; the secondary literature has to come after the primary literature. But it means that a story of the history of philosophy that concentrates on the great works will leave a misleading impression of when topics were being most discussed.
 
 Let's do the same thing but for the topics that have the lowest share of their articles turning up in a given era.
 
 ```{r eratopicsd}
-kable(era_distinctive_wide_bottom, col.names = era_headers, caption = "Least distinctive topics in each era")
+kable(era_distinctive_wide_bottom, col.names = era_headers, caption = "Least distinctive topics in each era.")
 ```
 
-For me, the middle column is the most interesting one. The last two columns are pretty much what you'd expect. And the first two columns are as much noise as signal. In the first column the absolute values are all low, and 1 or 2 articles that by coincidence shared some keywords with topics from a century later could move something up or down by several spots. In the second column, the fact that the model doesn't see consequentialism and utilitarianism as having much in common drives the 'top' result.
+For me, the middle column is the most interesting one. The last two columns are pretty much what we'd expect. And the first two columns are as much noise as signal. In the first column the absolute values are all low, and one or two articles that by coincidence shared some keywords with topics from a century later could move something up or down by several spots. In the second column, the fact that the model doesn't see consequentialism and utilitarianism as having much in common drives the "top" result.
 
-But in the middle we get an interesting mix. Idealism is over, so all the idealism related topics are relegated. And the journals that are still publishing history are settling on just publishing work on the same few big names, so some history topics are relegated. But other topics have yet to start. It isn't a surprise that before 1982 there wasn't much work on Vagueness or on Evolutionary Biology in these journals. (There are important articles in those fields from before 1982, but they don't tend to be in these 12 journals.) And Norms is as much a style as a topic. But I'm a bit surprised Cognitive Science hadn't started getting more attention yet. And I'm very surprised that Wide Content is showing up here.
+But in the middle we get an interesting mix. Idealism is over, so all the idealism-related topics are relegated. And the journals that are still publishing history are settling on just publishing work on the same few big names, so some history topics are relegated. But other topics have yet to start. It isn't a surprise that before 1982 there wasn't much work on vagueness or on evolutionary biology in these journals. (There are important articles in those fields from before 1982, but they don't tend to be in these twelve journals.) And norms is as much a style as a topic. But I'm a bit surprised cognitive science hadn't started getting more attention yet. And I'm very surprised that wide content is showing up here.
 
-Remember that Putnam's [Meaning and Reference](https://philpapers.org/rec/PUTMAR-2) [@Putnam1973] is from the very middle of this era. And given the importance of Twin Earth debates to philosophy of the last 40 years, I would have thought it would have kicked off a huge debate. But it just didn't. I've already discussed this when talking about the [Wide Content topic](#topic85), but it is just shocking to me how long it takes for the literature on Wide Content to really get going.
+Remember that Putnam's "[Meaning and Reference](https://philpapers.org/rec/PUTMAR-2)" [@Putnam1973] is from the very middle of this era. And given the importance of twin Earth debates to philosophy of the last forty years, I would have thought it would have kicked off a huge debate. But it just didn't. I've already discussed this when talking about the [wide content topic](#topic85), but it is just shocking to me how long it takes for the literature on Wide Content to really get going.
 
 ## Categories and Eras
 
-Let's turn from the 90 topics to the 12 more familiar categories. I'll start by ranking the categories by how many articles are in each category.
+Let's turn from the ninety topics to the twelve more familiar categories. I'll start by ranking the categories by how many articles are in each category.
 
 ```{r cattopicsa}
-kable(category_era_wide_top, col.names = era_headers, caption = "Most popular categories in each era")
+kable(category_era_wide_top, col.names = era_headers, caption = "Most popular categories in each era.")
 ```
 
-The first thing that jumps out is how prominent Idealism is in pre-1945 philosophy. Even though it is only one topic, and I could easily have included a couple of other prominent early topics in the category, it is pretty much above all the topics studied in contemporary philosophy. Philosophy of Mind is first, to be sure, but only because of all the psychology articles that _Mind_ and then _Philosophical Review_ published in their early years. It just can't be stressed enough how big Idealism was in Anglophone philosophy for so long.
+The first thing that jumps out is how prominent Idealism is in pre-1945 philosophy. Even though it is only one topic, and I could easily have included a couple of other prominent early topics in the category, it is pretty much above all the topics studied in contemporary philosophy. Philosophy of mind is first, to be sure, but only because of all the psychology articles that _Mind_ and then _Philosophical Review_ published in their early years. It just can't be stressed enough how big Idealism was in Anglophone philosophy for so long.
 
-It's easy from a current perspective to think of Ethics as being central to philosophy, but before 1945 it just wasn't. Now this is somewhat an issue of classification. There is some Hegelian work that the model counts as Idealism but which we could call Ethics. It wouldn't be implausible to classify a lot of the papers that the model classified as Life and Value as in Ethics rather than Social and Political. But still, Ethics in anything like the sense we understand it in contemporary philosophy was something of a niche topic before 1945.
+It's easy from a current perspective to think of Ethics as being central to philosophy, but before 1945 it just wasn't. Now this is somewhat an issue of classification. There is some Hegelian work that the model counts as idealism but which could be called ethics. It wouldn't be implausible to classify a lot of the papers that the model classified as life and value as in ethics rather than social and political. But still, ethics in anything like the sense we understand it in contemporary philosophy was something of a niche topic before 1945.
 
-But none of that compares to how little attention there was to Epistemology. Now again, you can argue that some of the Idealism had to do with epistemology. Certainly a lot of it had epistemological motivations. But work that looks at all like contemporary epistemology virtually doesn't exist before 1945. (As I noted in the discussion of the [Knowledge](#topic74) topic, the one exception is a paper from Calcutta.)
+But none of that compares to how little attention there was to epistemology. Now again, there is a sense in which some of the idealism papers had to do with epistemology. Certainly a lot of it had epistemological motivations. But work that looks at all like contemporary epistemology virtually doesn't exist before 1945. (As I noted in the discussion of the [knowledge](#topic74) topic, the one exception is a paper from Calcutta.)
 
-At the other end of the timeline, I was surprised that Epistemology wasn't higher in 1999-2013. I certainly didn't remember that time period as being one in which Logic and Mathematics was a bigger presence in the journal than Epistemology. So I went back and looked to see if the model was making a mistake here, or I had misremembered. And the mistake was mostly on my part.
+At the other end of the timeline, I was surprised that epistemology wasn't higher in 1999–2013. I certainly didn't remember that time period as being one in which logic and mathematics was a bigger presence in the journal than epistemology. So I went back and looked to see if the model was making a mistake here, or I had misremembered. And the mistake was mostly on my part.
 
-The Logic and Mathematics category, at least in 1999-2013, is largely driven by two debates.
+The logic and mathematics category, at least in 1999–2013, is largely driven by two debates.
 
-One is vagueness, and I've talked a bit back in Chapter \@ref(sortingchapter) about why that is included in Logic and Mathematics. I think I was thinking of that as part of Philosophy of Language back when I was part of that debate, but the case for classifying it as Logic is reasonably strong. 
+One is vagueness, and I've talked a bit back in chapter \@ref(sortingchapter) about why that is included in logic and mathematics. I think I was thinking of that as part of philosophy of language back when I was part of that debate, but the case for classifying it as Logic is reasonably strong. 
 
-But the other debate, and numerically the larger one, is about Truth. And a lot of that debate takes place in _Analysis_. If you look into why the model puts the category Logic and Mathematics so high up the ranks in 1999-2013, it's driven in very large part by there being so many articles about the theory of truth in _Analysis_ in those years. And if you look back at those years, the model seems pretty plausible. Indeed, the model sometimes understates things, only assigning 40-50% probability to an article being about the theory of truth when it quite clearly is about the theory of truth.
+But the other debate, and numerically the larger one, is about truth. And a lot of that debate takes place in _Analysis_. If we look into why the model puts the category logic and mathematics so high up the ranks in 1999–2013, it's driven in very large part by there being so many articles about the theory of truth in _Analysis_ in those years. And if we look back at those years, the model seems pretty plausible. Indeed, the model sometimes understates things, only assigning 40 to 50 percent probability to an article being about the theory of truth when it quite clearly is about the theory of truth.
 
-And I'd just misremembered how big that debate was. Now partially that's because I wasn't involved with it, and we have better memories for debates that we're involved with. But in part it's because while there were a lot of articles, they weren't very long. If we sorted the categories by pages, rather than by articles, the order here may have been different. And there is a case for doing that too. But there's also a case for doing things this way. If any quarterly journal publishes 10 articles in a year on a particular topic, that tells you something about the importance of that topic to philosophical debates at the time. And that's true even if the articles are 6-8 page _Analysis_ notes.
+And I'd just misremembered how big that debate was. Now partially that's because I wasn't involved with it, and we have better memories for debates that we're involved with. But in part it's because while there were a lot of articles, they weren't very long. If we sorted the categories by pages, rather than by articles, the order here may have been different. And there is a case for doing that too. But there's also a case for doing things this way. If any quarterly journal publishes ten articles in a year on a particular topic, that tells you something about the importance of that topic to philosophical debates at the time. And that's true even if the articles are six to eight page _Analysis_ notes.
 
 So while this ranking was a surprise to me, after looking at the underlying data I don't think it was a mistake. It turned out to be one of the advantages of having an analysis of the trends in philosophy that starts by looking at all the data.
 
 The categories are different sizes, and the middle of the previous list doesn't tell us a lot that we couldn't see just by looking at the category graphs back in chapter \@ref(categorychapter). It's perhaps more interesting to rank the categories by which percentage of their works are in a given era.
 
 ```{r cattopicsb}
-kable(category_era_distinctive_wide_top, col.names = era_headers, caption = "Most distinctive categories in each era")
+kable(category_era_distinctive_wide_top, col.names = era_headers, caption = "Most distinctive categories in each era.")
 ```
 
-The journals have never paid a ton of attention to Aesthetics or Philosophy of Religion. But in the post-war years, especially in America, they paid more attention to them than they otherwise did. 
+The journals have never paid a ton of attention to aesthetics or philosophy of religion. But in the postwar years, especially in America, they paid more attention to them than they otherwise did. 
 
-History of Philosophy looks quite strong during the second era, then falls away in the third era. This might make you sceptical of my story that its is [largely Ryle's fault](#history-category-section). But note that a huge proportion of the History papers in this era are in _Philosophy and Phenomenological Research_. At that time PPR was taking the third word in its name really seriously, and I'm classifying [phenomenology papers](#topic28) as part of History. This table shouldn't change your view on the impact Ryle had on History in the philosophy journals.
+History of philosophy looks quite strong during the second era, then falls away in the third era. This might make one sceptical of my story that it is [largely Ryle's fault](#history-category-section). But note that a huge proportion of the history papers in this era are in _Philosophy and Phenomenological Research_. At that time _PPR_ was taking the third word in its name really seriously, and I'm classifying [phenomenology papers](#topic28) as part of history. This table shouldn't change your view on the impact Ryle becoming editor of _Mind_ had on history in the philosophy journals.
 
-I've been [suspicious of the idea that there was a positivism-driven drop in metaphysics](#metaphysics-category-section). So it is only fair to note that by this measure (though seemingly no other) there really is a drop in Metaphysics in the post-war era.
+I've been [suspicious of the idea that there was a positivism-driven drop in metaphysics](#metaphysics-category-section). So it is only fair to note that by this measure (though seemingly no other) there really is a drop in metaphysics in the postwar era.
 
-On the other hand, the prominence of Ethics during the critical period from 1966-1981 is consistent with something I've been stressing a lot. Part of what made that era so distinctive is that so many topics in Ethics were either created or renewed.
+On the other hand, the prominence of ethics during the critical period from 1966–1981 is consistent with something I've been stressing a lot. Part of what made that era so distinctive is that so many topics in ethics were either created or renewed.
 
 ## Words and Eras {#words-eras}
 
-For most of the book, I have worked from a dataset that started with the JSTOR word list, then made two major edits. First, I cut out words that don't look like they are part of the content of the papers I'm focussing on. Second, I cut out words that only appear 1 to 3 times in a paper. For this section, mostly still excluding the non-contentful words - though I'll note one point below when I consider them - but I'm restoring the words that appear 1-3 times. 
+For most of the book, I have worked from a dataset that started with the JSTOR word list, then made two major edits. First, I cut out words that don't look like they are part of the content of the papers I'm focussing on. Second, I cut out words that only appear one to three times in a paper. For this section, mostly still excluding the noncontentful words—though I'll note one point below when I consider them—but I'm restoring the words that appear one to three times. 
 
-On the other hand, I'm restricting attention to the 5000 most common words in the data set. In practice, that means restricting attention to words that appear about 2200 times or more. That is, the word has to appear about once ever 15 articles. That doesn't mean it has to appear in $\frac{1}{15}$ of the articles; it could appear very often in a few articles. But it does have to get those 2200 appearances somewhere. The reason for this restriction will soon becme clear.
+On the other hand, I'm restricting attention to the five thousand most common words in the data set. In practice, that means restricting attention to words that appear about 2,200 times or more. That is, the word has to appear about once ever fifteen articles. That doesn't mean it has to appear in one-fifteenth of the articles; it could appear very often in a few articles. But it does have to get those 2,200 appearances somewhere. The reason for this restriction will soon becme clear.
 
-To start, here are the most common words from each era - remembering that we've filtered out a lot of 'stop words'.
+To start, here are the most common words from each era—remembering that we've filtered out a lot of "stop words".
 
 ```{r erawords1}
-kable(era_words_wide_top, col.names = era_headers, caption = "Most common words in each era")
+kable(era_words_wide_top, col.names = era_headers, caption = "Most common words in each era.")
 ```
 
-That doesn't tell us a lot. It is a bit interesting that 'theory' and especially 'case' are much more prevalent after World War II than before it, but that's about it.
+That doesn't tell us a lot. It is a bit interesting that _theory_ and especially _case_ are much more prevalent after World War II than before it, but that's about it.
 
 We learn more by comparing the frequency of each word in an era to that word's frequency across the whole data set. So rather than ask how many times a word appears in an era, we might ask what percentage of the word's appearances are in that era. That gives us a sense of the characteristic words of a given era.
 
-But as it stands, that doesn't work either. A lot of words have 100% of their appearances in one or other era. For instance, we don't see any occurrences of 'elga', 'kolodny', 'knobe', 'weatherson', 'rayo', 'obama' or 'greaves' until era 5. So they'd all be tied for being the most characteristic words of the 1999-2013 era, since 100% of their appearances in this era. And while some of those words are somewhat important to the era, I don't think that's quite what we're looking for.
+But as it stands, that doesn't work either. A lot of words have all of their appearances in one or other era. For instance, we don't see any occurrences of _elga_, _kolodny_, _knobe_, _weatherson_, _rayo_, _obama_ or _greaves_ until era 5. So they'd all be tied for being the most characteristic words of the 1999–2013 era, since all of their appearances in this era. And while some of those words are somewhat important to the era, I don't think that's quite what we're looking for.
 
-So what I decided to do, following common practice, is to restrict the study to the 5000 most common words. This excludes all the words I just listed. (I'd have to extend it a fair bit further to get them; 'elga' is at position 10468, 'greaves' at 16583, and the others in between.) And then we can look at which words from that 5000 have the highest percentage of their occurrences in a given era.
+What I decided to do, following common practice, is to restrict the study to the five thousand most common words. This excludes all the words I just listed. (I'd have to extend it a fair bit further to get them; _elga_ is at position 10468, _greaves_ at 16583, and the others in between.) And then we can look at which words from that five thousand have the highest percentage of their occurrences in a given era.
 
-But it turns out even that isn't quite what we want, though it's not clearly not what we want. If you do what I just said, most of the words that show up are between the 4000th and 5000th most common words. It's just much easier for rarer words, especially names, to appear at one particular time. So I decided to show you a whole bunch of tables.
+But it turns out even that isn't quite what we want, though it's not clearly not what we want. If you do what I just said, most of the words that show up are between the four thousandth and five thousandth most common words. It's just much easier for rarer words, especially names, to appear at one particular time. Therefore, I decided to show you a whole bunch of tables.
 
-For every one of the following tables, I restricted attention to the top _n_ thousand words in the data set, and then asked of those words, which have the highest percentage of their occurrences in different eras. I think looking at the tables for each value of _n_ from 1 to 5 is useful. There will be some repetition; sometimes a common word has a distinctive distribution. But you learn a new thing each time you increase _n_. I cut it off at _n_ = 5, but you could keep going beyond that. (Though if you did, you'd find a few more latex words, and journal names, and OCR errors, that in retrospect I might have wanted to delete from the dataset.) So here's what we get restricting attention to the 1000 most common words.
+For every one of the following tables, I restricted attention to the top _n_ thousand words in the data set, and then asked of those words, which have the highest percentage of their occurrences in different eras. I think looking at the tables for each value of _n_ from 1 to 5 is useful. There will be some repetition; sometimes a common word has a distinctive distribution. But there is some new information each time _n_ is increased. I cut it off at _n_ = 5, but you could keep going beyond that. (Though if we did, we'd find a few more latex words, and journal names, and OCR errors, that, in retrospect, I might have wanted to delete from the dataset.) So here's what we get when restricting attention to the one thousand most common words.
 
 ```{r erawords1000}
 words_by_limit(1000)
 ```
 
-Is 'jones' at the top of 1966-1981 because of Sellars, or Gettier, or Frankfurt? I think the answer is, all of the above! I think 'frege' appears prominently in 1982-1998 because of "Frege cases", not because of a particular upsurge in attention to Frege's own writings. Both 'quine' and 'rawls' are a bit later than their most famous writings, which makes sense. And note 'intuitions' turning up as a distinctive word in the 21st century literature. It's interesting, I think, that it isn't used as much in the era intuitions were allegedly dominating philosophy as in the era when metaphilosophy became such a big deal.
+Is _jones_ at the top of 1966–1981 because of Sellars, or Gettier, or Frankfurt? I think the answer is, all of the above! I think _frege_ appears prominently in 1982–1998 because of "Frege cases", not because of a particular upsurge in attention to Frege's own writings. Both _quine_ and _rawls_ are a bit later than their most famous writings, which makes sense. And note _intuitions_ turning up as a distinctive word in the 21st century literature. It's interesting, I think, that it isn't used as much in the era intuitions were allegedly dominating philosophy as in the era when metaphilosophy became such a big deal.
 
-We can look at the graphs of how frequently these words appeared over time to get a sense of what it means for them to be the distinctive words of an era. I'll just graph the top 5 for each era, because otherwise the graphs get too cluttered.
+We can look at the graphs of how frequently these words appeared over time to get a sense of what it means for them to be the distinctive words of an era. I'll just graph the top five for each era, because otherwise the graphs get too cluttered.
 
-```{r eragraphs1000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among 1000 most common words)", fig.alt = alt_text}
+```{r eragraphs1000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among one thousand most common words).", fig.alt = alt_text}
 word_era_graphs(1000, 1)
 alt_text <- word_era_graphs_alt_text(1000, 1)
 ```
 
-```{r eragraphs1000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among 1000 most common words)", fig.alt = alt_text}
+```{r eragraphs1000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among one thousand most common words).", fig.alt = alt_text}
 word_era_graphs(1000, 2)
 alt_text <- word_era_graphs_alt_text(1000, 2)
 ```
 
-```{r eragraphs1000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among 1000 most common words)", fig.alt = alt_text}
+```{r eragraphs1000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among one thousand most common words).", fig.alt = alt_text}
 word_era_graphs(1000, 3)
 alt_text <- word_era_graphs_alt_text(1000, 3)
 ```
 
-```{r eragraphs1000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among 1000 most common words)", fig.alt = alt_text}
+```{r eragraphs1000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among one thousand most common words).", fig.alt = alt_text}
 word_era_graphs(1000, 4)
 alt_text <- word_era_graphs_alt_text(1000, 4)
 ```
 
-```{r eragraphs1000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among 1000 most common words)", fig.alt = alt_text}
+```{r eragraphs1000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among one thousand most common words).", fig.alt = alt_text}
 word_era_graphs(1000, 5)
 alt_text <- word_era_graphs_alt_text(1000, 5)
 ```
 
-You can confirm that the words in question really do peak in the era in question.
+We can confirm that the words in question really do peak in the era in question.
 
-The y-axis measures the frequency of the words among the words in the JSTOR data. So that excludes 1 and 2 letter words, and whatever stop words JSTOR has excluded (like 'the', 'and', and the like), but includes things like bibliographic information and latex code. It probably overstates the actual frequency of the words by something like 25 to 50 percent. So if it says that a word appears 1 time in 400, its real frequency is, as far as I can tell, more like 1 time in 500 to 600.
+The Y-axis measures the frequency of the words among the words in the JSTOR data. That excludes 1 and 2 letter words, and whatever stop words JSTOR has excluded (like _the_, _and_, and the like), but includes things like bibliographic information and latex code. It probably overstates the actual frequency of the words by something like 25 to 50 percent. So if it says that a word appears one time in four hundred, its real frequency is, as far as I can tell, more like one time in five to six hundred.
 
-Note that the distinctive words of the middle eras are much less frequent than the distinctive words of the early eras or even (to a lesser extent) the later eras. The word 'consciousness' seems to have appeared, on average, about once a page in the early years! No word is this prevalent in the later years.
+Note that the distinctive words of the middle eras are much less frequent than the distinctive words of the early eras or even (to a lesser extent) the later eras. The word _consciousness_ seems to have appeared, on average, about once a page in the early years! No word is this prevalent in the later years.
 
-Let's expand the data set and look at the 2000 most common words.
+Let's expand the data set and look at the two thousand most common words.
 
 ```{r erawords2000}
 words_by_limit(2000)
 ```
 
-Both 'marx' and 'davidson' turn up one era later than I would have guessed. And I would have thought 'strawson' was either an era earlier or an era (or two) later; earlier for the work on descriptions, later for the work on responsibility. So those are a bit interesting. Testimony really was a big topic in the early 21st century. And note 'worry' turning up. Recent philosophy has a very distinctive lexicon, which we'll see more and more of.
+Both _marx_ and _davidson_ turn up one era later than I would have guessed. And I would have thought _strawson_ was either an era earlier or an era (or two) later; earlier for the work on descriptions, later for the work on responsibility. So those are a bit interesting. Testimony really was a big topic in the early twenty-first century. And note _worry_ turning up. Recent philosophy has a very distinctive lexicon, which we'll see more and more of.
 
 Here are the graphs for the first five words in each column.
 
-```{r eragraphs2000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among 2000 most common words)", fig.alt = alt_text}
+```{r eragraphs2000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among two thousand most common words).", fig.alt = alt_text}
 word_era_graphs(2000, 1)
 alt_text <- word_era_graphs_alt_text(2000, 1)
 ```
 
-```{r eragraphs2000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among 2000 most common words)", fig.alt = alt_text}
+```{r eragraphs2000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among two thousand most common words).", fig.alt = alt_text}
 word_era_graphs(2000, 2)
 alt_text <- word_era_graphs_alt_text(2000, 2)
 ```
 
-```{r eragraphs2000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among 2000 most common words)", fig.alt = alt_text}
+```{r eragraphs2000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among two thousand most common words).", fig.alt = alt_text}
 word_era_graphs(2000, 3)
 alt_text <- word_era_graphs_alt_text(2000, 3)
 ```
 
-```{r eragraphs2000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among 2000 most common words)", fig.alt = alt_text}
+```{r eragraphs2000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among two thousand most common words).", fig.alt = alt_text}
 word_era_graphs(2000, 4)
 alt_text <- word_era_graphs_alt_text(2000, 4)
 ```
 
-```{r eragraphs2000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among 2000 most common words)", fig.alt = alt_text}
+```{r eragraphs2000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among two thousand most common words).", fig.alt = alt_text}
 word_era_graphs(2000, 5)
 alt_text <- word_era_graphs_alt_text(2000, 5)
 ```
@@ -546,83 +546,83 @@ alt_text <- word_era_graphs_alt_text(2000, 5)
 words_by_limit(3000)
 ```
 
-Apart from in the earliest era, we're starting to see the majority of the list here be names of famous (male) philosophers. And we get a pretty good sense of when they were being most commonly discussed. The graphs show this in slightly more detail. (The fourth graph is a little busted because one of one year when 'nuclear' went nuclear.)
+Apart from in the earliest era, we're starting to see the majority of the list here be names of famous (male) philosophers. And we get a pretty good sense of when they were being most commonly discussed. The graphs show this in slightly more detail. (The fourth graph is a little busted because of one year when _nuclear_ went nuclear.)
 
-```{r eragraphs3000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among 3000 most common words)", fig.alt = alt_text}
+```{r eragraphs3000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among three thousand most common words).", fig.alt = alt_text}
 word_era_graphs(3000, 1)
 alt_text <- word_era_graphs_alt_text(3000, 1)
 ```
 
-```{r eragraphs3000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among 3000 most common words)", fig.alt = alt_text}
+```{r eragraphs3000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among three thousand most common words).", fig.alt = alt_text}
 word_era_graphs(3000, 2)
 alt_text <- word_era_graphs_alt_text(3000, 2)
 ```
 
-```{r eragraphs3000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among 3000 most common words)", fig.alt = alt_text}
+```{r eragraphs3000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among three thousand most common words).", fig.alt = alt_text}
 word_era_graphs(3000, 3)
 alt_text <- word_era_graphs_alt_text(3000, 3)
 ```
 
-```{r eragraphs3000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among 3000 most common words)", fig.alt = alt_text}
+```{r eragraphs3000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among three thousand most common words).", fig.alt = alt_text}
 word_era_graphs(3000, 4)
 alt_text <- word_era_graphs_alt_text(3000, 4)
 ```
 
-```{r eragraphs3000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among 3000 most common words)", fig.alt = alt_text}
+```{r eragraphs3000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among three thousand most common words).", fig.alt = alt_text}
 word_era_graphs(3000, 5)
 alt_text <- word_era_graphs_alt_text(3000, 5)
 ```
 
-The pattern stays the same as we expand to 4000 words.
+The pattern stays the same as we expand to four thousand words.
 
 ```{r erawords4000}
 words_by_limit(4000)
 ```
 
-I'm a bit surprised to see 'bob' here; I'm not sure if this is Stalnaker, or Brandom, or who is being referred to so informally. The graphs don't show a great deal that isn't visible on the previous set, so let's skip over them about move the limit up to the 5000 most common words.
+I'm a bit surprised to see _bob_ here; I'm not sure if this is Stalnaker, or Brandom, or who is being referred to so informally. The graphs don't show a great deal that isn't visible on the previous set, so let's skip over them and move the limit up to the five thousand most common words.
 
 ```{r erawords5000}
 words_by_limit(5000)
 ```
 
-And finally we get that not all the names are of men. Korsgaard is here, and the model doesn't discriminate between the Churchlands, so at least part of the reason for 'churchland' in 1982-1998 is Patricia Churchland.
+And finally we get that not all the names are of men. Korsgaard is here, and the model doesn't discriminate between the Churchlands, so at least part of the reason for _churchland_ in 1982–1998 is Patricia Churchland.
 
-Apart from the names, the words in the final era are all fairly much as expected. I'll come back in [the last chapter]({#buzzwords-section) to 'credence', because I don't think everyone realises how new a term it is. And 'egalitarianism' was used so much in 1982-1998 that I'm very surprised it can turn up here.
+Apart from the names, the words in the final era are all fairly much as expected. I'll come back in [the last chapter]({#buzzwords-section) to _credence_, because I don't think everyone realizes how new a term it is. And _egalitarianism_ was used so much in 1982–1998 that I'm very surprised it can turn up here.
 
-I have no idea why 'muscular' is such a common term in the first era. I suspect I wouldn't be happy to find out. 
+I have no idea why _muscular_ is such a common term in the first era. I suspect I wouldn't be happy to find out. 
 
 Here are the graphs for the five most distinctive words in each of the eras.
 
-```{r eragraphs5000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among 5000 most common words)", fig.alt = alt_text}
+```{r eragraphs5000a, fig.height=4, fig.cap = "Most distinctive words in era 1 (among five thousand most common words).", fig.alt = alt_text}
 word_era_graphs(5000, 1)
 alt_text <- word_era_graphs_alt_text(5000, 1)
 ```
 
-```{r eragraphs5000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among 5000 most common words)", fig.alt = alt_text}
+```{r eragraphs5000b, fig.height=4, fig.cap = "Most distinctive words in era 2 (among five thousand most common words).", fig.alt = alt_text}
 word_era_graphs(5000, 2)
 alt_text <- word_era_graphs_alt_text(5000, 2)
 ```
 
-```{r eragraphs5000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among 5000 most common words)", fig.alt = alt_text}
+```{r eragraphs5000c, fig.height=4, fig.cap = "Most distinctive words in era 3 (among five thousand most common words).", fig.alt = alt_text}
 word_era_graphs(5000, 3)
 alt_text <- word_era_graphs_alt_text(5000, 3)
 ```
 
-```{r eragraphs5000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among 5000 most common words)", fig.alt = alt_text}
+```{r eragraphs5000d, fig.height=4, fig.cap = "Most distinctive words in era 4 (among five thousand most common words).", fig.alt = alt_text}
 word_era_graphs(5000, 4)
 alt_text <- word_era_graphs_alt_text(5000, 4)
 ```
 
-```{r eragraphs5000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among 5000 most common words)", fig.alt = alt_text}
+```{r eragraphs5000e, fig.height=4, fig.cap = "Most distinctive words in era 5 (among five thousand most common words).", fig.alt = alt_text}
 word_era_graphs(5000, 5)
 alt_text <- word_era_graphs_alt_text(5000, 5)
 ```
 
-Here part of the story, as you can tell from the y-axes, is ever-increasing diversity. Figures who feel like they dominate the current age, like Williamson, Hawthorne and Chalmers, are discussed much less than figures like Ayer or Ryle were a couple of generations ago.
+Here part of the story, as is shown in the changing scale of the Y-axes, is ever-increasing diversity. Figures who feel like they dominate the current age, like Williamson, Hawthorne and Chalmers, are discussed much less than figures like Ayer or Ryle were a couple of generations ago.
 
 ## Topics and Decades
 
-So far I've broken down the years by what I've called eras. These are helpful because they feature equal numbers of articles, and if you squint the right way they correspond to philosophically significant periods. But most people are more familiar with decades than with any kinds of eras like this. (Having the first era end in 1945 was fortuitous, but otherwise they are a bit arbitrary.) So I thought I'd run all the tests from the previous three sections with decades rather than eras as the underlying unit. Start with the 90 topics broken down by which are the most popular and the least popular topics in each decade. (As above, I'm using weighted sums of articles as the main measure here.)
+So far I've broken down the years by what I've called eras. These are helpful because they feature equal numbers of articles, and if you squint the right way they correspond to philosophically significant periods. But most people are more familiar with decades than with any kinds of eras like this. (Having the first era end in 1945 was fortuitous, but otherwise they are a bit arbitrary.) So I thought I'd run all the tests from the previous three sections with decades rather than eras as the underlying unit. Start with the ninety topics broken down by which are the most popular and the least popular topics in each decade. (As above, I'm using weighted sums of articles as the main measure here.)
 
 ```{r decadetopicsa}
 kable(decade_wide_top[1:6], col.names =  dec_title[1:6], caption = "Most popular topics in each decade")
@@ -727,16 +727,16 @@ And I'm also surprised at the low rank in the 2000s of Aesthetics, Philosophy of
 
 I'm not going to start with the list of most common words each decade, because it just looks like what we found back in section \@ref(words-eras). Some words are really common, and they stay that way through the data set. What's more interesting is to look at words that are more common in a particular decade than they are in general. And this in turn requires picking a domain of words. 
 
-I'll start with the 1000 most common words (stop words excluded) from the data set. (I'm not going to do the graphs that I did in section \@ref(words-eras), because they would just be repetitive; it's very often just the same words.)
+I'll start with the one thousand most common words (stop words excluded) from the data set. (I'm not going to do the graphs that I did in section \@ref(words-eras), because they would just be repetitive; it's very often just the same words.)
 
 ```{r decadewords1000}
 early_decade_words_by_limit(1000)
 late_decade_words_by_limit(1000)
 ```
 
-I guess nothing there is too surprising. The keywords in the first few decades are basically what you'd expect if you knew there was a lot of idealism going on. Then there is much more attention to aesthetics in the middle decades, as well as a huge focus on statements. (I think the term 'statement' is too ambiguous between sentence, utterance and proposition to be used nowadays, but that clearly wasn't the view then.) And then Rawls shows up, along with some people called "David". "Probabilities" shows up in the 1990s but not later because it is replaced, as we'll see, with "credences". The boom in the topic Norms looks a little less surprising when you see 'normative' is used so much, especially in the 2000s, that it ends up on the list of 1000 most common words.
+I guess nothing there is too surprising. The keywords in the first few decades are basically what you'd expect if you knew there was a lot of idealism going on. Then there is much more attention to aesthetics in the middle decades, as well as a huge focus on statements. (I think the term 'statement' is too ambiguous between sentence, utterance and proposition to be used nowadays, but that clearly wasn't the view then.) And then Rawls shows up, along with some people called "David". "Probabilities" shows up in the 1990s but not later because it is replaced, as we'll see, with "credences". The boom in the topic Norms looks a little less surprising when you see 'normative' is used so much, especially in the 2000s, that it ends up on the list of one thousand most common words.
 
-Let's increase the domain to the 3000 most common words in the data set.
+Let's increase the domain to the three thousand most common words in the data set.
 
 ```{r decadewords3000}
 early_decade_words_by_limit(3000)
@@ -745,7 +745,7 @@ late_decade_words_by_limit(3000)
 
 The main auditorium at Monash University is the Alexander Hall. Graduations are there, but it isn't otherwise a major part of student life. I think I went there more often as a high school student than as a university student. But still, it was nice to know that a big part of the university was named after a philosopher, Samuel Alexander. We also had a nice sketch of him on the wall of one of the seminar rooms in the philosophy department while I was there. That didn't mean that we actually talked about Alexander's work; I don't remember ever being assigned one of his papers in a class or seminar. That was perhaps a bit too bad, since he's argaubly the second most important Australian philosopher for the first half of the 20th century.
 
-Let's expand this list to the 5000 most common words.
+Let's expand this list to the five thousand most common words.
 
 ```{r decadewords5000}
 early_decade_words_by_limit(5000)

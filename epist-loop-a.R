@@ -1,7 +1,7 @@
 cate_nam <- epistemology_subjects$subject[jjj]
 
 cat(" \n")
-cat("## ", cate_nam, " {#e",jjj,"}\n\n", sep="")
+cat("## ", str_to_title(cate_nam), " {#e",jjj,"}\n\n", sep="")
 
 keyword_list <- epistemology_distinctive_topics %>% filter(topic == jjj)
 keyword_paste <- paste(keyword_list$term, sep = ", ", collapse = ", ")
@@ -11,8 +11,8 @@ cat("**Keywords**: ", keyword_paste, " \n \n")
 raw_count <- epistemology_article_count$n[jjj]
 weighted_count <- epistemology_article_gamma$g[jjj]
 
-cat("**Number of Articles**: ", raw_count, "  \n")
-cat("**Weighted Number of Articles**: ", weighted_count, "  \n  \n")
+cat("**Number of articles**: ", raw_count, "  \n")
+cat("**Weighted number of articles**: ", weighted_count, "  \n  \n")
 
 bg <- epistemology_yeartopics_postwar %>%
   mutate(topic = as.numeric(topic)) %>%
@@ -42,7 +42,7 @@ print(
                 colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
     theme(legend.position="none") +
     labs(x = element_blank(), 
-         y = "Raw Number of Articles")
+         y = "Raw number of articles")
 )
 
 temp <- filter(epistemology_yeartopics_postwar, topic == jjj)

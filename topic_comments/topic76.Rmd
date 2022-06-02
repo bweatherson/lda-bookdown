@@ -3,11 +3,11 @@ jjj <- 76
 source('topic_comments/topic_summary_data.R') # Get data
 ```
 
-```{r t76b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
+```{r t76b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t76c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
+```{r t76c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -55,7 +55,7 @@ ggplot(t, aes(x = year, y = y, color=subject, group=subject)) +
     scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
   geom_smooth(size = 0.5, se = F, method = "loess", formula = "y ~ x")
 
-alt_text <- "A scatterplot, with trendlines, of the proportion of papers in recent years on Justification, Knowledge and Formal Epistemology in the last 25 years. Through the 1990s, Justification is much higher than the other two, but it stays fairly flat at around 2.5% throughout the period. In the early 2000s, Knowledge rises rapidly to almost catch up with Justification. Then in the late 2000s Formal Epistemology rises, and even passes, Justification."
+alt_text <- "A scatterplot, with trendlines, of the proportion of papers in recent years on justification, knowledge and formal epistemology in the last twenty-five years. Through the 1990s, justification is much higher than the other two, but it stays fairly flat at around 2.5 percent throughout the period. In the early 2000s, Knowledge rises rapidly to almost catch up with justification. Then in the late 2000s formal epistemology rises, and even passes, justification."
 
 ```
 

@@ -3,11 +3,11 @@ jjj <- 37
 source('topic_comments/topic_summary_data.R') # Get data
 ```
 
-```{r t37b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
+```{r t37b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t37c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
+```{r t37c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -136,13 +136,13 @@ The point of all this was to demonstrate something of the power of this method o
 
 This is a graph of the distribution of those 555 articles into the two buckets (grue and sets) over time.
 
-```{r grue-binary-graph, fig.height=5, fig.cap = "Articles on sets and articles on grue", fig.alt = alt_text}
+```{r grue-binary-graph, fig.height=5, fig.cap = "Articles on sets and articles on grue.", fig.alt = alt_text}
 grue_years <- grue_years %>%
   mutate(topic.x = as.factor(topic.x))
 ggplot(grue_years, aes(x = year, y = g, group = topic.x, color = topic.x)) + 
   spaghettistyle +
   geom_point() + 
-  labs(x = element_blank(), y = "Weighted Number of Articles", title = "Articles in Each Sub-Topic") +
+  labs(x = element_blank(), y = "Weighted number of articles", title = "Articles in Sub-Topics Sets and Grue") +
   theme(legend.title = element_blank(),
         legend.position = "right") +
   scale_color_discrete(labels = c("Grue", "Sets"))

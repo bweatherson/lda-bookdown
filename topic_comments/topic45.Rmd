@@ -3,11 +3,11 @@ jjj <- 45
 source('topic_comments/topic_summary_data.R') # Get data
 ```
 
-```{r t45b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
+```{r t45b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t45c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
+```{r t45c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -34,7 +34,7 @@ Second, the model decided it really really wanted to put work on coherence measu
 
 There isn't a drop in this topic after World War II as there is with other topics in early modern philosophy. This is, I suspect, because Hume wasn't that big a topic before the war. It wasn't that there was no work on Hume. Keynes and Sraffa, for example, published their important argument that Hume was the author of the _Abstract_ in 1938 [@HumeAbstract]. But while it was reviewed in various journals, it didn't get much sustained attention in the philosophy journals until much more recently.
 
-```{r graph-time-categories-t45, fig.cap = "Early Modern topics - Weighted Frequency of Articles", fig.height = 5, fig.alt = alt_text}
+```{r graph-time-categories-t45, fig.cap = "Weighted frequency of articles in four topics in early modern philosophy.", fig.height = 5, fig.alt = alt_text}
   weight_ratio_graph <- ggplot(filter(weight_ratio, topic == 21 | topic == 31 | topic == 32 | topic == 45), aes(x = year, y = y, color=topic, group=topic))
   weight_ratio_graph + 
     spaghettistyle +
@@ -43,9 +43,9 @@ There isn't a drop in this topic after World War II as there is with other topic
     theme(legend.title = element_blank(), legend.position = "right") +
     geom_point(size = 1, alpha = .5) +
     geom_smooth(se = F, method = "loess", size = .5, formula = "y ~ x") +
-    labs(x = element_blank(), y = "Weighted Frequency of Articles")
+    labs(x = element_blank(), y = "Weighted frequency of articles")
   
-alt_text <- "A scatterplot, with trendlines, of the topics Early Modern, Social Contract Theory, Kant, and Hume. In the early years, Hume is the smallest by a long way. But the other three fall a lot, and Hume gently rises, so that in recent years Social Contract is by far the smallest, and the other three are similar in size."
+alt_text <- "A scatterplot, with trendlines, of the topics early modern, social contract theory, Kant, and Hume. In the early years, Hume is the smallest by a long way. But the other three fall a lot, and Hume gently rises, so that in recent years social contract is by far the smallest, and the other three are similar in size."
 ```
 
 One can see from this graph of the four early modern topics that Hume is the only one that really rises. The generic early modern topic maybe edges up a bit from the start to 1920, but there is a lot of noise. And social contract theory has a Rawls-inspired arrest of its fall. But otherwise the other three are either steady or falling, while Hume sees a mild rise.

@@ -1,28 +1,37 @@
 ```{r t01a}
-# Burping-again
+# Burp
 jjj <- 1
 source('topic_comments/topic_summary_data.R') # Get data
 opts_knit$set(eval.after = c("fig.cap", "fig.alt"))
 alt_text <- "Placeholder"
 ```
 
-```{r t01b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
-# Burp
+```{r t01b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t01c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
+```{r t01c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t01d}
 source('topic_comments/topic_summary_char_art.R') # Create table of all articles in topic # Burp
+cat("<table style=\'margin-bottom:0px\'>",
+    paste0("<caption>",
+           "(#tab:t01d)",
+           paste0("Characteristic articles of the topic ",
+                  the_categories$sub_lower[jjj],
+                  "."),
+    "</caption>",
+    "</table>", sep =" ")
+)
 temp_dt
 ```
+Tab: \@ref(tab:t01d)
 
 ```{r t01e}
 source('topic_comments/topic_summary_high_cites.R') # Generate table of highly cited articles. 
- # Have to do this at same time as previous script or a weird caching error occurs.
+# Have to do this at same time as previous script or a weird caching error occurs.
 if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n\n**Comments**\n")
 ```

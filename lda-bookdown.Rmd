@@ -1,0 +1,2536 @@
+--- 
+title: "A History of Philosophy Journals"
+subtitle: "Volume 1: Evidence from Topic Modeling, 1876-2013"
+author: "Brian Weatherson"
+date: "Marshall M. Weinberg Professor of Philosophy <br> University of Michigan, Ann Arbor"
+documentclass: book
+link-citations: yes
+site: bookdown::bookdown_site
+description: Building models of the trends in philosophy journals using LDA.
+bibliography: topic.bib
+nocite: '@*'
+always_allow_html: true
+---
+
+# Introduction {-}
+
+```{r packages, echo=FALSE, message = FALSE, warning = FALSE, cache=FALSE}
+knitr::opts_knit$set(eval.after = c("fig.cap", "fig.alt"))
+knitr::opts_chunk$set(dpi = 288)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(fig.height = 8.2)
+knitr::opts_chunk$set(fig.width = 7.5)
+knitr::opts_chunk$set(results = 'asis')
+require(tidyverse)
+require(tidytext)
+require(topicmodels)
+require(knitr)
+require(kableExtra)
+require(corrr)
+require(svglite)
+library(ggplot2); theme_set(theme_minimal())
+require(DT)
+require(english)
+require(tools)
+require(ggtext)
+#library(webshot)
+#install_phantomjs()
+require(extrafont)
+#loadfonts()
+options(dplyr.summarise.inform = FALSE)
+```
+
+```{r loader, cache=TRUE}
+# Loads all the RData
+# Cached because this takes forever each step
+journal_short_names <- c(
+  "Analysis" = "Analysis",
+  "British Journal for the Philosophy of Science" = "BJPS",
+  "Ethics" = "Ethics",
+  "Journal of Philosophy" = "Journal of Philosophy",
+  "Mind" = "Mind",
+  "Noûs" = "Noûs",
+  "Philosophical Review" = "Philosophical Review",
+  "Philosophy and Phenomenological Research" = "PPR",
+  "Philosophy and Public Affairs" = "P&PA",
+  "Philosophy of Science" = "Philosophy of Science",
+  "Proceedings of the Aristotelian Society" = "Aristotelian Society",
+  "The Philosophical Quarterly" = "Philosophical Quarterly"
+)
+
+# The list of commonly used words (could calculate this from below)
+load("common_words.RData")
+source("short_words.R")
+
+# How many topics we are using
+cats <- 90
+
+# The big LDA we're using
+load("t90t15.RData")
+
+# Rename it to the name I primarily use (and so it isn't overridden by other loads)
+thelda <- refinedlda
+
+# The application of the LDA to the 2019 Imprint articles
+load("imprint_lda.RData")
+
+all_journals_gamma <- tidy(thelda, matrix = "gamma")
+
+```
+
+
+```{r word_list_loader, cache=TRUE}
+# The long word list
+# This isn't on github because it might be proprietary
+# It's in a different module because (a) it isn't on github and (b) it is really slow
+load("all_journals_word_list.RData")
+```
+
+```{r gamma_setup, cache=TRUE}
+# Gamma is the probability of article being in a topic
+# This retrieves it, and rearranges the topics chronologically
+
+# The list of articles
+load("fixed_articles.RData")
+
+articles <- articles %>% 
+  mutate(title = str_replace_all(title, "[/*]", "")) %>% 
+  mutate(auth1 = str_replace_all(auth1, "[/*†‡]", "")) %>% 
+  mutate(lastlet = str_sub(auth1, -1)) %>% 
+  mutate(auth1 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth1, end = -2),
+                              TRUE ~ auth1)) %>% 
+  mutate(auth1 = case_when((str_sub(auth1, -4) == " and" | (str_sub(auth1, -3) == "And")) ~ str_sub(auth1, end = -4),
+                              TRUE ~ auth1)) %>% 
+  mutate(lastlet = str_sub(auth1, -1)) %>% 
+  mutate(auth1 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth1, end = -2),
+                                       TRUE ~ auth1)) %>% 
+  mutate(auth2 = str_replace_all(auth2, "[/*†‡]", "")) %>% 
+  mutate(lastlet = str_sub(auth2, -1)) %>% 
+  mutate(auth2 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth2, end = -2),
+                              TRUE ~ auth2)) %>% 
+  mutate(auth2 = case_when((str_sub(auth2, -4) == " and" | (str_sub(auth2, -3) == "And")) ~ str_sub(auth2, end = -4),
+                              TRUE ~ auth2)) %>% 
+  mutate(lastlet = str_sub(auth2, -1)) %>% 
+  mutate(auth2 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth2, end = -2),
+                              TRUE ~ auth2)) %>% 
+  mutate(lastlet = str_sub(auth2, -1)) %>% 
+  mutate(auth2 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth2, end = -2),
+                              TRUE ~ auth2)) %>% 
+  mutate(auth3 = str_replace_all(auth3, "[/*†‡]", "")) %>% 
+  mutate(lastlet = str_sub(auth3, -1)) %>% 
+  mutate(auth3 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth3, end = -2),
+                              TRUE ~ auth3)) %>% 
+  mutate(auth3 = case_when((str_sub(auth3, -4) == " and" | (str_sub(auth3, -3) == "And")) ~ str_sub(auth3, end = -4),
+                              TRUE ~ auth3)) %>% 
+  mutate(lastlet = str_sub(auth3, -1)) %>% 
+  mutate(auth3 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth3, end = -2),
+                              TRUE ~ auth3)) %>% 
+  mutate(lastlet = str_sub(auth3, -1)) %>% 
+  mutate(auth3 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth3, end = -2),
+                              TRUE ~ auth3)) %>% 
+  mutate(auth4 = str_replace_all(auth4, "[/*†‡]", "")) 
+
+# Regenerate authall after all those changes
+articles <- articles %>% 
+    mutate(authall = case_when(
+    is.na(auth2) ~ auth1,
+    is.na(auth3) ~ paste0(auth1," and ", auth2),
+    is.na(auth4) ~ paste0(auth1,", ",auth2," and ",auth3),
+    TRUE ~ paste0(auth1, " et al")
+  ))
+
+# Change format to Michigan Publishing preferred style
+articles <- articles %>% 
+  mutate(adjlpage = case_when(floor(fpage/10) == floor(lpage/10) & fpage < 10000 ~ lpage - 10*floor(lpage/10),
+                              floor(fpage/100) == floor(lpage/100) & fpage < 10000 ~ lpage - 100*floor(lpage/100),
+                              TRUE ~ lpage)) %>% 
+  mutate(citation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” ",journal," ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” ",journal," (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(title),",” ",journal," ",vol,":",fpage,"–",adjlpage,".")
+  )
+  )
+
+
+
+
+# The list of highly cited articles
+load("Highly_Cites_articles.RData")
+
+highly_cited <- highly_cited %>% 
+  mutate(document = file) %>% 
+  mutate(adjlpage = case_when(floor(fpage/10) == floor(lpage/10) & fpage < 10000 ~ lpage - 10*floor(lpage/10),
+                              floor(fpage/100) == floor(lpage/100) & fpage < 10000 ~ lpage - 100*floor(lpage/100),
+                              TRUE ~ lpage)) %>% 
+  mutate(citation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(Title),",” ",journal," ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(Title),",” ",journal," (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(Title),",” ",journal," ",vol,":",fpage,"–",adjlpage,".")
+  )
+  )
+
+
+all_journals_classifications <- all_journals_gamma %>%
+  group_by(document) %>%
+  top_n(1, gamma) %>%
+  ungroup()
+
+all_journals_titles_and_topics <- inner_join(all_journals_classifications, articles, by = "document")
+
+year_topic_mean <- all_journals_titles_and_topics %>% ungroup() %>% 
+  group_by(topic)  %>% 
+  dplyr::summarize(date = mean(year)) %>% 
+  mutate(rank = rank(date))
+
+relabeled_articles <- merge(all_journals_titles_and_topics, year_topic_mean) %>% 
+  select(-topic) %>% 
+  dplyr::rename(topic = rank) %>% 
+  mutate(mcitation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":",fpage,"–",adjlpage,".")
+  )
+  )
+
+high_cite_gamma <- merge(highly_cited, relabeled_articles, by = "document") %>% arrange(desc(Cites))
+
+
+relabeled_gamma <- merge(all_journals_gamma, year_topic_mean) %>%
+  as_tibble() %>%
+  select(-topic) %>%
+  dplyr::rename(topic = rank)
+
+# Some code left over from before this was written in tidy
+relabeled_gamma <- merge(relabeled_gamma, articles, by = "document") %>%
+  select(document, gamma, topic, year, journal, length) %>%
+  mutate(length = case_when(
+                            is.na(length) ~ 1,
+                            TRUE ~ length
+                            ))
+```
+
+```{r import_categories, cache=FALSE}
+# The big category csv
+# Could type this in from R, but easier to edit as CSV
+require(readr)
+the_categories <- read_csv("category-summary-22031848-90-r15.csv")
+```
+
+```{r graphsetup, cache=TRUE}
+# All the data for the big graphs in chapter 3
+# Gotta build them first because some of them get drawn on for the individual topics in chapter 2
+  article_demonimator <-  relabeled_articles  %>%
+    group_by(year) %>%
+    dplyr::summarise(d = n_distinct(document))
+
+  page_demonimator <- relabeled_articles %>%
+    group_by(year) %>%
+    dplyr::summarise(d = sum(length, na.rm = TRUE))
+  
+  count_numerator <- relabeled_articles  %>%
+    group_by(year, topic) %>%
+    dplyr::summarise(y = n_distinct(document)) %>%
+    ungroup() %>%
+    complete(year, topic, fill = list(y = 0))
+
+  count_ratio <- merge(count_numerator, article_demonimator) %>%
+    mutate(y = y/d)
+  
+  page_count_numerator <- relabeled_articles %>%
+    group_by(year, topic) %>%
+    dplyr::summarise(y = sum(length, na.rm=TRUE)) %>%
+    ungroup() %>%
+    complete(year, topic, fill = list(y = 0))
+
+  page_count_ratio <- merge(page_count_numerator, page_demonimator) %>%
+    mutate(y = y/d)
+  
+  weight_numerator <- relabeled_gamma %>%    
+    group_by(year, topic) %>%
+    dplyr::summarise(y = sum(gamma)) %>%
+    ungroup() %>%
+    complete(year, topic, fill = list(y = 0))
+
+  weight_ratio <- merge(weight_numerator, article_demonimator) %>%
+    as_tibble() %>%
+    mutate(y = y/d)
+  
+  page_weight_numerator <- relabeled_gamma %>%    
+    group_by(year, topic) %>%
+    mutate(gl = gamma * length) %>%
+    dplyr::summarise(y = sum(gl, na.rm = TRUE)) %>%
+    ungroup() %>%
+    complete(year, topic, fill = list(y = 0))
+
+  page_weight_ratio <- merge(page_weight_numerator, page_demonimator) %>%
+    mutate(y = y/d)
+  
+  journalgamma <- relabeled_gamma  %>%
+    group_by(year, topic, journal) %>%
+    dplyr::summarise(gamsum = sum(gamma)) %>%
+    ungroup() %>%
+    complete(year, topic, journal, fill = list(gamsum = NA))
+  
+  yearjournalcount <- relabeled_articles %>%
+    group_by(journal, year) %>%
+    dplyr::summarise(annual = n_distinct(document))
+  
+  journalgamma_frequency <- merge(journalgamma, yearjournalcount) %>%
+    mutate(gamfre = gamsum / annual) %>%
+    complete(year, journal, topic, fill = list(gamfre = NA))  
+```
+
+```{r astopic, cache=FALSE}
+# The topics are naturally numbers so they get continuous colors
+# Turning them into factors makes the automatic coloring work
+# I also use this to relabel and rearrange the journal titles
+# Burp
+  count_numerator$topic <- as.factor(count_numerator$topic)
+  page_count_numerator$topic <- as.factor(page_count_numerator$topic)
+  weight_numerator$topic <- as.factor(weight_numerator$topic)
+  page_weight_numerator$topic <- as.factor(page_weight_numerator$topic)
+  count_ratio$topic <- as.factor(count_ratio$topic)
+  page_count_ratio$topic <- as.factor(page_count_ratio$topic)
+  weight_ratio$topic <- as.factor(weight_ratio$topic)
+  page_weight_ratio$topic <- as.factor(page_weight_ratio$topic)
+  journalgamma_frequency$topic <- as.factor(journalgamma_frequency$topic)
+  
+journal_order <- c("Mind", "Proceedings of the Aristotelian Society", "Ethics", "Philosophical Review",  "Analysis","Philosophy and Public Affairs", "Journal of Philosophy", "Philosophy and Phenomenological Research", "Philosophy of Science", "Noûs",  "The Philosophical Quarterly", "British Journal for the Philosophy of Science")
+
+journalgamma_frequency$journal <- factor(journalgamma_frequency$journal, levels = journal_order)
+```
+
+```{r keywordsetup, cache=TRUE}
+# Generate two things for the topic summaries in chapter 2
+# First, the keywords, which are a complicated thing to make, since the beta matrix is huge
+# Second, the highly cited list, which is actually fairly easy -though have to check it is up to date
+# Burp
+  phil_topics <- tidy(thelda, matrix = "beta")
+
+  relabeled_topics <- merge(phil_topics, year_topic_mean) %>%
+    as_tibble() %>%
+    select(-topic) %>%
+    dplyr::rename(topic = rank)
+
+  word_score <- relabeled_topics %>%
+    group_by(term) %>%
+    dplyr::summarise(sumbeta = sum(beta)) %>%
+    arrange(desc(sumbeta))
+
+ busy_topics <- merge(relabeled_topics, word_score) %>%
+   filter(sumbeta > 0.00005 * cats) %>%
+   mutate(score = beta/sumbeta) %>%
+   arrange(desc(score))
+
+ distinctive_topics <- busy_topics %>%
+   group_by(topic) %>%
+   top_n(15, score) %>%
+   ungroup() %>%
+   arrange(desc(-topic))
+
+ short_keywords <- c()
+
+ short_keywords <- tribble(
+   ~topic, ~distinctive_words)
+  
+
+```
+
+```{r overall_stats, cache=TRUE}
+# Put all the stats for chapter 2 into one table that I can draw out
+overall_stats <- tibble(
+  the_topic = 1:90,
+  r_count = 0,
+  w_count = 0,
+)
+
+
+for (i in 1:90){
+  overall_stats$r_count[i] <- nrow(relabeled_articles %>% filter(topic == i))
+  overall_stats$w_count[i] <- round(sum(filter(relabeled_gamma, topic == i)$gamma), 1)
+}
+
+overall_stats <- overall_stats %>%
+  mutate(r_percent = round(r_count / nrow(relabeled_articles), 3)) %>%
+  mutate(r_rank = order(order(r_count, decreasing=TRUE))) %>%
+  mutate(w_percent = round(w_count / nrow(relabeled_articles), 3)) %>%
+  mutate(w_rank = order(order(w_count, decreasing=TRUE))) %>%
+  mutate(w_over_r = w_count - r_count) %>%
+  mutate(gap_rank = order(order(w_over_r, decreasing=TRUE))) %>%
+  mutate(wy = 0)
+
+temp_years <- relabeled_gamma %>%
+  select(topic, gamma, year) %>%
+  mutate(yg = gamma * year)
+
+for (i in 1:90){
+  overall_stats$wy[i] = round(sum(filter(temp_years, topic == i)$yg)/overall_stats$w_count[i], 1)
+}
+
+overall_stats <- overall_stats %>%
+  add_column(mean_y = 0, median_y = 0, modal_y = 0)
+
+for (i in 1:90){
+  temp_years <- relabeled_articles %>% filter(topic == i)
+  overall_stats$mean_y[i] = round(mean(temp_years$year), 1)
+  overall_stats$median_y[i] = round(median(temp_years$year), 0)
+  overall_stats$modal_y[i] = as.numeric(names(sort(-table(temp_years$year)))[1])
+}
+```
+
+```{r first-cap, cache=TRUE}
+# A function for capitalising first letter of string and leaving everything else as is
+# Str_to_sentence makes the names lower case, so doesn't work for this purpose
+require(stringr)
+fcap <- function(x){
+  paste0(
+    str_to_upper(str_sub(x, 1,1)),
+    str_sub(x, 2, nchar(x))
+  )
+}
+```
+
+
+```{r cross-topic, cache=TRUE}
+# Average gamma in topic y for articles in topic x
+# Useful quick-and-dirty overlap between topics measure
+cross_topic <- function(x, y){
+  t <- relabeled_articles %>% filter(topic == x)
+  s <- relabeled_gamma %>% filter(topic == y, document %in% t$document)
+  sum(s$gamma)
+}
+```
+
+```{r cross-topic-two, cache=TRUE}
+# Create tables from the cross-topic function
+short_articles <- relabeled_articles %>%
+  select(document, hometopic = topic)
+
+cross_topic_tibble <- relabeled_gamma %>%
+  inner_join(short_articles, by = "document") %>%
+  group_by(topic, hometopic) %>%
+  dplyr::summarise(g = mean(gamma)) %>%
+  filter(!topic == hometopic) %>%
+  select(topic = hometopic, othertopic = topic, g) %>%
+  arrange(topic, othertopic)
+
+closest_neighbour <- cross_topic_tibble %>%
+  group_by(topic) %>%
+  top_n(1, g)
+
+closest_neighbour_inverse <- cross_topic_tibble %>%
+  group_by(othertopic) %>%
+  top_n(1, g) %>%
+  arrange(othertopic)
+
+furthest_neighbour <- cross_topic_tibble %>%
+  group_by(topic) %>%
+  top_n(1, -g)
+
+furthest_neighbour_inverse <- cross_topic_tibble %>%
+  group_by(othertopic) %>%
+  top_n(1, -g) %>%
+  arrange(othertopic)
+
+```
+
+
+```{r kable-for-article-probabilities, cache=TRUE}
+# A function for making a quick table of an article's distribution over the 90 topics
+# This is first used in chapter 2
+individual_article <- function(x){
+  temp_article <- relabeled_articles %>%
+  filter(document == x)
+
+temp_gamma <- relabeled_gamma %>%
+  filter(document == x, gamma > 0.02) %>%
+  select(topic, gamma) %>%
+  inner_join(the_categories, by = "topic") %>%
+  select(sub_lower, gamma) %>%
+  mutate(sub_lower = fcap(sub_lower)) %>% 
+  arrange(-gamma)
+
+kable(temp_gamma, 
+      col.names = c("Subject", "Probability"), 
+      caption = paste0(temp_article$authall[1], ", “", temp_article$title[1], ".”"),
+      digits = c(0, 4)) %>% 
+  kable_styling(full_width = F)
+}
+```
+
+```{r dt-for-author-articles, cache=TRUE}
+author_dt <- function(x, y){
+datatable(relabeled_articles %>%
+          filter(auth1 %in% x | auth2 %in% x | auth3 %in% x) %>%
+          arrange(topic) %>%
+         inner_join(the_categories, by = "topic") %>%
+          select(year, citation, subject, gamma),           
+          colnames = c("Year", "Article", "Subject", "Probability"), 
+          rownames = FALSE,
+          options = list(columnDefs = list(list(className = 'dt-left', targets = 0:3)),
+                         pageLength = 10
+                         )#,
+#          caption = htmltools::tags$caption(paste0("Articles with author ",y,"."), style = "font-weight: bold")
+    )%>%
+      formatSignif('gamma',4) %>%
+      formatStyle(1:4,`text-align` = 'left')  
+} 
+```
+
+```{r kable-for-author-articles, cache=TRUE}
+author_kable <- function(x, y){
+kable(relabeled_articles %>%
+          filter(auth1 %in% x | auth2 %in% x | auth3 %in% x) %>%
+          arrange(year) %>%
+        mutate(gamma = round(gamma, 4)) %>%
+         inner_join(the_categories, by = "topic") %>%
+          select(year, mcitation, subject, gamma),           
+          col.names = c("Year", "Article", "Subject", "Probability"), 
+#          caption = paste0("Articles with Author ",y), style = "font-weight: bold")
+          caption = paste0("Articles with author ",y,"."))
+  } 
+```
+
+```{r words-by-year, cache=TRUE}
+# Use this to get words to graph
+# This gets used in chapter 7
+
+article_year_tibble <- articles %>%
+  select(document, year)
+
+word_year_count <- all_journals_tibble %>%
+  inner_join(article_year_tibble, by = "document") %>%
+  group_by(year) %>%
+  dplyr::summarise(a = sum(wordcount))
+
+word_year_journal_count <- all_journals_tibble %>%
+  inner_join(articles, by = "document") %>%
+  group_by(year, journal) %>%
+  dplyr::summarise(a = sum(wordcount))
+
+
+```
+
+```{r word-frequency-graphs, cache=TRUE}
+# A pair of functions that turn a string of words into a graph of each of their frequencies over time
+# Have to generate the data first, because would be enormous table to have it all stored
+# These get used in chapter 7
+word_year_frequency <- function(x){
+  left_join(word_year_count, all_journals_tibble %>%
+    filter(word == x) %>%
+    left_join(article_year_tibble, by = "document") %>%
+    group_by(year) %>%
+    dplyr::summarise(c = sum(wordcount)),
+    by = "year") %>%
+    replace_na(list(c = 0)) %>%
+    mutate(f = c / a) %>%
+    mutate(term = x)
+}
+
+frequency_summary <- function(x){
+  denom <- sum(all_journals_tibble$wordcount)
+  numer <- sum(filter(all_journals_tibble, word == x)$wordcount)
+  zz <- numer/denom
+  tribble(
+    ~term, ~the_mean,
+    x, zz
+  )
+}
+
+
+word_frequency_graphs <- function(x){
+  t <- lapply(x, word_year_frequency) %>% bind_rows()
+  h <- lapply(x, frequency_summary) %>% bind_rows()
+ggplot(t, aes(x = year, y = f, color = term, group = term)) +
+  freqstyle +
+  geom_point(size = 0.6, alpha = 0.8) +
+#  geom_hline(yintercept = h$the_mean, col = group) +
+  stat_summary(fun = mean, 
+               aes(x = 1950, yintercept = ..y.., group = term), 
+               geom = "hline",
+               linetype = "dashed",
+               size = 0.2) +
+  scale_x_continuous(minor_breaks = 10 * 1:201,
+                     expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0.01, .03)),
+                     minor_breaks = scales::breaks_pretty(n = 12),
+                     breaks = scales::breaks_pretty(n = 3),
+                     labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
+  #  scale_y_continuous(labels = scale_inverter) +
+  labs(x = element_blank(), y = "Word frequency") +
+  theme(legend.title = element_blank())
+}
+
+word_frequency_graph_alt_text <- function(x){
+  t1 <- paste0(
+    "A scatterplot showing the frequency of the words ",
+    paste(x, collapse=", "),
+    ". "
+  )
+  for (ijk in 1:length(x)){
+    temp <- word_year_frequency(x[ijk]) %>% 
+      mutate(f = round(f * 1000000))
+    temp_max <- temp %>% slice_max(f, n = 1)
+    temp_min <- temp %>% slice_min(f, n = 1)
+    t1 <- paste0(t1,
+            paste0(
+              "The word ",
+              x[ijk],
+              " appears, on average across the years, ",
+              round(mean(temp$f)),
+              " times per million words, and in the median year, it appears ",
+              round(median(temp$f)),
+              " times per million words. Its most frequent occurrence is in ",
+              temp_max$year[1],
+              " when it appears ",
+              temp_max$f[1],
+              " times per million words, and its least frequent occurrence is in ",
+              temp_min$year[1],
+              " when it appears ",
+              temp_min$f[1],
+              " times per million words. "
+            ))
+  }
+  t1
+}
+
+word_year_journal_frequency <- function(x, y){
+  left_join(word_year_journal_count %>% 
+              filter(journal == y), 
+            all_journals_tibble %>%
+              filter(word == x) %>%
+              left_join(articles, by = "document") %>%
+              filter(journal == y) %>%
+              group_by(year) %>%
+              dplyr::summarise(c = sum(wordcount)),
+            by = "year") %>%
+    replace_na(list(c = 0)) %>%
+    mutate(f = c / a) %>%
+    mutate(term = x)
+}
+
+journal_word_frequency_graph_alt_text <- function(x, j){
+  t1 <- paste0(
+    "A scatterplot showing the frequency of the words ",
+    paste(x, collapse=", "),
+    " in the journal ",
+    j,
+    ". (All stats from now on just refer to that journal.) "
+  )
+  for (ijk in 1:length(x)){
+    temp <- word_year_journal_frequency(x[ijk], j) %>% 
+      mutate(f = round(f * 1000000)) %>% 
+      ungroup()
+    temp_max <- temp %>% slice_max(f, n = 1)
+    temp_min <- temp %>% slice_min(f, n = 1)
+    t1 <- paste0(t1,
+            paste0(
+              "The word ",
+              x[ijk],
+              " appears, on average across the years, ",
+              round(mean(temp$f)),
+              " times per million words, and in the median year, it appears ",
+              round(median(temp$f)),
+              " times per million words. Its most frequent occurrence is in ",
+              temp_max$year[1],
+              " when it appears ",
+              temp_max$f[1],
+              " times per million words, and its least frequent occurrence is in ",
+              temp_min$year[1],
+              " when it appears ",
+              temp_min$f[1],
+              " times per million words. "
+            ))
+  }
+  t1
+}
+```
+
+```{r word-era-graphs, cache=TRUE}
+word_era_graphs <- function(x, y){
+  word_freq_data <- era_words %>%
+    filter(word %in% slice(common_words, 1:x)$word) %>%
+    filter(epoch == y) %>%
+    arrange(-f) %>%
+    ungroup() %>%
+    slice(1:5)
+  print(word_frequency_graphs(word_freq_data$word))
+}
+
+word_era_graphs_alt_text <- function(x, y){
+    word_freq_data <- era_words %>%
+    filter(word %in% slice(common_words, 1:x)$word) %>%
+    filter(epoch == y) %>%
+    arrange(-f) %>%
+    ungroup() %>%
+    slice(1:5)
+    word_frequency_graph_alt_text(word_freq_data$word)
+}
+```
+
+```{r imprint-setup, cache=TRUE}
+# Extract the gammas from imprint_lda and renumber chronologically
+imprint_gamma<- as_tibble(imprint_lda$topics, rownames = NA) %>%
+  rownames_to_column(var = "document") %>%
+  pivot_longer(-document) %>%
+  select(document, topic = name, gamma = value) %>%
+  mutate(topic = as.integer(topic)) %>%
+  inner_join(year_topic_mean, by = "topic") %>%
+  select(document, topic = rank, gamma) %>%
+  arrange(document, gamma)
+
+# Sum gammas over the 54 Imprint articles
+imprint_summary <- imprint_gamma %>%
+  group_by(topic) %>%
+  dplyr::summarise(g = sum(gamma))
+
+# Top gamma for each article 
+imprint_top_gamma <- imprint_gamma %>%
+  group_by(document) %>%
+  top_n(1, gamma)
+```
+
+```{r load-bad-lda, cache=TRUE}
+# The LDA I use for the buzzwords section right at the end
+# Everything goes wrong when this is cached and doesn't load
+load("t90t100.RData")
+```
+
+```{r setup-bad-lda, cache=TRUE}
+
+# Just replicate the normal setup, but with The Bad LDA
+bad_gamma <- tidy(refinedlda, matrix = "gamma") %>%
+  filter(topic == 6) %>%
+  inner_join(articles, by = "document") %>%
+  select(citation, gamma, journal, year) %>%
+  arrange(-gamma)
+
+bad_gamma_year <- bad_gamma %>%
+  group_by(year) %>%
+  summarise(g = sum(gamma))%>%
+  inner_join(article_demonimator, by = "year") %>%
+  mutate(y = g / d)
+  
+# Graph absolute and ratio
+
+bad_gamma_year_journal <- bad_gamma %>%
+  group_by(year, journal) %>%
+  summarise(g = sum(gamma)) %>%
+  inner_join(yearjournalcount, by = c("year", "journal")) %>%
+  mutate(y = g / annual)
+
+bad_gamma_year_journal$journal <- factor(bad_gamma_year_journal$journal, levels = journal_order)
+
+# Graph absolute and ratio
+
+bad_beta <- tidy(refinedlda, matrix = "beta") %>%
+  filter(topic == 6) %>%
+  filter(term %in% all_word_count$word) %>%
+  select(word = term, beta) %>%
+  inner_join(all_word_count, by = "word") %>%
+  mutate(y = beta/total * sum(all_word_count$total)) %>%
+  arrange(-y)
+```
+
+```{r comparison-beta-tables, cache=TRUE}
+good_beta <- relabeled_topics %>%
+  filter(topic == 90) %>%
+  filter(term %in% all_word_count$word) %>%
+  select(word = term, beta) %>%
+  inner_join(all_word_count, by = "word") %>%
+  mutate(y = beta/total * sum(all_word_count$total)) %>%
+  arrange(-y)
+
+kant_beta <- relabeled_topics %>%
+  filter(topic == 32) %>%
+  filter(term %in% all_word_count$word) %>%
+  select(word = term, beta) %>%
+  inner_join(all_word_count, by = "word") %>%
+  mutate(y = beta/total * sum(all_word_count$total)) %>%
+  arrange(-y)
+
+olp_beta <- relabeled_topics %>%
+  filter(topic == 24) %>%
+  filter(term %in% all_word_count$word) %>%
+  select(word = term, beta) %>%
+  inner_join(all_word_count, by = "word") %>%
+  mutate(y = beta/total * sum(all_word_count$total)) %>%
+  arrange(-y)
+```
+
+```{r category_gamma_setup, cache=TRUE}
+# I recreate category_gamma from inside the script
+# Need to build all_dtm because gotta assign probabilities from within the binary sorts to all articles
+word_list <- all_journals_tibble %>%
+  filter(wordcount > 3) %>%
+  filter(!word %in% short_words) %>%
+  filter(document %in% articles$document)
+
+
+all_dtm <- cast_dtm(word_list, document, word, wordcount)
+```
+
+```{r category_gamma_derive, cache=TRUE}
+split_check <- filter(the_categories, cat_num == 13)$topic
+
+category_gamma <- relabeled_gamma %>%
+  select(document, topic, gamma)
+
+for (i in split_check){
+  load(paste0("binary_lda/lda_",i,".RData"))
+  temp_lda <- posterior(binary_lda, all_dtm)
+  temp_gamma<- as_tibble(temp_lda$topics, rownames = NA) %>%
+    rownames_to_column(var = "document") %>%
+    pivot_longer(-document) %>%
+    select(document, btopic = name, bgamma = value)
+  temp_old_gamma <- category_gamma %>%
+    filter(topic == i) %>%
+    inner_join(temp_gamma, by = "document") %>%
+    mutate(topic = as.numeric(topic)) %>%
+    mutate(btopic = as.numeric(btopic)) %>%
+    mutate(topic = 100*topic + btopic) %>%
+    mutate(gamma = gamma*bgamma) %>%
+    select(-btopic, -bgamma)
+ category_gamma <- category_gamma %>%
+   filter(!topic == i) %>%
+   bind_rows(temp_old_gamma)
+}
+
+category_gamma <- category_gamma %>%
+  inner_join(the_categories, by = "topic")
+
+articles_by_category <- category_gamma %>%
+  group_by(document) %>%
+  top_n(1, gamma) 
+```
+
+```{r category_setup, cache=TRUE}
+category_gamma_graph <- category_gamma %>%
+  inner_join(articles, by = "document") %>%
+  select(journal, year, category = cat_name, gamma) %>%
+  group_by(journal, year, category) %>%
+  dplyr::summarise(g = sum(gamma)) %>%
+  ungroup() %>%
+  complete(journal, year, category, fill = list(g = NA))
+
+category_year <- category_gamma_graph %>%
+  group_by(category, year) %>%
+  dplyr::summarise(y = sum(g, na.rm=TRUE))
+
+year_denominator <- category_gamma_graph %>%
+  group_by(year) %>%
+  dplyr::summarise(d = sum(g, na.rm = TRUE))
+
+category_frequency <- inner_join(category_year, year_denominator, by = "year") %>%
+  mutate(f = y / d)
+```
+
+Anglophone philosophy in the twentieth century was centered, to an unprecedented extent, around journals: periodical publications that aimed to present (one vision of) the best philosophical work of the moment. By looking at the trends across these journals, we can see important trends in philosophy itself.
+
+But looking at the journals is easier said than done. Most major journals have published thousands of articles. To get a guide to philosophy as a whole, and not just to one particular vision of it, it's necessary to look at several different journals, and tens of thousands of articles. This is impossible for any human to do.
+
+Fortunately, it's not necessary to rely on humans. Two technological developments have made it practical to use computers to do at least some of the reading.
+
+The first development was that JSTOR used optical character-recognition (OCR) software to create text versions of many archived journals. They combined this with the original electronic versions of recent issues to create a full library of the text of many leading journals. And, crucially, they made this library available to the general public.
+
+The second development was that personal computers have gotten fast enough that it is (just barely) practical to run text-mining algorithms over libraries as large as the ones JSTOR provides on personal computers.^[_Practical_ here is a relative term; the models I primarily use here took eight to ten hours to complete on pretty good computers. But that's fine if a computer can be left running overnight.] So even without having to use tools beyond what's available in a typical university office, these algorithms can be used to see trends in the journal data. 
+
+This study focuses on the following twelve journals.
+
+```{r journal-table, cache=TRUE}
+options(dplyr.summarise.inform = FALSE)
+
+journals_summary <- articles %>%
+  dplyr::group_by(journal) %>%
+  dplyr::summarise(fyear = min(year), art = n_distinct(document), .groups = "keep") %>% 
+  ungroup() %>% 
+  dplyr::mutate(journal = paste0("_",journal,"_"))
+
+kable(journals_summary, 
+      col.names = c("Journal", "First Year", "Number of Articles"), 
+      align=c("l", "c", "c"),
+      caption = "The twelve journals that this book talks about."
+  )
+    
+```
+
+That table shows the twelve journals I'm using, the year they started publication, and how many articles from each journal I'm analyzing. That doesn't include everything the journal published, since I'm only looking at the research articles they published in English. So I'm not looking at book reviews, but also not at editorials, introductions, corrections and the like. Because the text-mining algorithms really require a single language, I'm also excluding everything that was published in languages other than English.^[I had no idea how many articles in French, German and Spanish were published in these journals over the years.] But even still, there are a lot of articles to look at, and they include many of the most important works in philosophy over that time period.
+
+The data comes from JSTOR's [Data for Researchers](https://jstor.org/dfr/), which provides, for each article in these journals, a file with a list of the words in the article and the number of times those words appear. Though as will become important in what follows, this data separates hyphenated words, excludes various common words like _and_ and _the_, and also excludes all one and two letter words.
+
+JSTOR has a moving window, which means it doesn't make available the latest issues of all of the journals. When I started this project, the last year that I could get access to all issues of all twelve journals was 2013. So this study stops in 2013. I make a number of anecdotal observations about what's happened since 2013 during this book. And at the end I come back to one study on work from 2019. But this is primarily a history of the years 1876–2013.
+
+I used the data from JSTOR to build a Latent Dirichlet Allocation (LDA) model of the journals using the [_topicmodels_](https://cran.r-project.org/package=topicmodels) package written by [Bettina Grün](http://ifas.jku.at/gruen/) and [Kurt Hornik](http://statmath.wu.ac.at/~hornik/), and described by them in @GrunHornik2011.
+
+An LDA model takes the distribution of words in articles and comes up with a probabilistic assignment of each paper to one of a number of topics. The number of topics has to be set manually, and after some experimentation it seemed that the best results came from dividing the articles up into `r as.english(cats)` topics. And a lot of this book discusses the characteristics of these `r as.english(cats)` topics. But to give you a more accessible sense of what the data looks like, I'll start with a graph that groups those topics together into familiar contemporary philosophical subdisciplines, and displays their distributions in the twentieth and twenty-first century journals.^[I'm leaving the nineteenth century off this graph because it is odd in various ways, and best treated separately. I'll say much more about it as we proceed.]
+
+```{r initial-graph-style, cache = FALSE}
+facetstyle <-   theme_minimal() +
+  theme(text = element_text(family="Lato"),
+        plot.title = element_text(size = rel(1),
+                                  family = "Lato",
+                                  face = "bold",
+                                  margin = margin(0, 0, 10, 0)),
+        strip.text = element_blank(),
+        panel.spacing.x = unit(-0.05, "lines"),
+        panel.background = element_blank(),
+        panel.spacing.y = unit(1, "lines"),
+        axis.title.x = element_text(size = rel(1),
+                                    margin = margin(t = 6, r = 0, b = 0, l = 0)),
+        axis.title.y = element_text(size = rel(1),
+                                    margin = margin(t = 0, r = 8, b = 0, l = 0)),
+        panel.grid.major.y = element_line(color = "grey85", size = 0.07),
+        panel.grid.minor.y = element_line(color = "grey85", size = 0.03),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        legend.position="none")
+spaghettistyle <- facetstyle +
+  theme(panel.grid.major.y = element_line(color = "grey80", size = 0.08),
+        panel.grid.minor.y = element_line(color = "grey85", size = 0.04),
+        legend.text = element_text(size = rel(0.5)),
+        plot.caption = element_text(size = rel(0.7))
+        )
+freqstyle <-   spaghettistyle +
+  theme(legend.text = element_text(size = rel(0.75)),
+          panel.grid.major.y = element_line(color = "grey85", size = 0.08),
+        legend.position = "right")
+chap_two_facet_labels <- tribble(
+  ~journal, ~short_name,
+  "Mind", "Mind",
+  "Philosophical Review", "Philosophical Review",
+  "Journal of Philosophy", "Journal of Philosophy",
+  "Noûs", "Noûs",
+  "Proceedings of the Aristotelian Society", "Aristotelian Society",
+  "Analysis", "Analysis",
+  "Philosophy and Phenomenological Research", "PPR",
+  "The Philosophical Quarterly", "Philosophical Quarterly",
+  "Ethics", "Ethics",
+  "Philosophy and Public Affairs", "Philosophy & Public Affairs",
+  "Philosophy of Science", "Philosophy of Science",
+  "British Journal for the Philosophy of Science", "BJPS"
+)
+
+# Changing the text in the theme just changes the labels on the axis etc
+# To change what's in the graph itself, you need to use these commands
+# And I'm using a hack to get the titles for the graph appearing in the graph, so...
+update_geom_defaults("text", list(family = "Lato"))
+update_geom_defaults("label", list(family = "Lato"))
+```
+
+```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year", dev = 'png', fig.alt = alt_text, cache=TRUE}
+tt <- filter(category_frequency, year > 1899) # Remove 19th Century from graph
+category_graph_labels <- tt %>%
+  group_by(category) %>%
+  summarise(year = median(year)) %>% # Put label at middle horizontally
+  mutate(f = max(tt$f) * 1.2) # Put label above the highest value on the graph
+ggplot(tt, 
+       aes(x = year, y = f, color=category, group=category)) +
+  geom_text(data = category_graph_labels,
+            mapping = aes(label = category),
+            vjust = "inward", 
+            hjust = "inward",
+            fontface = "bold", 
+            size = 3) +
+  labs(x = element_blank(), y = "Proportion of articles", title = "Trends in Philosophical Categories") +
+  geom_point(size = 0.15) + 
+  facet_wrap(~category, ncol=3) +  
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.05)),
+                     breaks = 25 * 77:80) +
+  scale_y_continuous(breaks = c(0.1,0.2),
+                     expand = expansion(mult = c(0, .03))) +
+  facetstyle
+
+alt_text <- paste0(
+  "Scatterplots showing the proportion of articles in each year that are in each of the 12 categories the book uses. The categories are ",
+  paste(category_graph_labels$category, collapse = ", "),
+  ". The frequencies are described briefly in the text below, then in much more detail in chapter 4. The key point here is that even though this is a scatterplot, it looks like a line graph. The year-to-year changes in how much each topic is represented are tiny."
+)
+```
+
+These graphs aren't smoothed—this is just a scatterplot of how prevalent each category is over time. The continuity in the graphs comes from continuity in the underlying subject matter. Although philosophy changes over time, the changes tend to be small and smooth—at least at this level of resolution. 
+
+There are, however, a few big trends that are visible even at this resolution. 
+
+The categories of Ethics and Philosophy of Science have fairly steady rises over the graphs. What primarily drives that is that journals thought of as specialist journals, like _Ethics_ and _Philosophy of Science_, became more and more specialized over time. There is much more topic overlap between these journals and so-called generalist journals in the 1940s and 1950s than in the 1990s and 2000s. 
+
+For much of the history of these journals, they publish approximately zero articles that look anything like contemporary epistemology. Edmund Gettier's famous article ["Is Justified True Belief Knowledge?"](https://philpapers.org/rec/GETIJT-4) [@Gettier1963] doesn't advance an existing debate; it starts a debate. But that debate doesn't really get going for another decade or more.
+
+On the other hand, in the middle of that graph above is a chart that does not reflect anything in contemporary philosophy: Idealism. The extent to which Idealism dominated philosophy before World War I, and continued to be a huge presence between the wars, quite astounded me. And the model is using a fairly narrow definition of Idealism here. Idealist-influenced works on social and political philosophy, such as work that engages heavily with Bergson and Santayana, is another huge field, but it's included in social and political philosophy above.
+
+The anecdote I'd always been told about the state of British philosophy in the early part of the century was that you could get a good sense of things by just looking at the issue of _Mind_ that included ["On Denoting"](https://philpapers.org/rec/RUSOD) [@Russell1905]. It's wedged between two big articles on Idealism. Indeed, the model classifies the articles just [before](https://philpapers.org/rec/RFAPVA-2) and just [after](https://philpapers.org/rec/GIBPAP) Russell's in the Idealism category. But I, at least, had no idea how dominated British philosophy was by Idealism, or how long this dominance lasted.
+
+This was far from the only thing that surprised me about the data. Some of these surprises probably reflect my ignorance, but some of them may be of wider interest.
+
+As you might have gathered from the quantity of work on Idealism, there just isn't much space for the work that we now think is most significant in late-nineteenth or early-twentieth century philosophy. Frege, Moore, Russell and even Wittgenstein have virtually zero impact on the journals at the time they publish. They do have an impact later, with the starting times of their influence being in more or less in reverse chronological order to when they actually wrote. But they are invisible in real time. This is especially striking for Moore, who does not seem to have used his influence as the editor of _Mind_ to steer the journal particularly in the direction of his work. The contrast with the generation of editors who came after him, on either side of the Atlantic, will be striking.
+
+As well as Idealism, two other broadly antirealist schools make a major impact on the journals in the first half of the twentieth century: pragmatism and positivism. But the impacts differ greatly in size. Idealism has a much bigger impact than pragmatism, and pragmatism has a much bigger impact than positivism. Indeed, the main way that positivism is visible is that it has a very prominent decline phase. The 'one patch per puncture' period of attempts to save the verification principle is big enough that it is basically one of the `r as.english(cats)` topics the model finds. But this model doesn't find a ton of work defending positivism turning up as a distinctive topic, nor does it find a notable falling away in the fields (like metaphysics and mind) that positivists railed against. It's possible that the focus on journals that primarily publish in English explains why I didn't see a "rise of positivism" period, but its absence was striking.
+
+If there is no early analytic/logical atomism visible, and positivism is a small presence that shows up mainly as it is dying, what fields that are part of the standard story of the history of analytic philosophy do show up? Well, the first big one is [ordinary language philosophy](#topic24). This is so big, especially in Britain, that it almost breaks the model. The big assumption that drives the kind of model I'm building is that there is a one-to-one mapping between classes of articles with a distinctive vocabulary, and classes of articles with a distinctive subject matter. That often holds true, but it breaks quite spectacularly in 1950s Britain. A new language, shorn of pomp and circumstance, takes over. And my poor model thinks that all the philosophers have moved on to a wholly new subject matter. But they largely have not—they are just discussing the old subjects using new words.
+
+There is one notable exception to this though. During the ordinary language phase we do see a lot of articles that are about language itself. This is a new thing—we don't see any such articles before then. That's an exaggeration of course—"On Denoting" really was published—but it's true as a generalization. But all of a sudden in the middle of the century there is a spike in interest in [Wittgensteinian philosophy of language](#topic22). That spike falls away almost as quickly as it came, but it changes the field. The space that was taken up by Wittgensteinian philosophy of language is replaced by other work in philosophy of language, influenced in the first place by either Frege, Russell, Quine or Austin. 
+
+There is something about this story that is repeated across the subjects. When one particular topic falls out of fashion, it is usually replaced by one from the same subdiscipline. That's how the very stable lines on the graphs above are generated, although most categories are made up of topics that see sharp rises and falls in the amount of attention they are getting. But philosophy of language is a bit of an exception. Before the Wittgensteinian boom it was invisible in the journal; afterwards it routinely accounted for 10 percent of the published articles. And that 10 percent figure stayed stable across huge shifts in what philosophers of language were talking about. What surprised me was that the stability here was the norm—the sudden appearance of a new field taking up 10 percent of the journal space was what was unusual.
+
+But what interests me as much as these big-picture trends are the little trends underlying them. What particular topics do philosophers talk about, and when do they talk about them? The answer to the latter question is almost always several years later than I had expected. To take one dramatic example, I associate work on [wide content](#topic85) with Kripke and Putnam's work from the early 1970s, and hence with the 1970s as a whole. But it turns out this work is practically invisible in the 1970s journals. ["Meaning and Reference"](https://philpapers.org/rec/PUTMAR-2) [@Putnam1973] shows up, but almost nothing else does until a decade or more later. And that's the general pattern; if you associate a topic with its most famous papers, you'll be misled about when it primarily shows up in the journals.
+
+So I'll spend some time in what follows looking at when familiar topics show up. But I'll also be looking at what shows up that isn't part of contemporary philosophy. I've spent a bit of time talking about Idealism, but it isn't the only thing missing from current journals. There used to be much more work on, broadly construed, [philosophy of history and of sociology](#topic10) than there is now. This has one particular impact that intersects with my other interests. Anglophone philosophers nowadays do spend a bit of time on philosophically significant work from the late eighteenth century. But not much of the work that they look at comes from Philadelphia, United States, or Paris, France, let alone Cap-Haïtien, Haiti. Although it's not like midcentury philosophers paid any attention to Cap-Haïtien in the late eighteenth century either, but they did think a bit more about the philosophical importance of what happened, and what was written, at that time in Philadelphia and Paris. And that seems like a good idea. Also, hopefully one of the benefits of the kind of retrospective I'm writing is it encourages people to look back and see what else we used to spend more time on, and could profitably spend more time on in the future.
+
+## Plan {-}
+
+The book has nine chapters, and it loosely divides into three parts, with three chapters in each part.
+
+The first part concerns the ninety topics that the model divides the articles into. Chapter \@ref(methodology-chapter) is about how and why I made the choices I did in providing the inputs to the model. Chapter \@ref(all-90-topics) goes through each of these ninety topics one at a time. As well as producing some automated statistics and graphs for each topic, and listing which articles are in each topic, I make some small comments about the topic. These are mostly about the content of the topic and its place in philosophical history, though I also spend a lot of time talking about how the model made its division into topics. Most of the comments here are short, though occasionally I decide that one topic needs 2500 words or more. Chapter \@ref(summary-graphs) is about my attempts to make a legible graph of all ninety topics through time. I run through a lot of different representations of the data; most of them are failures, but some of them are more interesting failures than others.
+
+The second part looks at what happens if instead of making a ninety-way division into somewhat novel topics, a twelve-way division into familiar topics is tried. I divide the articles up into common contemporary categories, like epistemology, ethics, metaphysics, and philosophy of science, and I look at the trends in these categories. Chapter \@ref(categorychapter) goes over the trends in the twelve categories. Chapter \@ref(sortingchapter) goes over how I made these divisions, with a special focus on where the categories do, and do not, run into each other. And Chapter \@ref(epistemologychapter) looks at one of these categories: epistemology. This is in part for self-interested reasons; it's the field I work in. But it's in part because the data about epistemology were so surprising. Epistemology, as it is currently practiced, is basically invisible in the journals before World War II. And the most famous part of contemporary epistemology, the so-called Gettier problem about the relationship between knowledge, truth, justification, and belief, plays a surprisingly small role in recent years.
+
+The third part looks at further applications of the model. The first six chapters had used years as the main unit of temporal measurement. In chapter \@ref(eraschapter), I use more coarse-grained measures. First I look at the trends over five "eras" in philosophy, and then over twelve decades. One benefit of doing things this way is that as well as looking at what the model says, I can look at trends in the underlying data directly, and see how well the model is tracking reality. In chapter \@ref(outliers), I look at outliers along various dimensions, both to see where extreme events have been happening and to put some stress on the model. If its most outlandish claims are true, and I think several of them are, then there is more confidence in its more mundane claims. And in chapter \@ref(lookingoutward), I try to look beyond the model. I use the model to compare the early years of the journals with some famous books that were published around the same time. Then I look at how articles in _Philosophers' Imprint_ in 2019 compare to what is seen before 2013. (The big story is the resurgence of interest in historical figures outside the standard canon.) And finally I look at something that almost blew up the project: the very distinctive vocabulary of twenty-first-century philosophy.
+
+## Website Instructions {-}
+
+This book isn't meant to be read cover to cover; it's meant to be picked through like the proverbial box of chocolates. To make this easier, there is a full table of contents on the sidebar. If you click on any of the chapter headings, it takes you to that chapter, and expands to list all the sections in that chapter. Then you can go directly to the section.
+
+The sidebar is also scrollable separately from the rest of the text. If you put the mouse in the sidebar and scroll, it will move the sidebar not the main text. This is particularly important in chapter 2, where there are more sections than will fit on most screens.
+
+But the sidebar takes up quite a bit of real estate, especially on a tablet. So if you want to hide it, either hit _s_, or click the <i class="fa fa-align-justify"></i> button in the top left. If the sidebar is hidden, doing either of those things will restore it. If you're reading on a phone, the sidebar should be hidden by default.
+
+Next to <i class="fa fa-align-justify"></i>, the <i class="fa fa-search"></i> icon brings up a search box for searching the book. Though note that this only searches the text of the book; it doesn't search the various tables. Clicking 'f' also brings up, or hides if it is already present, the search box.
+
+The <i class="fa fa-font"></i> icon lets you adjust the appearance of the book. You can set the background to white (by default), sepia or dark. Unfortunately, this doesn't change the appearance of the graphs, which will be white no matter what you pick. So I don't love how it looks with different colors, but the option is there. You can also change the font so the body of the book is in the serif font that's used in the titles. And you can increase or decrease the font size.
+
+The <i class="fa fa-eye"></i> icon takes you to the GitHub source for the page you're reading. Except in chapter 2, the source documents are split by chapter not section. So if you click on it right now, it will take you to the source file for the whole introductory chapter. But you should still be able to find the part you are looking for quickly.
+
+The <i class="fa fa-info"></i> icon provides some basic information about keyboard shortcuts you can use in the book.
+
+The <i class="fa fa-twitter"></i> icon takes you to Twitter with a pregenerated tweet about how wonderful this book is.
+
+If you use any other social network, the <i class="fa fa-share-alt"></i> icon pulls up a list of other social networks you can share information about the book on. I don't suspect I'll end up with a lot of shares on LinkedIn or Weibo, but just in case that's the social media you most use, it's there.
+
+You can move forward or back between sections using the left and right arrow keys. This is especially useful in long sections where the arrows on the screen might not be immediately visible.
+
+## Acknowledgements {-}
+
+This book relies on resources that a lot of people have made available, usually for free.
+
+The raw data comes from JSTOR's [Data for Research](https://www.jstor.org/dfr/) program. It wouldn't really be possible without the work they did to make that set available.
+
+I initially transformed the JSTOR Ddta into something that could be read in R via some scripts from John Bernau. His paper [Text Analysis with JSTOR Archives](https://doi.org/10.1177%2F2378023118809264) describes some techniques for modeling trends in sociology journals using the JSTOR archives.
+
+Once I had the data in R, I analyed it using the **topicmodels** [package](https://cran.r-project.org/web/packages/topicmodels/index.html) by Bettina Grün and Kurt Hornik.
+
+The idea for analyzing this data using topicmodels to analyze the data in this way comes from [What Is This Thing Called Philosophy of Science? A Computational Topic-Modeling Perspective, 1934–2015](https://doi.org/10.1086/704372), by Christophe Malaterre, Jean-François Chartier, and Davide Pulizzotto [-@Malaterre2019].
+
+As well as those sources, I learned a lot about how to use the **topicmodels** package from [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com) by Julia Silge and David Robinson, and from some articles in Towards Data Science, including those by [Shashank Kapadia](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0) [-@Kapadia2019] and by [Farren tang](https://towardsdatascience.com/beginners-guide-to-lda-topic-modeling-with-r-e57a5a8e7a25). [-@tang2019].
+
+The citation data I use here are from [Google Scholar](http://scholar.google.com), and I accessed them via ["Publish or Perish"](https://harzing.com/resources/publish-or-perish) [@Harzing2007]. Happily, a Mac version of Publish or Perish came out recently; in the past I had set up PC emulators just so I could run it.
+
+Most of the graphics in this book are based on things I learned from Kieran Healy, either from his book [_Data Visualization: A Practical Introduction_](https://kieranhealy.org/publications/dataviz/) [@Healy2019] or from his [blog](https://kieranhealy.org/blog/).
+
+The whole book was put together using the **bookdown** package, primarily built by Yihui Xie [-@bookdown]. This in turn is built on the **Pandoc** language, which was originally built by John MacFarlane. And the code uses tools from the **tidyverse** package throughout, which was originally built by Hadley Wickham. 
+
+The design of the book is modeled on that of [_rstudio4edu_](https://rstudio4edu.github.io/rstudio4edu-book/) by Desirée De Leon and Alison Hill[-@DeLeonHall2019], and I've used a lot of their CSS code under the hood here.
+
+And my daughter Nyaya has helped catch a lot of errors, though given the way I write, this is an endless task.
+
+## GitHub {-}
+
+I've created a GitHub repository for this book. It's at
+
+> https://github.com/bweatherson/lda-bookdown
+
+Most of the code and data you need to recreate this book is there. The exception is that the data files that I downloaded from JSTOR are not there. That's for two reasons. One is that it wasn't completely clear that the license for them would allow redistribution. The other was that they would have been too big to put on GitHub anyway. So to recreate everything I'm doing here, you'll need to download them directly. 
+
+In the ```notes``` directory of the GitHub repository there are some R scripts for converting downloaded JSTOR files into things that can be managed in R. A lot of the things I'm doing here are based on code that's in the code for the book. But it takes about twenty-four to thirty-two hours (on a reasonably fast personal computer) to build the model, so I don't build it anew each time I compile the book. The next section describes how to build a model like the one I'm using.
+
+If you want to go directly to the code for the chapter you're in, the eye icon in the top bar will take you there.
+
+## Replication Instructions {-}
+
+One of the aims of this book is to encourage others to use similar tools to produce better books and papers. This book has many flaws, some of which come from me not knowing as much as I did when I started the project as I do now, and some of which are just my limitations. I'm sure others can do better. So I've tried throughout to be as clear as possible about my methodology, so as to provide an entry point for anyone who wants to set out on a similar project.
+
+This section contains step-by-step instructions for how to build a small-scale model of the kind I'm using. The next chapter discusses the many choice points on the way from small-scale models like this to the large-scale model I use in the book, but it's helpful to have a small example to start with. I'm going to download the text for issues of the _Journal of Philosophy_ in the 1970s, and build a small (ten-topic) model on them. These instructions assume basic familiarity with R, and especially with **tidyverse**. If you don't have that basic familiarity, a good getting-started guide for basic familiarity is Jenny Bryan's [STAT 545: Data wrangling, exploration, and analysis with R](https://stat545.com), especially chapters 1, 2, 5, 6, 7, 14 and 15. OK, I assume readers are familiar with the basics of R, it's time to do some basic text mining.
+
+Go to https://jstor.org/dfr and set up a free account.
+
+Download the [list of journals JSTOR has](https://www.jstor.org/kbart/collections/all-archive-titles?contentType=journals&fileFormat=xlsx). That link will take you to the Excel file; if you're dedicated to plain text there is [also a text version available](https://www.jstor.org/kbart/collections/all-archive-titles?contentType=journals&fileFormat=csv), but it isn't a lot of fun to use. The key part of that file is the column **title_id**. That gives you the code you need to refer to each journal.
+
+Back at https://jstor.org/dfr go to "Create a Dataset" and use "jcode:(jphilosophy)", or whatever the title_id for your desired journal is, to get a data set.
+
+![Finding all _Journal of Philosophy_ articles](instruct_1.png)
+
+We are going to restrict dates, so let's just do the 1970s. Type in the years you want, for us it's 1970 to 1979, and click "Update Results".
+
+![Restricting to the 1970s](instruct_2.png)
+
+Click "Request Dataset". You need the metadata and the unigrams, and you need to give it a name (but you won't use it at any time).
+
+![What data to get](instruct_4.png)
+
+Once again, click "Request Dataset". You'll get this somewhat less than reassuring popup.
+
+![Uh oh—waiting time](instruct_3.png)
+
+But despite it saying that it may take up to two hours, in fact you normally get the data in minutes, even seconds. You'll get an email (at the address you used for registration) saying it's ready. Clicking the link in that email will get you a zip file. And in that zip file there are two directories: ```ngram1``` and ```metadata```.
+
+We want to put these somewhere memorable. I'll put the first in ```data/ngram/jphil``` and the second in ```data/metadata/jphil```. (So **data** is a subdirectory of my main working directory. And it has two subdirectories in it, ```ngram``` and ```metadata```. And each of those have a subdirectory for each journal being analyzed.) It's good to keep the ngrams and the metadata in separate places, and it will be very useful (actually essential) to the code I'm about to run to use the same directory name for where a particular journal's metadata is, and where its words are.
+
+There is a hitch here that I should be able to figure out in R, but I couldn't. As things come out, I ended up with names that didn't have spaces in them. So the author of ["Should We Respond to Evil with Indifference"](https://philpapers.org/rec/WEASWR) was BrianWeatherson, not Brian Weatherson. There was probably a way to fix this at the importing stage, but doing so required more understanding of XML files than I have. So instead I came up with a hack. In each journal directory under inside ```metadata```, go to the terminal and run this command:
+
+```
+find . -name '*.xml' -print0 | xargs -0 sed -i "" "s/<surname>/<surname> /g"
+```
+
+This adds a space before each surname. So in the surname field, that article goes from having the value "Weatherson" to having the value “ Weatherson”. And now it can be concatenated with "Brian" to produce a reasonable looking name. It's not elegant, but it works.
+
+The next two steps are taken almost entirely from John A. Bernau's paper ["Text Analysis with JSTOR Archives"](https://doi.org/10.1177%2F2378023118809264) [@Bernau2018]. I've tinkered with the scripts a little, but if you go back to the supporting documents for his paper, you can see how much I've literally copied over. 
+
+Anyway, here's the script I ran to convert the metadata files, which are in XML format, into something readable in R. The following file is called ```extract_metadata.R``` on the GitHub page. If you're working with more journals, you have to add the extra journals into the tibble near the start. The first column should be the name you gave to the directories for the journal's data; the second should be the name you want to appear in any part of the project being read by humans.
+
+```{r echo = T, eval = F}
+# Parsing out xml files
+# Based on a script by John A. Bernau 2018
+
+# Install / load packages
+require(xml2)
+require(tidyverse)
+require(plyr)
+require(dplyr)
+
+# Add every journal that you're using here as an extra line
+journals <- tribble(
+  ~code, ~fullname,
+  "jphil", "Journal of Philosophy",
+)
+
+all_metadata <- tibble()
+
+journal_count <- nrow(journals)
+
+for (j in 1:journal_count){
+  
+  # Identify path to metadata folder and list files
+  path1 <- paste0("data/metadata/",journals$code[j])
+  files <- list.files(path1)
+  
+  # Initialize empty set
+  final_data <- NULL
+  
+  # Using the xml2 package: for each file, extract metadata and append row to final_data
+  for (x in files){
+    path <- read_xml(paste0(path1, "/", x))
+    
+    # File name - without .xml to make it easier for lookup purposes
+    document <- str_remove(str_remove(x, ".xml"),"journal-article-")
+    
+    # Article type
+    type <- xml_find_all(path, "/article/@article-type") %>% 
+      xml_text()
+    
+    # Title
+    title <- xml_find_all(path, xpath = "/article/front/article-meta/title-group/article-title") %>% 
+      xml_text()
+    
+    # Author names
+    authors <- xml_find_all(path, xpath = "/article/front/article-meta/contrib-group/contrib") %>%
+      xml_text()
+    auth1 <- authors[1]
+    auth2 <- authors[2]
+    auth3 <- authors[3]
+    auth4 <- authors[4]
+    
+    # Year
+    year <- xml_find_all(path, xpath = "/article/front/article-meta/pub-date/year") %>% 
+      xml_text()
+    
+    # Volume
+    vol <- xml_find_all(path, xpath = "/article/front/article-meta/volume") %>% 
+      xml_text()
+    
+    # Issue
+    iss <- xml_find_all(path, xpath = "/article/front/article-meta/issue") %>% 
+      xml_text()
+    
+    # First page
+    fpage <- xml_find_all(path, xpath = "/article/front/article-meta/fpage") %>% 
+      xml_text()
+    
+    # Last page
+    lpage <- xml_find_all(path, xpath = "/article/front/article-meta/lpage") %>% 
+      xml_text()
+    # Language
+    lang <-  xml_find_all(path, xpath = "/article/front/article-meta/custom-meta-group/custom-meta/meta-value") %>%  
+      xml_text()
+    
+    # Bind all together
+    article_meta <- cbind(document, type, title, 
+                          auth1, auth2, auth3, auth4, year, vol, iss, fpage, lpage, lang)
+    
+    final_data <- rbind.fill(final_data, data.frame(article_meta, stringsAsFactors = FALSE))
+    
+    # Print progress 
+    if (nrow(final_data) %% 250 == 0){
+      print(paste0("Extracting document # ", nrow(final_data)," - ", journals$code[j]))
+      print(Sys.time())
+    }
+  }
+  
+  # Shorter name
+  fd <- c()
+  fd <- final_data
+  
+  # Adjust data types
+  fd$type <- as.factor(fd$type)
+  fd$year <- as.numeric(fd$year)
+  fd$vol <- as.numeric(fd$vol)
+  fd$iss <- str_replace(fd$iss, "S", "10") # A hack for special issues
+  fd$iss <- as.numeric(fd$iss)
+  
+  # We are going to replace S with some large number, and then undo it a few lines later
+  fd$fpage <- str_replace(fd$fpage, "S", "1000") 
+  fd$lpage <- str_replace(fd$lpage, "S", "1000")
+  # Convert to numeric (roman numerals converted to NA by default, but the S files should be preserved)
+  fd$fpage <- as.numeric(fd$fpage)
+  fd$lpage <- as.numeric(fd$lpage)
+  fd <- fd %>%
+    mutate(
+      fpage = case_when(
+        fpage > 1000000 ~ fpage - 990000,
+        fpage > 100000 ~ fpage - 90000,
+        TRUE ~ fpage
+      )
+    )
+  fd <- fd %>%
+    mutate(
+      lpage = case_when(
+        lpage > 1000000 ~ lpage - 990000,
+        lpage > 100000 ~ lpage - 90000,
+        TRUE ~ lpage
+      )
+    )
+  fd$fpage[fd$fpage == ""] <- NA
+  fd$lpage[fd$lpage == ""] <- NA
+  
+  # Create length variable
+  fd$length <- fd$lpage - fd$fpage + 1
+  
+  # Convert to tibble  
+  fd <- as_tibble(fd)
+  
+  # Filter out things that aren't research-article, have no author
+  fd <- fd %>%
+    arrange(desc(-length)) %>%
+    filter(type == "research-article") %>%
+    filter(is.na(auth1) == FALSE)
+  
+  # Filter articles that we don't want  
+  fd <- fd %>%
+    filter(!grepl("Correction",title)) %>%
+    filter(!grepl("Foreword",title)) %>%
+    filter(!(title == "Descriptive Notices")) %>%
+    filter(!(title == "Editorial")) %>%
+    filter(!(title == "Letter to Editor")) %>%
+    filter(!(title == "Letter")) %>%
+    filter(!(title == "Introduction")) %>%
+    filter(!grepl("Introductory Note",title)) %>%
+    filter(!grepl("Foreword",title)) %>%
+    filter(!grepl("Errat",title)) %>%
+    filter(!grepl("Erata",title)) %>%
+    filter(!grepl("Abstract of C",title)) %>%
+    filter(!grepl("Abstracts of C",title)) %>%
+    filter(!grepl("To the Editor",title)) %>%
+    filter(!grepl("Corrigenda",title)) %>%
+    filter(!grepl("Obituary",title)) %>%
+    filter(!grepl("Congress",title))
+  
+  # Filter foreign language articles. Can't filter on lang = "eng" because some articles have blank
+  fd <- fd %>%
+    filter(!lang == "fre") %>%
+    filter(!lang == "ger")
+  
+  # Convert file to character to avoid cast_dtm bug
+  fd$document <- as.character(fd$document)
+  
+  # Add a column for journal name
+  fd <- fd %>%
+    mutate(journal = journals$fullname[j])
+  
+  # Put the metadata for this journal with metadata for other journals
+  all_metadata <- rbind(fd, all_metadata) %>%
+    arrange(year, fpage)
+}
+
+save(all_metadata, file  = "my_journals_metadata.RData")
+
+# The rest of this is a bunch of tweaks to make the metadata more readable
+
+my_articles <- all_metadata
+
+# Get Rid of All Caps
+my_articles$title <- str_to_title(my_articles$title)
+my_articles$auth1 <- str_to_title(my_articles$auth1)
+my_articles$auth2 <- str_to_title(my_articles$auth2)
+my_articles$auth3 <- str_to_title(my_articles$auth3)
+
+#Get rid of messy spaces in titles
+my_articles$title <- str_squish(my_articles$title)
+my_articles$auth1 <- str_squish(my_articles$auth1)
+my_articles$auth2 <- str_squish(my_articles$auth2)
+my_articles$auth3 <- str_squish(my_articles$auth3)
+
+# Note that this sometimes leaves us with duplicated articles in my_articles
+# The following is the fix duplication code
+my_articles <- my_articles %>% 
+  rowid_to_column("ID") %>%
+  group_by(document) %>%
+  top_n(1, ID) %>%
+  ungroup()
+
+# Making a list of authors; uses 'et al' for 4 or more authors
+my_articles <- my_articles %>%
+  mutate(authall = case_when(
+    is.na(auth2) ~ auth1,
+    is.na(auth3) ~ paste0(auth1," and ", auth2),
+    is.na(auth4) ~ paste0(auth1,", ",auth2," and ",auth3),
+    TRUE ~ paste0(auth1, " et al")
+  ))
+
+# Code for handling page numbers starting with S, and for just listing last two digits in last page when that's all that is needed
+my_articles <- my_articles %>% 
+  mutate(adjlpage = case_when(floor(fpage/100) == floor(lpage/100) & fpage < 10000 ~ lpage - 100*floor(lpage/100),
+                              TRUE ~ lpage)) %>% 
+  mutate(citation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":S",fpage-10000,"-S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall," (",year,") \"", title,"\" ",journal," (Supplementary Volume) ",vol,":",fpage,"-",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", \"", toTitleCase(title),",\" _",journal,"_ ",vol,":",fpage,"–",adjlpage,".")
+  )
+  )
+
+# Remove Errant Articles
+# This is used to remove duplicates, articles that aren't in English but don't have a language field, etc.
+# Again, this isn't very elegant, but you just have to look at the list of articles and see what shouldn't be there
+errant_articles <- c(
+  "10.2307_2250251",
+  "10.2307_2102671",
+  "10.2307_2102690",
+  "10.2307_4543952",
+  "10.2307_2103816",
+  "10.2307_185746",
+  "10.2307_3328062"
+)
+
+# Last list of things to exclude
+my_articles <- my_articles %>%
+  filter(!document %in% errant_articles) %>%
+  filter(!lang == "spa")
+
+save(my_articles, file="my_articles.RData")
+```
+
+The main thing I added to this was the ugly code for handling articles with **S** in their page number. This doesn't matter for the _Journal of Philosophy_ in the 1970s. But two other journals have page numbers that look like S17, S145, etc. Treating these as numbers was a bit of a challenge, and the ugly code above is an attempt to handle it. As you can see, I've written distinct lines in for the two journals that I was looking at that did this; if you look at more journals you'll have to be careful with this.
+
+The other thing I did is right near the end, which is the **mutate** command that introduces the citation field. That's a really helpful way of referring to articles in a familiar, human, and readable way. If you prefer a different citation format, that's the line you want to adjust.
+
+We now have a tibble, called **my_articles** that has the metadata for all the articles. It's somewhat helpful in its own right; I use the large one I generated from all twelve journals for looking up citations. But we also need the words. For this I use another script that I built off one from Bernau's paper.
+
+This is called ```extract_words.R``` on the GitHub page. And again, if you want to use more journals, you'll have to extend that tibble at the start.
+
+```{r echo = T, eval = F}
+# Read ngrams
+# Based on script by John A. Bernau 2018
+require(tidyverse)
+require(quanteda)
+
+# Journal List
+journals <- tribble(
+  ~code, ~fullname,
+  "jphil", "Journal of Philosophy",
+)
+
+jlist <- journals$code
+
+# Initialise huge tibble
+huge_tibble <- tibble(filename = character(), word = character(), wordcount = numeric())
+
+for (journal in jlist){
+  # Set up files paths
+  path <- paste0("data/ngram/",journal)
+  n_files <- list.files(path)
+  
+  # Connecting Words to Filter out
+  source("short_words.R")
+  
+  big_tibble <- tibble(filename = character(), word = character(), wordcount = numeric())
+  
+  for (i in seq_along(n_files)){
+    # Remove junk to get codename
+    codename <- str_remove(str_remove(n_files[i], "-ngram1.txt"),"journal-article-")
+    
+    # Get metadata for it
+    meta <- my_articles %>% filter(document == codename)
+    
+    # If it is in article list, extract text
+    if(nrow(meta) > 0){
+        small_tibble <- read.table(paste0(path, "/", n_files[i]))
+        small_tibble <- small_tibble %>%
+          dplyr::rename(word = V1, wordcount = V2) %>%
+          add_column(document = codename, .before=1) %>%
+          mutate(digit = str_detect(word, "[:digit:]"),
+                 len = str_length(word)) %>% 
+          filter(digit == F & len > 2) %>% 
+          filter(!(word %in% short_words)) %>% 
+          select(-digit, -len)
+        big_tibble <- rbind(big_tibble, small_tibble)
+    }
+    if (i %% 250 == 0){
+      print(paste0("Extracting document # ", journal, " - ", i))
+      print(Sys.time())
+    }
+  }
+  huge_tibble <- rbind(huge_tibble, big_tibble)
+}
+
+# Adjust data types
+my_wordlist <- as_tibble(huge_tibble)
+my_wordlist$document <- as.character(my_wordlist$document)
+my_wordlist$word <- as.character(my_wordlist$word)
+
+save(my_wordlist, file  = "my_wordlist.RData")
+```
+
+Now with a tibble of all the articles, and another with all the words in each article, it's time to go to work. The next file is called ```create_lda.R``` on the GitHub page, and if you're doing a big project, it could take some time to run. This particular script takes less than a minute to run on my computer. But the equivalent step in the main project took over eight hours on a pretty powerful laptop.
+
+```{r echo = T, eval = F}
+require(tidytext)
+require(topicmodels)
+require(tidyverse)
+
+# This is redundant if you've just run the other scripts, but here for resilience
+load("my_wordlist.RData")
+load("my_articles.RData")
+
+source("short_words.R")
+
+# Filter out short words and words appearing 1-3 times
+in_use_word_list <- my_wordlist %>%
+  filter(wordcount > 3) %>%
+  filter(!word %in% short_words) %>%
+  filter(document %in% my_articles$document)
+
+# Create a Document Term Matrix 
+my_dtm <- cast_dtm(in_use_word_list, document, word, wordcount)
+
+# Build the lda
+# k is the number of topics
+# seed is to allow replication; vary this to see how different model runs behave
+# Note that this can get slow - the real one I run takes 8 hours, though if you're following this script, it should take seconds
+my_lda <- LDA(my_dtm, k = 10, control = list(seed = 22031848, verbose = 1))
+
+# The start on analysis - extract topic probabilities
+my_gamma <- tidy(my_lda, matrix = "gamma")
+
+# Now extract probability of each word in each topic
+my_beta <- tidy(my_lda, matrix = "beta")
+```
+
+The big step is the one that calls the LDA command. That builds the topic model. From here, your job is to just do analysis. But just to demonstrate what this finds, here is a quick look at what we found. 
+
+```{r analyse-dummy-lda, cache=TRUE}
+load("my_lda.RData")
+my_gamma <- tidy(my_lda, matrix = "gamma")
+
+topic_three <- my_gamma %>%
+  filter(topic == 3) %>%
+  arrange(-gamma) %>%
+  slice(1:10) %>%
+  inner_join(articles, by = "document") %>%
+  select(citation)
+
+kable(topic_three,
+      col.names = "Article",
+      caption = "Top articles in topic 3 in example LDA.")
+```
+
+These are the ten articles that our little example LDA gives the highest probability to being in topic 3. What's topic 3? I guess ethics, from the look of those articles. We could check this by seeing which words have the highest probability of turning up in the topic.
+
+```{r analyse-dummy-lda-words, cache=TRUE}
+load("my_lda.RData")
+my_beta <- tidy(my_lda, matrix = "beta")
+
+topic_three_words <- my_beta %>%
+  filter(topic == 3) %>%
+  arrange(-beta) %>%
+  slice(1:10) %>%
+  select(term)
+
+kable(topic_three_words,
+      col.names = "Word",
+      caption = "Topic 3 words.") %>%
+   kable_styling(full_width = F)
+```
+
+And that seems to back up my initial hunch that this is about ethics, or at least about morality. I'm going to stop the illustration here, because to go any further would mean doing serious analysis on a model that probably doesn't deserve serious attention. But hopefully I've said enough here that anyone who wants to can get started on their own analysis.
+
+## Volumes {-}
+
+The portentous "Volume 1" in the subtitle is because I have a number of ideas for how to think about the history of philosophy journals. My first project along these lines involved looking at citation patterns, and a version of that focusing on early twenty-first century journals should be volume 2. When I started working on this what I really wanted to understand was the revolution in philosophy (at least as it appeared in journals) between 1968 an 1975, and maybe there will be a volume 3 if I figure out something to say about that period. But volume 2 is barely started, and volume 3 is for now vaporware. The subtitle is to leave options open, not to announce further work.
+
+The current version of this book has been compiled on:
+
+```{r include-date}
+Sys.Date()
+```
+
+With the following configuration:
+
+<details>
+    <summary>Show configuration</summary>
+```{r session-info}
+xfun::session_info()
+```
+</details>
+
+```{r articles-with-word, cache=TRUE}
+articles_with_word <- function(x){
+t <- all_journals_tibble %>%
+  filter(word == x) %>%
+  inner_join(relabeled_articles, by = "document") %>%
+  arrange(-wordcount) %>%
+  top_n(10, wordcount) %>%
+  inner_join(the_categories, by = "topic") %>%
+  select(mcitation, subject, wordcount)
+kable(t, 
+      col.names = c("Article", "Subject", "Word Count"), 
+      caption = paste0("Articles in which the word \'",x,"\' appears most often")
+)
+}
+```
+
+```{r empty-block-end-of-index}
+# I love placeholders
+```
+
+<!--chapter:end:index.Rmd-->
+
+# Methodology {#methodology-chapter}
+
+The point of this chapter is to explain the choices I made in building the model that the book is based around. But to understand the choices that I made, it helps to know a little bit about what a Latent Dirilecht Algorithm (LDA) does.
+
+The inputs to the model are some texts and a number. The model doesn't care about the ordering of words in the texts, so really the input isn't texts but a list of lists of ordered pairs. Each ordered pair is a word and a number. In the version I'm using, the outer list is a list of philosophy articles. And each element of that list is a list of words in that article, along with the number of times the word appears.
+
+Along with that, you give the model a number. This is the number of _topics_ that you want the model to divide the texts into. I'll call this number $t$ in this introduction. And intuitively there is a function $T$ that maps articles into the $t$ topics. 
+
+What the model outputs is, for our purposes, a pair of probability functions: one for articles and one for words.
+
+The probability function for articles gives, for each article $a$ and topic number $n \in \{1, \dots, t\}$, a probability for $T(a) = n$; that is, it gives a probability that the article is in that topic. Notably, it doesn't identify the topics with any more than numbers. I'm going to give names to the topics—this one is [Kant](#topic32); this one is [composition and constitution](#topic89), etc.—but the model doesn't do that. For it, the topics really are just integers between 1 and $t$.
+
+The probability function for words gives, for each word $w$ from any of the articles, and topic number $n \in \{1, \dots, t\}$, the probability that a randomly chosen word from the articles in that topic is $w$. So in the Kant topic, the probability that a randomly chosen word is _Kant_ is about 0.14. 
+
+That number feels absurdly high, but it makes sense for a couple of reasons. One is that to make the models compile in even semireasonable time, I filtered out a lot of words. What's it's really saying is that the word _Kant_ produces about 1/7 of the tokens that remain. The other is that what it's really giving you here is the probability that a random word in an article is _Kant_ conditional on the probability of that article being in the [Kant](#topic32) is 1. And in fact the model is never that confident. Even for articles that might be considered to be clearly articles about Kant, the model is rarely more than 40 percent confident that that's what they are about. And this is for a good reason. Most articles about Kant in philosophy journals are, naturally enough, about Kantian philosophy. And any part of Kantian philosophy is, well, philosophy. So the model has a topic on [beauty](#topic08), and when it sees an article on Kantian aesthetics, it gives some probability the correct classification of that article is in the topic on Beauty. So the word probabilities are quite abstract things—they are something like word frequencies in a certain kind of stereotyped article. What the model really wants to do is find $t$ stereotypes such that each real article is a linear mixture of the stereotypes. 
+
+The way the model approaches this goal is by building two probability functions, checking how well they cohere, and recursively refining them in places that they don't cohere. One probability function is the probability, for each article, that it is in one or other of the ninety topics. So it might say this article is 0.4 likely to be in topic 32, 0.3 likely to be in topic 68, and so on down to some vanishing probability that it is in topic 89. The other probability function is the probability, for each topic, of a given word appearing. So it might say that given the article is in topic 32, there is a 0.15 likelihood that a randomly selected word in the article is _Kant_, an 0.05 likelihood that a randomly selected wordis _ideal_, and so on, down to a vanishingly small likelihood that the word is, say, _Weatherson_. Combining those functions, we get the probability, for each actual article, that a randomly selected word in it is _Kant_ or _ideal_ or _Weatherson_ or any other word. And we can check that calculated probability against the actual frequency of each word in the article. I'll call the calculated probabilities the _modeled frequencies_, and say that the goal of the model is to have the modeled frequencies of words in articles match the actual frequencies of the words in the articles. A perfect match here is impossible to achieve; there aren't enough degrees of freedom. But the model can minimize the error, and it does so recursively.
+
+The process involved is slow. I was able to build all the models I'll discuss on personal computers, but it takes some processing time. The particular model I'm primarily using took about twenty hours to build, but I ran through many more hours than that building other models to compare it to.
+
+And the process is very path dependent. The algorithm, like many algorithms, has the basic structure of pick a somewhat random starting point, then look for a local equilibrium. That's incredibly dependent on how you start and somewhat dependent on how you travel.
+
+The point of this chapter is to describe how I chose the inputs to the model I ended up using, and then how I set various parameters within the model. The parameters are primarily, in terms of the metaphor of the previous paragraph, the starting point of the search, and how long the search should go before we decide one is something close enough to an equilibrium.
+
+The inputs are more complex. Very roughly, the inputs I used are the frequently occurring substantive words from research articles in twelve important philosophy journals. I'll start by talking about how and why I selected the particular twelve journals that I did.
+
+## Selecting the Twelve Journals
+
+This is a study about the trajectory of topics across leading philosophy journals. But presumably most people reading this aren't interested in philosophy journals as such; they are interested in the trajectory of philosophy. So it is important to select, as far as possible, journals that accurately reflect what's going on in philosophy.
+
+An obvious idea would be to just use generalist journals, because they will reflect what's generally happening in philosophy. But this turns out to be a bad idea, since there really aren't any generalist journals in philosophy. Perhaps that's because the journals in moral and political philosophy, and in philosophy of science, are so good, that so-called generalist journals tend to under-represent work in those fields. Or, perhaps more precisely, they don't always reflect the cutting-edge work in those fields.
+
+In [previous work](http://tar.weatherson.org/2017/04/26/citation-patterns-across-journals/), I noted how little attention the leading generalist journals had paid to two of the most important late twentieth-century articles, Elizabeth Anderson's ["What is the Point of Equality?"](https://philpapers.org/rec/ANDWIT), and Peter Machamer, Lindley Darden and Carl Craver's ["Thinking about Mechanisms"](https://philpapers.org/rec/MACTAM). These papers each have over 2500 Google Scholar citations, but they have barely been mentioned in the leading generalist journals. An accurate picture of recent philosophy has to include the literatures these papers spawned, and those literatures on the whole aren't found in generalist journals. So to get an accurate picture of philosophy, you need to include at least some specialist journals.
+
+As a reminder, here are the journals that I've included:
+
+```{r journaltablereprise, echo=FALSE, cache=TRUE}
+  kable(journals_summary, 
+        col.names = c("Journal", "First Year", "Number of Articles"), 
+        align=c("l", "c", "c")
+  )
+```
+
+As you can see, there are two moral and political journals, _Ethics_ and _Philosophy and Public Affairs_ (_P&PA_), and two philosophy of science journals, _Philosophy of Science_ and the _British Journal for the Philosophy of Science_. I could possibly have gotten by with just one of each. But I thought _Ethics_ and _P&PA_ brought in different fields of philosophy, and so they were both worth including. That meant it would be good to balance them with two philosophy of science journals. This had the side benefit of my not having to decide which of those two philosophy of science journals was more representative.
+
+But if I had those four "specialist" journals, I needed enough "generalist" journals that what I had felt representative of philosophy as a whole. Partially to get the balance right and partially to make the graphs look nice, it felt like I needed eight more journals. I started with the current "big four" journals.
+
+- _Mind_
+- _The Philosophical Review_
+- _Journal of Philosophy_
+- _Noûs_
+
+I added _Analysis_ because I wanted to be very sensitive to trends, and _Analysis_ is often ahead of the trends in the field. That leaves three more spots. Here were the criteria I used to fill those:
+
+- The data for the journal had to be available through JSTOR's Data for Researchers. This was not negotiable since that was my data source. But it was unfortunate, since it ruled out the _Australasian Journal of Philosophy_, which would otherwise have been perfect.
+- The journal had to be active for a long time. It wouldn't help balance much to add a journal that didn't exist during the timeframe I'm looking at. This ruled out _Philosophical Studies_. That's a bit of a shame since the story of twenty-first century philosophy can't be told without _Philosophical Studies_. But it just doesn't have enough history for the purposes of this study.
+- The journal could not be too idiosyncratic. I wanted it to tell something about the field, not just about those journals. This ruled out _The Monist_, which was very idiosyncratic in its early years. In recent years, it is idiosyncratic in a good way; highlighting work the others sometimes overlook. But before World War II it is barely a philosophy journal in any recognizable sense.
+- The journal could not be a philosophy of science journal, since the aim is to balance the two philosophy of science journals I have.
+- The journal had to primarily publish in English, since the analysis tools I'm using simply don't work for cross-linguistic data sets. The last two criteria ruled out _Synthese_ and _Erkenntnis_.
+
+After all that, I was left with:
+
+- _Philosophy and Phenomenological Research_: This has slightly more non-English work than is ideal for current purposes, but I thought adding a little continental philosophy from its early years was worthwhile. And it became such an important journal that it felt wrong to leave it out.
+- _Proceedings of the Aristotelian Society_: Note that I'm including the supplementary volumes here.^[Including them also causes a few headaches. The articles in the supplementary volumes often have respondents. When they do, the metadata often lists both the original article and the reply article as coauthored. This is bizarre, though even more bizarre is that often the running head on the print article does the same thing. This can totally mess up the calculating of philosophical Erdös numbers which one would probably know if they have calculated them). This study isn’t tracking authors, so it isn’t too painful. But I am using auto-generated citations as a way of picking out articles, and they will sometimes look coauthored when they are really not. I’m not going to try fixing this; it’s just a weirdness that I’ll live with.] This is idiosyncratic in its early years; some secretaries of the Aristotelian Society have a bigger impact on this study than they do on the field. But without it, so much of British philosophy is missed, including some themes in contemporary philosophy that aren’t always covered in the other major journals.
+- _Philosophical Quarterly_. For much of the twentieth century, this is much less prestigious than the other eleven journals I'm looking at, and this will become relevant when I look at the citation data. But it fits the other criteria very well. It adds a Scottish journal to the English and US journals I am otherwise looking at. It has slightly better history coverage than the other journals, and since I worked at St Andrews for so many years, I'm personally fond of it.
+
+One might wonder why I didn't add any other specialist journals, along with journals in ethics and in philosophy of science. The reasons were a bit varied.
+
+I think there is a better sense of midcentury philosophy if one logic journal is added. But text mining can't be done on symbols. And in more recent years, the sense in which the logic journals are primarily philosophy journals as opposed to mathematics journals has gotten weaker. So, I left them out.
+
+The twelve journals I have don;t include as much history of philosophy as there is in the profession. But that's simply unavoidable if doing a study based on journals. History of philosophy is primarily a book discipline rather than a journal discipline. This can be seen in the citation data. Pick almost any prominent figure in history of philosophy and odds are that I'll have several journal articles with more citations than their most cited article. The prominent figure picked will almost surely have several books that are more widely cited than any of my articles. The point isn't that historians of philosophy are never cited but that they rarely have highly cited articles. Just as importantly, when a history article is widely cited, it usually appears in one of the twelve journals I've already included. For this reason, the model that I end up working with does have a lot of history categories. Just remember that the absolute numbers of articles in each of these categories is not representative of how important the categories are in philosophy.
+
+And the other specialist journals are either too new (e.g., _Mind and Language_, or _Linguistics and Philosophy_) or representative of too small a section of contemporary philosophy to be worth including. Aesthetics, for example, is an important philosophical field. (And it shows up in the model in an interesting way.) But including the _Journal of Aesthetics and Art Criticism_ in the study would have made it look like aesthetics was 1/13 of the field, and that's misleading. So I stuck with these twelve.
+
+## Selecting the Articles
+
+Journals publish a lot, and I had to decide what to include and what to leave out. The aim was to include all and only research articles, but this was harder than it looks.
+
+The metadata that JSTOR provides includes a tag for article kind. I only included articles with the tag "research-article", which does a reasonable job of getting rid of book reviews. But it turns out that it includes a lot of things that are not really research articles. It functions in the JSTOR metadata as something of a generic article kind, one that applies if nothing else seems right. So we have to manually edit out a bunch of articles.
+
+I deleted all articles without a listed author. These were often editorials, corrections and the like.
+
+After that, I started working through various words in titles that indicated something was not actually a research article. So I deleted all articles with these titles:
+
+- Descriptive Notices
+- Editorial
+- Letter to Editor
+- Letter
+- Introduction
+
+The first four are clear enough. The last was mostly a problem for special issues, but there were enough special issues of one kind or another to make it worthwhile. Then I deleted any articles that had the following phrases anywhere in the title:
+
+- Correction
+- Foreword
+- Introductory Note
+- Errat
+- Erata
+- Abstract of C
+- Abstracts of C
+- To the Editor
+- Corrigenda
+- Obituary
+- Congress
+
+The last is the only one that really needs comment. All the articles I found with this in the title were reports on one or another philosophy congress, not genuine research articles. Maybe there was a political philosophy article that referenced the United States Congress in its title and should not have been excluded but I didn't see it.
+
+Since text mining only works within a single language, I excluded all the articles whose listed language in the metadata was anything other than English. And I manually excluded, when I saw them, articles whose title was not in English and which seemed like non-English articles.
+
+That left me with `r nrow(articles)` articles to work with.
+
+## Selecting the Words {#stop-words}
+
+The JSTOR data excludes a few stop words (like _the_ and _and_), and words with one or two characters. On the other hand, it takes nonletters to be word breaks. So _doesn't_ would be split into _doesn_ and _t_ and the second rejected as too short. And hyphenated words are split as well. It turned out that this made _est_ into a reasonably common word. But I didn't want to include all the words for various reasons.
+
+It seems common in text mining to exclude a more expansive list of stop words than JSTOR leaves out. I was playing around with making my own list of stop words, but I decided it would be more objective to use the commonly used list from the **tm** package. They use the following list of stop words:
+
+```{r stop_words, echo=FALSE, cache=TRUE, results='asis'}
+sw <- common_words[1]
+for (i in 2:length(common_words)){
+  sw <- paste0(sw, ", ", common_words[i])
+}
+cat("-", sw)
+```
+
+I excluded all of these words from the analysis. The intuition here is that including them would mean that the analysis is more sensitive to stylistic ticks than to content, and in practice that seemed to be right. The models did look more reflective of substance than style with the stop words excluded. In principle I'm not sure it was right to exclude all those quantifiers from the end of the list, but it doesn't seem to have hurt the analysis. I'll come back to this point at the end of the chapter, but it is possible I should have been more aggressive in filtering out stop words.
+
+The stop words list from **tm** includes a lot of contractions. I wrote a small script to extract the parts of those contractions before the apostraphe, and excluded them too. The parts after then apostrophe were always one or two letters, so they were already excluded.
+
+I've also looked through the list of the five thousand most common words in the data set to see what shouldn't be there, and the rest of this section comes from what was cut on the basis of that.
+
+In some cases, JSTOR's source for the text was from the LaTeX code for the article, so there was a lot of LaTeX junk in the text file. I'm sure I didn't clean out all of this, but to clean out a lot of it, I deleted the following words.
+
+```{r latex_words, echo=FALSE, cache=TRUE, results='asis'}
+sw <- latex_words[1]
+for (i in 2:length(latex_words)){
+  sw <- paste0(sw, ", ", latex_words[i])
+}
+cat("-", sw)
+```
+
+I'm a bit worried that excluding _document_ meant I lost some signal about historical articles in the LaTeX noise. But this was unavoidable. 
+
+Also note that _anid_ is not a LaTeX term, but it was worthwhile to exclude it here. Something about how the text recognition software JSTOR uses interacted with nineteenth- and early twentieth-century articles meant that several words, especially 'and', got coded as 'anid'. But this was the OCR verison of a typo, and best deleted. (There were a few more of these that were not in the five thousand most common words that on reflection I wish I'd cut too. But I don't think they make a huge difference to the analysis given how rare they are.)
+
+Somewhat reluctantly, I deleted a bunch of spellings out of Greek letters for the same reason; they were mostly from LaTeX code. This meant deleting the following words:
+
+```{r greek_words, echo=FALSE, cache=TRUE, results='asis'}
+sw <- greek_words[1]
+for (i in 2:length(greek_words)){
+  sw <- paste0(sw, ", ", greek_words[i])
+}
+cat("-", sw)
+```
+
+I'm sure this lost some signal. But there was so much LaTeX noise that it was unavoidable.
+
+Next I deleted a few honorifics; in particular:
+
+```{r honorifics, echo=FALSE, cache=TRUE, results='asis'}
+sw <- gendered_words[5]
+for (i in 6:length(gendered_words)){
+  sw <- paste0(sw, ", ", gendered_words[i])
+}
+cat("-", sw)
+```
+
+These just seemed to mark the article as being old, not anything about the content of the article. I didn't need to exclude _mr_ or _dr_ since they were already excluded as too short.
+
+Although I was trying to exclude foreign-language articles, I also excluded a bunch of foreign words. One reason was that it was a check on whether I missed any foreign-language articles. Another was that if I didn't do this, then articles that had extensive quotation from foreign languages would be seen by the model as being in their own distinctive topic merely in virtue of having non-English quotations. And that seemed wrong. So to fix it, I excluded these words:
+
+```{r foreign_words, echo=FALSE, cache=TRUE, results='asis'}
+sw <- foreign_words[1]
+for (i in 2:length(foreign_words)){
+  sw <- paste0(sw, ", ", foreign_words[i])
+}
+cat("-", sw)
+```
+
+Finally, I excluded a bunch of words that seemed to turn up primarily in bibliographies or in text citations. Including them seemed to just make the model be more sensitive to the referencing style of the journal rather than the content. But here the deletions really did cost some content, because some of the words were philosophically relevant. But I deleted them because they seemed to be turning up more often in bibliographies than in text:
+
+```{r ref_words, echo=FALSE, cache=TRUE, results='asis'}
+sw <- ref_words[1]
+for (i in 2:length(ref_words)){
+  sw <- paste0(sw, ", ", ref_words[i])
+}
+cat("-", sw)
+```
+
+The surprising one there is _compilation_. But it most often appears because some journals have a footer saying "Journal compilation ©".
+
+Then to speed up processing, I deleted any word that appeared in any article three times or less This lost some content, but it sped up the processing a lot. Some of the steps I'll describe below took several days computing time. Without this restriction they would have taken several weeks. And I thought words that appear one to three times in an article shouldn't be that significant for determining its content. Though as I'll note below, this might have been too aggressive in retrospect.
+
+## Building a Model
+
+So at this stage we have a list of `r nrow(articles)` articles to include, and a list of several hundred words to exclude. JSTOR provides text files for each article that can easily be converted into a two-column spreadsheet. The first column is a word; the second column is the number of times the word appears. I added a third column for the code number of the article and then merged all the spreadsheets for each article into one giant spreadsheet. (Not for the last time, I used code that was very closely based on code that [John Bernau](https://www.johnabernau.com/about/) built for a similar purpose [@Bernau2018].) Now I had a file that was 137MB large, and had the word counts of all the words in all the articles.
+
+I filtered out the words in all the lists above, and all the words that appeared in an article one to three times. And I filtered out all the articles that weren't on the list of `r nrow(articles)` research articles. This was the master word list I'd work with.
+
+I turned that word list, which at this stage looked like a regular spreadsheet, into something called a document-term-matrix using the ```cast_dtm``` command from Julia Slige and David Robinson's package [tidytext](https://www.rdocumentation.org/packages/tidytext/versions/0.1.3). The DTM format is important only because that's what the [**topicmodels**](https://cran.r-project.org/web/packages/topicmodels/index.html) package (written by Bettina Grün and Kurt Hornik) takes as input before producing an LDA model as output.
+
+I'm not going to go over the full details of how a Latent Dirichlet Allocation (LDA) model is built, because the description that [Grün and Hornik provide](https://cran.r-project.org/web/packages/topicmodels/topicmodels.pdf) is better than what I could do. I'll just note that I'm using the default VEM algorithm.
+
+The basic idea is to use word frequency to estimate which words go in which topics. This makes some amount of sense. Every time the word _Rawls_ appears in an article, that increases the probability that the article is about political philosophy. And every time the word _Bayesian_ appears, that increases the probability that the article is about formal epistemology. These aren't surefire signs, but they are probabilistic signs, and by adding up all these signsthe probability that the article is in one topic rather than another can be worked out.
+
+But what's striking about the LDA method is that the topics are not specified in advance. The model is not told, "Hey, there's this thing called political philosophy, and here are some keywords for it." Rather, the algorithm itself comes up with the topics. This works a little bit by trial and error. The model starts off guessing at a distribution of articles into topics, then works out what words would be keywords for each of those topics, then sees if, given those keywords, it agrees with its own (probabilistic) assignment of articles into topics. It almost certainly doesn't, since the assignment was random, so it reassigns the articles and repeats the process. And this process repeats until it is reasonably satisfied with the (probabilistic) sorting. At that point, it tells us the assignment of articles, and keywords, to topics. (Really though, go see the link above for more details if you want to understand the math.)
+
+The output provides topics, and keywords, but not any further description of the topics. They are just numbered. It might be that topic 52 has a bunch of articles about liberalism and democracy, broadly construed, and has words like _Rawls_, _liberal_, _democracy_, and _democratic_ as keywords, and then we can recognize it as political philosophy. But to the model it's just topic 52.
+
+At this stage there are three big choices the modeler has:
+
+1. How many topics should the articles be divided into?
+2. How satisfied should the model be with itself before it reports the data?
+3. What random assignment should be used to initialize the algorithm?
+
+Although the algorithm can sort the articles into any number of topics one asks it to, it cannot say what makes for a natural number of topics to use. (There is a caveat to this that I'll get to.) That has to be coded by hand into the request for a model. And it's really the biggest decision to make. The next section discusses how I eventually made it.
+
+## Choosing the Number of Topics {#choose-topic-number}
+
+The model-building algorithm automates most of the work; it even chooses what the topics are. But the one thing it doesn't do is choose how many topics there are. That has to be specified in advance. And it's a big choice.
+
+In principle, it can be given as few as two topics to work with. If the model is asked to divide all the articles into two groups, it will usually divide them into something like ethics articles and something like metaphysics and epistemology articles. I say "usually" because it's a fairly random process. And about a quarter of the time, it will find some other way of dividing the articles in two, such as earlier or later, or perhaps things that look maximally like philosophy of science and maximally unlike philosophy of science. But none of these are helpful models; they say more about the nature of the modeling function than they say about the history of philosophy.
+
+The topicmodels package itself comes with a measure that's intended to be used for this purpose. The "perplexity"'" function asks the model, in effect, how confused it is by the data once it has built the model.^[One can ask the model how confused it is about the data that was used to build the model or hold back some of the data from the model-building stage and use it on the held-back data. The second probably makes more sense theoretically, but it didn’t make a huge difference here.] The thought is that once there are too many topics, the perplexity score won’t change as more topics are added. That’s a sign that a natural limit has been reached. But it didn’t help here. As far as I could tell, I could have had something like four hundred topics and the perplexity score would still have fallen every time I added more topics. Philosophers are just too idiosyncratic, and topics need to be fine-grained before the computer is comfortable thinking it has the classifications of articles into topics right.
+
+But a model with four hundred topics wouldn’t help anyone. I did build one such model, and the rest of this paragraph is about why I’m not using it.) On its own, it’s too fine-grained to be useful. I don’t think anyone would actually read it closely. To make the model human readable, I’d have to bundle the four hundred topics into familiar categories (e.g., ethics, metaphysics, philosophy of science, etc.). But when I tried to do that, I found just as many edge cases as clear cases. The only data that would come out of this approach that would be legible to humans would be a product of my choices—not the underlying model. And the aim was to get my prejudices out of the system as much as possible.
+
+I needed something more coarse-grained than the model with lowest perplexity but obviously more fine-grained than simply two topics. I ended up doing a lot of trial and error and looking at how the models came up with different numbers of topics. (This feels
+like the thing that most people using topic-modeling tools end up doing.)
+
+When I looked at the models that were produced with different numbers of topics, I was generally looking at four factors, which I will describe in detail. The first two factors push toward more and more topics. The next two were designed to put downward pressure on
+the number of topics.
+
+First, how often did the model come up with topics that simply looked disjunctive? The point of the model is to group the articles into _n_ topics, and hopefully each of these topics has a sensible theme. But sometimes the theme is a disjunction (i.e., the topic consists of papers from philosophical debate X and papers from mostly unrelated debate Y). There are always some of these. Some debates are distinctive enough that the papers within that topic always cluster together—the model can tell that it shouldn’t be separating them—but small enough in these twelve journals) that the model doesn’t want to use up a valuable topic on just that debate. There were three of these that almost always came up: feminism, Freud, and vagueness. If a model is built out of these journals with, say, forty topics, then it is almost certain that three of the topics are simply disjunctive, with one of the disjuncts being one of these three topics. My favorite was an otherwise sensible model that decided one of the topics in philosophy consisted of papers on material constitution and papers on feminist philosophy. Now there are links there—some important feminist theories carefully distinguish causation from constitution—but it’s really a disjunctive topic. And the fewer topics there are, the more disjunctive topics you get. It’s good to get rid of disjunctions, and that’s a reason to increase the number of topics.
+
+Second, how often did the model make divisions that cross-cut familiar disciplinary boundaries? Some such divisions are unavoidable, and the model I use ends up with a lot of them. But in the first instance I’d prefer, for example, a model that separates papers on the metaphysics of causation from papers on the semantics of counterfactuals to a model that puts them together. The debates are obviously closely related, but there was a big advantage to me if they were separated. If they were, then measuring how prominent metaphysics is in the journals becomes one step easier, as is measuring how prominent philosophy of language is. So I’d rather models that split them up.
+
+Third, how often did the model divide up debates, and not in terms of what question they were asking but in terms of what answers they were giving (or at least taking seriously)? For instance, sometimes the model would decide to split up work on causation into, roughly, those papers that did and those that did not take counterfactuals as central to understanding causation. This tracked pretty closely (but not perfectly) the division into papers before and after David Lewis's paper ["Causation""](https://philpapers.org/rec/LEWC) [@Lewis1973b]. (Though, amusingly, models that made this division usually put Lewis's own paper into the pre-Lewisian category; which makes sense since most of that paper is about theories of causation that had come before.) This seemed bad—division should be into _topics_, and different answers to the same question shouldn't count.
+
+Fourth, how often did the model make divisions that only specialists would understand? A bunch of models I looked at divided up, for instance, the philosophy of biology articles along dimensions that I, a non-pecialist, couldn't see reason behind. The point of this is not that there are no real divisions there, or that the model was in any sense wrong. It's rather that I want the model to be useful to people across philosophy, and if nonexperts can't see what the difference is between two topics just by looking at the headline data about the topic, then it isn't serving its function.
+
+Still, after a lot of trial and error, it seemed like the best balance between these four criteria was hit at around sixty topics. This isn't to say it was perfect. For one thing, even with a fixed number of topics, different model runs produce very different models, and as I'll discuss in [the next section](#model-seed-choice), I have to choose between them. For another, the optimal balance between these criteria would come at different points in different fields. So perhaps at forty-eight topics a pretty good balance between these criteria within ethics (broadly construed) would be seen, but it might be double that before seeing the right balance in philosophy of mind. There are a lot of trade-offs, as might be expected given that I'm trying to detect trends in the absence of anything like clear boundary lines.
+
+But something odd might be noticed at this stage. I said that I got the best balance at around sixty topics. Yet the model I've based the book on has ninety topics. How I got to that model involves yet more choices. I think each of the choices I made was defensible, but the reason this chapter is so long is that there really were quite a lot of choices, and I think it's worthwhile to lay them all out.
+
+## Choosing between whe Models {#model-seed-choice}
+
+Despite the number of topics being set, there are still a lot of ways that the model can change. Building a model starts with a somewhat random assignment of words and articles to topics, followed by a series of steps (themselves each involving a degree of randomization) toward a local equilibrium. But there is a lot of path dependency in this process, as there always is in finding a local equilibrium.
+
+Rather than walk through the mathematics of why this is so, I find it more helpful to think about what the model is trying to achieve and why it is such a hard thing to achieve. Let’s just focus on one subject matter in philosophy, friendship, and think about how it could be classified it if were trying to divide all of philosophy up into sixty to ninety topics.
+
+It’s too small a subject to be its own topic. It’s best if the topics are roughly equal size, and discussions that are primarily about friendship are, I’d guess, about 0.1 to 0.2 percent of the articles in these twelve journals. It’s an order of magnitude short of being its own topic. It has to be grouped in with neighboring subjects. But which ones? For some subjects, the problem is that there aren’t enough natural neighbors. This is why the models never quite know what to do with vagueness, or feminism, or Freud. But here the problem is that there are too many.
+
+One natural thing to do is to group papers on friendship with papers on love and both of them with papers on other emotions or perhaps with papers on other reactive attitudes. That groups a nice set of papers about aspects of the mental lives of humans that are central to actually being human but not obviously well captured by simple belief-desire models.
+
+Another natural thing to do is to group papers on friendship with papers on families, and perhaps include both of them in broader discussions of ways in which special connections to particular others should be accounted for in a good ethical theory. Again, this produces a reasonably nice set of papers here, with the general theme of special connections to others.
+
+Or yet another natural thing to do is to group papers on friendship with papers on cooperation. And while thinking about cooperation, the natural paper to center the topic around is Michael Bratman’s very highly cited paper ["Shared Cooperative Activity""](https://philpapers.org/rec/BRASCA). From there, there are a few different ways one could go. Expanding the topic to Bratman’s work on intention more broadly and the literature it has spawned could be done. Or one could expand it to include other work on group action, and even perhaps on group agency. (I teach that Bratman paper in a course on groups and choices, which is centered around game theory. Though I think getting from friendship to game theory in a single one of our sixty to ninety topics would be a step too far.)
+
+Which of these is right? Well, I saw all of them when I ran the algorithm enough times. And they all seem like sensible choices to me. How should I choose which model to use when different models draw such different boundaries within the space of articles? A tempting thought is to see which one looks most like what one thinks philosophy really looks like and choose it. But now prejudices are being imposed on the model rather than letting the model teach something about the discipline.
+
+A better thing to do is to run the algorithm a bunch of times and find the output that most commonly appears. Intuitively, we’re looking for an equilibrium, and there’s something to be said for picking the equilibrium with the largest basin of attraction. This is more or less what I did, though there are two problems.
+
+The first problem is that running the algorithm a bunch of times is easier said than done. On the computers I was using pretty good personal computers), it took about eight hours to come up with a model with sixty topics. Running a bunch of them to find an average was a
+bit of work. The University of Michigan has a good unit for doing intensive computing jobs like this, but I kept feeling as though I was close enough to being done that running things on my own devices was less work than setting up an account there. (This ended up being a bad mistake.) But I could just leave them run overnight every night for a couple of weeks, and eventually I had sixteen sixty-topic models to average out.
+
+The models are distinguished by their **seed**. This is a number that can be specified to seed the random-number generator. The intended use of it is to make it possible to replicate work like this that relies on randomization. But it also means that a bunch of models can be run, then slight changes can be made to the one that seems most representative. And that’s what I ended up doing. The seeds I used at this stage were famous dates from the revolutions of 1848. And to get ahead of the story, the model the book is based around has seed value 22031848, the date of both the end of the Five Days of Milan and of the start of the Venetian Revolution.^[Why 1848 and not some other historical event? Well, I had originally been using dates from the French Revolution. But I made so many mistakes that I had to start again. In particular, I didn’t learn how many words I needed to filter out, and how many articles I needed to filter out, until I saw how much they were distorting the models. And by that stage I had so many files with names starting with 14071789 and the like that I needed a clean break. So 1848, with all its wins and all its losses, it was.] 
+
+The second is that it isn’t obvious how to average the models. At one level, what the model produces is a giant probability function. And there is a lot of literature on how to merge probability functions into a single function or more or less equivalently) how to find the most representative of a set of probability functions. But this literature assumes that the probability functions are defined over more or less) the same possibility spaces. And that’s precisely what isn’t true here. When building one of these models, what is left is a giant probability function all right. But no two model runs give a function over the same space. Indeed, the most interesting thing about any model is what space it decides is most relevant. So the standard tools for merging probability functions don’t apply.
+
+What I did instead was look for two things. 
+
+First, the model doesn’t just say, “This article goes in this topic.” It says that this article goes in this topic with probability p. Indeed, it gives nonzero probabilities to each article being in each topic. So the thing to look for in a model is what articles does it think have the highest probability of being in any given topic? That is, roughly speaking, Which articles does it think are the paradigms of the different topics it discovers? Then ask, across a range of models, How much does this model agree with the other models about which are the paradigm articles? So, for instance, find the ten articles with the highest probability of being in each of the sixty topics. And then ask, Out of the six hundred articles that this model thinks are the clearest instance of a particular topic, how many of them are similarly in the six hundred articles that other models think are the paradigms of a particular topic? So that was one what I looked for: Which models had canonical articles that were also canonical articles in a lot of other models?
+
+Second, the models don’t just give probabilistic judgments of an article being in a particular topic; they give probabilistic judgments of a word being in an article in that topic. So, the model might say that the probability of the word _Kant_ turning up in an article in topic 25 is 0.1, while the probability of it turning up in most other topics is more like 0.001. That tells us that topic 25 is about Kant, but it also tells us that the model thinks that Kant is a keyword for a topic. Since some words will turn up frequently in a lot of topics no matter what, focus here not just on the raw probabilities like the 0.1 above) but on the ratio between the probability of a word being in one topic and it being in others. That determines how characteristic the word is of the topic. And again this trick can be used to find the six hundred characteristic words of a particular model and ask how often those six hundred words are characteristic words of any model at all. There is a lot of overlap here—the vast majority of models have a topic where Aristotle is a characteristic word in this
+sense, for example. But there are also idiosyncrasies, and the models with fewest idiosyncrasies seem like better bets for being more representative. So that was another thing I looked for: Which models had keywords that were also keywords in a lot of other models?
+
+The problem was that these two approaches (and a couple of variations of them that I tried) didn’t really pick out a unique model. It told me that three of them were better than the others but not really which of those three was best. I chose one in particular. Partially this was because I could convince myself it was a bit better on the two representativeness tests from the last two paragraphs, though honestly the other two would have done just as well, and partially it was because it did better on the four criteria from the previous section. But largely it was because the flaws it had all seemed to go one way: they were all flaws in which the model failed to make distinctions I felt it should be making. The other models had a mix; some were missing distinctions but also it had some needless distinctions. And I felt at the time that having all the errors go one way was a good thing. All I had to do now was run the same model with slightly more topics and I’d have a really good model. And that sort of worked, though it was more complicated than I’d hoped.
+
+## Two Refinements {#refinements-section}
+
+So now I had a model, with sixty topics, that looked good but not quite right. And, by design, there was a natural way to fix the problems: just add topics. It turns out that if the seed number is kept the same and the model is given more topics to play with, it makes very few changes. Or, to be a bit more precise, it makes very few changes apart from permuting the numbers. So, if two models are built with the same seed, and the second has one more topic than the first, for the vast majority of topics in the first model, there will typically be a “matching” topic in the second model. And by “matching” here I mean that the correlation between the probabilities the models give to articles being in those topics is very, very high—above 0.99 or so. The matching models won’t always have the same number, so it isn’t always easy to find them. But by simply looking at the correlations between any pairs of topics one from each model) they usually jumped out.
+
+That meant it was possible every time a few topics were added to simply look at the new topics and ask if they were improvements or not. In an earlier attempt at this project—one that was fatally undermined by not filtering out enough latex and bibliographic words—this had led to a clear optimum arising around seventy topics. And that’s what I expected this time. But it didn’t happen.
+
+Instead, what happened was that as I kept adding topics, it (a) kept finding relative, sensible new topics to add and (b) was not splitting up the topics I really hoped it would split. This was something of a disappointment—the project would have been more manageable for me if the model had found an optimum number of topics in the low seventies or lower. But it simply didn’t; by the standards I’d set before looking at the models, they just kept getting better as the number of topics got higher.
+
+Eventually I settled on ninety topics. There were a bit more than I wanted, and I could have gone even higher. But it was starting to get a little more fine-grained than I wanted—I already had three distinct topics in philosophy of biology, for example. Still, the model runs in which I asked for ninety-six topics and then for one hundred topics weren’t clearly worse than the one run with ninety topics by the standards I’d set myself). So stopping here was somewhat arbitrary.
+
+Once I had the ninety-topic model, it still wasn’t perfect. There were a few places where it looked like the model had put some things in very odd spots. Some of this remains in the finished product—the model bundles together some work on probability and coherence with historical work on Hume, and it puts one-half of the Freud papers with medical ethics and the other half of them with intention. But at this stage there were more of these overlaps than I liked.
+
+I relied on one last feature of the topicmodels package. The algorithm doesn’t stop when it reaches an equilibrium; it stops when it sees insufficient progress toward equilibrium. One thing to do would be to refine what counts as “insufficient,” but I found this hard to control. A similar approach is to start not with a random distribution but with a finished model and then ask the algorithm to approach equilibrium from that starting point. It won't go very far; the model was finished to start with. But it will end up with a model that the algorithm likes slightly better. (The model will, for example, have a lower perplexity score.) I'll call the resulting model a _refinement_.
+
+The refinement process takes a model as input and returns a model as output, so it can be iterated.^[If you're interested in doing this yourself, the magic code looks like ```refinedlda <- LDA(all_dtm, k = 90, model = refinedlda, control = list(seed = 22031848, verbose = 1, initialize = "model"))```. That is ```refinedlda``` is an LDA that takes the DTM I started with, and has nineity topics, and is based on a model, where that model is ```refinedlda``` itself. If loops don't scare you, you can simply loop this process to get as many iterations of refinement as you like. They took about forty-five minutes each to run when I did them.] And at this stage I had a clever thought. Since the refinement process improves the model, and it can be iterated, I should just iterate it as often as I can to get a better and better model. At the back of my mind, I had two worries at this point: one was that this was a bit like tightening a string, and if done too much the string will just snap. The other was that I had lost my mind and was fretting about mathematical models of large text libraries using half-baked metaphors concerning the physics of everyday objects.
+
+Reader, it snapped.
+
+After one hundred iterations, the model ended up making an interesting, and amusing, mistake. 
+
+One signature problem with the kind of text mining I'm doing is that it can't tell the difference between a change of vocabulary that is the result of a change in subject matter, and a change of vocabulary that is the result of a change in verbal fashions. If these kinds of models are built with almost any parameter settings, a distinctive topic (or two) for [ordinary language philosophy](#topic24) will turn up. Why? Because the language of the ordinary language philosophers was so distinctive. That's not great, but it's unavoidable. Ideally, that would be the only such topic. And one of the reasons I filtered out so many words was to avoid having more such topics.
+
+But it turns out that there is another period with a somewhat distinctive vocabulary: the twenty-first century. It's not as distinctive as midcentury British philosophy. And usually it isn't distinctive enough to really confuse most of these models. But it is just distinctive enough that if refinements are run iteratively for, let's say, four days while I'm away at a conference, the model will find this distinctive language. So after one hundred iterations, I ended up with a model whose last topic that wasn't a philosophical topic at all, but was characterized by [the buzzwords of recent philosophy](buzzwords-section).
+
+Still, it turns out the refinements weren’t all a bad idea. After fifteen refinements, the model had separated out some of the disjunctive categories I’d hoped it would and was only starting to get thrown by the weird language of very recent philosophy. That’s the model I ended up using—the one with seed 22031848, ninety topics, and fifteen iterations of the refinement process.
+
+## The Output
+
+The result of all this is a model with two giant probability functions. In this section I'll talk through what those functions look like with  a worked example, and then some graphs about how well the models perform at their intended task.
+
+The worked example involves David Makinson's article ["The Paradox of the Preface"](https://philpapers.org/rec/MAKTPO-9) [@Makinson1965]. The input to the model looks like this.
+
+```{r preface-words, cache=TRUE}
+preface_words <- word_list %>%
+  filter(document == "10.2307_3326519") %>%
+  arrange(-wordcount) %>%
+  select(word, wordcount)
+
+kable(preface_words, 
+      col.names = c("Word", "Word Count"), 
+      caption = "Words in \"The Paradox of the Preface.\"",
+      digits = c(0, 0)) %>% 
+  kable_styling(full_width = F)
+```
+
+That is, the word _rational_ appears fourteen times, _beliefs_ appears eleven times, and so on. This is a list of all of the words in the article, excluding the various stop words described above and the words that appear one to three times.
+
+The model gives a probability to the article being in each of ninety topics. For this article, as for most articles, it just gives a residual probability to the vast majority of topics. For eighty-three topics, the probability it gives to the article being in that topic is about 0.0003. The seven topics it gives a serious probability to are:
+
+```{r preface-topics, cache=TRUE}
+preface_topics <- relabeled_gamma %>%
+  select(document, topic, gamma) %>%
+  filter(document == "10.2307_3326519") %>%
+  arrange(-gamma) %>%
+  select(topic, gamma) %>%
+  filter(gamma > 0.02)
+
+kable(preface_topics, 
+      col.names = c("Topic", "Probability"), 
+      caption = "Topic Probabilities for \"The Paradox of the Preface.\"",
+      digits = c(0, 4)) %>% 
+  kable_styling(full_width = F)
+```
+
+I'm going to spend a lot of time in [the next chapter](#all-90-topics) on what these topics are. For now, I'll just refer to them by number.
+
+The model also gives a probability to each word turning up in a paradigm article for each of the topics. For those nineteen words that the model saw as input, we can look at how frequently the model thinks a word should turn up in each of these seven topics.
+
+```{r preface-large-table, cache=TRUE}
+preface_large_table <- relabeled_topics %>%
+  select(-date) %>%
+  filter(term %in% preface_words$word) %>%
+  filter(topic %in% preface_topics$topic) %>%
+  arrange(topic) %>%
+  mutate(beta = as.character(signif(beta, 2)))
+
+preface_wide_table <- preface_large_table %>%
+  pivot_wider(id_cols = term, names_from = "topic", names_prefix = "t", values_from = beta)
+
+kable(preface_wide_table, 
+      col.names = c("Word", "Topic 4", "Topic 15", "Topic 37", "Topic 39", "Topic 59", "Topic 76", "Topic 81"), 
+      caption = "Word frequencies for topics in \"The Paradox of the Preface.\"")
+```
+
+But the model doesn't think that "The Paradox of the Preface" is a paradigm case of any one of these topics; it thinks it is a mix of seven. Therefore, what it thinks the word frequencies in that article should be can be worked out by taking weighted means of these columns, with the weights given by the topic probabilities. And that gives the following results:
+
+```{r preface-cross-check, cache=TRUE}
+overall_sum <- sum(preface_words$wordcount)
+
+preface_check_table <- preface_large_table %>%
+  inner_join(preface_topics, by = c("topic")) %>%
+  group_by(term) %>%
+  mutate(beta = as.numeric(beta)) %>%
+  summarise(proj = weighted.mean(beta, gamma)) %>%
+  inner_join(preface_words, by = c("term" = "word")) %>%
+  mutate(f = wordcount/overall_sum) %>%
+  select(term, wordcount, f, proj) %>%
+  arrange(-wordcount)
+
+kable(preface_check_table,
+      col.names = c("Word", "Wordcount", "Measured Frequency", "Modeled Frequency"),
+      digits = c(0, 0, 4, 4),
+      caption = "Measured and modeled frequencies for \"The Paradox of the Preface.\"")
+```
+
+The modeled frequency of _rational_ is given by multiplying, across seven topics, the probability of the article being in that topic, by the expected frequency of the word given it is in that topic. And the same goes for the other words. What I'm giving here as the measured frequency of a word is not its frequency in the original article; it is its frequency among the words that survive the various filters I described above. In general that will be two to three times as large as its original frequency.
+
+The aim is that the two columns here would line up. And, of course they don't. In fact, the model doesn't end up doing very well with this article; it is still a long way from equilibrium.
+
+```{r preface-graph, fig.cap = "Modeled and measured frequency for Makinson (1965).", fig.alt = alt_text, cache=TRUE}
+cross_check_graph <- function(x){
+  temp_gamma <- relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document"))
+  
+  temp_words <- word_list %>%
+    filter(document == x)
+  
+  total_words = sum(temp_words$wordcount)
+  
+  temp_words <- temp_words %>%
+    mutate(f = wordcount/total_words)
+  
+  temp_topics <- relabeled_topics %>%
+    select(-date) %>%
+    filter(term %in% temp_words$word) %>%
+    inner_join(temp_gamma, by = "topic") %>%
+    group_by(term) %>%
+    summarise(proj = weighted.mean(beta, gamma)) %>%
+    arrange(-proj) %>%
+    inner_join(temp_words, by = c("term" = "word"))
+  
+  salient_words <- temp_topics %>%
+    mutate(outlier = f + proj) %>%
+    arrange(-outlier) %>%
+    slice(1:5)
+  
+  high_number <- max(salient_words$f, salient_words$proj)
+  
+print(  ggplot(temp_topics, aes(x = f, y=  proj)) + 
+    spaghettistyle +
+    geom_point(size = 0.5, alpha = 0.5) +
+    coord_fixed(xlim = c(0, high_number * 1.02), ylim = c(0, high_number * 1.02)) +
+    labs(title = paste0(temp_gamma$authall[1], ", “", temp_gamma$title[1],"”"),
+        x = "Measured Word Frequency",
+        y = "Modeled Word Frequency")  +
+    ggrepel::geom_text_repel(data = salient_words, aes(label = term)) 
+)
+}
+
+salient_words <- function(x){
+    temp_gamma <- relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document"))
+  
+  temp_words <- word_list %>%
+    filter(document == x)
+  
+  total_words = sum(temp_words$wordcount)
+  
+  temp_words <- temp_words %>%
+    mutate(f = wordcount/total_words)
+  
+  temp_topics <- relabeled_topics %>%
+    select(-date) %>%
+    filter(term %in% temp_words$word) %>%
+    inner_join(temp_gamma, by = "topic") %>%
+    group_by(term) %>%
+    summarise(proj = weighted.mean(beta, gamma)) %>%
+    arrange(-proj) %>%
+    inner_join(temp_words, by = c("term" = "word"))
+  
+  the_words <- temp_topics %>%
+    mutate(outlier = f + proj) %>%
+    arrange(-outlier) %>%
+    slice(1:5)
+  
+  paste(the_words$term, collapse = ", ")
+}
+
+# Burper
+
+x <- "10.2307_3326519"
+
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is well below the forty-five degree line. ",
+  "That means they appear in the article more often than the model expects. ",
+  "The word belief only appears a bit more often than expected, then others appear much more often."
+)
+```
+
+On that graph, every dot is a word type. The x axis represents the frequency of that word type in the article (after excluding the stop words and so on), and the y axis represents how frequently the model thinks the word 'should' appear, given its classification of the article into ninety topics, and the frequency of words in those topics. Ideally, all the dots would be on the forty-five degree line coming northeast out of the origin. Obviously, that doesn't happen. It can't really, because, to a very rough approximation, I've only given the model ninety degrees of freedom, and I've asked it to approximate over 32,000 data points.
+
+Actually, this is one of the least impressive jobs the model does. I measured the correlations between measured and modeled word frequency, i.e., what this graph represents, for six hundred highly cited articles. Among those six hundred, this was the twenty-third lowest correlation between measured and modeled frequency. But in many cases, that correlation was very strong. For example, here are the graphs for three more articles where the model manages to understand what's happening.
+
+```{r good-graph-1, fig.cap = "Modeled and measured frequency for Davidson (1990).", fig.alt = alt_text, cache=TRUE}
+x <- 0
+x <- "10.2307_2026863"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are usually met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is close to the forty-five degree line. ",
+  "That means they appear in the article about as often than the model expects. ",
+  "The word truth appears a lot; it is 6% of the words in the article. The model expects a little less; around 5%. The others are very close to the forty-five degree line."
+)
+```
+
+```{r good-graph-2, fig.cap = "Modeled and measured frequency for Edgington (1995).", fig.alt = alt_text, cache=TRUE}
+x <- 0
+x <- "10.2307_2254793"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are usually met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is close to the forty-five degree line. ",
+  "That means they appear in the article about as often than the model expects."
+)
+
+```
+
+```{r good-graph-3, fig.cap = "Modeled and measured frequency for Dworkin (1996).", fig.alt = alt_text, cache=TRUE}
+x <- 0
+x <- "10.2307_2961920"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are usually met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is close to the forty-five degree line. ",
+  "That means they appear in the article about as often than the model expects.",
+  " The word moral appears a lot, about 4% of all words in the article. And the model predicts this correctly."
+)
+```
+
+There are some articles that it doesn't manage as well—typically articles with unusual words. (It also does poorly with short articles, like "The Paradox of the Preface".)
+
+```{r bad-graph-1, fig.cap = "Modeled and measured frequency for Thomson (1998).", fig.alt = alt_text, cache=TRUE}
+x <- 0
+x <- "10.2307_2671962"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is far from the forty-five degree line. ",
+  "The model expects the words property and properties will appear a lot, 3-4% of the time, but they make up only about 1% of the words. It does not expect the words time, part and, especially, clay, to appear as often as they do."
+)
+```
+
+```{r bad-graph-2, fig.cap = "Modeled and measured frequency for Elster (1990).", fig.alt = alt_text, cache=TRUE}
+x <- 0
+x <- "10.2307_2381783"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Each of them is far from the forty-five degree line. ",
+  "The model expects the words society and social to appear more often than they do. But it is very surprised at how often the words honor, norms, and revenge, appear."
+)
+```
+
+```{r bad-graph-3, fig.cap = "Modeled and measured frequency for Fara (2005).", fig.alt = alt_text, cache=TRUE}
+x <- 0
+x <- "10.2307_3506173"
+
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Four of them are far from the forty-five degree line. ",
+  "The model expects the words possible, worlds and, especially, world, to appear much more often than they do.",
+  " But it expects the word disposition to appear much less. ",
+  "The model does correctly predict that the word true will appear about 2% of the time."
+)
+```
+
+A few different things are going on here. In Elster's article, the model doesn't expect any philosophy article to use the word _revenge_ as much as the author does. In Fara's article, the model lumps articles about modality (especially possible worlds) in with articles on dispositions. (This ends up being [topic 80](#topic80).) And so it expected that Fara will talk about worlds, given he is also talking about dispositions, but he doesn't. Thomson's article has both of these features. The model is surprised that anyone is talking about clay so much. And it expects that a metaphysics article like Thomson's will talk about properties more than Thomson does.
+
+It isn’t perfect, but as seen above, it does pretty well with some cases. The papers I’ve shown so far are pretty much outliers though; here are some more typical examples:
+
+```{r medium-graph-1, fig.cap = "Modeled and measured frequency for Lewis (1979).", fig.alt = alt_text, cache=TRUE}
+x <- 0
+x <- "10.2307_2215339"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are mostly met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Four of them are close to the forty-five degree line. ",
+  "But the model expects the word laws to appear much more often than it does."
+)
+```
+
+```{r medium-graph-2, fig.cap = "Modeled and measured frequency for Lakoff and Johnson (1980).", fig.alt = alt_text, cache=TRUE}
+x <- 0
+x <- "10.2307_2025464"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are mostly met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Four of them are close to the forty-five degree line. ",
+  "That means they appear in the article about as often than the model expects.",
+  " But the model does not expect the word metaphor to appear so often."
+)
+```
+
+```{r medium-graph-3, fig.cap = "Modeled and measured frequency for Kelly (2003).", fig.alt = alt_text, cache=TRUE}
+x <- 0
+x <- "10.2307_20140564"
+cross_check_graph(x)
+
+alt_text <- paste0(
+  "A scatterplot where the x axis shows how often each word appears in ",
+  (relabeled_gamma %>%
+    select(document, gamma, topic) %>%
+    filter(document == x) %>%
+    inner_join(articles, by = c("document")))$citation[1],
+  ", and the y axis shows how often the model anticipated that word to appear. ",
+  "Here the expectations are rarely met. ",
+  "The words ",
+  salient_words(x),
+  " are highlighted. Belief and reason are far above the forty-five degree line, epistemic and rationality far below it. ",
+  "The model expects the word reasons to make up 2% of the words in the article, and in fact it makes up 3%."
+)
+```
+
+It's not perfect, but the general picture is that the model does a pretty good job of modeling 32000 articles given the tools it has. And, more importantly from the perspective of this book, the way it models them ends up grouping like articles together. And that's what I'll use for describing trends in the journals over their first 138 years.
+
+## Strengths and Weaknesses {#strengths-and-weaknesses-section}
+
+The benefit of using this kind of modeling is that it allows every article to be taken into account. This is the history of philosophy (in these journals) without any gaps whatsoever.
+
+And this is no small feat. Remember that there are 32,261 articles that are being looked at. Let’s say that eight hours a day, five days a week, could be dedicated just to reading these articles, and that one could on average read an article per hour. Some, to be sure, would take less than an hour, even to read closely. But just one hour is an optimistic reading time for the longer articles. Still, let’s make the optimistic assumption. That would mean 807 weeks of just reading through them all. If one takes two weeks a year off, it would take sixteen years just to do the reading. And at the end of that time, one would, at best, have some sketchy notes on the articles and not anything that could be used for an analysis.
+
+To analyze all the articles, to really have no gaps, then the only way is by machine.
+
+But there are a number of downsides to this algorithmic approach, all of which come from the fact that the machine is just doing string recognition. The algorithm doesn’t know any semantics—just syntax. And this causes some complications. I’ll mention five here, along with a brief discussion of how badly they impacted the model I ended up using.
+
+One problem that turned out not to be too big a deal was that the algorithm has a hard time distinguishing between different uses of the same word. But while this is hard, it isn’t impossible. The model seems, for example, to understand the difference between how _function_ is used in philosophy of biology versus how it is used in logic and mathematics. It didn’t run together the different uses of _realism_ or _internalism_ and _externalism_ in a way that I would have expected. There is a hint of running together _scepticism_ in the sense most relevant to epistemology with other kinds of philosophical scepticism. (Someone who is a free-will sceptic doesn’t say that people don’t know whether free will exists but that people know it doesn’t.) But maybe this isn’t too much of a problem, since the views aren’t that separate.
+
+The one time that this particular model seems to have gotten confused over the two related meanings of a word concerned _free_. [Topic 35](#topic35) is a mishmash of work on free will, with work on political freedom. It’s possible to think this isn’t too bad, since the subjects are somewhat connected. But it’s not optimal, and eventually it’s necessary to separate out free will and political freedom. But the big picture is that something that seemed likely to be a problem turned out, pleasingly, to not be that bad.
+
+A second, opposing problem  is that sometimes the differences in topics come from a change in terminology. This can be seen most clearly, I think, in the logic topics in the model. Papers about sequents are put in a different topic than papers about syllogisms. Papers about implications are put in a different topic than papers about validities. Now there is a sense in which that’s a good thing, and the model is picking up a philosophically significant change. But it’s a relatively minor change compared to what the model thinks. Still, this isn’t a particularly serious problem. The worst-case scenario is that one has to come back in later and manually note that the papers on validities and papers on implications need to be put back together when we’re doing analysis. That’s a bit of work but it isn’t too bad—just remember that it happens.
+
+A third, and related, problem comes from the model making fine-grained distinctions within a subject. I mentioned earlier that I saw several models that ended up separating out work on causation that didn’t discuss counterfactuals (such as that of Mackie) from post-Lewisian work, where counterfactuals are front and center. That’s not great—these really are on the same topic—but it isn’t too bad. Again, the worst-case scenario is that these topics need to be combined by hand when doing analysis. But in practice I don’t think I really saw this problem arise in this particular run of the model.
+
+A potentially bigger problem is the converse, which I already discussed when talking about choosing the number of topics. Sometimes the topics are just disjunctive. For example, [topic 37](#topic37) ends up being half about sets and half about the grue paradox. There is a connection of sorts here—Nelson Goodman is kind of important to both literatures. But really this shouldn’t be a single topic. As I already noted, this is a hard problem to fix. If the number of topics are increased, the model becomes harder to read, and it’s just as likely to split a coherent topic like causation) as it is to split a disjunctive topic.
+
+I did three things here to address these disjunctive topics. One, that I’ve already mentioned, was to keep running refinements until the worst of the disjunctiveness was polished away. Before the refinements, some papers on probabilistic epistemology got classified in with papers on Hume, and I don’t know what the computer was thinking. A handful ended up there after the refinements, but not nearly as many.) A second is to use very clear labels for the topics, like “Sets and Grue,” to indicate that it is a disjunctive topic. And a third is to run a further analysis on articles in that topic to divide up the sets of articles from the grue articles. Eventually there ended up being ten topics where I felt this kind of split was worthwhile.
+
+The fifth and final problem is that the algorithm can’t tell changes of topic apart from changes in style. If it becomes a requirement on all right-thinking philosophers to express oneself more or less exclusively in monosyllables, as seems to have been the case in midcentury Britain, then the algorithm will think that there is a new topic that is being discussed right then. I’m exaggerating of course about midcentury Britain, but there is a trend that matters, and that I’ll talk much more about later.
+
+Or imagine what would happen if every philosopher all at once decided that objections shouldn’t be responded to with a new theory that has distinctive consequences but instead one should respond to _worries_ with a new _account_ that has distinctive _commitments_. Well, the model will think that there is this cool new subject about “worries,” “accounts,” and “commitments,” and that they’re being talked about. And if this stylistic change happens all at once across philosophy, the model will think that the generalist journals, the philosophy of science journals, and the moral and political journals are suddenly obsessed with the worry/account/commitment subject. Of course, philosophy couldn’t be so caught up chasing trends that something like this would happen all at once, could it? Could it? Let's return to this issue [at the very end](#buzzwords-section) and see how bad things got.
+
+## Regrets {#regrets-section}
+
+Now that I’ve written the whole methodology that I used, there are a few things I wish I’d done differently. This wish clearly isn’t strong enough to make me scrap the project and start again.^[I did in fact scrap several versions of this when writing up the model revealed mistakes in the model building. This is the model that resulted from acting on the lessons of those mistakes.] But I hope that others will learn from what I’ve done, and to that end, I want to be up front about things I could have done differently.
+
+First, I should have filtered even more words. There are four kinds of words I wish I’d been more aggressive about filtering out:
+
+- There are some systematic OCR errors in the early articles. I caught _anid_, which appears over three thousand times. (It’s almost always meant to be _and_, I think.) But I missed _aind_, which appears about 1,500 times. And there are other less common words that are also OCR errors and should be filtered out.
+- I caught a lot of latex words but somehow missed _rightarrow_, as well as a few rarer words.
+- If a word is hyphenated in the original journal, each half appears as a word in this data set. (At least if the data was generated by OCR.) I caught a few of the prefixes and suffixes that turn up for that reason, but missed _ity_, which ends up being a reasonably common word.
+- And I caught a lot of words that almost always appear in bibliographies, headers, or footers but missed _basil_ (which turns up on a table later) and _noûs_ (though I caught _nous_).
+
+In general, I could have been way more aggressive filtering words like these out.
+
+But second, I think it was a mistake to filter out words that appear one to three times in articles. This actually makes perfect sense for long articles, and for some really long articles words that appear four or five times could be eliminated as well. But it’s too aggressive for short articles. I needed some kind of rule such as filtering out words that appear less than one time in two thousand in the article. It is important, I think, to filter out the words that appear just once or else it’s easy to miss OCR errors and weird latex code. But after that there needs to be some kind of sliding scale.
+
+The next three things are much more systematic, though also less clearly errors.
+
+The third problem was that my model selection was too stepwise and not holistic enough. I found the best sixty topic model I could find. Then I increased the topics on it (eventually to ninety) until the topics looked as good as they could get while holding a fixed seed number from the search through sixty topics. Then I ran refinements on it until the refinements looked like they were damaging the model. Then I split some of the topics up for categorization. What I didn’t do at any time was look back and ask, for example, how the other sixty topic models would look if I applied these adjustments to them.
+
+There was a reason for that. Each of those adjustments cost quite a lot of my time, and even more computer time. Doing the best at each step and then locking in the result makes the process at least a bit manageable. But I should have been (a) a bit more willing to revisit earlier decisions and (b) more forward looking when making each of those intermediate decisions. I was a bit forward looking at one point; one of my criteria for choosing between sixty topic models was a preference for unwanted conflations over unwanted splits. And that was because I knew I could fix conflations in various ways. But I should have been both more forward looking and more willing to take a step or two backward. And maybe I could have stuck much closer to sixty topics if I had.
+
+The fourth problem was that I didn't realize how bad a topic [arguments](#topic55) would turn out to be. For the purposes of the kind of study I'm doing, it's really important that the topics really be _topics_ in the ordinary sense, and not tools or methods. Now this is hard in philosophy, because philosophy is so methodologically self-conscious that there are articles that really are about all the tools and methods one might care about. But I wish I'd avoided having a topic about a tool. (I'll come back in section \@ref(raw-weight-count) to a formal method one can use for detecting these kinds of topics early in the process.)
+
+The fifth problem, if it is a problem, is that I wasn't more aggressive about expanding the list of stop words. This model has a topic on [ordinary language philosophy](#topic24). Actually, _all_ the models I built had a topic like this (at least once they had at least fifteen or so topics). But the keywords characteristic of this topic are words that really could have been included on a stop words list. They are words like _ask_ and _try_. And one side-effect of this is that the model keeps thinking a huge proportion of the articles in the data set are, perhaps,  ordinary language philosophy articles.
+
+Another way to put this is that the boundary between a stop word and a substantive word (in this context) is pretty vague. And given that ordinary language philosophy was a thing that happened and that affected how everyone (at least in the United Kingdom) was writing for a while, there is a good case for taking a very expansive understanding of what the stop words were.
+
+The choice I made was to not lean on the scales at all, and just use the most common off-the-shelf list of stop words. And there was a good reason for that: I wanted the model to not simply replicate my prejudices. But I half-think I made the wrong call here, and that the model would be more useful if I had filtered out more "ordinary language".
+
+<!--chapter:end:01-methodology.Rmd-->
+
+# The Ninety Topics {#all-90-topics}
+
+```{r setup-alts}
+# Eval after doesn't seem to work if there is no value for these terms.
+# So I'm giving them a starting value here.
+alt_text <- ""
+alt_text_journals <- ""
+```
+In this chapter I go through all ninety topics that the model generates. I’ll present a bunch of automatically generated facts about each topic, then say something about either the history of the topic or how it fits into the larger model. In this introduction I’ll explain how each of the automatically generated facts is in fact generated, using the example of [topic 21](#topic21).
+
+As can be seen in the sidebar, each topic has a number and a name. The numbers are taken from the age of the articles in the topic. Lower numbers pick out older topics. While working through the ninety topics, the closer and closer one gets to the present of philosophy. The names are things that I supplied. The statistics that follow are mostly the things I was looking at when I gave each topic its name.
+
+I’ve put each topic into one (or sometimes two) **categories**. These are the familiar disciplines of contemporary philosophy: metaphysics, ethics, history, and the like. For early modern, the categorization was easy.
+
+```{r example-category}
+jjj <- 21
+if(!the_categories$cat_num[jjj] == 13){
+  cat_nam <- the_categories$cat_name[jjj]
+}
+if(the_categories$cat_num[jjj] == 13){
+  temp_category_tibble <- tibble(
+    topic = (jjj*100+1):(jjj*100+2))
+  temp_category_tibble <- temp_category_tibble %>%
+    inner_join(the_categories, by = "topic")
+  cat_nam <- paste(temp_category_tibble$cat_name, sep = "/", collapse = "/")
+}
+
+cat("**Category**: ", cat_nam, "\n\n")
+```
+
+For each topic, the model generates something such as a probability of a word turning up given that an article is certainly) in that topic. That can be used to generate keywords for each topic. But there are a couple of hitches.
+
+The first thing I tried was to identify the keywords for a topic with the words that have the highest probability of turning up in articles in that topic. But that gives the same keywords for most of the topics. Indeed, for every topic it gives keywords that were borderline cases of being  [stop words](#stop-words).
+
+The second thing I tried was to identify keywords using those words where the ratio between the probability the word turns up in this topic with the probability it turns up in an arbitrary article. This is better but still not right. Doing this makes all the keywords incredibly rare words that essentially never turn up in any other topic. (Occasionally this would make _weatherson_ a keyword, for example, though not usually where I expected.)
+
+What I settled on was to use that ratio but only quantify the words that are at least reasonably common across the data. Roughly, they are words that turn up at least once in every twenty thousand words (excluding stop words).^[More carefully, for any word $w$ and model $t_k$ the model provides something like $\Pr(w | t_k)$, the probability of a word turning up in an article in that topic. I'm looking for the words that maximize $\frac{\Pr(w | t_k)}{\sum \Pr(w | t_i)}$, where the sum is over the ninety topics, and the constraint is that the average value of $\Pr(w | t_i)$ is at least $\frac{1}{20000}$.] Applied to early modern, that gives us the following keywords:
+
+```{r example-keywords}
+distinctive <- distinctive_topics[(jjj-1)*15 + 1, 1]
+for (jj in 2:15){
+  distinctive <- paste(distinctive, distinctive_topics[(jjj-1)*15 + jj, 1], sep = ", ")
+}
+
+cat("**Keywords**: ", distinctive, "\n\n")
+```
+
+Hopefully it isn't too surprising now why I called this early modern. I don't know what _vii_ is doing there; arguably it should have been filtered out. 
+
+Next I'll look at the size of the topic. There are two ways of looking at this, and since I'm going to be using them a lot, it's worthwhile going over them at some length.
+
+The model assigns each article a probability of being in each topic. So for each article there is a topic with maximal probability. (In principle there could be ties, but in practice that doesn't seem to happen.) I'll follow a fairly standard practice and say that an article is **in a topic** if that topic has maximal probability. And then the number of articles in a topic is the number of articles such that this topic gets higher probability for that article than any other topic. These can be counted up to get a sense of the size of the topic.
+
+```{r example-raw-count}
+require(toOrdinal)
+
+cat("**Number of Articles**: ", overall_stats$r_count[jjj], "  \n", sep="")
+cat("**Percentage of Total**: ", 100*overall_stats$r_percent[jjj], "%  \n", sep="")
+cat("**Rank**: ", toOrdinal(overall_stats$r_rank[jjj]), "\n\n", sep="")
+```
+
+There are 398 articles that are in early modern in this sense). That’s slightly more than average, since there are about 360 articles in the average topic. It’s 1.2 percent of the total; as can be calculated, the average topic would have 1.1 percent. And if the topics are ordered from largest to smallest, it makes Early Modern the thirty-second largest of the topics.
+
+But this isn’t the only way to measure the size of a topic. The model gives a probability of being in early Mmodern to every article in the data set. Those probabilities can be added up to get another way to measure topic size. Formally, this is the way to calculate the _expected_ number of articles in that topic given the probability distribution, though I don’t believe thinking of these numbers as expected values is particularly helpful. If that is done, summing the probabilities of being in early modern across all articles, the following statistics are retrieved:
+
+```{r example-weighted-count}
+cat("**Weighted Number of Articles**: ", overall_stats$w_count[jjj], "  \n", sep="")
+cat("**Percentage of Total**: ", 100*overall_stats$w_percent[jjj], "%  \n", sep="")
+cat("**Rank**: ", toOrdinal(overall_stats$w_rank[jjj]), "\n\n", sep="")
+```
+
+I'll call this calculation the **weighted number** of articles in the topic. As I said, mathematically it's just the formula for expected value calculation, but I'm going to use it more like a weighted sum, hence the name. By this measure, early modern looks a little smaller. It's now only the forty-ninth largest topic, and is under 1 percent. This is one of the larger gaps between the two ways of measuring the size of a topic; mostly they go together. (Though there is going to be one [special case](#topic55) where they come dramatically apart.)
+
+Next I'll look at some facts about the dates of articles in that topic.
+
+```{r example-dates}
+cat("**Mean Publication Year**: ", overall_stats$mean_y[jjj], "  \n", sep="")
+cat("**Weighted Mean Publication Year**: ", overall_stats$wy[jjj], "  \n", sep="")
+cat("**Median Publication Year**: ", overall_stats$median_y[jjj], "  \n", sep="")
+cat("**Modal Publication Year**: ", overall_stats$modal_y[jjj], "\n\n", sep="")
+```
+
+The first, third and fourth statistics there are easy to understand. I simply took the 398 articles in early modern, and found the mean, median and modal publication dates for them. The second is only a little trickier. I calculated the weighted average of the publication year of all articles in the data set, where the weights are given by the probability of being in early modern. As happens here, the first three numbers usually end up being very similar. The fourth can be quite random and usually leans toward the present since there are more articles published now than in the past.
+
+The last statistics I'll look at, before going on to some graphs, concern how close early modern is to various neighbours. I'll present these then explain them.
+
+```{r example-neighbours}
+cat("**Topic with Most Overlap**: ",
+    the_categories$subject[closest_neighbour$othertopic[jjj]], 
+    " (", 
+    round(closest_neighbour$g[jjj],4),
+    ")  \n",
+    sep="")
+cat("**Topic this Overlaps Most with**: ",
+    the_categories$subject[closest_neighbour_inverse$topic[jjj]], 
+    " (", 
+    round(closest_neighbour_inverse$g[jjj],4),
+    ")  \n",
+    sep="")
+cat("**Topic with Least Overlap**: ",
+    the_categories$subject[furthest_neighbour$othertopic[jjj]], 
+    " (", 
+    round(furthest_neighbour$g[jjj],5),
+    ")  \n",
+    sep="")
+cat("**Topic this Overlaps Least with**: ",
+    the_categories$subject[furthest_neighbour_inverse$topic[jjj]], 
+    " (", 
+    round(furthest_neighbour_inverse$g[jjj],5),
+    ")\n",
+    sep="")
+
+opts_knit$set(eval.after = "fig.cap") # Need this for next chunk
+```
+
+Recall that each of the 398 articles in early modern is also assigned a probability of being in each of the other eighty-nine topics. I then calculated the average probability of being in each of the eighty-nine topics among these 398 articles. And the first line here reports that the highest average probability was for [idealism](#topic02). It isn’t huge—just 4.6 percent, but given I’m only looking at nonmaximal probabilities, and it’s a ninety-way partition, this isn’t that small. The third line reports that the lowest of these average probabilities was for [formal epistemology](#topic84). Usually there is a group of ten to twenty topics that have vanishingly small mean probabilities here and it’s a bit random which of them the model picks out.
+
+Each of the other topics could also be looked through and ask, Of the articles in those topics, what is the average probability the model gives to them being early modern articles? And which topic is such that this average is highest? If this is done to all eighty-nine calculations, it turns out the answer is the topic about the [ontological argument](#topic29). This is one of the smaller topics, but the articles in it have on average a probability of just over 2 percent of being early modern articles. On the other hand, the articles in [game theory](#topic75) have a mean probability of being early modern articles of only 0.01 percent. I suspect this is because the model separates out early modern from [social contract theory](#topic31), and any paper on the intersection of seventeenth-/eighteenth-century philosophy with game theory ends up classified as a social contract paper.
+
+That’s enough statistics to get started. I will move on to some nice graphs. First, I’ll show the proportion of articles that are in that topic in each year. I’m using weighted sums for this. So really what each point here shows is the average probability that an article in this year is in this topic.
+
+
+
+
+```{r exampleoverall, fig.cap = str_to_sentence(the_categories$subject[jjj]), fig.height = 5.2, fig.alt = alt_text}
+source('topic_comments/topic_summary_overall_graph.R')
+alt_text <- paste0(
+  "A scatterplot showing which proportion of articles each year are in the topic ", 
+  the_categories$subject[jjj],
+  ". The x axis shows the year, the y axis measures the proportion of articles each year in this topic. There is one dot per year. The highest value is in ",
+  max_year$year[1],
+  " when ",
+  scales::percent(max_year$y[1], accuracy = 0.1),
+  " of articles were in this topic. The lowest value is in ",
+  min_year$year[1],
+  " when ",
+  scales::percent(min_year$y[1], accuracy = 0.1),
+  " of articles were in this topic. The full table that provides the data for this graph is available in Table A.",
+  jjj,
+  " in Appendix A."
+)
+```
+
+Next, I'll do the same thing but broken down by journals.
+
+```{r examplefacet, fig.cap = paste(str_to_sentence(the_categories$subject[jjj]), "articles in each journal"), fig.alt = alt_text_journals}
+jjj <- 21
+source('topic_comments/topic_summary_facet_graph.R')
+alt_text_journals <- paste0(
+  "A set of twelve scatterplots showing the proportion of articles in each journal in each year that are in the topic ",
+  the_categories$subject[jjj],
+  ". There is one scatterplot for each of the twelve journals that are the focus of this book.",
+  " In each scatterplot, the x axis is the year, and the y axis is the proportion of articles in that year in that journal in this topic.",
+  " Here are the average values for each of the twelve scatterplots - these tell you on average how much of the journal is dedicated to this topic. ",
+  temp_by_journal_summary,
+  "The topic reaches its zenith in year ",
+  slice_max(temp_by_year, m, n = 1)$year,
+  " when it makes up, on average across the journals, ",
+  percent(slice_max(temp_by_year, m, n = 1)$m, accuracy = 0.1),
+  " of the articles. And it hits a minimum in year ",
+  slice_min(temp_by_year, m, n = 1)$year,
+  " when it makes up, on average across the journals, ",
+  percent(slice_min(temp_by_year, m, n = 1)$m, accuracy = 0.1),
+  " of the articles."
+)
+```
+
+As you can see, this has years on the x axis, and ratios on the y axis, and twelve "facets". What each dot represents is an average probability for an article in a particular year-journal pair being located in this topic. It helps to understand what this means by working through an example.
+
+Look in the facet for _Philosophical Review_. There are two dots that are much higher than the rest, both of them around 0.15. The left-hand one, which is just under 0.15, is from the early 1930s. The right-hand one, just over 0.15, is from 1999. And I'm going to talk through this one for a bit. Here are the eleven articles in _Philosophical Review_ that year, along with their probability of being in topic 21.^[The automatically generated citations include messy things like "Sleighjr", and I just haven't corrected them - I'm just going with what JSTOR feeds me.]
+
+```{r prexample1}
+phil_review_1999 <- relabeled_gamma %>%
+  filter(topic == 21, year == 1999, journal == "Philosophical Review") %>%
+  inner_join(articles, by = "document") %>%
+  arrange(fpage) %>%
+  select(citation, gamma)
+
+kable(phil_review_1999, 
+	col.names = c("Article", "Probability of Being Early Modern"),
+	caption = "Articles in Philosophical Review, 1999")
+```
+
+If these eleven probabilities are summed, the answer  `r sum(phil_review_1999$gamma)`. And dividing by eleven to get the average, the answer is  `r mean(phil_review_1999$gamma)`. And that's where the dot I was pointing out comes from.
+
+Note that this might feel a little light. Topic 21 is, more or less, early modern metaphysics and epistemology. And that looks like it should be three or four out of the eleven topics, which is much more than 0.15. What’s going on?
+
+One thing that's happened is somewhat inevitable when dealing with history. The article by Michael Griffin [-@Griffin1999] is definitely about Leibniz, which is why a probability well above 0 is seen, but it’s also about modals and counterfactuals. And there is another topic that’s all about [modality](#topic80), so a bunch of the probability went there. (Indeed, it is officially in that topic because that probability was maximal.) And it’s about God, and there are two topics about God in the model, and some of the probability went there. This is the general case. History of philosophy articles involve a lot of philosophy, and whatever kind of philosophy they involve, the model will want to put them with other philosophy articles discussing those points.
+
+But how does that explain the article by Dugald Murdoch [-@Murdoch1999]? Surely that’s an early modern article. And it surely is. The simplest thing to say there is that when there are ninety exclusive hypotheses, ending up with a probability of 0.6 for one of them is actually a lot. And some of the remaining probability also makes sense. There is a topic for the [ontological argument](#topic29), and some of the probability for Murdoch's article goes there. And there is a topic on [arguments](#topic55), and the articles in that topic are mostly about how to understand circularity, so some of the probability goes there. And there is a topic for [ordinary language philosophy](#topic24), and most articles use some ordinary language, and hence are given a non-trivial probability of being in it. That topic causes some complications, because it's as much a style as a topic, and I'll come back to it a lot in what follows.
+
+In essence, that’s how the facet graphs are constructed. Apart from the Mind facet, the graphs do not start all the way to the left edge, because those journals didn’t start publishing until after Mind did. The color of the dots is taken from the color the topic has in the big graphs done later when all ninety topics are presented on one graph.
+I need to add a few words about the scale of these graphs. There were two competing considerations when setting the scale. On the one hand, it would be good to have the scale of the Y-axis be the same for all topics. That way, when flipping through the pages, there is an immediate visual sense of how big the topic is. On the other hand, that approach forces us to set the scale to accommodate outliers. And if that is done, the vast majority of the graphs are just dots that bounce on or just above the x axis.
+
+To deal with both these concerns, I’ve split the difference somewhat. On the one hand, the vast majority of the overall graphs—the ones that show the prevalence of the topic across all journals—are set to a common scale. I’ve adjusted the scale a little for the really big topics, such as [idealism](#topic02) and [ordinary language philosophy](#topic24), but mostly the scale is the same. On the other hand, the scales for the graphs that break things up by journal vary a lot. So, when trying to get a quick visual impression from the graphs, the first graph says something about the size of the topic, and the second graph says something about the distribution of the topic over the journals. But the second graph doesn’t say, unless one looks closely at the labeling on the y axis, how big the topic is in each journal.
+
+I have made one other visual note to help read the graphs. The gridlines in each graph are at the same places. Therefore, if the scale is increased for a large topic, there will be lots of gridlines in the background, and that’s a sign that it’s a bigger topic as well. I’m not sure this is an ideal solution, but it seemed less bad than the others I tried.
+
+After these graphs, there are two tables of the articles that are in the topic. Here is the first:
+
+```{r examplecharart}
+cat("<br/>")
+source('topic_comments/topic_summary_char_art.R')
+temp_dt
+```
+This table actually lists all 398 articles in early modern. By default it displays ten at a time. It's possible to move through the list by the numbers at the bottom, or extend it using the dropdown menu in the top left.
+
+The search box in the upper right will search for any text in the citation. This is helpful either for finding title words (e.g., _Spinoza_), or author names (e.g., _Curley_).
+
+The year and citation columns are self-explanatory. The probability column gives the probability that the article is actually in early modern. This is helpful to check when finding an article that looks misclassified. If the number is under about 0.25, that means the model is fairly undecided about what to do with the article, and it ended up here for want of somewhere better to put it.
+
+The table is sortable by any of those three columns. But its default sort order is by what I'll call _typicality_. This is the product of its probability of being in the topic, with the log of its length in pages. I'm using this complicated formula because for most topics, the high-probability articles are short discussion notes where the model doesn't see anything to offset its initial judgment about where the article should go. Using this (totally made up) typicality measure as the initial sort meant that the articles that turned up here were more familiar and gave me a better sense of what was, well, typical for the topic.
+
+The second table is a list of highly cited articles in the topic.
+
+```{r example-t21e}
+cat("<br/>")
+source('topic_comments/topic_summary_high_cites.R')
+high_table
+```
+I used ["Publish or Perish"](https://harzing.com/resources/publish-or-perish) [@Harzing2007] to download the fifty most cited articles from each of the twelve journals according to Google Scholar. I do _not_ stand by these lists as being particularly accurate. I tried a couple of obvious ways to download the data, and they had obvious shortcomings, which I corrected. And then I thought the lists I had were good enough for illustrative purposes, so I stopped. But there were so many obvious things to correct that I'm sure there were also nonobvious things to correct. But the point is not to do a citation study; it's to list some familiar articles that are in the topic.
+
+The order of this list is most to least Google Scholar citations. Note that it is not the six hundred most cited articles in the twelve journals; the fiftieth most cited _Journal of Philosophy_ article is cited more than practically any _Philosophical Quarterly_ article. ^[With one [notable exception](https://philpapers.org/rec/JACEQ).] But again, the point is not to measure how well cited the topics are; it's to list some familiar articles in the topics. And I felt that spreading around the journals was best for that purpose.
+
+Google Scholar isn't particularly reliable at distinguishing between articles with the same title, year, and publication venue. So there is the occasional doubling up as with the two Spitzer articles that are the highly cited articles here. As I said, I don't stand behind the accuracy of these lists; they are there to illustrate the topic.
+
+Some very low probabilities turning up in these tables will be noticeable. Note that the first of the two Spitzer articles only has a probability of being in early modern of about 0.21. But that's higher than its probability of being in any other topic. Sometimes the most influential articles in philosophy are ones that don't neatly fit into one topic or another. Indeed, one of the themes of this book is that by highlighting where the most work has been done, it's possible to see more clearly what areas are left open. They'll probably be the areas that produce highly cited articles of the next 138 years.
+
+
+<!--chapter:end:02-topics.Rmd-->
+
+```{r t01a}
+# Burp
+jjj <- 1
+source('topic_comments/topic_summary_data.R') # Get data
+opts_knit$set(eval.after = c("fig.cap", "fig.alt"))
+alt_text <- "Placeholder"
+```
+
+```{r t01b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
+source('topic_comments/topic_summary_overall_graph.R')
+```
+
+```{r t01c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
+source('topic_comments/topic_summary_facet_graph.R')
+```
+
+```{r t01d}
+source('topic_comments/topic_summary_char_art.R') # Create table of all articles in topic # Burp
+cat("<table style=\'margin-bottom:1px\'>",
+    paste0("<caption>",
+           "(#tab:t01d)",
+           paste0("Characteristic articles of the topic ",
+                  the_categories$sub_lower[jjj],
+                  "."),
+    "</caption>",
+    "</table>", sep =" ")
+)
+temp_dt
+```
+Tab: \@ref(tab:t01d)
+
+```{r t01e}
+source('topic_comments/topic_summary_high_cites.R') # Generate table of highly cited articles. 
+# Have to do this at same time as previous script or a weird caching error occurs.
+if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
+cat("\n\n**Comments**\n")
+```
+
+Several philosophy journals started their lives as combined journals of philosophy and psychology. Most notably for our purposes, _Mind_ is as much a psychology journal as a philosophy journal for several years. And this topic collects those articles.
+
+It isn't entirely what is now called _psychology_. [George Dawes Hicks](https://philpapers.org/rec/KEEGDH) was an important philosopher, and longtime president of the Aristotelian Society [@Keeling1941]. He read a lot of papers to the society, and it wasn't uncommon when I was building these models to have a run produce a topic that was largely centered on his work. But he ends up being relatively peripheral to the story this model tells, for better or worse.
+
+Perhaps relatedly, we shouldn't think of the boundary between philosophy and psychology in the prewar years as being as strict as it was for much of the twentieth century. As Omar W. Nasim notes in his introduction to the Aristotelian Society's [virtual issue on the emergence of analytic philosophy](http://www.aristoteliansociety.org.uk/the-virtual-issue/the-virtual-issue-no-2/), even an issue like the existence of the external world was often viewed by philosophers at the time as a psychological issue [@Nasim2014].
+
+One thing that surprised me a little was that the model didn't take the recent empirical turn in philosophy of mind as a reason to put more articles into this topic. I would not have been surprised if some recent work on attention, for example, had turned up. But the model seems to have figured out that this topic is pretty much dead as far as the philosophy journals are concerned.
+
+<!--chapter:end:topic_comments/topic01.Rmd-->
+

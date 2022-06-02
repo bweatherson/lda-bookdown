@@ -25,7 +25,7 @@ print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
                     colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
         theme(legend.position="none") +
         labs(x = element_blank(), 
-             y = "Weighted Number of Articles")
+             y = "Weighted number of articles")
 )
 
 temp <- filter(epistemology_yeargamma_postwar, topic == jjj)

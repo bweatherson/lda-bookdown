@@ -66,7 +66,7 @@ app_a_table <- weight_numerator %>%
   
   
 for (jjj in 1:90){
-  cat_subject <- the_categories$subject[jjj]
+  cat_subject <- fcap(the_categories$sub_lower[jjj])
 
   cat(" \n")
   cat("### ", cat_subject, " {-#a",jjj,"}\n\n", sep="")
@@ -143,7 +143,9 @@ app_b_table <- weight_numerator %>%
   left_join(the_categories, by = "topic") %>% 
   arrange(year, topic) %>% 
   select(-cat_num, -cat_name, -topic) %>% 
-  select(Subject = subject, everything())
+  select(Subject = sub_lower, everything()) %>% # What comes next is a hack to change the capitalisation
+  select(-subject) %>% 
+  mutate(Subject = fcap(Subject))
   
   
   
@@ -194,7 +196,7 @@ cat("**",jjj,"**  \n  \n", sep="")
 
 print(
   kable(
-    temp2, align = 'lccc', caption = paste0("Three measures of the prevalence of ",jjj," in each year.")
+    temp2, align = 'lccc', caption = paste0("Three measures of the prevalence of ",str_to_lower(jjj)," in each year.")
   )
 )
 }
@@ -215,9 +217,9 @@ temp1 <- temp %>%
 temp2 <- temp %>% 
   select(c(1, 2, 3, 6, 8, 9, 11))
   
-kable(temp1, align = c('r', 'c', 'c', 'c', 'c', 'c', 'c'), caption = "Weighted frequency by year for six larger topics.")
+kable(temp1, align = c('r', 'c', 'c', 'c', 'c', 'c', 'c'), caption = "Weighted frequency by year for the six larger topics.")
 
-kable(temp2, align = c('r', 'c', 'c', 'c', 'c', 'c', 'c'), caption = "Weighted frequency by year for six smaller topics.")
+kable(temp2, align = c('r', 'c', 'c', 'c', 'c', 'c', 'c'), caption = "Weighted frequency by year for the six smaller topics.")
 ```
 
 
@@ -276,7 +278,7 @@ temp <- epistemology_yearcount %>%
   select(year, n) %>% 
   rename(Year = year, `Number of Articles` = n)
 
-kable(temp, align = 'cc', caption = "Number of Epistemology articles in each year.")
+kable(temp, align = 'cc', caption = "Number of epistemology articles in each year.")
 ```
 
 ### Data Table for Figure 6.2 {-}
@@ -291,7 +293,7 @@ temp <- epistemology_yeartopics_postwar %>%
   pivot_wider(id_cols = year, names_from = topic, values_from = tn) %>% 
   rename(Year = year)
 
-kable(temp, align = 'rcccccccccc', caption = "Raw number of Epistemology articles in topics 1-10 in each year.")
+kable(temp, align = 'rcccccccccc', caption = "Raw number of epistemology articles in topics 1–10 in each year.")
 
 temp <- epistemology_yeartopics_postwar %>% 
   drop_na() %>% 
@@ -301,7 +303,7 @@ temp <- epistemology_yeartopics_postwar %>%
   pivot_wider(id_cols = year, names_from = topic, values_from = tn)  %>% 
   rename(Year = year)
 
-kable(temp, align = 'rcccccccccc', caption = "Raw number of Epistemology articles in topics 11-20 in each year.")
+kable(temp, align = 'rcccccccccc', caption = "Raw number of epistemology articles in topics 11–20 in each year.")
 
 temp <- epistemology_yeartopics_postwar %>% 
   drop_na() %>% 
@@ -311,7 +313,7 @@ temp <- epistemology_yeartopics_postwar %>%
   pivot_wider(id_cols = year, names_from = topic, values_from = tn)  %>% 
   rename(Year = year)
 
-kable(temp, align = 'rcccccccccc', caption = "Raw number of Epistemology articles in topics 21-30 in each year.")
+kable(temp, align = 'rcccccccccc', caption = "Raw number of epistemology articles in topics 21–30 in each year.")
 
 temp <- epistemology_yeartopics_postwar %>% 
   drop_na() %>% 
@@ -321,7 +323,7 @@ temp <- epistemology_yeartopics_postwar %>%
   pivot_wider(id_cols = year, names_from = topic, values_from = tn)  %>% 
   rename(Year = year)
 
-kable(temp, align = 'rcccccccccc', caption = "Raw number of Epistemology articles in topics 31-40 in each year.")
+kable(temp, align = 'rcccccccccc', caption = "Raw number of epistemology articles in topics 31–40 in each year.")
 
 
 
@@ -340,7 +342,7 @@ temp <- epistemology_yeargamma_postwar %>%
   pivot_wider(id_cols = year, names_from = topic, values_from = gamsum) %>% 
   rename(Year = year)
 
-kable(temp, align = 'rcccccccccc', caption = "Weighted number of Epistemology articles in topics 1-10 in each year.")
+kable(temp, align = 'rcccccccccc', caption = "Weighted number of epistemology articles in topics 1–10 in each year.")
 
 temp <- epistemology_yeargamma_postwar %>% 
   drop_na() %>% 
@@ -351,7 +353,7 @@ temp <- epistemology_yeargamma_postwar %>%
   pivot_wider(id_cols = year, names_from = topic, values_from = gamsum)  %>% 
   rename(Year = year)
 
-kable(temp, align = 'rcccccccccc', caption = "Weighted number of Epistemology articles in topics 11-20 in each year.")
+kable(temp, align = 'rcccccccccc', caption = "Weighted number of epistemology articles in topics 11–20 in each year.")
 
 temp <- epistemology_yeargamma_postwar %>% 
   drop_na() %>% 
@@ -362,7 +364,7 @@ temp <- epistemology_yeargamma_postwar %>%
   pivot_wider(id_cols = year, names_from = topic, values_from = gamsum)  %>% 
   rename(Year = year)
 
-kable(temp, align = 'rcccccccccc', caption = "Weighted number of Epistemology articles in topics 21-30 in each year.")
+kable(temp, align = 'rcccccccccc', caption = "Weighted number of epistemology articles in topics 21–30 in each year.")
 
 temp <- epistemology_yeargamma_postwar %>% 
   drop_na() %>% 
@@ -373,7 +375,7 @@ temp <- epistemology_yeargamma_postwar %>%
   pivot_wider(id_cols = year, names_from = topic, values_from = gamsum)  %>% 
   rename(Year = year)
 
-kable(temp, align = 'rcccccccccc', caption = "Weighted number of Epistemology articles in topics 31-40 in each year.")
+kable(temp, align = 'rcccccccccc', caption = "Weighted number of epistemology articles in topics 31–40 in each year.")
 
 
 ```
@@ -389,5 +391,5 @@ temp <- epistemology_categories %>%
   pivot_wider(id_cols = year, names_from = category, values_from = y) %>% 
   rename(Year = year)
 
-kable(temp, align = 'rccccc', caption = "Weighted number of Epistemology articles in each category in each year.")
+kable(temp, align = 'rccccc', caption = "Weighted number of epistemology articles in each category in each year.")
 ```

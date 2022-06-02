@@ -20,7 +20,7 @@ names(subtopic.labs) <- the_categories$topic
 # Code for the Spaghetti graphs
 spaghettigraph <- function(datainput, ylabel, titlelabel){
   ggplot(datainput, aes(x = year, y = y, color=topic, group=topic)) + 
-    scale_colour_discrete(labels = the_categories$subject[1:90]) + 
+    scale_colour_discrete(labels = fcap(the_categories$sub_lower[1:90])) + 
     spaghettistyle +
     theme(legend.title = element_blank(), 
           legend.position = "bottom",
@@ -88,7 +88,7 @@ facetgraph <- function(datainput, ylabel, titlelabel){
 ```
 
 ```{r graph1a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted sum of articles.", fig.alt = alt_text}
-spaghettigraph(weight_numerator, "Weighted Number of Articles", "Weighted Sum of Articles in Each Topic Per Year")  
+spaghettigraph(weight_numerator, "Weighted number of articles", "Weighted Sum of Articles in Each Topic per Year")  
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted sum. The underlying data is in Table B.1. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 ```
 
@@ -105,7 +105,7 @@ But the fourth result is the one that surprised me most of all, and one that I d
 I'm going to [come back to this much later in the book](#the-bump), because I think it's fascinating. But apart from making this rise in the minimal values visible, this graph is otherwise something of a mess. Things are a bit clearer if we view the individual topics separately.
 
 ```{r graph1b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—weighted sum of articled (faceted).", fig.alt = alt_text}
-facetgraph(weight_numerator, "Weighted Number of Articles", "Weighted Sum of Articles in Each Topic Per Year")
+facetgraph(weight_numerator, "Weighted Number of Articles", "Weighted Sum of Articles in Each Topic per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 ```
 
@@ -150,7 +150,7 @@ It is also somewhat useful to see the graph animated. This shows all the lines o
 #   spaghettistyle +
 #   labs(x = element_blank(), 
 #        y = "Weighted Number of Articles", 
-#        title = "Weighted Sum of Articles in Each Topic Per Year", 
+#        title = "Weighted Sum of Articles in Each Topic per Year", 
 #        caption = "Hello World") +
 #   scale_x_continuous(minor_breaks = 10 * 188:201,
 #                      expand = expansion(mult = c(0.01, 0.01))) +
@@ -255,14 +255,14 @@ But that said, I think all eight graphs are interesting, and in the rest of this
 Here is what it looks like if we just count how many articles are in each topic each year.
 
 ```{r graph2a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—raw sum of articles.", fig.alt = alt_text}
-spaghettigraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Each Topic Per Year")
+spaghettigraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Each Topic per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw sum. The underlying data is in Table B.2. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 ```
 
 There are so many overlapping dots that it isn't that helpful a graph. It's a bit clearer when the topics are broken out.
 
 ```{r graph2b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—raw sum of articles (faceted).", fig.alt = alt_text}
-facetgraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Each Topic Per Year")
+facetgraph(count_numerator, "Raw Number of Articles", "Raw Sum of Articles in Each Topic per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 ```
 
@@ -277,14 +277,14 @@ The animation makes things a bit clearer here because the original features so m
 ## Weighted Frequency of Articles {#graph-wfa}
 
 ```{r graph3a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted frequency of articles.", fig.alt = alt_text}
-spaghettigraph(weight_ratio, "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
+spaghettigraph(weight_ratio, "Weighted frequency of articles", "Weighted Frequency of Articles in Each Topic per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted frequency. The underlying data is in Table B.3. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 ```
 
 There are some dots in the upper-left quadrant, and then a bunch of dots bouncing along the bottom tenth of the graph. It isn't very informative, and breaking it out by topic doesn't help a lot.
 
 ```{r graph3b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—weighted frequency of articles (faceted).", fig.alt = alt_text}
-facetgraph(weight_ratio, "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
+facetgraph(weight_ratio, "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
 ```
@@ -293,7 +293,7 @@ In this case, cutting down the to the last seventy-five years produces a much mo
 
 ```{r graph3c, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted frequency of articles.", fig.alt = alt_text}
 #Burper
-spaghettigraph(filter(weight_ratio, year > 1938), "Weighted Frequency of Articles", "Weighted Frequency of Articles in Each Topic Per Year")
+spaghettigraph(filter(weight_ratio, year > 1938), "Weighted frequency of articles", "Weighted Frequency of Articles in Each Topic per Year")
 ```
 
 There are too many overlapping dots here to see much, but the animation is a little clearer.
@@ -309,12 +309,12 @@ And the result is an animated version of some graphs that appeared a lot in the 
 The problems of the previous section are just exacerbated if we go to raw frequencies.
 
 ```{r graph4a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Raw Frequency of Articles", fig.alt = alt_text}
-spaghettigraph(count_ratio, "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
+spaghettigraph(count_ratio, "Raw frequency of articles", "Raw Frequency of Articles in Each Topic per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw frequency. The underlying data is in Table B.4. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 ```
 
 ```{r graph4b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—raw frequency of articles (faceted).", fig.alt = alt_text}
-facetgraph(count_ratio, "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
+facetgraph(count_ratio, "Raw frequency of articles", "Raw Frequency of Articles in Each Topic per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet."
 
 ```
@@ -324,7 +324,7 @@ All this tells us is that there is a lot more diversity, and a lot more speciali
 It's only a little clearer in the graph that only shows the last seventy-five years.
 
 ```{r graph4c, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics - Raw Frequency of Articles", fig.alt = alt_text}
-spaghettigraph(filter(count_ratio, year > 1938), "Raw Frequency of Articles", "Raw Frequency of Articles in Each Topic Per Year")
+spaghettigraph(filter(count_ratio, year > 1938), "Raw frequency of articles", "Raw Frequency of Articles in Each Topic per Year")
 ```
 
 The animation is a bit more revealing.
@@ -342,7 +342,7 @@ The rest of the graphs look at what happens when focusing on pages rather than a
 This is probably the second-best graph. Even the graph with ninety dots on it shows some trends.
 
 ```{r graph5a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted sum of pages.", fig.alt = alt_text}
-spaghettigraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
+spaghettigraph(page_weight_numerator, "Weighted sum of pages", "Weighted Sum of Pages in Each Topic per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted sum of pages. The underlying data is in Table B.5. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
 ```
@@ -357,7 +357,7 @@ page_average <- inner_join(page_demonimator, article_demonimator, by = "year") %
 ggplot(page_average, aes(x = year, y = y)) + 
   spaghettistyle +
   geom_point(size = 0.5, colour = hcl(h = 15, l = 65, c = 100)) + 
-  labs(x = element_blank(), y = "Average Number of Pages in Articles", title = "Average Article Length")
+  labs(x = element_blank(), y = "Average number of pages in articles", title = "Average Article Length")
 
 alt_text <- "The average number of pages in articles over time. It starts around 12, then rises unevenly to a peak of around 19 around 1910. It then falls almost linearly to around 9 in the mid-1960s. The it bounces, rising linearly at almost the same rate it fell. The new peak is around 20 at the end of the data in 2013, but it doesn't look like a peak; it looks like that's just where the data ends, and the trend would probably continue into the future."
 ```
@@ -365,7 +365,7 @@ alt_text <- "The average number of pages in articles over time. It starts around
 And that same effect means that some of the big twenty-first-century topics are now outpacing ordinary language philosophy. I'll come back to this article length increase in a bit, but first let's see what this graph looks like with every topic having its own facet.
 
 ```{r graph5b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—weighted sum of pages (faceted).", fig.alt = alt_text}
-facetgraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic Per Year")
+facetgraph(page_weight_numerator, "Weighted Sum of Pages", "Weighted Sum of Pages in Each Topic per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet."
 
 ```
@@ -392,7 +392,7 @@ ggplot(length_deciles, aes(x = year, y = length, color = decile)) +
   geom_point(size = 0.5, alpha = 0.2) +
   geom_smooth(se = F, method = "loess", size = 0.2) +
   theme(legend.title = element_blank(), legend.position = "bottom") +
-  labs(x = element_blank(), y = "Number of Pages", title = "Distribution of Article Lengths")
+  labs(x = element_blank(), y = "Number of pages", title = "Distribution of Article Lengths")
 
 alt_text <- "Another graph of article lengths over time. This shows the 10th, 30th, 50th, 70th and 90th percentile of page lengths in each year. All five graphs have the same shape, though they are much noisier than the previous graph. They all rise to an initial peak around 1910, then fall through the 1960s, then increase fairly rapidly through the end of the data period in 2013."
 ```
@@ -404,7 +404,7 @@ Articles are getting much much longer.
 ## Raw Sum of Pages {#graph-rsp}
 
 ```{r graph6a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—raw sum of pages.", fig.alt = alt_text}
-spaghettigraph(page_count_numerator, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
+spaghettigraph(page_count_numerator, "Raw sum of pages", "Raw Sum of Pages in Each Topic per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw sum of pages. The underlying data is in Table B.6. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
 ```
@@ -412,7 +412,7 @@ alt_text <- "A plot showing the importance of all topics over time on a single g
 As always, moving from the weighted count to the raw count just exacerbates the trends. Let's see that broken out into topics.
 
 ```{r graph6b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Raw Sum of Pages (faceted)", fig.alt = alt_text}
-facetgraph(page_count_numerator, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic Per Year")
+facetgraph(page_count_numerator, "Raw Sum of Pages", "Raw Sum of Pages in Each Topic per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
 ```
@@ -432,7 +432,7 @@ One interesting thing that is visible here (and also in the facet graph), is tha
 Again, the frequency graphs are dominated by the topics popular with _Mind_ in its early years.
 
 ```{r graph7a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—weighted frequency of pages.", fig.alt = alt_text}
-spaghettigraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
+spaghettigraph(page_weight_ratio, "Weighted frequency of pages", "Weighted Frequency of Pages in Each Topic per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by weighted frequency of pages. The underlying data is in Table B.7. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
 ```
@@ -440,7 +440,7 @@ alt_text <- "A plot showing the importance of all topics over time on a single g
 There is psychology, then idealism dominates, then there is ordinary language philosophy, and the rest is almost all just noise. (Except for a burst of interest in norms at the end.) It's a bit clearer if we graph the ninety topics distinctly, but not a lot.
 
 ```{r graph7b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics - Weighted Frequency of Pages (Faceted)", fig.alt = alt_text}
-facetgraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic Per Year")
+facetgraph(page_weight_ratio, "Weighted Frequency of Pages", "Weighted Frequency of Pages in Each Topic per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
 ```
@@ -456,7 +456,7 @@ These graphs aren't particularly informative, but we'll end with some graphs tha
 ## Raw Frequency of Pages {#graph-rfp}
 
 ```{r graph8a, fig.height=11.4, fig.width = 7.5, fig.cap = "All ninety topics—raw frequency of pages.", fig.alt = alt_text}
-spaghettigraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
+spaghettigraph(page_count_ratio, "Raw frequency of pages", "Raw Frequency of Pages in Each Topic per Year")
 alt_text <- "A plot showing the importance of all topics over time on a single graph, as measured by raw frequency of pages. The underlying data is in Table B.8. It is mostly a mess of dots that doesn't show very much, but what information can be gleaned by looking is described in the text below."
 
 ```
@@ -464,7 +464,7 @@ alt_text <- "A plot showing the importance of all topics over time on a single g
 As always, moving from the weighted count to the raw count just exacerbates the trends. Here are the individual topics; there are a lot of low lines here.
 
 ```{r graph8b, fig.height=18.2, fig.width = 7.5, fig.cap = "The ninety topics—raw frequency of pages (faceted).", fig.alt = alt_text}
-facetgraph(page_count_ratio, "Raw Frequency of Pages", "Raw Frequency of Pages in Each Topic Per Year")
+facetgraph(page_count_ratio, "Raw frequency of pages", "Raw Frequency of Pages in Each Topic per Year")
 alt_text <- "The same data as above, but with each topic shown as a separate facet"
 
 ```

@@ -15,7 +15,7 @@ print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
                     formula = "y ~ x") +
         scale_x_continuous(minor_breaks = 5 * 1:402,
                            expand = expansion(mult = c(0.01, 0.01))) +
-        scale_y_continuous(expand = expansion(mult = c(0.01, .03))) +
+        scale_y_continuous(expand = expansion(mult = c(0.01, .03)), labels = scales::percent) +
         epistemologystyle +
         geom_point(size = 1.5, colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
         geom_smooth(se = F, 
@@ -25,13 +25,13 @@ print(ggplot(data = filter(epistemology_yeargamma_postwar, topic == jjj),
                     colour = hcl(h = (jjj-1)*(9)+15, l = 65, c = 100)) +
         theme(legend.position="none") +
         labs(x = element_blank(), 
-             y = "Weighted Number of Articles")
+             y = "Percentage of epistemology articles")
 )
 
 temp <- filter(epistemology_yeargamma_postwar, topic == jjj)
 
 alt_text <- paste0(
-  "A scatterplot showing the proportion of epistemology articles that are in the epistemology subtopic ",
+  "A scatterplot showing the percentage of epistemology articles that are in the epistemology subtopic ",
   cate_nam,
   " each year from 1945-2013. The average value is ",
   percent(

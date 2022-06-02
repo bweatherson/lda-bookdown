@@ -1,0 +1,16 @@
+**Getting captions on DataTables**
+
+Have to search for datatable and author_dt, which is a function which calls datatable. 
+  For latter, caption should be "Articles with author "y".", where y is author.
+
+In code chunk, after datatable
+>> cat("<table>",paste0("<caption>", "(#tab:code-chunk-name)", "caption", "Here's my caption", "</caption>"),"</table>", sep ="\n")
+
+After code chunk
+>> Tab: \@ref(tab:code-chunk-name)
+
+To do
+  - Change the actual datatables
+  - Check any of this works in Word
+  - Reprogram author_dt
+  - Fix the references to author_dt

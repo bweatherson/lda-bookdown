@@ -3,11 +3,11 @@ jjj <- 84
 source('topic_comments/topic_summary_data.R') # Get data
 ```
 
-```{r t84b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
+```{r t84b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t84c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
+```{r t84c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -47,7 +47,7 @@ indiv_journal_graphs +
             size = 3,
             colour = "grey40")
 
-alt_text <- "A version of figure 2.188 restricted to the years from 1980-2013. The data shows that this topic stayed relatively flat in 9 journals, but took off in Mind, Philosophical Review, and Noûs."
+alt_text <- "A version of figure 2.188 restricted to the years from 1980-2013. The data shows that this topic stayed relatively flat in nine journals, but took off in Mind, Philosophical Review, and Noûs."
 ```
 
 I think this makes clear something that was intuitively plausible: that it's the generalist journals leading the charge here. As work on Bayesianism has moved from being philosophy of science to epistemology, it has become a much bigger part of what _Mind_, _Philosophical Review_ and _Noûs_ have published. (Though, to be sure, a lot of what's happened in _Noûs_ has been since 2013.) I'm a little surprised there isn't more movement on the _Analysis_ graph; I would have guessed the Sleeping Beauty debate alone would have pushed it higher. But otherwise this looks like a case where the general picture—that this went from something of a specialist topic to a "generalist" one—is borne out by the data.

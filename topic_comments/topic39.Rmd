@@ -3,11 +3,11 @@ jjj <- 39
 source('topic_comments/topic_summary_data.R') # Get data
 ```
 
-```{r t39b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
+```{r t39b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t39c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
+```{r t39c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -30,7 +30,7 @@ One of four different topics the model found on time, which has been a continuin
 
 Especially compared to its neighbors in debates about time, this one has a very flat distribution across time. Perhaps there is some kind of irony in this. This can be seen when looking at all four topics on a single graph. (I'm starting this in the twentieth century to exclude some outlier years, and I've included trend lines to make things clearer.)
 
-```{r graph-time-categories, fig.height = 5, fig.cap = "Time topics - Weighted Frequency of Articles", fig.alt = alt_text}
+```{r graph-time-categories, fig.height = 5, fig.cap = "Weighted frequency of articles in four topics about time.", fig.alt = alt_text}
   weight_ratio_graph <- ggplot(filter(weight_ratio, topic == 19 | topic == 20 | topic == 39 | topic == 50), aes(x = year, y = y, color=topic, group=topic))
   weight_ratio_graph + 
     spaghettistyle +
@@ -39,9 +39,9 @@ Especially compared to its neighbors in debates about time, this one has a very 
     theme(legend.title = element_blank(), legend.position = "right") +
     geom_point(size = 1, alpha = .5) +
     geom_smooth(se = F, method = "loess", size = .5, formula = "y ~ x") +
-    labs(x = element_blank(), y = "Weighted Frequency of Articles")
+    labs(x = element_blank(), y = "Weighted frequency of articles")
   
-alt_text <- "A scatterplot showing the proportion of articles in the four main topics about time. The two early topics, Temporal Paradoxes and Classical Space and Time, slowly recede over the years. This topic, which I've simply called Time, peaks in the 1980s. And the topic I've called Space and Time, which is largely about relativity, keeps rising through the century."
+alt_text <- "A scatterplot showing the proportion of articles in the four main topics about time. The two early topics, temporal paradoxes and classical space and time, slowly recede over the years. This topic, which I've simply called time, peaks in the 1980s. And the topic I've called space and time, which is largely about relativity, keeps rising through the century."
 ```
 
 The two early topics gradually fall, though maybe they have both reached a steady state. Relativistic space and time rises through around 1980, though it too might have obtained an equilibrium. But this topic, the metaphysics of time(s) stays at a very steady level around 1 percent year after year.

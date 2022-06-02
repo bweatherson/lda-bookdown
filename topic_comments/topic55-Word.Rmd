@@ -3,11 +3,11 @@ jjj <- 55
 source('topic_comments/topic_summary_data.R') # Get data
 ```
 
-```{r t55b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
+```{r t55b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t55c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
+```{r t55c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -97,7 +97,8 @@ datatable(t,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2)),
                          pageLength = 10
                          ),
-          caption = htmltools::tags$caption(paste0("Articles that have Arguments as Second Most Likely Topic"), style = "font-weight: bold")
+          caption = htmltools::tags$caption(paste0("Articles that have arguments as second most likely topic.")#, style = "font-weight: bold"
+          )
     )%>%
       formatSignif('gamma.x',4) %>%
       formatStyle(1:3,`text-align` = 'left')

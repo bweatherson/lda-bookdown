@@ -9,7 +9,9 @@ temp_dt <- datatable(select(char_art, year, citation, gamma),
                      rownames = FALSE,
                      options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2)),
                                     pageLength = 10
-                     ),
-                     caption = htmltools::tags$caption(paste0("Characteristic Articles of ",the_categories$subject[jjj]), style = "font-weight: bold")
+                     )#,
+#                     caption = htmltools::tags$caption(paste0("Characteristic articles of the topic ",the_categories$sub_lower[jjj],".")#, style = "font-weight: bold"
+#                     )
 )%>%
   formatStyle(1:3,`text-align` = 'left')
+

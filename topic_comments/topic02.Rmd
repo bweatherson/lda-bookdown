@@ -3,11 +3,11 @@ jjj <- 2
 source('topic_comments/topic_summary_data.R') # Get data
 ```
 
-```{r t02b, fig.cap=the_categories$subject[jjj], fig.alt = alt_text, fig.height= 5.2}
+```{r t02b, fig.cap=paste0(fcap(the_categories$sub_lower[jjj]),"."),  fig.alt = alt_text, fig.height= 5.2}
 source('topic_comments/topic_summary_overall_graph.R')
 ```
 
-```{r t02c, fig.cap=paste(the_categories$subject[jjj], "articles in each journal."), fig.alt = alt_text_journals}
+```{r t02c, fig.cap=paste(fcap(the_categories$sub_lower[jjj]), "articles in each journal."), fig.alt = alt_text_journals}
 source('topic_comments/topic_summary_facet_graph.R')
 ```
 
@@ -122,7 +122,7 @@ ggplot(idealist_data, aes(x = year, y = count)) +
   geom_point(size = 0.15, color = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   facetstyle +
   facet_wrap(~word, ncol = 3, scales = "free") +
-  labs(x = element_blank(), y = "Word Count", title = "Idealists in the Journals") +
+  labs(x = element_blank(), y = "Word count", title = "Idealists in the Journals") +
   geom_text(data = ttttt,
             mapping = aes(label = name),
             vjust = "inward", 
@@ -163,7 +163,8 @@ datatable(select(recent_idealism, year, citation, gamma),
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2)),
                          pageLength = 10
                          ),
-          caption = htmltools::tags$caption(paste0("Recent Articles in Idealism"), style = "font-weight: bold")
+          caption = htmltools::tags$caption(paste0("Recent articles in idealism")#, style = "font-weight: bold"
+          )
     )%>%
       formatSignif('gamma',4) %>%
       formatStyle(1:3,`text-align` = 'left')

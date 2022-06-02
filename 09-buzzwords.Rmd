@@ -1,6 +1,6 @@
 # Looking Outwards {#lookingoutward}
 
-To conclude the book, I end by looking at three ways in which the model can tell us about things beyond the journals in the years 1876-2013. The first two use a technique I haven't used yet: applying the LDA model out of sample to texts that the model wasn't built around. The third (and last) looks at word trends within the the journals in recent years, and makes some speculations about how those trends might continue.
+To conclude the book, I end by looking at three ways in which the model can tell us about things beyond the journals in the years 1876–2013. The first two use a technique I haven't used yet: applying the LDA model out of sample to texts that the model wasn't built around. The third (and last) looks at word trends within the the journals in recent years, and makes some speculations about how those trends might continue.
 
 ## Classic Books {#classic-book-section}
 
@@ -121,18 +121,18 @@ gg_revised <- gutenberg_gamma %>%
   mutate(book_name = str_extract(document, "^.*(?=_)"))
 ```
 
-In this section I look at 8 philosophy books that are available on [gutenberg.org](http://gutenberg.org). The books are
+In this section I look at 8 philosophy books that are available on [gutenberg.org](http://gutenberg.org). The books are:
 
-- [Democracy and Education](https://www.gutenberg.org/ebooks/852), by John Dewey
-- [The Economic Consequences of the Peace](https://www.gutenberg.org/ebooks/15776), by J. M. Keynes^[Is this a philosophy book? Well, I think it's an important work of applied political philosophy.]
-- [On Liberty](https://www.gutenberg.org/ebooks/34901), by John Stuart Mill
-- [Principia Ethica](https://www.gutenberg.org/ebooks/53430), by G. E. Moore
-- [Our Knowledge of the External World](https://www.gutenberg.org/ebooks/37090), by Bertrand Russell
-- [The Analysis of Mind](https://www.gutenberg.org/ebooks/2529), by Bertrand Russell
-- [The Problems of Philosophy](The Problems of Philosophy), by Bertrand Russell
-- [The Methods of Ethics](https://www.gutenberg.org/ebooks/46743), by Henry Sidgwick
+- [_Democracy and Education_](https://www.gutenberg.org/ebooks/852), by John Dewey
+- [_The Economic Consequences of the Peace_](https://www.gutenberg.org/ebooks/15776), by J. M. Keynes^[Is this a philosophy book? Well, I think it's an important work of applied political philosophy.]
+- [_On Liberty_](https://www.gutenberg.org/ebooks/34901), by John Stuart Mill
+- [_Principia Ethica_](https://www.gutenberg.org/ebooks/53430), by G. E. Moore
+- [_Our Knowledge of the External World_](https://www.gutenberg.org/ebooks/37090), by Bertrand Russell
+- [_The Analysis of Mind_](https://www.gutenberg.org/ebooks/2529), by Bertrand Russell
+- [_The Problems of Philosophy_](The Problems of Philosophy), by Bertrand Russell
+- [_The Methods of Ethics_](https://www.gutenberg.org/ebooks/46743), by Henry Sidgwick
 
-I then applied the model to these eight books, one chapter at a time. That is, I asked the model what probability it gave to each chapter from each of these books to being in each of the 90 topics. The outputs looked like this. (I'm just including the 10 topics with the highest probability.)
+I then applied the model to these eight books, one chapter at a time. That is, I asked the model what probability it gave to each chapter from each of these books to being in each of the ninety topics. The outputs looked like this. (I'm just including the ten topics with the highest probability.)
 
 ```{r gutenberg-top-ten}
 gtt <- function(x, y){
@@ -143,9 +143,10 @@ kable(gg_revised %>%
     slice(1:10) %>%
     inner_join(the_categories, by = "topic") %>%
     mutate(gamma = round(gamma, 4)) %>%  
-    select(subject, gamma),
+    select(sub_lower, gamma) %>%
+    mutate(sub_lower = fcap(sub_lower)),
     col.names = c("Subject", "Probability"),
-    caption = paste(x, "- Chapter", y)) %>%
+    caption = paste0("_", x, "_, chapter ", y,".")) %>%
     kable_styling(full_width = F)
 }
 ```
@@ -158,9 +159,9 @@ There are three things to note about this table.
 
 One is that the probabilities are very widely spread around. This is what normally happens when doing these out-of-sample applications. The model is much more confident about the data it was trained on than it is about other data. And even in the training data, the average maximal probability was around 0.4. Here it is more usually 0.2 or lower.
 
-The second is that [Ordinary Language](#topic24) plays an outside role in these models. The fact that it really isn't like the other topics, that it is a style as much as a subject matter, keeps complicating the analysis.
+The second is that [ordinary language](#topic24) plays an outside role in these models. The fact that it really isn't like the other topics, that it is a style as much as a subject matter, keeps complicating the analysis.
 
-And the third is that the topics here are old. Chapter 5 of _The Problems of Philosophy_ reminds the model a little of _On Denoting_, which makes sense, and a little of Frege, which also makes sense, but the other subjects are very old. In fact, what's surprising about this chapter is that it reminds the model of two relatively modern topics, not that it has 8 or more old topics mixed in.
+And the third is that the topics here are old. Chapter 5 of _The Problems of Philosophy_ reminds the model a little of "On Denoting", which makes sense, and a little of Frege, which also makes sense, but the other subjects are very old. In fact, what's surprising about this chapter is that it reminds the model of two relatively modern topics, not that it has eight or more old topics mixed in.
 
 Let's look at the top topic across each of the books. Since I am averaging the chapter probabilities, these numbers will be even lower than for individual chapters.
 
@@ -183,49 +184,49 @@ gbb <- function(x){
 gbb("Democracy and Education")
 ```
 
-It's a bit surprising that the model doesn't identify this with [Pragmatism](#topic05), and even more surprising that [Feminism](#topic70) turns up here. But otherwise this broadly makes sense.
+It's a bit surprising that the model doesn't identify this with [pragmatism](#topic05), and even more surprising that [feminism](#topic70) turns up here. But otherwise this broadly makes sense.
 
 ```{r keynes-book}
 gbb("The Economic Consequences of the Peace")
 ```
 
-This, on the other hand, doesn't look quite right. It's about WWI, so I guess it looks like war. But it isn't really a history book. And it's certainly not a Marx book. This does look like it pushed the model way past its comfort level.
+This, on the other hand, doesn't look quite right. It's about World War I, so I guess it looks like war. But it isn't really a history book. And it's certainly not a Marx book. This does look like it pushed the model way past its comfort level.
 
 ```{r on-liberty}
 gbb("On Liberty")
 ```
 
-Putting this in with [Other History](#topic04) does make some sense because a few of the papers in that topic are about Mill. But it's striking to me that the model thinks of this book as going with social work of its time, even more than it sees it as going with topics on liberalism, or freedom. This is bringing up a limit of this approach that we've seen a few times before. Literary styles change over time, and the model doesn't do well with that kind of change.
+Putting this in with [other history](#topic04) does make some sense because a few of the papers in that topic are about Mill. But it's striking to me that the model thinks of this book as going with social work of its time, even more than it sees it as going with topics on liberalism, or freedom. This is bringing up a limit of this approach that we've seen a few times before. Literary styles change over time, and the model doesn't do well with that kind of change.
 
 ```{r principia}
 gbb("Principia Ethica")
 ```
 
-One way to look at this data is that it's bringing out the extent to which the Ordinary Language movement wasn't a repudiation of the philosophy that had gone before them, but a return to the way of doing philosophy exemplified by Moore and Russell. The model does not typically think papers from 1903 are Ordinary Language papers, but it does think that Principia Ethica is Ordinary Language.
+One way to look at this data is that it's bringing out the extent to which the ordinary language movement wasn't a repudiation of the philosophy that had gone before them, but a return to the way of doing philosophy exemplified by Moore and Russell. The model does not typically think papers from 1903 are ordinary language papers, but it does think that _Principia Ethica_ is ordinary language.
 
 ```{r external-world}
 gbb("Our Knowledge of the External World as a Field for Scientific Method in Philosophy")
 ```
 
-The model really doesn't identify _Our Knowledge of the External World_ with any of the contemporary topics. The closest is [Mathematics](#topic51), but this book seems surprisingly dated.
+The model really doesn't identify _Our Knowledge of the External World_ with any of the contemporary topics. The closest is [mathematics](#topic51), but this book seems surprisingly dated.
 
 ```{r analysis-of-mind}
 gbb("The Analysis of Mind")
 ```
 
-This is part of why I was happy to include [Psychology](#topic01) as a philosophy of mind topic. It is a bit different to how we now do philosophy of mind. But it includes a lot of what Russell does in _The Analysis of Mind_. And that's definition a philosophy of mind book.
+This is part of why I was happy to include [psychology](#topic01) as a philosophy of mind topic. It is a bit different to how we now do philosophy of mind. But it includes a lot of what Russell does in _The Analysis of Mind_. And that's a paradigm of a philosophy of mind book.
 
 ```{r problems-philosophy}
 gbb("The Problems of Philosophy")
 ```
 
-Again, we see that Moore and Russell were precursors as much as opponents of Ordinary Language philosophy. And between [Perception](#topic48), [Denoting](#topic63), [Knowledge](#topic74) and [Justification](#topic76), we see flickers of contemporary philosophy entering into the picture.
+Again, we see that Moore and Russell were precursors as much as opponents of ordinary language philosophy. And between [perception](#topic48), [denoting](#topic63), [knowledge](#topic74) and [justification](#topic76), we see flickers of contemporary philosophy entering into the picture.
 
 ```{r methods-ethics}
 gbb("The Methods of Ethics")
 ```
 
-This, on the other hand, is a bit disappointing. I would have thought it would have done a better job of identifying _The Methods of Ethics_ as, well, a work of ethics. And you do see a few topics from Ethics here, but also a lot of others.
+This, on the other hand, is a bit disappointing. I would have thought it would have done a better job of identifying _The Methods of Ethics_ as, well, a work of ethics. And we do see a few topics from Ethics here, but also a lot of others.
 
 Let's turn to chapters. I'm not going to go through every chapter and display the topics for it. But it is interesting to look at the chapters the model is most confident about.
 
@@ -233,58 +234,62 @@ Let's turn to chapters. I'm not going to go through every chapter and display th
 gg_high_gamma <- gg_revised %>%
   arrange(-gamma) %>%
   inner_join(the_categories, by = "topic") %>%
-  select(book_name, chap_num, subject, gamma, topic) %>%
+  select(book_name, chap_num, sub_lower, gamma, topic) %>%
   mutate(book_name = replace(book_name, book_name == "Our Knowledge of the External World as a Field for Scientific Method in Philosophy", "Our Knowledge of the External World"))
 ```
 
 ```{r gutenberg-highest-a}
 kable(gg_high_gamma %>%
-        select(book_name, chap_num, subject, gamma) %>%
+        select(book_name, chap_num, sub_lower, gamma) %>%
+        mutate(sub_lower = fcap(sub_lower)) %>%
         slice(1:10),
       col.names = c("Book", "Chapter", "Subject", "Probability"),
       digits = c(0, 0, 0, 4),
-      caption = "10 chapters with highest topic probabilities")
+      caption = "Ten chapters with the highest topic probabilities.")
 ```
 
-It really is confident about Russellian works, relatively speaking. Let's see what happens if we leave off Psychology.
+It really is confident about Russellian works, relatively speaking. Let's see what happens if we leave off psychology.
 
 ```{r gutenberg-highest-b}
 kable(gg_high_gamma %>%
         filter(topic > 1) %>%
-        select(book_name, chap_num, subject, gamma) %>%
+        select(book_name, chap_num, sub_lower, gamma) %>%
+        mutate(sub_lower = fcap(sub_lower)) %>%
         slice(1:10),
       col.names = c("Book", "Chapter", "Subject", "Probability"),
       digits = c(0, 0, 0, 4),
-      caption = "10 chapters with highest topic probabilities (excluding Psychology)")
+      caption = "Ten chapters with the highest topic probabilities (excluding psychology).")
 ```
 
-And pushing further forward, let's see what happens if we leave off all of topics 1-30.
+And pushing further forward, let's see what happens if we leave off all of topics 1–30.
 
 ```{r gutenberg-highest-c}
 kable(gg_high_gamma %>%
         filter(topic > 30) %>%
-        select(book_name, chap_num, subject, gamma) %>%
+        select(book_name, chap_num, sub_lower, gamma) %>%
+        mutate(sub_lower = fcap(sub_lower)) %>%
         slice(1:10),
       col.names = c("Book", "Chapter", "Subject", "Probability"),
       digits = c(0, 0, 0, 4),
-      caption = "10 chapters with highest topic probabilities (excluding first 30 topics)")
+      caption = "Ten chapters with the highest topic probabilities (excluding first thirty topics).")
 ```
 
-This doesn't look like the model is doing too bad a job. Russell does talk about philosophy of mathematics, Keynes about war, and Mill about liberal democracy. And remember that Egalitarianism is largely about Parfit, and hence about consequentialism, so it isn't surprising Sidgwick ends up there. What if we restrict things to topics from 61-90?
+This doesn't look like the model is doing too bad a job. Russell does talk about philosophy of mathematics, Keynes about war, and Mill about liberal democracy. And remember that egalitarianism is largely about Parfit, and hence about consequentialism, so it isn't surprising Sidgwick ends up there. What if we restrict things to topics from 61–90?
 
 ```{r gutenberg-highest-d}
 kable(gg_high_gamma %>%
         filter(topic > 60) %>%
-        select(book_name, chap_num, subject, gamma) %>%
+        select(book_name, chap_num, sub_lower, gamma) %>%
+        mutate(sub_lower = fcap(sub_lower)) %>%
         slice(1:10),
       col.names = c("Book", "Chapter", "Subject", "Probability"),
       digits = c(0, 0, 0, 4),
-      caption = "10 chapters with highest topic probabilities (excluding first 60 topics)")
+      caption = "Ten chapters with the highest topic probabilities (excluding the first sixty topics)")
 ```
 
 And while the numbers are low, Russell on epistemology reminds the model much more of contemporary philosophy than most of the other books. This makes sense, I think.
 
-To end this little inquiry, I want to look a bit at how much these books resemble the articles of their time. The next six graphs compare the eight books (collectively) to the journal articles published between 1876-1925. I'll compare the average topic probability, and the maximum topic probability, for each of the 90 topics in the journals and in the books.^[Small note on methodology. When I talk about the average topic probability for the books, this is something that gets calculated in two steps. First, I calculate the average for each book, across its chapters. Then I average the books. I'm doing this rather than averaging the chapters because that approach would mean that the books with more chapters would swamp the books with fewer.] I'll do this 30 topics at a time, because otherwise we get a bunch of dots clustered together in the bottom left corner of the graph. So on this graph the x-axis measures the average probability of a topic in journal articles up to 1925, and the y-axis measures the average probability of a topic in the 8 books.
+To end this little inquiry, I want to look a bit at how much these books resemble the articles of their time. The next six graphs compare the eight books (collectively) to the journal articles published between 1876–1925. I'll compare the average topic probability, and the maximum topic probability, for each of the ninety topics in the journals and in the books.^[Small note on methodology. When I talk about the average topic probability for the books, this is something that gets calculated in two steps. First, I calculate the average for each book, across its chapters. Then I average the books. I'm doing this rather than averaging the chapters because that approach would mean that the books with more chapters would swamp the books with fewer.] I'll do this thirty topics at a time, because otherwise we get a bunch of dots clustered together in the bottom left corner of the graph. So on this graph the x axis measures the average probability of a topic in journal articles up to 1925, and the y axis measures the average probability of a topic in the eight books.
 
 ```{r compare-journals-and-books}
 # Get articles from before 1926
@@ -312,65 +317,65 @@ book_journal_graph <- inner_join(early_journal_summary, gg_summary, by = "topic"
   inner_join(the_categories, by = "topic")
 ```
 
-```{r first-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for first 30 topics in journals and books", fig.alt = alt_text}
+```{r first-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for the first thirty topics in journals and books.", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 31), aes(x = jm, y  = bm, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Average probabilty of topic in journals", y = "Average probability of topic in books") +
-  ggrepel::geom_text_repel(aes(label=ifelse(topic == 1 | topic == 2 | topic == 3 | topic == 16 | topic == 24,as.character(subject),''))) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 1 | topic == 2 | topic == 3 | topic == 16 | topic == 24,as.character(sub_lower),''))) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.03, 0.01))) +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.03)))
 
-alt_text <- "A scatterplot comparing the distribution of topics 1-30 in journal articles up to 1925 and in the books being discussed. Most topics are present to roughly the same amount, but Idealism is much less prevalent in the books, and Ordinary Language philosophy is more prevalent"
+alt_text <- "A scatterplot comparing the distribution of topics 1–30 in journal articles up to 1925 and in the books being discussed. Most topics are present to roughly the same amount, but idealism is much less prevalent in the books, and ordinary language philosophy is more prevalent."
 ```
 
-The books I've chosen are more like Ordinary Language, and less like Idealism, than the journals. And they have a little more Ethics in them. We get a similar story if we look at the maximum values instead of the average values.
+The books I've chosen are more like ordinary language, and less like idealism, than the journals. And they have a little more ethics in them. We get a similar story if we look at the maximum values instead of the average values.
 
-```{r first-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for first 30 topics in journals and books", fig.alt = alt_text}
+```{r first-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for the first thirty topics in journals and books.", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 31), aes(x = jh, y  = bh, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Maximum probabilty of topic in journals", y = "Maximum probability of topic in books") +
-  ggrepel::geom_text_repel(aes(label=ifelse(topic == 1 | topic == 2 | topic == 3 | topic == 16 | topic == 24,as.character(subject),''))) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 1 | topic == 2 | topic == 3 | topic == 16 | topic == 24,as.character(sub_lower),''))) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.03, 0.01))) +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.03)))
 
-alt_text <- "A scatterplot comparing the maximum probability distribution of topics 1-30 in journal articles up to 1925 and in the books being discussed. Maximum probabilities are generally higher for journal articles than for books. Ordinary Language and Value are much more present in books. "
+alt_text <- "A scatterplot comparing the maximum probability distribution of topics 1–30 in journal articles up to 1925 and in the books being discussed. Maximum probabilities are generally higher for journal articles than for books. Ordinary language and Value are much more present in books. "
 ```
 
-There are a lot more journal articles, and some of them are very short, so the maximum probabilities go much higher for the journals than the chapters. But otherwise there isn't much of a pattern here. Let's move on to the middle 30 topics.
+There are a lot more journal articles, and some of them are very short, so the maximum probabilities go much higher for the journals than the chapters. But otherwise there isn't much of a pattern here. Let's move on to the middle thirty topics.
 
-```{r second-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for second 30 topics in journals and books", fig.alt = alt_text}
+```{r second-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for the second thirty topics in journals and books.", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jm, y  = bm, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Average probabilty of topic in journals", y = "Average probability of topic in books") +
-  ggrepel::geom_text_repel(aes(label=ifelse(topic == 32 | topic == 41 | topic == 47 | topic == 52 | topic == 60,as.character(subject),''))) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 32 | topic == 41 | topic == 47 | topic == 52 | topic == 60,as.character(sub_lower),''))) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.03, 0.7))) +
   scale_y_continuous(expand = expansion(mult = c(0.03, 0.01)))
 
-alt_text <- "A scatterplot comparing the average probability distribution of topics 31-60 in journal articles up to 1925 and in the books being discussed. War and Liberal Democracy are much more prevalent in books, and Perception and Kant are more prevalent in journals. Otherwise, most topics are present roughly the same."
+alt_text <- "A scatterplot comparing the average probability distribution of topics 31-60 in journal articles up to 1925 and in the books being discussed. War and liberal democracy are much more prevalent in books, and perception and Kant are more prevalent in journals. Otherwise, most topics are present roughly the same."
 ```
 
-This perhaps tells us more about the books I chose than the difference between philosophy in books and philosophy in journals. I'm sure there was discussion of Kant and Perception in books at the time; just not so much in these 8 books. Maybe War and Liberal Democracy are under-represented in the journals relative to their importance to philosophy at the time; I would need more information. No one is talking about Radical Translation before 1925. The same patterns hold, more or less, if we look at maximum values.
+This perhaps tells us more about the books I chose than the difference between philosophy in books and philosophy in journals. I'm sure there was discussion of Kant and perception in books at the time; just not so much in these eight books. Maybe war and liberal democracy are under-represented in the journals relative to their importance to philosophy at the time; I would need more information. No one is talking about radical translation before 1925. The same patterns hold, more or less, if we look at maximum values.
 
-```{r second-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for second 30 topics in journals and books", fig.alt = alt_text}
+```{r second-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for the second thirty topics in journals and books.", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jh, y  = bh, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Maximum probabilty of topic in journals", y = "Maximum probability of topic in books") +
-  ggrepel::geom_text_repel(aes(label=ifelse(topic == 32 | topic == 40 | topic == 41 | topic == 47 | topic == 51 | topic == 52 | topic == 60,as.character(subject),''))) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 32 | topic == 40 | topic == 41 | topic == 47 | topic == 51 | topic == 52 | topic == 60,as.character(sub_lower),''))) +
 #  geom_text(aes(label=ifelse(topic == 32 | topic == 47 ,as.character(subject),'')),hjust=-.02,vjust=-0.4) +
 #  geom_text(aes(label=ifelse(topic == 41 | topic == 52 ,as.character(subject),'')),hjust=-.01,vjust=1.4) +
 #  geom_text(aes(label=ifelse(topic == 60 | topic == 41 | topic == 52 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
@@ -382,35 +387,35 @@ ggplot(filter(book_journal_graph, topic < 61, topic > 30), aes(x = jh, y  = bh, 
 alt_text <- "A scatterplot comparing the maximum probability distribution of topics 31-60 in journal articles up to 1925 and in the books being discussed. Maximum probabilities are generally higher for journals than books. War is much more prevalent in books."
 ```
 
-The maximum probabilities are, as always, higher for the journals than for the book chapters. And there are some articles that are really about Color, or about Philosophy of Mathematics. There is, as I've already mentioned, one book chapter that's also about Philosophy of Mathematics. Onto the last 30.
+The maximum probabilities are, as always, higher for the journals than for the book chapters. And there are some articles that are really about color, or about philosophy of mathematics. There is, as I've already mentioned, one book chapter that's also about philosophy of mathematics. Onto the last thirty.
 
-```{r third-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for last 30 topics in journals and books", fig.alt = alt_text}
+```{r third-thirty-book-journal-compare-mean, fig.height = 5, fig.cap = "Average probability for the last thirty topics in journals and books.", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 91, topic > 60), aes(x = jm, y  = bm, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Average probabilty of topic in journals", y = "Average probability of topic in books") +
-  ggrepel::geom_text_repel(aes(label=ifelse(topic == 65 | topic == 83 | topic == 74,as.character(subject),''))) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 65 | topic == 83 | topic == 74,as.character(sub_lower),''))) +
 #  geom_text(aes(label=ifelse(topic == 60 | topic == 60 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
 #  geom_text(aes(label=ifelse(topic == 74 | topic == 51 ,as.character(subject),'')),hjust=1.1,vjust=-0.1) +
   theme(legend.position = "none") +
   scale_x_continuous(expand = expansion(mult = c(0.1, 0.02))) +
   scale_y_continuous(expand = expansion(mult = c(0.1, 0.02)))
 
-alt_text <- "A scatterplot comparing the average probability distribution of topics 61-90 in journal articles up to 1925 and in the books being discussed. Average probabilities are generally lower for journals. Egalitarianism and Population Ethics are much higher for books; Knowledge is also higher in books."
+alt_text <- "A scatterplot comparing the average probability distribution of topics 61-90 in journal articles up to 1925 and in the books being discussed. Average probabilities are generally lower for journals. Egalitarianism and population ethics are much higher for books; knowledge is also higher in books."
 ```
 
-Note that the scales here are very different. The numbers are all low, but they are much lower for the journals than the books. So even though Knowledge is way over to the right of the graph, the numbers for it are actually bigger in the books than the journals. And it's a little bigger in the journals than I had quite realised; there are no articles primarily in epistemology, but it isn't at 0 like some other topics. Let's end this section with looking at the maximum probabilities in each topic.
+Note that the scales here are very different. The numbers are all low, but they are much lower for the journals than the books. So even though knowledge is way over to the right of the graph, the numbers for it are actually bigger in the books than the journals. And it's a little bigger in the journals than I had quite realised; there are no articles primarily in epistemology, but it isn't at zero like some other topics. Let's end this section with looking at the maximum probabilities in each topic.
 
-```{r third-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for last 30 topics in journals and books", fig.alt = alt_text}
+```{r third-thirty-book-journal-compare-max, fig.height = 5, fig.cap = "Maximum probability for the last thirty topics in journals and books.", fig.alt = alt_text}
 ggplot(filter(book_journal_graph, topic < 91, topic > 60), aes(x = jh, y  = bh, color = topicfactor)) + 
   geom_point() +
   scale_color_manual(values = cols) +
   freqstyle +
   theme(legend.position = "none") +
   labs(x = "Maximum probabilty of topic in journals", y = "Maximum probability of topic in books") +
-  ggrepel::geom_text_repel(aes(label=ifelse(topic == 65 | topic == 71 |topic == 74 | topic == 76 | topic == 83 ,as.character(subject),''))) +
+  ggrepel::geom_text_repel(aes(label=ifelse(topic == 65 | topic == 71 |topic == 74 | topic == 76 | topic == 83 ,as.character(sub_lower),''))) +
 #  geom_text(aes(label=ifelse(topic == 65 | topic == 52 ,as.character(subject),'')),hjust=-.01,vjust=1.5) +
 #  geom_text(aes(label=ifelse(topic == 1 | topic == 41 | topic == 52 ,as.character(subject),'')),hjust=-0.03,vjust=-0.2) +
 #  geom_text(aes(label=ifelse(topic == 71 | topic == 51 ,as.character(subject),'')),hjust=1.03,vjust=-0.01) +
@@ -418,14 +423,14 @@ ggplot(filter(book_journal_graph, topic < 91, topic > 60), aes(x = jh, y  = bh, 
   scale_x_continuous(expand = expansion(mult = c(0.16, 0.02))) +
   scale_y_continuous(expand = expansion(mult = c(0.06, 0.02)))
 
-alt_text <- "A scatterplot comparing the maximum probability distribution of topics 61-90 in journal articles up to 1925 and in the books being discussed. The maximum probablity for journals is higher for all topics than for the maximum probability for books. Abortion and Self-Defense is the most extreme data-point, and is much higher in journal articles than in books."
+alt_text <- "A scatterplot comparing the maximum probability distribution of topics 61-90 in journal articles up to 1925 and in the books being discussed. The maximum probablity for journals is higher for all topics than for the maximum probability for books. Abortion and self-defense is the most extreme data-point, and is much higher in journal articles than in books."
 ```
 
-For all 30 of these, the highest probability in the journals is higher than the highest probability in any book chapter. I was wondering whether the epistemology chapters would be the counterexamples to this claim, but they didn't come that close. Where we did get close to a counterexample was that Sidgwick _almost_ sounds more like a modern Parfitian than any journal author. But not quite - when there are 3000 journal articles, you can usually find one counterexample to any generalisation in there somewhere.
+For all thirty of these, the highest probability in the journals is higher than the highest probability in any book chapter. I was wondering whether the epistemology chapters would be the counterexamples to this claim, but they didn't come that close. Where we did get close to a counterexample was that Sidgwick _almost_ sounds more like a modern Parfitian than any journal author. But not quite—when there are three thousand journal articles, there will usually be one counterexample to any generalisation in there somewhere.
 
 ## Philosophers' Imprint {#imprint-section}
 
-I've often speculated in the book about what would happen if we ran the model forward beyond the end of JSTOR's moving wall. The purpose of this section is to look at what happens if we run the model forward in one very particular way. I downloaded all the articles published in 2019 by the open access journal [Philosophers' Imprint](https://www.philosophersimprint.org). I extracted the text from these articles using Jeroen Ooms's package [pdftools](https://docs.ropensci.org/pdftools/). And then I applied the model to these articles using the posterior function in [topicmodels](https://cran.r-project.org/web/packages/topicmodels/index.html). Here are the primary topics for each of the 54 articles.
+I've often speculated in the book about what would happen if we ran the model forward beyond the end of JSTOR's moving wall. The purpose of this section is to look at what happens if we run the model forward in one very particular way. I downloaded all the articles published in 2019 by the open-access journal [Philosophers' Imprint](https://www.philosophersimprint.org). I extracted the text from these articles using Jeroen Ooms's package [pdftools](https://docs.ropensci.org/pdftools/). And then I applied the model to these articles using the posterior function in [topicmodels](https://cran.r-project.org/web/packages/topicmodels/index.html). Here are the primary topics for each of the fifty-four articles.
 
 ```{r get-imprint-articles}
 # Load the titles from the CSV
@@ -453,15 +458,15 @@ datatable(imprint_top_gamma_display %>%
           colnames = c("Article", "Topic", "Probability"), 
           rownames = FALSE,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2))),
-          caption = "Topic Assignments for Articles in Philosophers' Imprint 2019"
+          caption = "Topic assignments for articles in Philosophers' Imprint 2019."
           )%>%
   formatSignif('gamma',3) %>%
   formatStyle(1:3,`text-align` = 'left')
 ```
 
-For each article I've shown which topic the model thinks the article most likely falls in. And these are, I think, mostly sensible classifications. But I've also shown the probability the model gives to that article being in just that topic. And given that these are maximal, they might look surprisingly low.
+For each article I've shown the topic to which the model gives the highest probability. And these are, I think, mostly sensible classifications. But I've also shown the probability the model gives to that article being in just that topic. And given that these are maximal, they might look surprisingly low.
 
-As we saw in the [previous section](#classic-book-section), the model is extremely cautious when making out of sample classifications. So even for what looks to us like a fairly clear case, like say Janum Sethi's [Two Feelings in the Beautiful: Kant on the Structure of Judgments of Beauty](http://hdl.handle.net/2027/spo.3521354.0019.034), the model is only 30% sure of its judgment. Now I guess it isn't surprising that the model is a little hesitant about whether to classify this with article on Kant or articles on Beauty, but the uncertainty you see in out-of-sample applications goes well beyond this. Here, for instance, is the list of all the topics it thinks Sethi's article might be in. (As has been the standard through this book, I've cut the table off at 2%.)
+As we saw in the [previous section](#classic-book-section), the model is extremely cautious when making out-of-sample classifications. So even for what looks to a human reader like a fairly clear case, like say Janum Sethi's "[Two Feelings in the Beautiful: Kant on the Structure of Judgments of Beauty](http://hdl.handle.net/2027/spo.3521354.0019.034)", the model is only 30 percent sure of its judgment. Now I guess it isn't surprising that the model is a little hesitant about whether to classify this with article on Kant or articles on beauty, but the uncertainty seen here in out-of-sample applications goes well beyond this. Here, for instance, is the list of all the topics it thinks Sethi's article might be in. (As has been the standard through this book, I've cut the table off at 2 percent.)
 
 ```{r individual-article-imprint-kable}
 imprint_kable <- function(x){
@@ -469,16 +474,18 @@ temp_gamma <- imprint_gamma %>%
   filter(document == x, gamma > 0.02) %>%
   select(topic, gamma) %>%
   inner_join(the_categories, by = "topic") %>%
-  select(subject, gamma) %>%
+  select(sub_lower, gamma) %>%
+  mutate(sub_lower = fcap(sub_lower)) %>%
   mutate(gamma = round(gamma, 4)) %>%
   arrange(-gamma)
 
-capt <- paste0(filter(imprint_top_gamma_display, document == x)$citation[1],
-               ", ",
-               "Philosophers' Imprint, 2019, vol. 19, number",
-               ", ",
-               filter(imprint_top_gamma_display, document == x)$number[1]-1900
-)
+#capt <- paste0(filter(imprint_top_gamma_display, document == x)$citation[1],
+#               ", ",
+#               "Philosophers' Imprint, 2019, vol. 19, number",
+#               ", ",
+#               filter(imprint_top_gamma_display, document == x)$number[1]-1900
+capt <- filter(imprint_top_gamma_display, document == x)$citation[1]
+
 
 kable(temp_gamma, 
       col.names = c("Subject", "Probability"), 
@@ -491,16 +498,17 @@ kable(temp_gamma,
 imprint_kable("imprint-1934")
 ```
 
-The top three look reasonable, though the numbers are too low, especially for Kant. This is just what happens in these out-of-sample applications. I have no idea why the model thought [Dewey and Pragmatism](#topic32) was there. But the story about [Norms](#topic90) is a bit more interesting.
+The top three look reasonable, though the numbers are too low, especially for Kant. This is just what happens in these out-of-sample applications. I have no idea why the model thought [dewey and pragmatism](#topic32) was there. But the story about [norms](#topic90) is a bit more interesting.
 
-It turns out that the language of twenty-first century philosophy is rather different from the language of twentieth-century philosophy. This is like the way in which the language of mid-century British philosophy was rather different to the language of other places and times. And the Norms topic picks up some of these newly fashionable words. I'll come back to this at much greater length in section \@ref(buzzwords-section).
+It turns out that the language of twenty first century philosophy is rather different from the language of twentieth-century philosophy. This is like the way in which the language of midcentury British philosophy was rather different to the language of other places and times. And the norms topic picks up some of these newly fashionable words. I'll come back to this at much greater length in section \@ref(buzzwords-section).
 
-It isn't only Sethi's paper that is part of this linguistic change. There are many papers that are primarily in Norms, even though they aren't really all about normative philosophy. Some of that is washed away when you use the weighted counts, but far from all of it. Here is the table of the weighted sum of each of the topics over the 54 articles. (That is, it's the sum, over the 54 articles, of the article being in that topic.) The table is long, so it's split up, sortable, and searchable.
+It isn't only Sethi's paper that is part of this linguistic change. There are many papers that are primarily in norms, even though they aren't really all about normative philosophy. Some of that is washed away when using the weighted counts, but far from all of it. Here is the table of the weighted sum of each of the topics over the 54 articles. (That is, it's the sum, over the 54 articles, of the article being in that topic.) The table is long, so it's split up, sortable, and searchable.
 
 ```{r imprint-topic-summary}
 imprint_summary_DT <- inner_join(imprint_summary, the_categories, by = "topic") %>%
   arrange(-g) %>%
-  select(topic, subject, g)
+  select(topic, sub_lower, g) %>%
+  mutate(sub_lower = fcap(sub_lower))
 
 require(DT)
 
@@ -508,13 +516,13 @@ datatable(imprint_summary_DT,
           colnames = c("Topic Number", "Topic", "Weighted Sum"), 
           rownames = FALSE,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2))),
-          caption = "Weighted Sum of Topic Probabilities for Philosophers' Imprint 2019"
+          caption = "Weighted sum of topic probabilities for articles in Philosophers' Imprint 2019."
           )%>%
   formatSignif('g',3) %>%
   formatStyle(1:3,`text-align` = 'left')
 ```
 
-How does Norms get to 4.8 like that? Lots of small pieces it turns out.
+How does morms get to 4.8 like that? Lots of small pieces it turns out.
 
 ```{r imprint-norms-summary}
 imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %>%
@@ -530,15 +538,15 @@ datatable(imprint_norms_DT %>%
           colnames = c("Article", "Probability"), 
           rownames = FALSE,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:1))),
-          caption = "Articles in Philosophers' Imprint 2019 - Probability of being in Topic 90"
+          caption = "Probability of being in topic 90 for articles in Philosophers' Imprint 2019."
           )%>%
   formatSignif('gamma',3) %>%
   formatStyle(1:2,`text-align` = 'left')
 ```
 
-This is really surprising, and a sign that something's gone wrong. It tells us something, I think, about the language of 21st century philosophy. I'll return to this in the next section. What I'd rather look at, because I think it tells us something more about where philosophy is heading, is the topic that was second on the above list: [Other History](#topic04).
+This is really surprising, and a sign that something's gone wrong. It tells us something, I think, about the language of twenty-first-century philosophy. I'll return to this in the next section. What I'd rather look at, because I think it tells us something more about where philosophy is heading, is the topic that was second on the above list: [other history](#topic04).
 
-This topic had looked rather dead in recent journals, but it turns up second overall here. And just eyeballing the article list that might not be too surprising. There are articles on Suárez (two of them!), William King, Amo, and Mary Shepherd. But this isn't entirely why Other History pops up so high here.
+This topic had looked rather dead in recent journals, but it turns up second overall here. And just eyeballing the article list that might not be too surprising. There are articles on Suárez (two of them!), William King, Amo, and Mary Shepherd. But this isn't entirely why other history pops up so high here.
 
 ```{r imprint-history-summary}
 imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %>%
@@ -554,29 +562,29 @@ datatable(imprint_norms_DT %>%
           colnames = c("Article", "Probability"), 
           rownames = FALSE,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:1))),
-          caption = "Articles in Philosophers' Imprint 2019 - Probability of being in Topic 4"
+          caption = "Probability of being in topic 90 for articles in Philosophers' Imprint 2019."
           )%>%
   formatSignif('gamma',3) %>%
   formatStyle(1:2,`text-align` = 'left')
 ```
 
-This makes the lack of attention to 'Other History' in the journals up to 2013 even more striking. James, Wittgenstein and Nietzche are hardly obscure figures. If articles on them are enough to keep the Other History scoreboard ticking over, it's really telling that that scoreboard had ground to a halt.
+This makes the lack of attention to other history in the journals up to 2013 even more striking. James, Wittgenstein and Nietzche are hardly obscure figures. If articles on them are enough to keep the other history scoreboard ticking over, it's really telling that that scoreboard had ground to a halt.
 
-Apart from this topic, the results are largely as I expected. The contemporary topics mostly keep growing. [Vagueness](#topic86), which peaked in the early 2000s, is an exception. And Imprint does less philosophy of science than some journals, so the recent philosophy of science topics aren't showing up much. But otherwise the new topics are still growing. And the old topics are still mostly shrinking, but with two big exceptions. One, the resurgence of interest in historical figures outside of the huge names like Plato, Descartes and Kant, I've already mentioned. The other is that there is a paper on [Idealism](#topic02).
+Apart from this topic, the results are largely as I expected. The contemporary topics mostly keep growing. [Vagueness](#topic86), which peaked in the early 2000s, is an exception. And Imprint does less philosophy of science than some journals, so the recent philosophy of science topics aren't showing up much. But otherwise the new topics are still growing. And the old topics are still mostly shrinking, but with two big exceptions. One, the resurgence of interest in historical figures outside of the huge names such Plato, Descartes and Kant, I've already mentioned. The other is that there is a paper on [idealism](#topic02).
 
 ```{r idealism-imprint-paper-summary}
 imprint_kable("imprint-1944")
 ```
 
-Now on the one hand, that's only a 10.1% probability of being in Idealism. On the other hand, it doesn't look like a mistake for the model to put this article in Idealism. And to my eyes, in the twelve journals I'm focussing on, there are no articles from about 1995-2013 that were correctly classified as Idealism articles.
+Now on the one hand, that's only a 10.1 percent probability of being in idealism. On the other hand, it doesn't look like a mistake for the model to put this article in idealism. And to my eyes, in the twelve journals I'm focussing on, there are no articles from about 1995–2013 that were correctly classified as idealism articles.
 
-I don't want to say that one article in Imprint is a trend, even if it is something we hadn't seen in the last 7000 or so articles in the original data set. But it is interesting, and something to watch for over upcoming years. It is so striking to me that Idealism went from being so big to so small, and some regression to the mean seems like it wouldn't be a surprise.
+I don't want to say that one article in _Imprint_ is a trend, even if it is something we hadn't seen in the last seven thousand or so articles in the original data set. But it is interesting, and something to watch for over upcoming years. It is so striking to me that idealism went from being so big to so small, and some regression to the mean seems like it wouldn't be a surprise.
 
 ## Buzzwords {#buzzwords-section}
 
-One of the methods I used for building the model was to run repeated [refinements](#refinements-section) of the model, to try to make it better track actual philosophical topics. At the time I did this, I was worried that this would have bad consequences. It felt like tightening the strings. And while this is generally a good idea, if you make things too tight, they snap. After a few refinements, I started to think this was a silly bit of reasoning by analogy. These aren't actually strings, so they can't actually snap, right? Well, after 100 iterations of the refinement script, I got a topic whose distribution looked like this.
+One of the methods I used for building the model was to run repeated [refinements](#refinements-section) of the model, to try to make it better track actual philosophical topics. At the time I did this, I was worried that this would have bad consequences. It felt like tightening the strings. And while this is generally a good idea, if things are made too tight, they snap. After a few refinements, I started to think this was a silly bit of reasoning by analogy. These aren't actually strings, so they can't actually snap, right? Well, after one hundred iterations of the refinement script, I got a topic whose distribution looked like this.
 
-```{r bad-gamma-absolute, fig.cap = "Number of articles in Norms topic in the Bad LDA", fig.alt = alt_text}
+```{r bad-gamma-absolute, fig.cap = "Number of articles in the norms topic in the bad LDA.", fig.alt = alt_text}
 # Doing the facet graph with number of articles, not proportion
 # It's a bit cheating to do this first, but it looks really striking
 jjj <- 90
@@ -593,7 +601,7 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = g))  +
   scale_y_continuous(breaks = c(1, 2, 3, 4)) +
   geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   theme(legend.position="none") +
-  labs(x = element_blank(), y = "Weighted Number of Articles", title = "The Bad Topic") +
+  labs(x = element_blank(), y = "Weighted Number of articles", title = "The Bad Topic") +
   facet_wrap(~journal, ncol = 3, labeller = as_labeller(journal_short_names)) +
     geom_text(data = facet_labels,
             mapping = aes(label = short_name),
@@ -603,13 +611,13 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = g))  +
             size = 3,
             colour = "grey40")
 
-alt_text <- "A series of scatterplots showing the weighted number of articles about Norms in twelve journals from 1900 to 2000. The number rises dramatically starting sometime between 1940 and 1980 across all journals."
+alt_text <- "A series of scatterplots showing the weighted number of articles about norms in twelve journals from 1900 to 2000. The number rises dramatically starting sometime between 1940 and 1980 across all journals."
 
 ```
 
-Those are remarkable graphs - it seems that this topic is getting to be a bigger and bigger deal in all the journals. I had not seen anything like this; after 1970 it's almost impossible to get the 'generalist' journals, the philosophy of science journals, and the ethics journals moving in the same direction. Maybe it's a function of the journals publishing more articles over time. We could check this by looking at what proportion of the journals are made up by this topic, not the absolute number of (expected) articles.^[Most of the graphs in chapter \@ref(all-90-topics) are proportional, not the absolute graph I just showed you.]
+Those are remarkable graphs—it seems that this topic is getting to be a bigger and bigger deal in all the journals. I had not seen anything like this; after 1970 it's almost impossible to get the "generalist" journals, the philosophy of science journals, and the ethics journals moving in the same direction. Maybe it's a function of the journals publishing more articles over time. We could check this by looking at what proportion of the journals are made up by this topic, not the absolute number of (expected) articles.^[Most of the graphs in chapter \@ref(all-90-topics) are proportional, not the absolute graph I just showed you.]
 
-```{r bad-gamma-relative, fig.cap = "Proportion of articles in Norms topic in the Bad LDA", fig.alt = alt_text}
+```{r bad-gamma-relative, fig.cap = "Proportion of articles in the norms topic in the bad LDA.", fig.alt = alt_text}
 # A standard facet graph, but with the bad LDA instead of the good LDA
 jjj <- 90
 
@@ -634,10 +642,10 @@ ggplot(data = bad_gamma_year_journal %>% drop_na(), aes(x = year, y = y))  +
             fontface = "bold", 
             size = 3,
             colour = "grey40")
-alt_text <- "A series of scatterplots showing the proportion of articles about Norms in twelve journals from 1900 to 2000. The proportion rises dramatically sometime between 1940 and 1980 for all journals, though the rise is less steep for Analysis, Philosophy of Science, and British Journal for the Philosophy of Science."
+alt_text <- "A series of scatterplots showing the proportion of articles about norms in twelve journals from 1900 to 2000. The proportion rises dramatically sometime between 1940 and 1980 for all journals, though the rise is less steep for Analysis, Philosophy of Science, and British Journal for the Philosophy of Science."
 ```
 
-It's slightly less steep, especially in _Philosophy of Science_. But the generalist journals - except _Analysis_ - and _British Journal for the Philosophy of Science_ are still rising rapidly. So let's look at what articles are primarily in this topic.
+It's slightly less steep, especially in _Philosophy of Science_. But the generalist journals—except _Analysis_—and _British Journal for the Philosophy of Science_ are still rising rapidly. Let's look at what articles are primarily in this topic.
 
 ```{r bad-gamma-top-articles}
 # A very simple kable of which articles have highest probability of being in this bad topic
@@ -646,16 +654,16 @@ kable(bad_gamma %>%
         select(citation, gamma) %>%
         mutate(gamma = round(gamma,4)), 
       col.names = c("Article", "Topic Probability"), 
-      caption  = "Top Articles in Norms in Bad LDA")
+      caption  = "Top articles in the norms topic in the bad LDA.")
 ```
 
 This is very confusing in three different ways.
 
 1. Although the topic seems concentrated in the twenty-first century, two of the top ten articles are from a fair way ago - including the top one.
-2. If you exclude that top article, no article has a topic probability of over 0.4. This is true even though for some journal-year pairs, the average topic probability is over 0.1. It feels like every article must get a reasonable probability of being in this topic.
-3. Relatedly, there doesn't seem to be any thematic unity to the articles here. What would you even call the 'topic' which has these ten articles as paradigm? I'm calling it Norms because it looks from the graphs like the counterpart of our topic Norms, but this is hardly a perfect name.
+2. If that top article is excluded, no article has a topic probability of over 0.4. This is true even though for some journal-year pairs, the average topic probability is over 0.1. It feels like every article must get a reasonable probability of being in this topic.
+3. Relatedly, there doesn't seem to be any thematic unity to the articles here. What could we even call the "topic" which has these ten articles as paradigm cases? I'm calling it _norms_ because it looks from the graphs like the counterpart of our topic norms, but this is hardly a perfect name.
 
-For comparison, the original [topic 90](#topic90) had a top 10 list that looked a little more sensible.
+For comparison, the original [topic 90](#topic90) had a top ten list that looked a little more sensible.
 
 ```{r bad-gamma-compare-top-articles}
 
@@ -666,111 +674,111 @@ t <- relabeled_articles %>%
   select(citation, gamma) %>%
   mutate(gamma = round(gamma, 4))
 
-kable(t, col.names = c("Article", "Topic Probability"), caption = "Top Articles in Norms in Good LDA")
+kable(t, col.names = c("Article", "Topic Probability"), caption = "Top articles in the norms topic in the good LDA.")
 ```
 
-The papers are more recent, the probabilities are higher, and there is some more unity to the topic. It's about normativity and objectivity, very broadly construed, with a bit of a focus on Brandm. And you can still see hints of that in the new top 10 list, but it's gotten blurrier. The Rosen article that's at nearly 70% in the original topic has dropped to around 20% in the new topic, reflecting the lack of thematic unity.
+The papers are more recent, the probabilities are higher, and there is some more unity to the topic. It's about normativity and objectivity, very broadly construed, with a bit of a focus on Brandom. And we can still see hints of that in the new top ten list, but it's gotten blurrier. The Rosen article that's at nearly 70 percent in the original topic has dropped to around 20 percent in the new topic, reflecting the lack of thematic unity.
 
-Maybe we can get a bit better look at this new weird topic by looking at its keywords. Remember that an LDA model assigns each word a probability of being in a paradigm article in the topic. We can compare that to the frequency of that word in the whole data set to get a sense of what's characteristic of the topic. (Again, it's necessary to restrict attention to the 5000 most common words here to prevent too much focus on words that appear just a handful of times.) And here's what we get. The second column here is the ratio of the probability of the word being in a (paradigm) article in this topic to the word's overall frequency.
+Maybe we can get a bit of a better look at this new weird topic by looking at its keywords. Remember that an LDA model assigns each word a probability of being in a paradigm article in the topic. We can compare that to the frequency of that word in the whole data set to get a sense of what's characteristic of the topic. (Again, it's necessary to restrict attention to the five thousand most common words here to prevent too much focus on words that appear just a handful of times.) And here's what we get. The second column here is the ratio of the probability of the word being in a (paradigm) article in this topic to the word's overall frequency.
 
 ```{r bad-beta-top-ratio}
 kable(bad_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), 
       col.names = c("Word", "Ratio"),
-      caption = "Top Words in Norms in the Bad LDA") %>% 
+      caption = "Top words in the norms topic in the bad LDA.") %>% 
   kable_styling(full_width = F)
 ```
 
-This I think is the clue to what's happened. The 'topic' here is just the distinctive vocabulary of twenty-first century philosophy. The topic appears in all journals because these words have become more and more prevalent in all journals.
+This I think is the clue to what's happened. The "topic" here is just the distinctive vocabulary of twenty-first-century philosophy. The topic appears in all journals because these words have become more and more prevalent in all journals.
 
-I'll come back to direct evidence for this hypothesis in a minute, but first I wanted to show you what a table like this looks like for normal topics. Here's the same table for topic 90 in the original model.
+I'll come back to direct evidence for this hypothesis in a minute, but first I wanted to show what a table like this looks like for normal topics. Here's the same table for topic 90 in the original model.
 
 ```{r good-beta-top-ratio}
 kable(good_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
-       caption = "Top Words in Norms in the Good LDA") %>% 
+       caption = "Top words in the norms topic in the good LDA.") %>% 
   kable_styling(full_width = F)
 ```
 
-You can see some of the twenty-first century vocabulary, like 'challenge' and 'accounts' turning up at the bottom. But this is what things mostly should look like for a topic about normativity and objectivity. 
+It's possible to see some of the twenty-first-century vocabulary, like _challenge_ and _accounts_ turning up at the bottom. But this is what things mostly should look like for a topic about normativity and objectivity. 
 
 Just to get a sense of the appropriate scale for what's being measured here, here's what the top of the table for the [Kant topic](#topic32) looks like.
 
 ```{r kant-beta-top-ratio}
 kable(kant_beta %>% select(word, y) %>% slice(1:10) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
-       caption = "Top Words in Kant in the Good LDA") %>% 
+       caption = "Top words in the Kant topic in the good LDA.") %>% 
   kable_styling(full_width = F)
 ```
 
-That makes sense; the word 'Kant' is 163 times more likely to appear in a paradigm Kant article than in philosophy in general. A ratio like this of 163 is high, but having the highest ratio be 15 is a sign something has gone wrong. The only topic that is really like this in the original model is [ordinary language philosophy](#topic 24).
+That makes sense; the word _Kant_ is 163 times more likely to appear in a paradigm Kant article than in philosophy in general. A ratio like this of 163 is high, but having the highest ratio be fifteen is a sign something has gone wrong. The only topic that is really like this in the original model is [ordinary language philosophy](#topic 24).
 
 ```{r olp-beta-top-ratio}
 kable(olp_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
-       caption = "Top Words in Ordinary Language Philosophy in the Bad LDA") %>% 
+       caption = "Top words in the ordinary language philosophy topic in the good LDA.") %>% 
   kable_styling(full_width = F)
 ```
 
-Like the new topic 90, this topic in the original model really tracked a style not a content. It's really striking that the distinctive words in ordinary language philosophy are so much shorter than the distinctive words in contemporary philosophy.^[I wanted to include here some graphs about average word lengths over time, but they don't really show very much. There is a very gentle increase, focussed on the philosophy of science journals, but the distinctively short keywords don't really track anything about average word length.] But it's probably time to start actually proving that words like 'commitment', 'challange' and 'approach' are distinctively twenty-first century words. So rather than just look at the outputs of complicated models, I'm going to end with some simple graphs of word frequency over time. 
+Like the new topic 90, this topic in the original model really tracked a style and not a content. It's really striking that the distinctive words in ordinary language philosophy are so much shorter than the distinctive words in contemporary philosophy.^[I wanted to include here some graphs about average word lengths over time, but they don't really show very much. There is a very gentle increase, focussed on the philosophy of science journals, but on the whole the distinctively short keywords don't really track anything about average word length. There was a notable drop in average word length in _Proceedings of the Aristotelian Society_ in the 1950s, but it didn't show up elsewhere. Most notably, there was no similar drop in average word length in _Mind_ or _Philosophical Quarterly_. That suggested it was something about the journal, perhaps connected to the fact that papers are read to the society, rather than about British philosophical culture more broadly.] But it's probably time to start actually proving that words like _commitment_, _challange_ and _approach_ are distinctively twenty-first-century words. So rather than just look at the outputs of complicated models, I'm going to end with some simple graphs of word frequency over time. 
 
-The data set I'm using for the graphs to follow is the word lists as provided by JSTOR. So that excludes some stop words, and all one and two letter words, but not all the other words that I filtered out before building the LDA. I'll start with some graphs of the keywords from this new topic 90.
+The data set I'm using for the graphs to follow is the word lists as provided by JSTOR. That excludes some stop words, and all one and two letter words, but not all the other words that I filtered out before building the LDA. I'll start with some graphs of the keywords from this new topic 90.
 
-```{r buzzwords-graphs-a, fig.height = 5, fig.cap = "Words about theories", fig.alt = alt_text}
+```{r buzzwords-graphs-a, fig.height = 5, fig.cap = "Words about theories.", fig.alt = alt_text}
 word_frequency_graphs(c("account", "accounts", "claim", "claims"))
-alt_text <- "A scatterplot showing the frequency of words about theories ('account', 'accounts', 'claim', and 'claims') in journal articles from 1880 to after 2000. The frequency of all four words begins to increase more rapidly beginning around 1960. "
+alt_text <- "A scatterplot showing the frequency of words about theories (_account_, _accounts_, _claim_, and _claims_) in journal articles from 1880 to after 2000. The frequency of all four words begins to increase more rapidly beginning around 1960. "
 ```
 
-```{r buzzwords-graphs-b, fig.height = 5, fig.cap = "Words about plans", fig.alt = alt_text}
+```{r buzzwords-graphs-b, fig.height = 5, fig.cap = "Words about plans.", fig.alt = alt_text}
 word_frequency_graphs(c("role", "appeal", "project", "focus"))
-alt_text <- "A scatterplot showing the frequency of words about plans ('appeal', 'focus', 'project', and 'role') in journal articles from 1880 to after 2000. The frequency of all four words begins to increase more rapidly after 1960."
+alt_text <- "A scatterplot showing the frequency of words about plans (_appeal_, _focus_, _project_, and _role_) in journal articles from 1880 to after 2000. The frequency of all four words begins to increase more rapidly after 1960."
 ```
 
-```{r buzzwords-graphs-c, fig.height = 5, fig.cap = "Words about views", fig.alt = alt_text}
+```{r buzzwords-graphs-c, fig.height = 5, fig.cap = "Words about views.", fig.alt = alt_text}
 word_frequency_graphs(c("commitment", "commitments", "proposal", "proposals"))
-alt_text <- "A scatterplot showing the frequency of words about views ('commitment', 'commitments', 'proposal', and 'proposals') in journal articles from 1880 to after 2000. The frequency for all four is quite low early on, and begins to increase significantly around 1930-1940."
+alt_text <- "A scatterplot showing the frequency of words about views (_commitment_, _commitments_, _proposal_, and _proposals_) in journal articles from 1880 to after 2000. The frequency for all four is quite low early on, and begins to increase significantly around 1930-1940."
 ```
 
-```{r buzzwords-graphs-d, fig.height = 5, fig.cap = "Words about objections", fig.alt = alt_text}
+```{r buzzwords-graphs-d, fig.height = 5, fig.cap = "Words about objections.", fig.alt = alt_text}
 word_frequency_graphs(c("worry", "worries", "challenge", "challenges"))
-alt_text <- "A scatterplot showing the frequency of words about objections ('challenge', 'challenges', 'worries', and 'worry') in jounal articles from 1880 to after 2000. The frequency for all four begins to rise by around 1950, though 'challenge' starts to rise earlier, around 1920. "
+alt_text <- "A scatterplot showing the frequency of words about objections (_challenge_, _challenges_, _worries_, and _worry_) in jounal articles from 1880 to after 2000. The frequency for all four begins to rise by around 1950, though _challenge_ starts to rise earlier, around 1920. "
 ```
 
-```{r buzzwords-graphs-e, fig.height = 5, fig.cap = "Words about what's common", fig.alt = alt_text}
+```{r buzzwords-graphs-e, fig.height = 5, fig.cap = "Words about what's common.", fig.alt = alt_text}
 word_frequency_graphs(c("typically", "relevant", "practices"))
-alt_text <- "A scatterplot showing the frequency of words about what's common ('practices', 'relevant', 'typically') in journal articles from 1880 to after 2000. The frequency of 'relevant' begins to rise dramatically around 1900; 'practices' and 'typically' begin to rise around 1960."
+alt_text <- "A scatterplot showing the frequency of words about what's common (_practices_, _relevant_, _typically_) in journal articles from 1880 to after 2000. The frequency of _relevant_ begins to rise dramatically around 1900; _practices_ and _typically_ begin to rise around 1960."
 ```
 
-Not all of these words are shooting upwards, but many of them are. It's striking to me that you don't really need trendlines here to see a trend. At this rate we'll soon see articles made up of just the words 'account', 'typically', 'relevant' and 'challenge', plus perhaps their plurals.
+Not all of these words are shooting upwards, but many of them are. I had originally drawn these graphs with trend lines, but they aren't needed to see the pattern. At this rate we'll soon see articles made up of just the words _account_, _typically_, _relevant_ and _challenge_, plus perhaps their plurals.
 
-So this is why I just used 15 refinements of the model rather than 100. The language of early twenty-first century philosophy is distinctive enough that if you push a text-based analysis too hard, it ends up just tracking form rather than content.
+So this is why I just used fifteen refinements of the model rather than one hundred. The language of early twenty-first-century philosophy is distinctive enough that if you push a text-based analysis too hard, it ends up just tracking form rather than content.
 
-But didn't we have this already back in [ordinary language philosophy](#topic 24)? We did, though fortunately the binary sort helped find a couple of natural topics within it. Still, it would be nice to confirm that these words really were being used more frequently in mid-century. So let's look at the same graphs for the keywords from ordinary language philosophy.
+But didn't we have this already back in [ordinary language philosophy](#topic 24)? We did, though fortunately the binary sort helped find a couple of natural topics within it. Still, it would be nice to confirm that these words really were being used more frequently in midcentury. So let's look at the same graphs for the keywords from ordinary language philosophy.
 
-```{r olpwords-graphs-a, fig.height = 5, fig.cap = "Words about speech acts", fig.alt = alt_text}
+```{r olpwords-graphs-a, fig.height = 5, fig.cap = "Words about speech acts.", fig.alt = alt_text}
 word_frequency_graphs(c("ask", "answer", "question", "said"))
-alt_text <- "A scatterplot showing the frequency of words about speech acts ('answer,' 'ask,' 'question,' and 'said') in journal articles from 1880 to after 2000. 'Question' is always the most frequent and 'ask' is always the least frequent. All four words show a similar pattern with frequency peaks around the 1960s."
+alt_text <- "A scatterplot showing the frequency of words about speech acts (_answer_, _ask_, _question_, and _said_) in journal articles from 1880 to after 2000. _Question_ is always the most frequent and _ask' is always the least frequent. All four words show a similar pattern with frequency peaks around the 1960s."
 ```
 
-```{r olpwords-graphs-b, fig.height = 5, fig.cap = "Words about epistemic modality", fig.alt = alt_text}
+```{r olpwords-graphs-b, fig.height = 5, fig.cap = "Words about epistemic modality.", fig.alt = alt_text}
 word_frequency_graphs(c("really", "perhaps", "course", "certainly"))
-alt_text <- "A scatterplot showing the frequency of words about epistemic modality ('certianly,' 'course,' 'perhaps,' and 'really') in journal articles from 1880 to after 2000. 'Course' is generally the most frequent, and 'certainly' is the least frequent. All four words show a peak in frequency around 1960."
+alt_text <- "A scatterplot showing the frequency of words about epistemic modality (_certainly_, _course_, _perhaps_, and _really_) in journal articles from 1880 to after 2000. _Course_ is generally the most frequent, and _certainly_ is the least frequent. All four words show a peak in frequency around 1960."
 ```
 
-```{r olpwords-graphs-c, fig.height = 5, fig.cap = "Words about quantity", fig.alt = alt_text}
+```{r olpwords-graphs-c, fig.height = 5, fig.cap = "Words about quantity.", fig.alt = alt_text}
 word_frequency_graphs(c("quite", "sort", "seem", "much"))
-alt_text <- "A scatterplot showing the frequency of words about quantity ('much,' 'quite,' 'seem,' and 'sort') in journal articles from 1880 to after 2000. 'Much' generally has the highest frequency, though its frequency declines steadily with time. 'Sort' has the lowest frequency in the 1880s through mid-1900s. The words somewhat converge in frequency around 1970. "
+alt_text <- "A scatterplot showing the frequency of words about quantity (_much_, _quite_, _seem_, and _sort_) in journal articles from 1880 to after 2000. _Much_ generally has the highest frequency, though its frequency declines steadily with time. _Sort_ has the lowest frequency in the 1880s through mid-1900s. The words somewhat converge in frequency around 1970. "
 ```
 
-```{r olpwords-graphs-d, fig.height = 5, fig.cap = "Words about mental state attribution", fig.alt = alt_text}
+```{r olpwords-graphs-d, fig.height = 5, fig.cap = "Words about mental state attribution.", fig.alt = alt_text}
 word_frequency_graphs(c("think", "want", "get"))
-alt_text <- "A scatterplot showing the frequency of words about mental state attribution ('get,' 'think,' and 'want') in journal articles from 1880 to after 2000. 'Think' appears much more frequently than the other words throughout the time span. All three words have moderate peaks in frequency around the 1970s. "
+alt_text <- "A scatterplot showing the frequency of words about mental state attribution (_get_, _think_, and _want_) in journal articles from 1880 to after 2000. _Think_ appears much more frequently than the other words throughout the time span. All three words have moderate peaks in frequency around the 1970s. "
 ```
 
-```{r olpwords-graphs-e, fig.height = 5, fig.cap = "Words about quantification", fig.alt = alt_text}
+```{r olpwords-graphs-e, fig.height = 5, fig.cap = "Words about quantification.", fig.alt = alt_text}
 word_frequency_graphs(c("anything", "something", "things"))
-alt_text <- "A scatterplot showing the frequency of words about quantification ('anything,' 'something,' and 'thigs') in journal articles from 1880 to after 2000. 'Anything' is the least frequent throughout most of the time span. All three words show a peak in frequency around 1960, though the peak is more pronounced for 'something' and 'things.'"
+alt_text <- "A scatterplot showing the frequency of words about quantification (_anything_, _something_, and _things_) in journal articles from 1880 to after 2000. _Anything_ is the least frequent throughout most of the time span. All three words show a peak in frequency around 1960, though the peak is more pronounced for _something_ and _things.'"
 ```
 
-The first three have roughly the pattern I was expecting, but the last two don't. I think there is a sense in which some of the stylistic changes that the ordinary language philosophers brought in persisted. And there is also a sense in which they were the last holdouts against the move to a more scientific philosophy. As is so often the case, it helps to look at a distinctive era as both the end of what came before it, and the start of what came after it.
+The first three have roughly the pattern I was expecting, but the last two don't. I think there is a sense in which some of the stylistic changes that the ordinary language philosophers brought in persisted. And there is also a sense in which they were the last holdouts against the move to a more scientific philosophy. As is so often the case, it helps to look at a distinctive era as both the end of what came before it and the start of what came after it.
 
-There is another puzzle that I left open above that I want to return to. How could we square the low ratio between the maximal and average topic probabilities for some journal-year pairs? The obvious answer is that every article is in the topic to some non-trivial degree. Let's see how true that is. So for a few journal-year pairs, I'm going to go through every article and list the probability that it is in this new topic. I'll start with _Philosophical Review_ in 2004.
+There is another puzzle that I left open above that I want to return to. How could we square the low ratio between the maximal and average topic probabilities for some journal-year pairs? The obvious answer is that every article is in the topic to some nontrivial degree. Let's see how true that is. So for a few journal-year pairs, I'm going to go through every article and list the probability that it is in this new topic. I'll start with _Philosophical Review_ in 2004.
 
 ```{r bad-gamma-pr-2004}
 kable(bad_gamma %>% 
@@ -778,7 +786,7 @@ kable(bad_gamma %>%
         select(citation, gamma) %>%
         mutate(gamma = round(gamma, 4)),
       col.names = c("Article", "Topic Probability"),
-      caption = "Philosophical Review, 2004 - probability that each article is in the bad topic")
+      caption = "_Philosophical Review_, 2004, probability that each article is in the bad topic.")
 ```
 
 The Roth paper really is about commitments, so it isn't surprising that it's a little higher than the others. But look how much this spreads around other articles. The model thinks there is something that all but one of these articles have seriously in common. And I think there isn't anything substantive (as opposed to stylistic) this could be. Let's move on to _Ethics_ in 2010.
@@ -789,27 +797,27 @@ kable(bad_gamma %>%
         select(citation, gamma) %>%
         mutate(gamma = round(gamma, 4)), 
       col.names = c("Article", "Topic Probability"),
-      caption = "Ethics 2010 - probability that each article is in the bad topic")
+      caption = "_Ethics_, 2010, probability that each article is in the bad topic.")
 ```
 
-I don't know why all the stars are there in the title; that's just what came from JSTOR. And we get the same pattern; almost all the articles are in the topic at a 5% probability or higher. To the extent that there was anything substantive in the topic, it was in normative ethics, so maybe that's not too surprising. But let's see what happens when we do the same thing for _British Journal for the Philosophy of Science_ in 2011.
+The same pattern shows up; almost all the articles are in the topic at a 5 percent probability or higher. To the extent that there was anything substantive in the topic, it was in normative ethics, so maybe the topic being so visible in _Ethics_ isn't too surprising. But let's see what happens when we do the same thing for _British Journal for the Philosophy of Science_ in 2011.
 
 ```{r bad-gamma-bjps-2011}
 kable(bad_gamma %>% 
-        filter(year == 2011, journal == "British Journal for the Philosophy of Science") %>% 
+        filter(year == 2011, journal == "British Journal for the philosophy of Science") %>% 
         select(citation, gamma) %>%
         mutate(gamma = round(gamma, 4)), 
       col.names = c("Article", "Topic Probability"),
-      caption = "BJPS 2011 - probability that each article is in the bad topic")
+      caption = "_BJPS_, 2011, probability that each article is in the bad topic.")
 ```
 
-Here we do get more articles that are clearly excluded. The difference between the last six articles is unimportant. Once you get below 0.1%, the probabilities are functions of how confident the model is in its central classifications. But it's still striking how many of these are above 1.1%. There are 90 topics, so if the model had no idea it would put each probability at 1.1%. The vast majority of the articles here are above that.
+Here we do get more articles that are clearly excluded. The difference between the last six articles is unimportant. Once you get below 0.1 percent, the probabilities are functions of how confident the model is in its central classifications. But it's still striking how many of these are above 1.1 percent. There are ninety topics, so if the model had no idea it would put each probability at 1.1 percent. The vast majority of the articles here are above that.
 
-There is another study I could imagine running here, but it would take so long that I'm going to leave it to later work. Repeatedly refining the model broke because of the distinctive language of twenty-first century philosophy. There are two possible explanations for that.
+There is another study I could imagine running here, but it would take so long that I'm going to leave it to later work. Repeatedly refining the model broke because of the distinctive language of twenty-first-century philosophy. There are two possible explanations for that.
 
 1. There has been a linguistic revolution over the last generation, and philosophers now write in a very different style to how they wrote a generation ago.
-2. This is an artifact of model building, and if you stopped the model at any time, and ran the same study I did, you'd get results like this. That is, doing what I did will get you weird results whenever there is linguistic drift, and there is always linguistic drift.
+2. This is an artifact of model building, and if the model was stopped at any time, and ran the same study I did, there would be results like this. That is, doing what I did will get  weird results whenever there is linguistic drift, and there is always linguistic drift.
 
 I actually could test these by running the study I did for this book but stopping in, say, 1993. But I don't think spending several hundred hours processing time on teasing apart these two explanations would be worthwhile.
 
-That's in part because this question will resolve itself over time naturally. Hopefully more studies like mine (or preferably better designed studies than mine) will be run on data that goes through 2020 and beyond. Those will tell us even more about where philosophy is going, and answer several questions that I've left open as pleasant side-effects.
+That's in part because this question will resolve itself over time naturally. Hopefully more studies like mine (or preferably better designed studies than mine) will be run on data that goes through 2020 and beyond. Those will tell us even more about where philosophy is going, and answer several questions that I've left open as pleasant side effects.

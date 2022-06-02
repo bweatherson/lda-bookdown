@@ -96,6 +96,52 @@ load("all_journals_word_list.RData")
 # The list of articles
 load("fixed_articles.RData")
 
+articles <- articles %>% 
+  mutate(title = str_replace_all(title, "[/*]", "")) %>% 
+  mutate(auth1 = str_replace_all(auth1, "[/*†‡]", "")) %>% 
+  mutate(lastlet = str_sub(auth1, -1)) %>% 
+  mutate(auth1 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth1, end = -2),
+                              TRUE ~ auth1)) %>% 
+  mutate(auth1 = case_when((str_sub(auth1, -4) == " and" | (str_sub(auth1, -3) == "And")) ~ str_sub(auth1, end = -4),
+                              TRUE ~ auth1)) %>% 
+  mutate(lastlet = str_sub(auth1, -1)) %>% 
+  mutate(auth1 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth1, end = -2),
+                                       TRUE ~ auth1)) %>% 
+  mutate(auth2 = str_replace_all(auth2, "[/*†‡]", "")) %>% 
+  mutate(lastlet = str_sub(auth2, -1)) %>% 
+  mutate(auth2 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth2, end = -2),
+                              TRUE ~ auth2)) %>% 
+  mutate(auth2 = case_when((str_sub(auth2, -4) == " and" | (str_sub(auth2, -3) == "And")) ~ str_sub(auth2, end = -4),
+                              TRUE ~ auth2)) %>% 
+  mutate(lastlet = str_sub(auth2, -1)) %>% 
+  mutate(auth2 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth2, end = -2),
+                              TRUE ~ auth2)) %>% 
+  mutate(lastlet = str_sub(auth2, -1)) %>% 
+  mutate(auth2 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth2, end = -2),
+                              TRUE ~ auth2)) %>% 
+  mutate(auth3 = str_replace_all(auth3, "[/*†‡]", "")) %>% 
+  mutate(lastlet = str_sub(auth3, -1)) %>% 
+  mutate(auth3 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth3, end = -2),
+                              TRUE ~ auth3)) %>% 
+  mutate(auth3 = case_when((str_sub(auth3, -4) == " and" | (str_sub(auth3, -3) == "And")) ~ str_sub(auth3, end = -4),
+                              TRUE ~ auth3)) %>% 
+  mutate(lastlet = str_sub(auth3, -1)) %>% 
+  mutate(auth3 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth3, end = -2),
+                              TRUE ~ auth3)) %>% 
+  mutate(lastlet = str_sub(auth3, -1)) %>% 
+  mutate(auth3 = case_when((lastlet == "," | lastlet == " ") ~ str_sub(auth3, end = -2),
+                              TRUE ~ auth3)) %>% 
+  mutate(auth4 = str_replace_all(auth4, "[/*†‡]", "")) 
+
+# Regenerate authall after all those changes
+articles <- articles %>% 
+    mutate(authall = case_when(
+    is.na(auth2) ~ auth1,
+    is.na(auth3) ~ paste0(auth1," and ", auth2),
+    is.na(auth4) ~ paste0(auth1,", ",auth2," and ",auth3),
+    TRUE ~ paste0(auth1, " et al")
+  ))
+
 # Change format to Michigan Publishing preferred style
 articles <- articles %>% 
   mutate(adjlpage = case_when(floor(fpage/10) == floor(lpage/10) & fpage < 10000 ~ lpage - 10*floor(lpage/10),
@@ -108,6 +154,9 @@ articles <- articles %>%
     TRUE ~ paste0(authall,", ",year,", “", toTitleCase(title),",” ",journal," ",vol,":",fpage,"–",adjlpage,".")
   )
   )
+
+
+
 
 # The list of highly cited articles
 load("Highly_Cites_articles.RData")
@@ -169,7 +218,6 @@ relabeled_gamma <- merge(relabeled_gamma, articles, by = "document") %>%
 ```{r import_categories, cache=FALSE}
 # The big category csv
 # Could type this in from R, but easier to edit as CSV
-# Burp
 require(readr)
 the_categories <- read_csv("category-summary-22031848-90-r15.csv")
 ```
@@ -404,7 +452,8 @@ temp_gamma <- relabeled_gamma %>%
   filter(document == x, gamma > 0.02) %>%
   select(topic, gamma) %>%
   inner_join(the_categories, by = "topic") %>%
-  select(subject, gamma) %>%
+  select(sub_lower, gamma) %>%
+  mutate(sub_lower = fcap(sub_lower)) %>% 
   arrange(-gamma)
 
 kable(temp_gamma, 
@@ -426,8 +475,8 @@ datatable(relabeled_articles %>%
           rownames = FALSE,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:3)),
                          pageLength = 10
-                         ),
-          caption = htmltools::tags$caption(paste0("Articles with Author ",y), style = "font-weight: bold")
+                         )#,
+#          caption = htmltools::tags$caption(paste0("Articles with author ",y,"."), style = "font-weight: bold")
     )%>%
       formatSignif('gamma',4) %>%
       formatStyle(1:4,`text-align` = 'left')  
@@ -444,7 +493,7 @@ kable(relabeled_articles %>%
           select(year, mcitation, subject, gamma),           
           col.names = c("Year", "Article", "Subject", "Probability"), 
 #          caption = paste0("Articles with Author ",y), style = "font-weight: bold")
-          caption = paste0("Articles with author ",y))
+          caption = paste0("Articles with author ",y,"."))
   } 
 ```
 
@@ -514,7 +563,7 @@ ggplot(t, aes(x = year, y = f, color = term, group = term)) +
                      breaks = scales::breaks_pretty(n = 3),
                      labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
   #  scale_y_continuous(labels = scale_inverter) +
-  labs(x = element_blank(), y = "Word Frequency") +
+  labs(x = element_blank(), y = "Word frequency") +
   theme(legend.title = element_blank())
 }
 
@@ -888,7 +937,7 @@ ggplot(tt,
             hjust = "inward",
             fontface = "bold", 
             size = 3) +
-  labs(x = element_blank(), y = "Proportion of Articles", title = "Trends in Philosophical Categories") +
+  labs(x = element_blank(), y = "Proportion of articles", title = "Trends in Philosophical Categories") +
   geom_point(size = 0.15) + 
   facet_wrap(~category, ncol=3) +  
   scale_x_continuous(expand = expansion(mult = c(0.05, 0.05)),

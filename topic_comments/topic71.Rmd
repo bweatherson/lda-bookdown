@@ -12,12 +12,12 @@ source('topic_comments/topic_summary_facet_graph.R')
 ```
 
 ```{r t71d}
-source('topic_comments/topic_summary_char_art.R') # Create table of all articles in topic
+source('topic_comments/topic_summary_char_art.R') # Create table of all articles in this topic
 temp_dt
 ```
 
 ```{r t71e}
-source('topic_comments/topic_summary_high_cites.R') # Generate table of highly cited articles. 
+source('topic_comments/topic_summary_high_cites.R') # Generate table of highly cited articles in this topic. 
  # Have to do this at same time as previous script or a weird caching error occurs.
 if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n
@@ -35,7 +35,8 @@ The other was that there was a topic that included everything that related to se
 The happy consequence of this is that we get a topic that really is all about Judith Jarvis Thomson's work. It's not about all of her work of course—that covers ever so many fields.
 
 ```{r thomson-articles}
-author_dt(c("Judith Jarvis", "Judith Jarvis Thomson"), "Judith Jarvis Thomson")
+# Burp
+author_dt(c("Judith Jarvis", "Judith Jarvis Thomson"), "Judith Jarvis Thomson", "thomson-articles")
 ```
 
 But this topic does include many of the papers on two of her signature contributions: her innovative defense of abortion and her discussions of the trolley problem. Her original paper on the trolley problem is not in this study, since it wasn't published in one of the twelve journals I'm looking at. But a lot of papers that follow up on it, including Thomson's own second thoughts in "Turning the Trolley" are here.

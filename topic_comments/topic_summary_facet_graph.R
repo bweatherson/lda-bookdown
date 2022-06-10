@@ -63,9 +63,9 @@ for (k in 1:nrow(temp_by_journal)){
 }
 
 alt_text_journals <- paste0(
-  "A set of twelve scatterplots showing the proportion of articles in each journal in each year that are in the topic ",
+  "A set of twelve scatterplots showing the proportion of articles in each journal in each year that are in the ",
   the_categories$subject[jjj],
-  ". There is one scatterplot for each of the twelve journals that are the focus of this book.",
+  "topic. There is one scatterplot for each of the twelve journals that are the focus of this book.",
   " In each scatterplot, the x-axis is the year, and the y-axis is the proportion of articles in that year in that journal in this topic.",
   " Here are the average values for each of the twelve scatterplots - these tell you on average how much of the journal is dedicated to this topic. ",
   temp_by_journal_summary,

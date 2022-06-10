@@ -44,7 +44,7 @@ breadth_measure <- weight_ratio %>%
   left_join(the_categories, by = "topic") %>%
   select(subject, y)
 
-kable(breadth_measure, col.names = c("Subject", "Proportion"), caption = "One hundredth highest proportion for each topic") 
+kable(breadth_measure, col.names = c("Subject", "Proportion"), caption = "One hundredth highest proportion for each topic.") 
 ```
 
 And we get the result that perception is indeed a topic of continuing interest. The only ones ahead of it are [ordinary language philosophy](#topic24), which is a style as much as a topic, and [methodology of science](#topic26), which is obviously also something of continuiting interest to philosophers.

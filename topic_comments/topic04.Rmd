@@ -87,7 +87,7 @@ history_names <- history_names %>%
 ```{r history-table}
 kable(history_names, 
       col.names = c("Name", "50 Usages (in Topic)", "10 Usages", "1 Usage", "50 Usages (Anywhere)"), 
-      caption = "Names in topic 4",
+      caption = "Prominent names in the topic other history.",
       align=c("l", "c", "c", "c", "c"))
 ```
 

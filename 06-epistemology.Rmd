@@ -25,7 +25,14 @@ epistemology_year_topic_mean <- epistemology_all_journals_titles_and_topics %>% 
 
 epistemology_relabeled_articles <- merge(epistemology_all_journals_titles_and_topics, epistemology_year_topic_mean) %>% 
   select(-topic) %>% 
-  dplyr::rename(topic = rank)
+  dplyr::rename(topic = rank) %>% 
+  mutate(mcitation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":",fpage,"–",adjlpage,".")
+  )
+)
 
 epistemology_yearcount <-  epistemology_relabeled_articles  %>%
   group_by(year) %>%
@@ -104,9 +111,17 @@ epistemology_gamma <- category_gamma %>%
   dplyr::summarise(g = sum(gamma)) %>%
   filter(g > 0.2) %>%
   arrange(g) %>%
-  inner_join(articles, by = "document") %>%
-  select(document, g, authall, title, citation)
+  inner_join(articles, by = "document") %>% 
+  mutate(mcitation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":",fpage,"–",adjlpage,".")
+  )
+  ) %>% 
+    select(document, g, authall, title, mcitation)
 
+  
 epistemology_cuts <- category_gamma %>%
   filter(topic == 5501 | topic == 74 | topic == 76 | topic == 84) %>%
   group_by(document) %>%
@@ -115,14 +130,21 @@ epistemology_cuts <- category_gamma %>%
   arrange(-g) %>%
   top_n(8, g) %>%
   inner_join(articles, by = "document") %>%
-  select(citation)
+  mutate(mcitation = case_when(
+    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
+    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
+#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
+    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":",fpage,"–",adjlpage,".")
+  )
+  ) %>% 
+  select(mcitation)
 
 epistemology_last_in <- epistemology_gamma %>%
   top_n(8, -g) %>%
-  select(citation)
+  select(mcitation)
 
   for (jj in 1:8){
-    cat(jj,". ", epistemology_last_in$citation[jj], "\n", sep="")
+    cat(jj,". ", epistemology_last_in$mcitation[jj], "\n", sep="")
   }
 ```
 
@@ -131,7 +153,7 @@ Those aren't all epistemology articles, but some of them are. The Ludwig clearly
 ```{r epistemology-first}
 
   for (jj in 1:8){
-    cat(jj,". ", epistemology_cuts$citation[jj], "\n", sep="")
+    cat(jj,". ", epistemology_cuts$mcitation[jj], "\n", sep="")
   }
 ```
 
@@ -444,7 +466,7 @@ epistemology_the_articles <- epistemology_relabeled_articles %>%
   group_by(topic) %>%
   top_n(10, gamma) %>%
   ungroup() %>%
-  select(gamma, topic, citation) %>%
+  select(gamma, topic, mcitation) %>%
   arrange(topic, gamma)
 ```
 
@@ -564,6 +586,7 @@ source('epist-loop-c.R')
 ```
 
 ```{r e1d, fig.height = 5, fig.cap = paste0("Percentage of epistemology articles in topic ",jjj, ", ", cate_nam,"."), fig.alt = alt_text}
+# Burp
 source('epist-loop-d.R') 
 ```
 

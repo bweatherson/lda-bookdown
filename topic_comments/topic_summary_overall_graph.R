@@ -21,9 +21,9 @@ min_year <- filter(weight_ratio, topic == jjj) %>%
   filter(y == min(filter(weight_ratio, topic == jjj)$y))
 
 alt_text <- paste0(
-  "A scatterplot showing which proportion of articles each year are in the topic ", 
+  "A scatterplot showing which proportion of articles each year are in the ", 
   the_categories$sub_lower[jjj],
-  ". The x-axis shows the year, the y-axis measures the proportion of articles each year in this topic. There is one dot per year. The highest value is in ",
+  "topic. The x-axis shows the year, the y-axis measures the proportion of articles each year in this topic. There is one dot per year. The highest value is in ",
   max_year$year[1],
   " when ",
   scales::percent(max_year$y[1], accuracy = 0.1),

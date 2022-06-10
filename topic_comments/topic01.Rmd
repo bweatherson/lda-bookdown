@@ -16,22 +16,12 @@ source('topic_comments/topic_summary_facet_graph.R')
 
 ```{r t01d}
 source('topic_comments/topic_summary_char_art.R') # Create table of all articles in topic # Burp
-cat("<table style=\'margin-bottom:0px\'>",
-    paste0("<caption>",
-           "(#tab:t01d)",
-           paste0("Characteristic articles of the topic ",
-                  the_categories$sub_lower[jjj],
-                  "."),
-    "</caption>",
-    "</table>", sep =" ")
-)
 temp_dt
 ```
-Tab: \@ref(tab:t01d)
 
 ```{r t01e}
 source('topic_comments/topic_summary_high_cites.R') # Generate table of highly cited articles. 
-# Have to do this at same time as previous script or a weird caching error occurs.
+# Have to do this at same time as previous script or a weird caching error occurs, not sure why.
 if(is_high_cites == 1){high_table} # Conditional because not all topics have high cites
 cat("\n\n**Comments**\n")
 ```

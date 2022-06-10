@@ -169,9 +169,16 @@ binary_split_table <- lapply(1:90, binary_summary) %>% bind_rows()
 ```
 
 ```{r binary-split-dt}
+cat("<table style=\'margin-bottom:0px\'>",
+    paste0("<caption>",
+           "(#tab:binary-split-dt)",
+           "Characteristics of the ninety binary sorts.",
+           "</caption>",
+           "</table>", sep =" ")
+)
+
 datatable(binary_split_table, 
-          rownames = FALSE,
-          caption = "Characteristics of the 90 Binary Sorts") %>%
+          rownames = FALSE) %>% 
       formatSignif('Confidence',3) %>%
       formatStyle(1:5,`text-align` = 'left') 
 ```
@@ -205,11 +212,17 @@ In fact of the `r nrow(dualism_temp_gamma)/2` articles, `r nrow(arguments_clear_
 Let's look at the rest of the topics that I decided to split up into subtopics:
 
 ```{r binary-split-dt-part-two}
-datatable(binary_split_table %>% slice(c(24, 35,36,37,77,79, 90)), 
-          rownames = FALSE,
-          caption = "Seven Disjunctive Topics") %>%
-      formatSignif('Confidence',3) %>%
-      formatStyle(1:5,`text-align` = 'left') 
+kable(binary_split_table %>% 
+		slice(c(24, 35,36,37,77,79, 90)) %>%
+		mutate(Confidence = round(Confidence, 3)),
+	  caption = "Seven disjunctive topics.",
+	  align=c("l", "l", "l", "l", "l")
+)
+#datatable(binary_split_table %>% slice(c(24, 35,36,37,77,79, 90)), 
+#          rownames = FALSE,
+#          caption = "Seven Disjunctive Topics") %>%
+#      formatSignif('Confidence',3) %>%
+#      formatStyle(1:5,`text-align` = 'left') 
 ```
 
 [Ordinary language](#topic24) is a mess, and the confidence measure isn't as high as I'd like to make a division, but the subtopics look pretty clearly disjoint. The first is about ethics, the second is about mind. And since we already have a separate topic for [contemporaneous British philosophy of language](#topic22), splitting this topic into ethics and mind seems like a sensible plan.

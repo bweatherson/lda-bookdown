@@ -89,12 +89,45 @@ all_journals_gamma <- tidy(thelda, matrix = "gamma")
 load("all_journals_word_list.RData")
 ```
 
-```{r gamma_setup, cache=TRUE}
-# Gamma is the probability of article being in a topic
-# This retrieves it, and rearranges the topics chronologically
-
+```{r article_loader, cache=TRUE}
+# Load the articles, and make a bunch of tidying up
+# Fixed_articles is now a terrible misnomer - it only has a few fixes
+# With caches the others are easy to do every time
 # The list of articles
 load("fixed_articles.RData")
+
+articles <- articles %>% 
+  mutate(across(.cols = title:auth4, sub, pattern = "O\\'([a-z])", perl=TRUE, replacement = "O\\'\\U\\1")) %>% 
+  mutate(across(.cols = title:auth4, sub, pattern = "Mc([a-z])", perl=TRUE, replacement = "Mc\\U\\1")) %>% 
+  mutate(across(.cols = title:auth4, sub, pattern = "([a-z]),Jr.", replacement = "\\1, Jr.")) %>% 
+  mutate(across(.cols = title:auth4, sub, pattern = "([a-z])jr.", replacement = "\\1, Jr.")) 
+  
+  # mutate(across(.cols = title:auth4, str_replace, "Mca", "McA")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcb", "McB")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcc", "McC")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcd", "McD")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mce", "McE")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcf", "McF")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcg", "McG")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mch", "McH")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mci", "McI")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcj", "McJ")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mck", "McK")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcl", "McL")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcm", "McM")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcn", "McN")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mco", "McO")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcp", "McP")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcq", "McQ")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcr", "McR")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcs", "McS")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mct", "McT")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcu", "McU")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcv", "McV")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcw", "McW")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcx", "McX")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcy", "McY")) %>% 
+  # mutate(across(.cols = title:auth4, str_replace, "Mcz", "McZ"))
 
 articles <- articles %>% 
   mutate(title = str_replace_all(title, "[/*]", "")) %>% 
@@ -156,23 +189,14 @@ articles <- articles %>%
   )
 
 
+```
 
+```{r gamma_setup, cache=TRUE}
+# Gamma is the probability of article being in a topic
+# This retrieves it, and rearranges the topics chronologically
 
 # The list of highly cited articles
-load("Highly_Cites_articles.RData")
-
-highly_cited <- highly_cited %>% 
-  mutate(document = file) %>% 
-  mutate(adjlpage = case_when(floor(fpage/10) == floor(lpage/10) & fpage < 10000 ~ lpage - 10*floor(lpage/10),
-                              floor(fpage/100) == floor(lpage/100) & fpage < 10000 ~ lpage - 100*floor(lpage/100),
-                              TRUE ~ lpage)) %>% 
-  mutate(citation = case_when(
-    journal == "Philosophy of Science" & fpage > 10000 ~ paste0(authall,", ",year,", “", toTitleCase(Title),",” ",journal," ",vol,":S",fpage-10000,"–S",lpage-10000,"."),
-    journal == "Proceedings of the Aristotelian Society" & year - vol > 1905 ~ paste0(authall,", ",year,", “", toTitleCase(Title),",” ",journal," (Supplementary Volume) ",vol,":",fpage,"–",adjlpage,"."),
-#    TRUE ~ paste0(authall," (",year,") \"", title,"\" ",journal," ",vol,":",fpage,"-",lpage,".")
-    TRUE ~ paste0(authall,", ",year,", “", toTitleCase(Title),",” ",journal," ",vol,":",fpage,"–",adjlpage,".")
-  )
-  )
+load("highly_cited_articles.RData")
 
 
 all_journals_classifications <- all_journals_gamma %>%
@@ -465,7 +489,19 @@ kable(temp_gamma,
 ```
 
 ```{r dt-for-author-articles, cache=TRUE}
-author_dt <- function(x, y){
+author_dt <- function(x, y, z){
+cat("<table style=\'margin-bottom:0px\'>",
+    paste0("<caption>",
+           paste0("(#tab:t",
+                  z,
+                  ")"
+           ),
+           paste0("Articles with author ",
+                  y,
+                  "."),
+           "</caption>",
+           "</table>", sep =" ")
+)
 datatable(relabeled_articles %>%
           filter(auth1 %in% x | auth2 %in% x | auth3 %in% x) %>%
           arrange(topic) %>%
@@ -1506,7 +1542,7 @@ t <- all_journals_tibble %>%
   select(mcitation, subject, wordcount)
 kable(t, 
       col.names = c("Article", "Subject", "Word Count"), 
-      caption = paste0("Articles in which the word \'",x,"\' appears most often")
+      caption = paste0("Articles in which the word \'",x,"\' appears most often.")
 )
 }
 ```

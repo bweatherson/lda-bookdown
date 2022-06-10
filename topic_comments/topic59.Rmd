@@ -31,7 +31,7 @@ The graphs by journal do not make this look like a particularly big topic, but t
 The spike in the late 1900s and early 1910s is due to an interest in theories of truth in pragmatist and voluntarist philosophical theories. Some of these papers involved early contributions from Susan Stebbing, who would go on to contribute many papers to the British journals we're looking at.
 
 ```{r stebbing}
-author_dt(c("L. Susan Stebbing", "L. S. Stebbing"), "L. Susan Stebbing")
+author_dt(c("L. Susan Stebbing", "L. S. Stebbing"), "L. Susan Stebbing", "stebbing")
 ```
 
 The only one of these 27 articles that is actually in this topic is the earliest of them, a two page note critical of Schiller's defences of pragmatism. But an interest in how different theories think about truth runs through a lot of her work. And the model picks this up; a lot of these articles are as much about truth as anything else. For instance, her Aristotelian Society article on Bergson (which was extracted from her MA thesis!) cuts across a number of the topics in this model.

@@ -43,7 +43,7 @@ In both cases it thinks about putting the article in this topic, but decides aga
 Although there are some articles about Anscombe in this topic—just type 'Anscombe' into the search box above and it will return a few—the model puts none of her own articles in here. In general it doesn't really feel like the model knows what to do with Anscombe. Here are the articles of hers that it analyzes, along with the topic they most probably ended up in and the probability that they are in that topic.
 
 ```{r anscombe-author-table}
-author_dt(c("G. E. M. Anscombe"), "G. E. M. Anscombe")
+author_dt(c("G. E. M. Anscombe"), "G. E. M. Anscombe", "anscombe-author-table")
 ```
 
 There are a couple of articles that it is reasonably confident about; it knows that papers with "Anselm" in the title are going to have to do with the ontological argument, but mostly it isn't very sure. 

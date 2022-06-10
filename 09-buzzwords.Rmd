@@ -452,14 +452,19 @@ imprint_top_gamma_display <- inner_join(imprint_titles, imprint_top_gamma, by = 
 ```{r display-article-summary}
 
 require(DT)
-
+cat("<table style=\'margin-bottom:0px\'>",
+    paste0("<caption>",
+    	   "(#tab:display-article-summary)",
+          "Topic assignments for articles in <i>Philosophers' Imprint</i>, 2019.",
+           "</caption>",
+           "</table>", sep =" ")
+)
 datatable(imprint_top_gamma_display %>%
         select(citation, subject, gamma), 
           colnames = c("Article", "Topic", "Probability"), 
           rownames = FALSE,
-          options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2))),
-          caption = "Topic assignments for articles in Philosophers' Imprint 2019."
-          )%>%
+          options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2)))
+        )%>%
   formatSignif('gamma',3) %>%
   formatStyle(1:3,`text-align` = 'left')
 ```
@@ -511,18 +516,23 @@ imprint_summary_DT <- inner_join(imprint_summary, the_categories, by = "topic") 
   mutate(sub_lower = fcap(sub_lower))
 
 require(DT)
-
+cat("<table style=\'margin-bottom:0px\'>",
+    paste0("<caption>",
+    	   "(#tab:imprint-topic-summary)",
+          "Weighted sum of topic probabilities for articles in <i>Philosophers' Imprint</i>, 2019.",
+           "</caption>",
+           "</table>", sep =" ")
+)
 datatable(imprint_summary_DT, 
           colnames = c("Topic Number", "Topic", "Weighted Sum"), 
           rownames = FALSE,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:2))),
-          caption = "Weighted sum of topic probabilities for articles in Philosophers' Imprint 2019."
           )%>%
   formatSignif('g',3) %>%
   formatStyle(1:3,`text-align` = 'left')
 ```
 
-How does morms get to 4.8 like that? Lots of small pieces it turns out.
+How does norms get to 4.8 like that? Lots of small pieces it turns out.
 
 ```{r imprint-norms-summary}
 imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %>%
@@ -532,13 +542,18 @@ imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %
   select(citation, gamma, everything())
 
 require(DT)
-
+cat("<table style=\'margin-bottom:0px\'>",
+    paste0("<caption>",
+    	   "(#tab:imprint-norms-summary)",
+          "Probability of being in topic 90 for articles in <i>Philosophers' Imprint</i>, 2019.",
+           "</caption>",
+           "</table>", sep =" ")
+)
 datatable(imprint_norms_DT %>%
             select(citation, gamma), 
           colnames = c("Article", "Probability"), 
           rownames = FALSE,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:1))),
-          caption = "Probability of being in topic 90 for articles in Philosophers' Imprint 2019."
           )%>%
   formatSignif('gamma',3) %>%
   formatStyle(1:2,`text-align` = 'left')
@@ -556,13 +571,18 @@ imprint_norms_DT <- inner_join(imprint_titles, imprint_gamma, by = "document") %
   select(citation, gamma, everything())
 
 require(DT)
-
+cat("<table style=\'margin-bottom:0px\'>",
+    paste0("<caption>",
+    	   "(#tab:imprint-history-summary)",
+          "Probability of being in topic 4 for articles in <i>Philosophers' Imprint</i>, 2019.",
+           "</caption>",
+           "</table>", sep =" ")
+)
 datatable(imprint_norms_DT %>%
             select(citation, gamma), 
           colnames = c("Article", "Probability"), 
           rownames = FALSE,
           options = list(columnDefs = list(list(className = 'dt-left', targets = 0:1))),
-          caption = "Probability of being in topic 90 for articles in Philosophers' Imprint 2019."
           )%>%
   formatSignif('gamma',3) %>%
   formatStyle(1:2,`text-align` = 'left')

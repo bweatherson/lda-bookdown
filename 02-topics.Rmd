@@ -125,9 +125,9 @@ That’s enough statistics to get started. I will move on to some nice graphs. F
 ```{r exampleoverall, fig.cap = str_to_sentence(the_categories$subject[jjj]), fig.height = 5.2, fig.alt = alt_text}
 source('topic_comments/topic_summary_overall_graph.R')
 alt_text <- paste0(
-  "A scatterplot showing which proportion of articles each year are in the topic ", 
-  the_categories$subject[jjj],
-  ". The x axis shows the year, the y axis measures the proportion of articles each year in this topic. There is one dot per year. The highest value is in ",
+  "A scatterplot showing which proportion of articles each year are in the ", 
+  the_categories$sub_lower[jjj],
+  " topic. The x axis shows the year, the y axis measures the proportion of articles each year in this topic. There is one dot per year. The highest value is in ",
   max_year$year[1],
   " when ",
   scales::percent(max_year$y[1], accuracy = 0.1),
@@ -147,9 +147,9 @@ Next, I'll do the same thing but broken down by journals.
 jjj <- 21
 source('topic_comments/topic_summary_facet_graph.R')
 alt_text_journals <- paste0(
-  "A set of twelve scatterplots showing the proportion of articles in each journal in each year that are in the topic ",
-  the_categories$subject[jjj],
-  ". There is one scatterplot for each of the twelve journals that are the focus of this book.",
+  "A set of twelve scatterplots showing the proportion of articles in each journal in each year that are in the ",
+  the_categories$sub_lower[jjj],
+  " topic. There is one scatterplot for each of the twelve journals that are the focus of this book.",
   " In each scatterplot, the x axis is the year, and the y axis is the proportion of articles in that year in that journal in this topic.",
   " Here are the average values for each of the twelve scatterplots - these tell you on average how much of the journal is dedicated to this topic. ",
   temp_by_journal_summary,
@@ -200,6 +200,8 @@ After these graphs, there are two tables of the articles that are in the topic. 
 
 ```{r examplecharart}
 cat("<br/>")
+jjj <- 21
+topic_crossref <- 21
 source('topic_comments/topic_summary_char_art.R')
 temp_dt
 ```

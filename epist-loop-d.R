@@ -74,18 +74,18 @@ alt_text <- paste0(
   
 cat("\n\n**Characteristic Articles** \n \n")
 for (jj in 1:10){
-  cat(jj,". ", epistemology_the_articles$citation[jjj*10 + jj - 10], " \n", sep="")
+  cat(jj,". ", epistemology_the_articles$mcitation[jjj*10 + jj - 10], " \n", sep="")
 }
 
 these_cites <- epistemology_high_cite_gamma %>% 
   as_tibble() %>%
   filter(topic == jjj) %>%
-  arrange(desc(Cites))
+  arrange(desc(Cites)) 
 
 if (nrow(these_cites) > 0){
   cat(" \n")
   cat("**Highly Cited Articles** \n \n")
   for (jj in 1:nrow(these_cites)){
-    cat(jj,". ", these_cites$citation.x[[jj]], " (", these_cites$gamma[[jj]], ")\n", sep="")   
+    cat(jj,". ", these_cites$mcitation[[jj]], " (", these_cites$gamma[[jj]], ")\n", sep="")   
   }
 }

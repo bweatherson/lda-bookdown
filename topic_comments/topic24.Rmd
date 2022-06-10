@@ -26,13 +26,13 @@ cat("\n
 	\n")
 ```
 
-The biggest topic in the model is also one of the hardest to classify. I've called it Ordinary Language Philosophy, and you can see from the graphs that it peaks in the years we associate with Ordinary Language Philosophy, but beyond that it gets hard to say precisely what it is.
+The biggest topic in the model is also one of the hardest to classify. I've called it _ordinary language philosophy_, and you can see from the graphs that it peaks in the years we associate with ordinary language philosophy, but beyond that it gets hard to say precisely what it is.
 
 It is such a big deal in the years after World War II, especially in the _Proceedings of the Aristotelian Society_, that I had to change the scale for the graphs by journal. And yet there are very few articles that are unambiguously in this topic.
 
-Part of what's going on here is that what the model is finding is a style as much as a content. Take a look at the keywords at the top of the page: 'ask', 'certainly', 'really', 'surely', 'try', 'anything', etc. These aren't philosophical topics, but they are a way of talking about philosophy. And they were a distinctive enough style that the model, which is always on the lookout for correlated word usages, declares it a big topic. 
+Part of what's going on here is that what the model is finding is a style as much as a content. Take a look at the keywords at the top of the page: _ask_, _certainly_, _really_, _surely_, _try_, _anything_, etc. These aren't philosophical topics, but they are a way of talking about philosophy. And they were a distinctive enough style that the model, which is always on the lookout for correlated word usages, declares it a big topic. 
 
-To get a sense of just how distinctive the style is, take a look at the frequency of various words that were popular with the Ordinary Language Philosophers. These graphs are taken straight from the JSTOR data. So they cut out all the 1 and 2 letter words, and some stop words that JSTOR filters out, but they don't remove all the other words that I took out. So the fractions on the y-axis show how often the word appears as a function of almost all the words in the article, not just of the words included in this study.
+To get a sense of just how distinctive the style is, take a look at the frequency of various words that were popular with the ordinary language philosophers. These graphs are taken straight from the JSTOR data. So they cut out all the one and two letter words, and some stop words that JSTOR filters out, but they don't remove all the other words that I took out. So the fractions on the y-axis show how often the word appears as a function of almost all the words in the article, not just of the words included in this study.
 
 The dashed lines are roughly speaking the average rate that the word appears across the whole study. But not exactly. More precisely, it is the average across the 138 years of the rate of the word in each year. I thought that was a little more representative of the role of the word in the study, rather than just having the huge number of articles in recent years swamp the averages.
 
@@ -92,28 +92,28 @@ pos_word_journal_frequency_graphs <- function(x){
                      breaks = scales::breaks_pretty(n = 3),
                      labels = function(x) ifelse(x > 0, paste0("1/",round(1/x,0)), 0)) +
 #  scale_y_continuous(labels = scale_inverter) +
-  labs(x = element_blank(), y = "Word Frequency") +
+  labs(x = element_blank(), y = "Word frequency") +
   theme(legend.title = element_blank())
 }
 
 ```
 
-```{r olpwords-graphs-t24, fig.height = 5, fig.cap = "Popular words in Ordinary Language", fig.alt = alt_text}
+```{r olpwords-graphs-t24, fig.height = 5, fig.cap = "Popular words in ordinary language.", fig.alt = alt_text}
 word_frequency_graphs(c("ask", "surely", "try", "put", "tell"))
 alt_text <- word_frequency_graph_alt_text(c("ask", "surely", "try", "put", "tell"))
 ```
 
-You can see a rise in each of these in the years after World War II. In some cases this is restoring the level that existed back in the 1870s and 1880s, but in all cases there is a steep fall from the mid-1960s onwards. Let's see what happens if we restrict this to the journal that seems central to Ordinary Language Philosophy, _Proceedings of the Aristotelian Society_. (Note that the averages on this graph are averages for just this journal, so they are higher than the overall averages.)
+A rise is visible in the frequency of each word in the years after World War II. In some cases this is restoring the level that existed back in the 1870s and 1880s, but in all cases there is a steep fall from the mid-1960s onwards. Let's see what happens if we restrict this to the journal that seems central to ordinary language philosophy, _Proceedings of the Aristotelian Society_. (Note that the averages on this graph are averages for just this journal, so they are higher than the overall averages.)
 
-```{r olpwords-graphs-t24-pas, fig.height = 5, fig.cap = "Popular words in Ordinary Language in Proceedings of the Aristotelian Society", fig.alt = alt_text}
+```{r olpwords-graphs-t24-pas, fig.height = 5, fig.cap = "Popular words in ordinary language in _Proceedings of the Aristotelian Society_.", fig.alt = alt_text}
 pas_word_journal_frequency_graphs(c("ask", "surely", "try", "put", "tell"))
 alt_text <- journal_word_frequency_graph_alt_text(c("ask", "surely", "try", "put", "tell"), "Proceedings of the Aristotelian Society")
 ```
 
 And again you see much higher frequencies in the 1950s and 1960s.
 
-There is a question about whether I should have manually filtered out something like this whole topic. I could have added 'ask', 'quite', 'else' and so on to the stop words that I filtered out. If I'd been really aggressive about this, I could have gotten rid of this whole topic. And maybe I should have done this. There are a few topics that are like this. I could have added 'argument' as a stop word and gotten rid of the [Arguments](#topic55) topic. I could have added 'concept' as a stop word and gotten rid of the [Concepts](#topic78) topic. There is an interesting question about where to stop, and how tightly to focus on _topics_ as opposed to tools (like arguments or concepts), or styles (like ordinary language). I do think that if I were starting over I would try to strip some of the keywords here out, but it's not obvious to me what's right.
+There is a question about whether I should have manually filtered out something like this whole topic. I could have added _ask_, _quite_, _else_ and so on to the stop words that I filtered out. If I'd been really aggressive about this, I could have gotten rid of this whole topic. And maybe I should have done this. There are a few topics that are like this. I could have added _argument_ as a stop word and gotten rid of the [arguments](#topic55) topic. I could have added _concept_ as a stop word and gotten rid of the [concepts](#topic78) topic. There is an interesting question about where to stop, and how tightly to focus on _topics_ as opposed to tools (like arguments or concepts), or styles (like ordinary language). I do think that if I were starting over I would try to strip some of the keywords here out, but it's not obvious to me what's right.
 
-There are a lot of highly cited articles in this topic. That's largely because there are a lot of articles in this topic. Notably, a lot of the highly cited articles here are well after the peak of Ordinary Language Philosophers. And the papers are by a fairly disparate set of authors. But one striking thing is that, to my eyes at least, there are a lot of very good writers represented here. So we see papers, for instance, by Bernard Williams, Frank Jackson, Stephen Yablo and Philippa Foot. On the other hand, there is also a Wittgenstein paper here, and I never thought of Wittgenstein as a great stylist, so maybe it's just a coincidence. But mostly I think most writers would be better off if they tried to adopt the styles of the mid-century greats.
+There are a lot of highly cited articles in this topic. That's largely because there are a lot of articles in this topic. Notably, a lot of the highly cited articles here are well after the peak of ordinary language philosophy. The highly cted papers are by a fairly disparate set of authors. But one striking thing is that, to my eyes at least, there are a lot of very good writers represented here. So we see papers, for instance, by Bernard Williams, Frank Jackson, Stephen Yablo and Philippa Foot. On the other hand, there is also a Wittgenstein paper here, and I never thought of Wittgenstein as a great stylist, so maybe it's just a coincidence. But mostly I think most writers would be better off if they tried to adopt the styles of the midcentury greats.
 
-Finally, note that I've put this topic in two categories. While the papers here to cover a huge range (there are 1400 of them after all), there do seem to be two big clusters in ethics and in philosophy of mind. I'll go over how I split topics in two when I come to another topic, [Sets and Grue](#topic37), that is even more binary than this one.
+Finally, note that I've put this topic in two categories. While the papers here to cover a huge range (there are fourteen hundred of them after all), there do seem to be two big clusters in ethics and in philosophy of mind. I'll go over how I split topics in two when I come to another topic, [sets and grue](#topic37), that is even more binary than this one.

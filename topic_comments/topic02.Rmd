@@ -50,7 +50,7 @@ There are a handful of articles by Indian philosophers, or about Indian philosop
 As well there are five articles by [Hiralal Haldar](https://philpapers.org/s/Hiralal%20Haldar), which are more squarely on European idealism.
 
 ```{r haldar}
-author_dt(c("Hiralal Haldar"), "Hiralal Haldar")
+author_dt(c("Hiralal Haldar"), "Hiralal Haldar", "haldar")
 ```
 
 One might think that fifteen articles out of 1600 is not a lot. And that might be right. But it's a bit more than is seen in other topics, so it seemed worth noting.
@@ -77,7 +77,10 @@ idealism_authors <- relabeled_articles %>%
   arrange(-n) %>%
   slice(1:20)
 
-kable(idealism_authors, col.names = c("Author", "Number of Articles")) %>%
+kable(idealism_authors, 
+      col.names = c("Author", "Number of Articles"),
+      caption = "Number of articles in these twelve journals by famous idealist authors."
+      ) %>%
   kable_styling(full_width = F)
 ```
 

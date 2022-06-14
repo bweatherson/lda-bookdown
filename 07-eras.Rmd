@@ -438,7 +438,7 @@ kable(category_era_distinctive_wide_top, col.names = era_headers, caption = "Mos
 
 The journals have never paid a ton of attention to aesthetics or philosophy of religion. But in the postwar years, especially in America, they paid more attention to them than they otherwise did. 
 
-History of philosophy looks quite strong during the second era, then falls away in the third era. This might make one sceptical of my story that it is [largely Ryle's fault](#history-category-section). But note that a huge proportion of the history papers in this era are in _Philosophy and Phenomenological Research_. At that time _PPR_ was taking the third word in its name really seriously, and I'm classifying [phenomenology papers](#topic28) as part of history. This table shouldn't change your view on the impact Ryle becoming editor of _Mind_ had on history in the philosophy journals.
+History of philosophy looks quite strong during the second era, then falls away in the third era. This might make one sceptical of my story that it is [to do with Ryle's ascension to the editorship of _Mind_](#history-category-section). But note that a huge proportion of the history papers in this era are in _Philosophy and Phenomenological Research_. At that time _PPR_ was taking the third word in its name really seriously, and I'm classifying [phenomenology papers](#topic28) as part of history. This table shouldn't change your view on the impact Ryle becoming editor of _Mind_ had on history in the philosophy journals.
 
 I've been [suspicious of the idea that there was a positivism-driven drop in metaphysics](#metaphysics-category-section). So it is only fair to note that by this measure (though seemingly no other) there really is a drop in metaphysics in the postwar era.
 
@@ -651,7 +651,7 @@ kable(decade_distinctive_wide_top[7:12], col.names = dec_title[7:12])
 
 The early decades are not much of a surprise. The big topics from those years are big in every decade, with slightly more attention paid to history as we get into the twentieth Century.
 
-[Early modern](#topic21) hits a high point in the 1930s before Ryle stops it appearing in _Mind_. 
+[Early modern](#topic21) hits a high point in the 1930s before it stops at the same time Ryle becomes editor of _Mind_. 
 
 The founding of _Philosophy and Phenomenological Research_ makes [Heidegger and Husserl](#topic28) particularly prominent in the 1940s. 
 

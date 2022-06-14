@@ -26,6 +26,6 @@ cat("\n
 	\n")
 ```
 
-Another fairly easy topic to describe—it's Kant. Both Kantian ethics and Kantian metaphysics end up here. Like all of the other early modern topics, it drops away a bit after Ryle takes over _Mind_ and decrees that only Greek history will be allowed in the journal. But it always hovers a bit above the zero line.
+Another fairly easy topic to describe—it's Kant. Both Kantian ethics and Kantian metaphysics end up here. Like all of the other early modern topics, it drops away a bit after Ryle takes over _Mind_ and excludes all (non-Greek) history from that journal. But it always hovers a bit above the zero line.
 
 I had expected there would be a bit more in recent years, but I think I'd been taking _Philosophical Review_ to be a more representative than it turns out to be. The data is a little noisy, but it does look like _Philosophical Review_ has been substantially more receptive to work on Kant in the last twenty years than any of the other journals.

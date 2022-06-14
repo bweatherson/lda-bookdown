@@ -30,4 +30,100 @@ In earlier iterations of this project I ran through a few different journals. An
 
 This topic is an exception. The graph for _Philosophy and Phenomenological Research_ obviously looks very different to the graphs for the rest of the journals. But I don’t think this means that we’re seeing something unrepresentative here. Rather, what we’re seeing is something like a blind spot or deliberate oversight) in the other eleven journals, which is counterbalanced by _Philosophy and Phenomenological Research_. This does mean that when _PPR_ changes its focus in the 1980s, this topic seems to fall away very quickly. That’s misleading though, if one cares about all of philosophy. What’s really true is that the topic moves away from these twelve journals, and this becomes a respect in which the twelve journals are less than fully representative of philosophy.
 
-I’m calling this a history topic because most of the papers feel historical; they are looking back at work done in the glory days of phenomenology. But those 1940s papers that make up a chunk of the topics weren’t intended as being papers in history of philosophy; they were just doing philosophy. This is a systematic challenge with a study this long. If I extended the study even further—say by including seventeenth- to nineteenth-century books—there would be even more dramatic versions of this effect. Topic modeling can’t typically tell works by an author apart from works about that author, so any historical figure will be grouped in with the history of work on that author.
+When there is a difference this striking between journals, or between times, I like to go back and check the underlying data to see whether it is just a weird consequence of the way the model was built. In this case it is easy enough to see that there is a striking difference beteween _PPR_ and the other eleven journals. Here are the number of times the word _Husserl_ appears in each journal each year.
+
+```{r husserl-year-graph, fig.cap = "Number of times Husserl is mentioned in each journal each year.", , fig.alt = alt_text}
+x = "husserl"
+
+
+husserl_tibble <-          all_journals_tibble %>%
+            filter(word == x) %>%
+            left_join(articles, by = "document") %>%
+            group_by(year, journal) %>%
+            dplyr::summarise(c = sum(wordcount)) %>% 
+            filter(!is.na(year)) %>% 
+            ungroup() %>% 
+            add_row(year = 1918, journal = "Mind", c= 0) %>% 
+            add_row(year = 1928, journal = "Mind", c= 0) %>% 
+            arrange(desc(year)) %>% 
+            complete(year, journal, fill = list(c = 0))
+
+cate_num <- 3
+
+yupper <- max(husserl_tibble$c, na.rm=TRUE)
+
+facet_labels <- chap_two_facet_labels %>%
+  mutate(year = 1954.5, c = yupper)
+
+facet_labels$journal <- factor(facet_labels$journal, levels = journal_order)
+
+ggplot(data = husserl_tibble, aes(x = year, y = c))  +
+  facetstyle +
+  scale_y_continuous(breaks = c(200, 400)) +
+  geom_point(size = 0.15, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
+  theme(legend.position="none",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  labs(x = element_blank(), y = "Number of Mentions", title = "Husserl") +
+  facet_wrap(~journal, ncol = 3) +
+  geom_text(data = facet_labels,
+            mapping = aes(label = short_name),
+            vjust = "inward", 
+            hjust = "middle",
+            fontface = "bold", 
+            size = 3,
+            colour = "grey40")
+
+alt_text <- "A graph showing how often the word Husserl appears in each journal in each year. It appears a lot in Philosophy and Phenomenological Research, and almost never in the other eleven journals."
+```
+
+And here is the same graph for Heidegger. Note that in some recent years, 2002 and 2012, the word _Heidegger_ does not appear in these twelve journals.
+
+x = "heidegger"
+
+```{r heidegger-year-graph, fig.cap = "Number of times Heidegger is mentioned in each journal each year.", , fig.alt = alt_text}
+
+heidegger_tibble <-          all_journals_tibble %>%
+  filter(word == x) %>%
+  left_join(articles, by = "document") %>%
+  group_by(year, journal) %>%
+  dplyr::summarise(c = sum(wordcount)) %>% 
+  filter(!is.na(year)) %>% 
+  ungroup() %>% 
+  add_row(year = 1932, journal = "Mind", c= 0) %>% 
+  add_row(year = 2002, journal = "Mind", c= 0) %>% 
+  add_row(year = 2012, journal = "Mind", c= 0) %>% 
+  arrange(desc(year)) %>% 
+  complete(year, journal, fill = list(c = 0))
+
+cate_num <- 3
+
+yupper <- max(husserl_tibble$c, na.rm=TRUE)
+
+facet_labels <- chap_two_facet_labels %>%
+  mutate(year = 1959.5, c = yupper)
+
+facet_labels$journal <- factor(facet_labels$journal, levels = journal_order)
+
+ggplot(data = heidegger_tibble, aes(x = year, y = c))  +
+  facetstyle +
+  scale_y_continuous(breaks = c(200, 400)) +
+  scale_x_continuous(breaks = c(1950, 1975, 2000)) +
+  geom_point(size = 0.15, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
+  theme(legend.position="none",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  labs(x = element_blank(), y = "Number of Mentions") +
+  facet_wrap(~journal, ncol = 3) +
+  geom_text(data = facet_labels,
+            mapping = aes(label = short_name),
+            vjust = "inward", 
+            hjust = "middle",
+            fontface = "bold", 
+            size = 3,
+            colour = "grey40")
+
+alt_text <- "A graph showing how often the word Heidegger appears in each journal in each year. It appears a lot in Philosophy and Phenomenological Research, and almost never in the other eleven journals."
+```
+
+I’m calling this topic a history topic because most of the papers feel historical; they are looking back at work done in the glory days of phenomenology. But those 1940s papers that make up a chunk of the topics weren’t intended as being papers in history of philosophy; they were just doing philosophy. This is a systematic challenge with a study this long. If I extended the study even further—say by including seventeenth- to nineteenth-century books—there would be even more dramatic versions of this effect. Topic modeling can’t typically tell works by an author apart from works about that author, so any historical figure will be grouped in with the history of work on that author.

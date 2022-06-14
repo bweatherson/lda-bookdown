@@ -428,7 +428,7 @@ history_words <- c(
 Early Modern Words
 :    `r history_words`
 
-See if it's possible to spot when Gilbert Ryle took over.
+Note the dramatic fall in the late 1940s, at the same time Ryle becomes editor of _Mind_. I will have more to say about this in what follows.
 
 ```{r phil-review-history-words, fig.height = 10.2, fig.cap = "Early modern words in the three big journals, 1930–1970.", fig.alt = alt_text}
 t <- mid_words %>%

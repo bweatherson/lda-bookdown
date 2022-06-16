@@ -41,8 +41,7 @@ epistemology_yearcount <-  epistemology_relabeled_articles  %>%
 epistemology_yeartopics <- epistemology_relabeled_articles  %>%
   group_by(year, topic) %>%
   dplyr::summarise(tn = n_distinct(document)) %>%
-  ungroup() #%>%
-  #complete(year, topic, fill = list(tn = 0))
+  ungroup() 
 
 epistemology_yeargraphs <- merge(epistemology_yearcount, epistemology_yeartopics) %>%
   mutate(frequency = round(tn/n,3))
@@ -332,7 +331,7 @@ epistemology_missing <- epistemology_yeartopics_postwar %>%
 kable(epistemology_missing, 
       col.names = c("Year", "Subject", "Count"),
       caption = "Epistemology topics left off figure 6.2.") %>% 
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 These points are not shown, but they are influencing the curves.
@@ -372,7 +371,7 @@ epistemology_gamma_missing <- epistemology_yeargamma_postwar %>%
 kable(epistemology_gamma_missing, 
       col.names = c("Year", "Subject", "Weighted Count"),
       caption = "Epistemology articles left off Figure 6.3.") %>% 
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 It's much easier to see what's happening here with the subjects separated out. Again, I've left off those two data points so they don't throw off the scale of the whole graph.

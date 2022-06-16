@@ -877,9 +877,9 @@ The first development was that JSTOR used optical character-recognition (OCR) so
 
 The second development was that personal computers have gotten fast enough that it is (just barely) practical to run text-mining algorithms over libraries as large as the ones JSTOR provides on personal computers.^[_Practical_ here is a relative term; the models I primarily use here took eight to ten hours to complete on pretty good computers. But that's fine if a computer can be left running overnight.] So even without having to use tools beyond what's available in a typical university office, these algorithms can be used to see trends in the journal data. 
 
-This study focuses on the following twelve journals.
+This study focuses on these twelve journals.
 
-```{r journal-table, cache=TRUE}
+```{r journal-table, cache=FALSE}
 options(dplyr.summarise.inform = FALSE)
 
 journals_summary <- articles %>%
@@ -959,7 +959,7 @@ update_geom_defaults("text", list(family = "Lato"))
 update_geom_defaults("label", list(family = "Lato"))
 ```
 
-```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year", dev = 'png', fig.alt = alt_text, cache=TRUE}
+```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year.", dev = 'png', fig.alt = alt_text, cache=TRUE}
 tt <- filter(category_frequency, year > 1899) # Remove 19th Century from graph
 category_graph_labels <- tt %>%
   group_by(category) %>%
@@ -3333,7 +3333,7 @@ history_words <- c(
 Early Modern Words
 :    `r history_words`
 
-See if it's possible to spot when Gilbert Ryle took over.
+Note the dramatic fall in the late 1940s, at the same time Ryle becomes editor of _Mind_. I will have more to say about this in what follows.
 
 ```{r phil-review-history-words, fig.height = 10.2, fig.cap = "Early modern words in the three big journals, 1930–1970.", fig.alt = alt_text}
 t <- mid_words %>%
@@ -4011,9 +4011,11 @@ cat("\n
 
 This is the main topic the model finds on early modern metaphysics and epistemology. It is a little bit centered on the rationalists; the characteristic articles are all on broadly rationalist figures. But that's largely because the model wants to hedge its bets on articles about Locke. Topic 31 will be on social contract theory, and Locke will play a major role in that obviously. So while this topic has twenty-eight articles with "Locke" in the title, all on his metaphysics and epistemology, the model is a little nervous about whether it should be putting those in with the other Locke articles in social contract theory. So that's why the characteristic articles are mostly about rationalist philosophers.
 
-The big story here is the collapse in this category when Ryle takes over _Mind_ in 1947. According to [D. M. Hamlyn](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents), Ryle thought the only history worth publishing was Greek philosophy. And so once he took over a relatively thriving tradition of Early Modern articles in _Mind_ came to a complete halt. Apart from _Philosophical Review_, and to a smaller extent PPR, that put an end to articles in Early Modern turning up in these journals.
+The big story here is the collapse in this category when Ryle takes over _Mind_ in 1947. According to [D. M. Hamlyn](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents), who edited _Mind_ after Ryle, Ryle thought the only history worth publishing was Greek philosophy. As Michael Kremer pointed out to me, that's hard to square with the fact that Ryle published on several figures in history, including in early modern. Indeed, the first volume of his collected papers [-@Ryle1971] consists entirely of history papers, and only a few of these were in ancient philosophy. The volume includes two papers on Locke and one on Hume, so it's not as if he thought those figures should be ignored.
 
-The method I used for generating the list of highly cited articles only individuated articles by title, journal and publication year. I thought that would be enough, but it turns out journals used to publish two part articles without individuating the parts. So we get results like this one; I don't really know which of them is really cited the most. It's possible that neither part on its own is cited enough to deserve a spot here, but merging the citations got it into the list. In future work I hope to look more closely at citation data, and then I'll have to be more careful about cases like this one.
+But in fact once he took over at _Mind_, a relatively thriving tradition of that journal publishing articles on early modern came to a complete halt. Apart from _Philosophical Review_, and to a smaller extent PPR, that put an end to articles in early modern turning up in the twelve journals I'm looking at. I don't have a good theory about why Ryle did this, and it's possible it was a policy handed down to him, but it is a striking fact about _Mind_'s publication record.
+
+One quick point about the list of highly cited articles. The method I used for generating the list of highly cited articles only individuated articles by title, journal and publication year. I thought that would be enough, but it turns out journals used to publish two part articles without individuating the parts. So we get results like this one; I don't really know which of them is really cited the most. It's possible that neither part on its own is cited enough to deserve a spot here, but merging the citations got it into the list. In future work I hope to look more closely at citation data, and then I'll have to be more careful about cases like this one.
 
 <!--chapter:end:topic_comments/topic21.Rmd-->
 
@@ -4303,7 +4305,7 @@ cat("\n
 	\n")
 ```
 
-A more accurate, if less pithy, name for this category would be mideentury general philosophy of science. It isn’t all midcentury; if one scrolls down the list of articles in the topic there are several from recent years. But there is something midcentury about the spirit of it; it’s philosophy of science that is very much not philosophy of one or other science in particular. And as that has gone out of fashion, this topic has declined.
+A more accurate, if less pithy, name for this category would be midcentury general philosophy of science. It isn’t all midcentury; if one scrolls down the list of articles in the topic there are several from recent years. But there is something midcentury about the spirit of it; it’s philosophy of science that is very much not philosophy of one or other science in particular. And as that has gone out of fashion, this topic has declined.
 
 The statistics for this topic were very surprising. The years make sense; midcentury philosophy peaks in the midcentury. But the numbers show how misleading the graphs can be. Eyeballing the graphs makes it look like this was just bubbling along, but the numbers say it is the fifth or sixth biggest topic of the ninety. The story here, I think, is that there was much less specialization in the 1950s and 1960s, and so individual topics get a chance to grow a lot.
 
@@ -4343,7 +4345,108 @@ In earlier iterations of this project I ran through a few different journals. An
 
 This topic is an exception. The graph for _Philosophy and Phenomenological Research_ obviously looks very different to the graphs for the rest of the journals. But I don’t think this means that we’re seeing something unrepresentative here. Rather, what we’re seeing is something like a blind spot or deliberate oversight) in the other eleven journals, which is counterbalanced by _Philosophy and Phenomenological Research_. This does mean that when _PPR_ changes its focus in the 1980s, this topic seems to fall away very quickly. That’s misleading though, if one cares about all of philosophy. What’s really true is that the topic moves away from these twelve journals, and this becomes a respect in which the twelve journals are less than fully representative of philosophy.
 
-I’m calling this a history topic because most of the papers feel historical; they are looking back at work done in the glory days of phenomenology. But those 1940s papers that make up a chunk of the topics weren’t intended as being papers in history of philosophy; they were just doing philosophy. This is a systematic challenge with a study this long. If I extended the study even further—say by including seventeenth- to nineteenth-century books—there would be even more dramatic versions of this effect. Topic modeling can’t typically tell works by an author apart from works about that author, so any historical figure will be grouped in with the history of work on that author.
+When there is a difference this striking between journals, or between times, I like to go back and check the underlying data to see whether it is just a weird consequence of the way the model was built. In this case it is easy enough to see that there is a striking difference beteween _PPR_ and the other eleven journals. Here are the number of times the word _Husserl_ appears in each journal each year.
+
+```{r husserl-year-graph, fig.cap = "Number of times Husserl is mentioned in each journal each year.", , fig.alt = alt_text}
+x = "husserl"
+
+jjj <- 27
+cats <- 90
+
+husserl_tibble <-          all_journals_tibble %>%
+            filter(word == x) %>%
+            left_join(articles, by = "document") %>%
+            group_by(year, journal) %>%
+            dplyr::summarise(c = sum(wordcount)) %>% 
+            filter(!is.na(year)) %>% 
+            ungroup() %>% 
+            add_row(year = 1918, journal = "Mind", c= 0) %>% 
+            add_row(year = 1928, journal = "Mind", c= 0) %>% 
+            arrange(desc(year)) %>% 
+            complete(year, journal, fill = list(c = 0))
+
+cate_num <- 3
+
+yupper <- max(husserl_tibble$c, na.rm=TRUE)
+
+facet_labels <- chap_two_facet_labels %>%
+  mutate(year = 1954.5, c = yupper)
+
+facet_labels$journal <- factor(facet_labels$journal, levels = journal_order)
+
+ggplot(data = husserl_tibble, aes(x = year, y = c))  +
+  facetstyle +
+  scale_y_continuous(breaks = c(200, 400)) +
+  geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
+  theme(legend.position="none",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        plot.title = element_text(colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)))  +
+  labs(x = element_blank(), y = "Number of Mentions", title = "Husserl") +
+  facet_wrap(~journal, ncol = 3) +
+  geom_text(data = facet_labels,
+            mapping = aes(label = short_name),
+            vjust = "inward", 
+            hjust = "middle",
+            fontface = "bold", 
+            size = 3,
+            colour = "grey40")
+
+alt_text <- "A graph showing how often the word Husserl appears in each journal in each year. It appears a lot in Philosophy and Phenomenological Research, and almost never in the other eleven journals."
+```
+
+And here is the same graph for Heidegger. Note that in some recent years, 2002 and 2012, the word _Heidegger_ does not appear in these twelve journals.
+
+
+```{r heidegger-year-graph, fig.cap = "Number of times Heidegger is mentioned in each journal each year.", , fig.alt = alt_text}
+
+x = "heidegger"
+
+heidegger_tibble <-          all_journals_tibble %>%
+  filter(word == x) %>%
+  left_join(articles, by = "document") %>%
+  group_by(year, journal) %>%
+  dplyr::summarise(c = sum(wordcount)) %>% 
+  filter(!is.na(year)) %>% 
+  ungroup() %>% 
+  add_row(year = 1932, journal = "Mind", c= 0) %>% 
+  add_row(year = 2002, journal = "Mind", c= 0) %>% 
+  add_row(year = 2012, journal = "Mind", c= 0) %>% 
+  arrange(desc(year)) %>% 
+  complete(year, journal, fill = list(c = 0))
+
+cate_num <- 3
+
+yupper <- max(husserl_tibble$c, na.rm=TRUE)
+
+facet_labels <- chap_two_facet_labels %>%
+  mutate(year = 1959.5, c = yupper)
+
+facet_labels$journal <- factor(facet_labels$journal, levels = journal_order)
+
+ggplot(data = heidegger_tibble, aes(x = year, y = c))  +
+  facetstyle +
+  scale_y_continuous(breaks = c(200, 400)) +
+  scale_x_continuous(breaks = c(1950, 1975, 2000)) +
+  geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
+  theme(legend.position="none",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        plot.title = element_text(colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)))  +
+  labs(x = element_blank(), y = "Number of Mentions", title = "Heidegger") +
+  facet_wrap(~journal, ncol = 3) +
+  geom_text(data = facet_labels,
+            mapping = aes(label = short_name),
+            vjust = "inward", 
+            hjust = "middle",
+            fontface = "bold", 
+            size = 3,
+            colour = "grey40")
+
+alt_text <- "A graph showing how often the word Heidegger appears in each journal in each year. It appears a lot in Philosophy and Phenomenological Research, and almost never in the other eleven journals."
+```
+
+I’m calling this topic a history topic because most of the papers feel historical; they are looking back at work done in the glory days of phenomenology. But those 1940s papers that make up a chunk of the topics weren’t intended as being papers in history of philosophy; they were just doing philosophy. This is a systematic challenge with a study this long. If I extended the study even further—say by including seventeenth- to nineteenth-century books—there would be even more dramatic versions of this effect. Topic modeling can’t typically tell works by an author apart from works about that author, so any historical figure will be grouped in with the history of work on that author.
 
 <!--chapter:end:topic_comments/topic27.Rmd-->
 
@@ -4509,7 +4612,7 @@ cat("\n
 	\n")
 ```
 
-Another fairly easy topic to describe—it's Kant. Both Kantian ethics and Kantian metaphysics end up here. Like all of the other early modern topics, it drops away a bit after Ryle takes over _Mind_ and decrees that only Greek history will be allowed in the journal. But it always hovers a bit above the zero line.
+Another fairly easy topic to describe—it's Kant. Both Kantian ethics and Kantian metaphysics end up here. Like all of the other early modern topics, it drops away a bit after Ryle takes over _Mind_ and excludes all (non-Greek) history from that journal. But it always hovers a bit above the zero line.
 
 I had expected there would be a bit more in recent years, but I think I'd been taking _Philosophical Review_ to be a more representative than it turns out to be. The data is a little noisy, but it does look like _Philosophical Review_ has been substantially more receptive to work on Kant in the last twenty years than any of the other journals.
 
@@ -8172,11 +8275,11 @@ None of these lines seem to be trending up, and several of them are trending dow
 - _Mind_ falls off a cliff around World War II, around the same time Ryle takes over.
 - _Philosophy and Phenomenological Research_ falls away around 1990, as they stop taking quite as seriously the part of their name that says "phenomenological". (I don't know how closely this tracks with Ernest Sosa becoming editor of PPR.)
 
-So part of what's going on is what I mentioned in the previous section. Specialist journals are focusing more on their specialty, and this means doing less of everything else. And in part this feels like the long influence of Gilbert Ryle. This might seem odd given that Ryle published in history of philosophy, but there is some independent evidence of this. This is from an article his successor as _Mind_ editor, D. M. Hamlyn, [wrote about Ryle's editorship](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents).
+So part of what's going on is what I mentioned in the previous section. Specialist journals are focusing more on their specialty, and this means doing less of everything else. And in part this feels like the long influence of Gilbert Ryle. This might seem odd given that Ryle published in history of philosophy, including several papers on early modern and on phenomenology, but there is some independent evidence of this. This is from an article his successor as _Mind_ editor, D. M. Hamlyn, [wrote about Ryle's editorship](https://www.jstor.org/stable/23955672?seq=5#metadata_info_tab_contents).
 
 > [Ryle] said, for example, that, except for Greek Philosophy, he tended to not accept papers on the history of philosophy, and he also said something about what was normally the desirable maximum length for papers. I must say that I found what he had to say on the first point rather odd, though he was absolutely right on the second. [@Hamlyn2003, 5-12]
 
-Whatever Hamlyn thought, it doesn't seem to have affected the publications much. You can't see his ascension (in 1971) in the data here. And I think this decision of Ryle's had a large impact on the role of journal articles in history of philosophy. (Though note Hamlyn says in that paper that Ryle left him a backlog of 2 years' material to publish. So any break would be 1973 not 1971. Both these facts, that _Mind_ was only publishing its backlog in 1972 and 1973, and that they were still papers accepted by Ryle, are quite interesting in the context of the differences in citation rates between _Mind_ and its US counterparts in those years. But that's a story for another study.)
+Whatever Hamlyn thought, it doesn't seem to have affected the publications much. You can't see his ascension (in 1971) in the data here. And I think this decision of Ryle's (or of the board of _Mind_ at the time Ryle was appointed) had a large impact on the role of journal articles in history of philosophy. (Though note Hamlyn says in that paper that Ryle left him a backlog of 2 years' material to publish. So any break would be 1973 not 1971. Both these facts, that _Mind_ was only publishing its backlog in 1972 and 1973, and that they were still papers accepted by Ryle, are quite interesting in the context of the differences in citation rates between _Mind_ and its US counterparts in those years. But that's a story for another study.)
 
 ```{r history-topics, fig.height=6.2, fig.cap = "Topics in history of philosophy.", fig.alt = alt_text}
 cgt("History of Philosophy", 4)
@@ -9202,8 +9305,7 @@ epistemology_yearcount <-  epistemology_relabeled_articles  %>%
 epistemology_yeartopics <- epistemology_relabeled_articles  %>%
   group_by(year, topic) %>%
   dplyr::summarise(tn = n_distinct(document)) %>%
-  ungroup() #%>%
-  #complete(year, topic, fill = list(tn = 0))
+  ungroup() 
 
 epistemology_yeargraphs <- merge(epistemology_yearcount, epistemology_yeartopics) %>%
   mutate(frequency = round(tn/n,3))
@@ -9493,7 +9595,7 @@ epistemology_missing <- epistemology_yeartopics_postwar %>%
 kable(epistemology_missing, 
       col.names = c("Year", "Subject", "Count"),
       caption = "Epistemology topics left off figure 6.2.") %>% 
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 These points are not shown, but they are influencing the curves.
@@ -9533,7 +9635,7 @@ epistemology_gamma_missing <- epistemology_yeargamma_postwar %>%
 kable(epistemology_gamma_missing, 
       col.names = c("Year", "Subject", "Weighted Count"),
       caption = "Epistemology articles left off Figure 6.3.") %>% 
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 It's much easier to see what's happening here with the subjects separated out. Again, I've left off those two data points so they don't throw off the scale of the whole graph.
@@ -10856,7 +10958,7 @@ kable(category_era_distinctive_wide_top, col.names = era_headers, caption = "Mos
 
 The journals have never paid a ton of attention to aesthetics or philosophy of religion. But in the postwar years, especially in America, they paid more attention to them than they otherwise did. 
 
-History of philosophy looks quite strong during the second era, then falls away in the third era. This might make one sceptical of my story that it is [largely Ryle's fault](#history-category-section). But note that a huge proportion of the history papers in this era are in _Philosophy and Phenomenological Research_. At that time _PPR_ was taking the third word in its name really seriously, and I'm classifying [phenomenology papers](#topic28) as part of history. This table shouldn't change your view on the impact Ryle becoming editor of _Mind_ had on history in the philosophy journals.
+History of philosophy looks quite strong during the second era, then falls away in the third era. This might make one sceptical of my story that it is [to do with Ryle's ascension to the editorship of _Mind_](#history-category-section). But note that a huge proportion of the history papers in this era are in _Philosophy and Phenomenological Research_. At that time _PPR_ was taking the third word in its name really seriously, and I'm classifying [phenomenology papers](#topic28) as part of history. This table shouldn't change your view on the impact Ryle becoming editor of _Mind_ had on history in the philosophy journals.
 
 I've been [suspicious of the idea that there was a positivism-driven drop in metaphysics](#metaphysics-category-section). So it is only fair to note that by this measure (though seemingly no other) there really is a drop in metaphysics in the postwar era.
 
@@ -11069,7 +11171,7 @@ kable(decade_distinctive_wide_top[7:12], col.names = dec_title[7:12])
 
 The early decades are not much of a surprise. The big topics from those years are big in every decade, with slightly more attention paid to history as we get into the twentieth Century.
 
-[Early modern](#topic21) hits a high point in the 1930s before Ryle stops it appearing in _Mind_. 
+[Early modern](#topic21) hits a high point in the 1930s before it stops at the same time Ryle becomes editor of _Mind_. 
 
 The founding of _Philosophy and Phenomenological Research_ makes [Heidegger and Husserl](#topic28) particularly prominent in the 1940s. 
 
@@ -11454,7 +11556,7 @@ kable(art_corr %>%
         select(1:3), 
       col.names = c("Subject One", "Subject Two", "Correlation"), 
       caption = "Highest topic correlations.") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 I think these mostly make sense. The two epistemology topics are very tightly connected. The two topics that are about formal methods in scientific reasoning are correlated. (Remember that [chance](#topic44) included a lot of work on formal models of inference.) The philosophy of religion articles are correlated. Idealism is correlated with the other early topics. Topics about time are correlated. [denoting](#topic43) and [sense and Reference](#topic64) are correlated; Frege and Russell aren't that far apart.
@@ -11470,7 +11572,7 @@ kable(art_corr %>%
         select(1:3), 
       col.names = c("Subject One", "Subject Two", "Correlation"), 
       caption = "Lowest topic correlations.") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 The early topics and the late topics aren't correlated. The Idealists aren't correlated with anyone who isn't sympathetic to idealism. No one was offering arguments, at least not as such, in the early going. Let's come back to this table and see what we can find that's more interesting.
@@ -11484,7 +11586,7 @@ kable(art_corr %>%
         select(1:3), 
       col.names = c("Subject One", "Subject Two", "Correlation"), 
       caption = "Most independent topics.") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 I don't know what I expected here, but I don't think it was this. Some of these felt like they should be positively correlated. I guess just on timing grounds I expected [personal Identity](#topic62) to correlate with [wide content](#topic85). But I would have guessed [beauty](#topic08) to be negatively correlated with [meaning and use](#topic22). Maybe there isn't anything to be found here; this mostly looks like noise to me.
@@ -11498,7 +11600,7 @@ kable(art_corr %>%
         select(1:3), 
         col.names = c("Subject One", "Subject Two", "Correlation"), 
         caption = "Highest topic correlations (topics 46–90).") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 Those all seem to make sense. That isn't totally surprising, but it's reassuring to see that the model seems to have not messed up here. Let's look at the other end of the table.
@@ -11511,7 +11613,7 @@ kable(art_corr %>%
         select(1:3), 
         col.names = c("Subject One", "Subject Two", "Correlation"), 
         caption = "Lowest topic correlations (topics 46–90).") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 This is a bit surprising. I thought I'd see pairs like Liberal Democracy and [composition and Constitution](#Topic89) turning up a lot here. That is, I thought what we'd find would recreate the famiilar ethics versus M&E divide. But pairs like that are not the bulk of the table. Instead, we get a lot of negatively correlated pairs that are on the same side of this (alleged) divide.
@@ -11544,7 +11646,7 @@ kable(n %>%
         select(1:3), 
       col.names = c("Subject One", "Subject Two", "Average Probability"), 
       caption = "Highest cross-topic probability.") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 That's not as helpful as I'd hoped. Lots of topics are such that articles in them look a lot like [ordinary language philosophy](#topic24). I'll deal with this by simple brute force; I'll filter out the ordinary language philosophy topic, and rerun the table.
@@ -11556,7 +11658,7 @@ kable(n %>%
         select(1:3),
       col.names = c("Subject One", "Subject Two", "Average Probability"), 
       caption = "Highest Cross-Topic Probability (excluding ordinary language).") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 That is a little more interesting, and a little more sensible, but there are a couple of things that jumped out.
@@ -11574,7 +11676,7 @@ kable(n %>%
         select(1:3),
       col.names = c("Subject One", "Subject Two", "Average Probability"), 
       caption = "Lowest cross-topic probability.") %>%
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 And this is why I've used this measure as my preferred distance measure. Those all look like topics that have nothing to do with each other. And they don't!
@@ -11610,12 +11712,12 @@ page_ratio_summary <- page_ratio %>%
   mutate(avg = round(avg, 1))
 
 kable(page_ratio_summary %>% select(Subject, avg) %>% slice(1:5), col.names = c("Topic", "Average Length"), caption = "Topics with longest average page length.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 ```{r topic-length-table-short}
 kable(page_ratio_summary %>% arrange(avg) %>% select(Subject, avg) %>% slice(1:5), col.names = c("Topic", "Average Length"), caption = "Topics with shortest average page length.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 The difference between the longest and the shortest is almost a 2:1 ratio. So if we measured things by pages, it would make some changes. But in most cases, this difference won't show up on the graphs I've displayed so far. That's because most of the differences are screened by the changes in average article lengths over time. That is, most of the changes are due to the fact that the topics appear at different times in the data, and that the norm for article lengths change over time.
@@ -12628,7 +12730,7 @@ capt <- filter(imprint_top_gamma_display, document == x)$citation[1]
 kable(temp_gamma, 
       col.names = c("Subject", "Probability"), 
       caption = capt) %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 }
 ```
 
@@ -12838,7 +12940,7 @@ Maybe we can get a bit of a better look at this new weird topic by looking at it
 kable(bad_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), 
       col.names = c("Word", "Ratio"),
       caption = "Top words in the norms topic in the bad LDA.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 This I think is the clue to what's happened. The "topic" here is just the distinctive vocabulary of twenty-first-century philosophy. The topic appears in all journals because these words have become more and more prevalent in all journals.
@@ -12848,7 +12950,7 @@ I'll come back to direct evidence for this hypothesis in a minute, but first I w
 ```{r good-beta-top-ratio}
 kable(good_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
        caption = "Top words in the norms topic in the good LDA.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 It's possible to see some of the twenty-first-century vocabulary, like _challenge_ and _accounts_ turning up at the bottom. But this is what things mostly should look like for a topic about normativity and objectivity. 
@@ -12866,7 +12968,7 @@ That makes sense; the word _Kant_ is 163 times more likely to appear in a paradi
 ```{r olp-beta-top-ratio}
 kable(olp_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
        caption = "Top words in the ordinary language philosophy topic in the good LDA.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 Like the new topic 90, this topic in the original model really tracked a style and not a content. It's really striking that the distinctive words in ordinary language philosophy are so much shorter than the distinctive words in contemporary philosophy.^[I wanted to include here some graphs about average word lengths over time, but they don't really show very much. There is a very gentle increase, focussed on the philosophy of science journals, but on the whole the distinctively short keywords don't really track anything about average word length. There was a notable drop in average word length in _Proceedings of the Aristotelian Society_ in the 1950s, but it didn't show up elsewhere. Most notably, there was no similar drop in average word length in _Mind_ or _Philosophical Quarterly_. That suggested it was something about the journal, perhaps connected to the fact that papers are read to the society, rather than about British philosophical culture more broadly.] But it's probably time to start actually proving that words like _commitment_, _challange_ and _approach_ are distinctively twenty-first-century words. So rather than just look at the outputs of complicated models, I'm going to end with some simple graphs of word frequency over time. 
@@ -12976,4 +13078,402 @@ I actually could test these by running the study I did for this book but stoppin
 That's in part because this question will resolve itself over time naturally. Hopefully more studies like mine (or preferably better designed studies than mine) will be run on data that goes through 2020 and beyond. Those will tell us even more about where philosophy is going, and answer several questions that I've left open as pleasant side effects.
 
 <!--chapter:end:09-buzzwords.Rmd-->
+
+# References {-}
+
+Note that I'm not including here papers that are merely mentioned from the twelve journals, or from the other sources that were mined in chapter 9. But I am including papers where I drew on their content (beyond just their word distribution) in preparing this book.
+
+<div id="refs"></div>
+
+# (APPENDIX) Data Tables {-} 
+
+# Subject Prominence by Subject
+
+There are 90 tables below, one for each subject. In each table there are 138 rows, one for each year. In each year, there are 8 columns. This is what each of the columns represents.<br><br><br>
+
+Weight
+:    The weighted number of articles in that subject in that year. This is the main data point that's used throughout the book as the measure of the subject's prominence in the year.
+
+Raw
+:    The raw number of articles in that subject in that year.
+
+W-Ratio
+:    The weighted number of articles in that subject in that year per 1000 articles published that year.
+
+R-Ratio
+:    The raw number of articles in that subject in that year per 1000 articles published that year.
+
+W-Pages
+:    The weighted number of pages of articles on that subject in that year.
+
+R-Pages
+:    The raw number of pages of articles on that subject in that year.
+
+WP-Ratio
+:    The weighted number of pages of articles in that subject in that year per 1000 pages published that year.
+
+RP-Ratio
+:    The raw number of pages of articles in that subject in that year per 1000 pages published that year.
+
+
+```{r append-two-loop}
+app_a_table <- weight_numerator %>% 
+  rename(Weight = y) %>% 
+  mutate(Weight = round(Weight, 1)) %>% 
+  full_join(count_numerator, by = c("year", "topic")) %>% 
+  rename(Raw = y) %>% 
+  full_join(weight_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`W-Ratio` = y) %>% 
+  select(-d) %>% 
+  full_join(count_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`R-Ratio` = y) %>% 
+  select(-d) %>% 
+  full_join(page_weight_numerator, by = c("year", "topic")) %>%
+  mutate(y = round(y, 1)) %>% 
+  rename(`W-Pages` = y) %>% 
+  full_join(page_count_numerator, by = c("year", "topic")) %>%
+  rename(`R-Pages` = y) %>% 
+  full_join(page_weight_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`WP-Ratio` = y) %>% 
+  select(-d) %>% 
+  full_join(page_count_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`RP-Ratio` = y) %>% 
+  select(-d) %>% 
+  rename(Year = year)
+  
+  
+for (jjj in 1:90){
+  cat_subject <- fcap(the_categories$sub_lower[jjj])
+
+  cat(" \n")
+  cat("### ", cat_subject, " {-#a",jjj,"}\n\n", sep="")
+
+  temp <- filter(app_a_table, topic == jjj) %>% 
+    arrange(Year) 
+  
+  print(
+    kable(
+      temp %>% select(-topic), 
+      label = paste0("appendyearfre",jjj),
+      caption = paste("Measures of the prominence of", cat_subject, "in each year's journals.")) 
+  )
+}
+```
+
+# Subject Prominence by Year
+
+There are 138 tables below, one for each year In each table there are 90 rows, one for each subject. In each row, there are 8 columns. This is what each of the columns represents.<br><br><br>
+
+Weight
+:    The weighted number of articles in that subject in that year. This is the main data point that's used throughout the book as the measure of the subject's prominence in the year.
+
+Raw
+:    The raw number of articles in that subject in that year.
+
+W-Ratio
+:    The weighted number of articles in that subject in that year per 1000 articles published that year.
+
+R-Ratio
+:    The raw number of articles in that subject in that year per 1000 articles published that year.
+
+W-Pages
+:    The weighted number of pages of articles on that subject in that year.
+
+R-Pages
+:    The raw number of pages of articles on that subject in that year.
+
+WP-Ratio
+:    The weighted number of pages of articles in that subject in that year per 1000 pages published that year.
+
+RP-Ratio
+:    The raw number of pages of articles in that subject in that year per 1000 pages published that year.
+
+
+```{r append-three-loop}
+app_b_table <- weight_numerator %>% 
+  rename(Weight = y) %>% 
+  mutate(Weight = round(Weight, 1)) %>% 
+  full_join(count_numerator, by = c("year", "topic")) %>% 
+  rename(Raw = y) %>% 
+  full_join(weight_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`W-Ratio` = y) %>% 
+  select(-d) %>% 
+  full_join(count_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`R-Ratio` = y) %>% 
+  select(-d) %>% 
+  full_join(page_weight_numerator, by = c("year", "topic")) %>%
+  mutate(y = round(y, 1)) %>% 
+  rename(`W-Pages` = y) %>% 
+  full_join(page_count_numerator, by = c("year", "topic")) %>%
+  rename(`R-Pages` = y) %>% 
+  full_join(page_weight_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`WP-Ratio` = y) %>% 
+  select(-d) %>% 
+  full_join(page_count_ratio, by = c("year", "topic")) %>%
+  mutate(y = round(y * 1000)) %>% 
+  rename(`RP-Ratio` = y) %>% 
+  select(-d) %>% 
+  mutate(topic = as.numeric(topic)) %>% 
+  left_join(the_categories, by = "topic") %>% 
+  arrange(year, topic) %>% 
+  select(-cat_num, -cat_name, -topic) %>% 
+  select(Subject = sub_lower, everything()) %>% # What comes next is a hack to change the capitalisation
+  select(-subject) %>% 
+  mutate(Subject = fcap(Subject))
+  
+  
+  
+for (jjj in 1:138){
+  cat_subject <- jjj + 1875
+
+  cat(" \n")
+  cat("### ", cat_subject, " {-#b",jjj,"}\n\n", sep="")
+
+  temp <- filter(app_b_table, year == cat_subject)
+  
+  print(
+    kable(
+      temp %>% select(-year), 
+      label = paste0("appendsubjectfre",cat_subject),
+      caption = paste("Measures of the prominence of each subject in ", cat_subject, "'s journals.")) 
+  )
+}
+```
+
+# Data Tables for Chapter 4
+
+### Category Prevalence for Each Topic {-}
+
+```{r category-count-table}
+
+temp <- category_count %>% 
+  arrange(year, category) %>% 
+  full_join(category_year, by  = c("year", "category")) %>% 
+  mutate(y = round(y * 10)/10) %>% 
+  full_join(category_frequency %>% 
+              arrange(year, category) %>%
+              select(year, category, f), by = c("year", "category")) %>% 
+  mutate(f = scales::percent(f, accuracy = 0.1, suffix = "%")) %>% 
+  select(category, Year = year, Count = n, `Weighted Count` = y, `Weighted Frequency` = f)
+
+cat_list <- temp %>% 
+  ungroup() %>% 
+  group_by(category) %>% 
+  tally()
+
+for (jjj in cat_list$category){
+  temp2 <- temp %>% 
+    filter(category == jjj) %>% 
+    select(-category)
+  
+cat("**",jjj,"**  \n  \n", sep="")
+
+print(
+  kable(
+    temp2, align = 'lccc', caption = paste0("Three measures of the prevalence of ",str_to_lower(jjj)," in each year.")
+  )
+)
+}
+```
+
+### Weighted Frequency of Categories in Each Year {-}
+
+```{r category-by-year}
+temp <- category_frequency %>% 
+  select(year, category, f) %>% 
+  mutate(f = scales::percent(f, accuracy = 0.1, suffix = "%")) %>% 
+  pivot_wider(id_cols = year, names_from = category, values_from = f) %>% 
+  rename(Year = year)
+
+temp1 <- temp %>% 
+  select(c(1, 4, 5, 7, 10, 12, 13))
+
+temp2 <- temp %>% 
+  select(c(1, 2, 3, 6, 8, 9, 11))
+  
+kable(temp1, align = c('r', 'c', 'c', 'c', 'c', 'c', 'c'), caption = "Weighted frequency by year for the six larger topics.")
+
+kable(temp2, align = c('r', 'c', 'c', 'c', 'c', 'c', 'c'), caption = "Weighted frequency by year for the six smaller topics.")
+```
+
+
+<!-- ### Data Table for Figures 4.1 and 4.2 {-} -->
+
+<!-- ```{r category-count-table} -->
+<!-- temp <- category_count %>%  -->
+<!--   arrange(year, category) %>%  -->
+<!--   rename(Year = year, Category = category, `Number of Articles` = n) -->
+
+<!-- kable(temp, caption = "Number of articles in each category in each year.") -->
+<!-- ``` -->
+
+<!-- ### Data Table for Figures 4.3 and 4.4 {-} -->
+
+<!-- ```{r category-weight-table} -->
+<!-- temp <- category_year %>%  -->
+<!--   arrange(year, category) %>% -->
+<!--   mutate(y = round(y * 10)/10) %>%  -->
+<!--   rename(Year = year, Category = category, `Weighted Number of Articles` = y) -->
+
+<!-- kable(temp, caption = "Weighted number of articles in each category in each year.") -->
+<!-- ``` -->
+
+<!-- ### Data Table for Figures 4.5 and 4.6 {-} -->
+
+<!-- ```{r category-weighted-frequency-table} -->
+<!-- temp <- category_frequency %>%  -->
+<!--   arrange(year, category) %>% -->
+<!--   select(year, category, f) %>%  -->
+<!--   mutate(f = scales::percent(f, accuracy = 0.1, suffix = "%")) %>%  -->
+<!--   rename(Year = year, Category = category, `Weighted Frequency of Articles` = f) -->
+
+<!-- kable(temp, caption = "Weighted frequency of articles in each category in each year.") -->
+<!-- ``` -->
+
+<!-- ### Data Table for Figure 4.7 {-} -->
+
+<!-- ```{r category-frequency-facet} -->
+<!-- temp <- category_frequency %>%  -->
+<!--   arrange(category, year) %>% -->
+<!--   select(category, year, f) %>%  -->
+<!--   mutate(f = scales::percent(f, accuracy = 0.1, suffix = "%")) %>%  -->
+<!--   rename(Year = year, Category = category, `Weighted Frequency of Articles` = f) -->
+
+<!-- kable(temp, caption = "Weighted frequency of articles in each year for each category.") -->
+<!-- ``` -->
+
+# Data Tables for Chapter 6
+
+### Data Table for Figure 6.1 {-}
+
+```{r epistemology-summary-table}
+temp <- epistemology_yearcount %>% 
+  arrange(year) %>% 
+  select(year, n) %>% 
+  rename(Year = year, `Number of Articles` = n)
+
+kable(temp, align = 'cc', caption = "Number of epistemology articles in each year.")
+```
+
+### Data Table for Figure 6.2 {-}
+
+
+```{r epistemology-topic-count}
+temp <- epistemology_yeartopics_postwar %>% 
+  drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, tn) %>% 
+  filter(topic <= 10) %>% 
+  pivot_wider(id_cols = year, names_from = topic, values_from = tn) %>% 
+  rename(Year = year)
+
+kable(temp, align = 'rcccccccccc', caption = "Raw number of epistemology articles in topics 1–10 in each year.")
+
+temp <- epistemology_yeartopics_postwar %>% 
+  drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, tn) %>% 
+  filter(topic > 10, topic <= 20) %>% 
+  pivot_wider(id_cols = year, names_from = topic, values_from = tn)  %>% 
+  rename(Year = year)
+
+kable(temp, align = 'rcccccccccc', caption = "Raw number of epistemology articles in topics 11–20 in each year.")
+
+temp <- epistemology_yeartopics_postwar %>% 
+  drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, tn) %>% 
+  filter(topic > 20, topic <= 30) %>% 
+  pivot_wider(id_cols = year, names_from = topic, values_from = tn)  %>% 
+  rename(Year = year)
+
+kable(temp, align = 'rcccccccccc', caption = "Raw number of epistemology articles in topics 21–30 in each year.")
+
+temp <- epistemology_yeartopics_postwar %>% 
+  drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, tn) %>% 
+  filter(topic > 30, topic <= 40) %>% 
+  pivot_wider(id_cols = year, names_from = topic, values_from = tn)  %>% 
+  rename(Year = year)
+
+kable(temp, align = 'rcccccccccc', caption = "Raw number of epistemology articles in topics 31–40 in each year.")
+
+
+
+```
+
+### Data Table for Figures 6.3 and 6.4 {-}
+
+
+```{r epistemology-topics-weight}
+temp <- epistemology_yeargamma_postwar %>% 
+  drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, gamsum) %>% 
+  filter(topic <= 10) %>% 
+  mutate(gamsum = round(gamsum, 1)) %>% 
+  pivot_wider(id_cols = year, names_from = topic, values_from = gamsum) %>% 
+  rename(Year = year)
+
+kable(temp, align = 'rcccccccccc', caption = "Weighted number of epistemology articles in topics 1–10 in each year.")
+
+temp <- epistemology_yeargamma_postwar %>% 
+  drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, gamsum) %>% 
+  filter(topic > 10, topic <= 20) %>% 
+  mutate(gamsum = round(gamsum, 1)) %>% 
+  pivot_wider(id_cols = year, names_from = topic, values_from = gamsum)  %>% 
+  rename(Year = year)
+
+kable(temp, align = 'rcccccccccc', caption = "Weighted number of epistemology articles in topics 11–20 in each year.")
+
+temp <- epistemology_yeargamma_postwar %>% 
+  drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, gamsum) %>% 
+  filter(topic > 20, topic <= 30) %>% 
+  mutate(gamsum = round(gamsum, 1)) %>% 
+  pivot_wider(id_cols = year, names_from = topic, values_from = gamsum)  %>% 
+  rename(Year = year)
+
+kable(temp, align = 'rcccccccccc', caption = "Weighted number of epistemology articles in topics 21–30 in each year.")
+
+temp <- epistemology_yeargamma_postwar %>% 
+  drop_na() %>% 
+  arrange(year, topic) %>% 
+  select(year, topic, gamsum) %>% 
+  filter(topic > 30, topic <= 40) %>% 
+  mutate(gamsum = round(gamsum, 1)) %>% 
+  pivot_wider(id_cols = year, names_from = topic, values_from = gamsum)  %>% 
+  rename(Year = year)
+
+kable(temp, align = 'rcccccccccc', caption = "Weighted number of epistemology articles in topics 31–40 in each year.")
+
+
+```
+
+### Data Table for Figures 6.5 {-}
+
+
+```{r epistemology-categories-count}
+temp <- epistemology_categories %>% 
+  arrange(year, category) %>% 
+  select(year, category, y) %>% 
+  mutate(y = round(y, 1)) %>% 
+  pivot_wider(id_cols = year, names_from = category, values_from = y) %>% 
+  rename(Year = year)
+
+kable(temp, align = 'rccccc', caption = "Weighted number of epistemology articles in each category in each year.")
+```
+
+<!--chapter:end:references.Rmd-->
 

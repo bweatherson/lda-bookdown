@@ -1,0 +1,12 @@
+Changes between HTML and Word versions
+
+index.Rmd
+31 - Comment/uncomment kableExtra (and make sure it is detached from regular R session)
+486 - Remove full_width
+1030-50 - Comment out because it is for website only
+1511 - Remove full_width
+
+For rest of the way, use bbedit to multifile search for 'full_width' and comment/uncomment
+
+Need to replace the weird code in the DataTable headers.
+  Ugh so much

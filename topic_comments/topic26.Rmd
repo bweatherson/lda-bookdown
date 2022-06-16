@@ -26,7 +26,7 @@ cat("\n
 	\n")
 ```
 
-A more accurate, if less pithy, name for this category would be mideentury general philosophy of science. It isn’t all midcentury; if one scrolls down the list of articles in the topic there are several from recent years. But there is something midcentury about the spirit of it; it’s philosophy of science that is very much not philosophy of one or other science in particular. And as that has gone out of fashion, this topic has declined.
+A more accurate, if less pithy, name for this category would be midcentury general philosophy of science. It isn’t all midcentury; if one scrolls down the list of articles in the topic there are several from recent years. But there is something midcentury about the spirit of it; it’s philosophy of science that is very much not philosophy of one or other science in particular. And as that has gone out of fashion, this topic has declined.
 
 The statistics for this topic were very surprising. The years make sense; midcentury philosophy peaks in the midcentury. But the numbers show how misleading the graphs can be. Eyeballing the graphs makes it look like this was just bubbling along, but the numbers say it is the fifth or sixth biggest topic of the ninety. The story here, I think, is that there was much less specialization in the 1950s and 1960s, and so individual topics get a chance to grow a lot.
 

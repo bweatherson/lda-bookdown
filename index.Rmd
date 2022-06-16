@@ -877,9 +877,9 @@ The first development was that JSTOR used optical character-recognition (OCR) so
 
 The second development was that personal computers have gotten fast enough that it is (just barely) practical to run text-mining algorithms over libraries as large as the ones JSTOR provides on personal computers.^[_Practical_ here is a relative term; the models I primarily use here took eight to ten hours to complete on pretty good computers. But that's fine if a computer can be left running overnight.] So even without having to use tools beyond what's available in a typical university office, these algorithms can be used to see trends in the journal data. 
 
-This study focuses on the following twelve journals.
+This study focuses on these twelve journals.
 
-```{r journal-table, cache=TRUE}
+```{r journal-table, cache=FALSE}
 options(dplyr.summarise.inform = FALSE)
 
 journals_summary <- articles %>%
@@ -959,7 +959,7 @@ update_geom_defaults("text", list(family = "Lato"))
 update_geom_defaults("label", list(family = "Lato"))
 ```
 
-```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year", dev = 'png', fig.alt = alt_text, cache=TRUE}
+```{r first-facet-graph, fig.cap = "Proportion of articles in each category per year.", dev = 'png', fig.alt = alt_text, cache=TRUE}
 tt <- filter(category_frequency, year > 1899) # Remove 19th Century from graph
 category_graph_labels <- tt %>%
   group_by(category) %>%

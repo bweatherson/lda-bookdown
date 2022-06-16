@@ -35,6 +35,8 @@ When there is a difference this striking between journals, or between times, I l
 ```{r husserl-year-graph, fig.cap = "Number of times Husserl is mentioned in each journal each year.", , fig.alt = alt_text}
 x = "husserl"
 
+jjj <- 27
+cats <- 90
 
 husserl_tibble <-          all_journals_tibble %>%
             filter(word == x) %>%
@@ -60,10 +62,11 @@ facet_labels$journal <- factor(facet_labels$journal, levels = journal_order)
 ggplot(data = husserl_tibble, aes(x = year, y = c))  +
   facetstyle +
   scale_y_continuous(breaks = c(200, 400)) +
-  geom_point(size = 0.15, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
+  geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   theme(legend.position="none",
         panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank()) +
+        panel.grid.minor.x = element_blank(),
+        plot.title = element_text(colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)))  +
   labs(x = element_blank(), y = "Number of Mentions", title = "Husserl") +
   facet_wrap(~journal, ncol = 3) +
   geom_text(data = facet_labels,
@@ -79,9 +82,10 @@ alt_text <- "A graph showing how often the word Husserl appears in each journal 
 
 And here is the same graph for Heidegger. Note that in some recent years, 2002 and 2012, the word _Heidegger_ does not appear in these twelve journals.
 
-x = "heidegger"
 
 ```{r heidegger-year-graph, fig.cap = "Number of times Heidegger is mentioned in each journal each year.", , fig.alt = alt_text}
+
+x = "heidegger"
 
 heidegger_tibble <-          all_journals_tibble %>%
   filter(word == x) %>%
@@ -109,11 +113,12 @@ ggplot(data = heidegger_tibble, aes(x = year, y = c))  +
   facetstyle +
   scale_y_continuous(breaks = c(200, 400)) +
   scale_x_continuous(breaks = c(1950, 1975, 2000)) +
-  geom_point(size = 0.15, colour = hcl(h = (cate_num-1)*30+15, l = 65, c = 100)) +
+  geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
   theme(legend.position="none",
         panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank()) +
-  labs(x = element_blank(), y = "Number of Mentions") +
+        panel.grid.minor.x = element_blank(),
+        plot.title = element_text(colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)))  +
+  labs(x = element_blank(), y = "Number of Mentions", title = "Heidegger") +
   facet_wrap(~journal, ncol = 3) +
   geom_text(data = facet_labels,
             mapping = aes(label = short_name),

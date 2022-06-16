@@ -33,6 +33,6 @@ bookdown::gitbook:
 # bookdown::epub_book:
 #   number_sections: true
 
-# bookdown::word_document2: 
-#   toc: TRUE
-#   always_allow_html: TRUE
+bookdown::word_document2:
+  toc: TRUE
+  always_allow_html: TRUE

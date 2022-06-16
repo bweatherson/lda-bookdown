@@ -108,5 +108,5 @@ rmd_files:
               "07-eras.Rmd",
               "08-outliers.Rmd",
               "09-buzzwords.Rmd",
-#              "references.Rmd"
+              "references.Rmd"
     ]

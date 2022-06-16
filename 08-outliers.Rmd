@@ -276,7 +276,7 @@ kable(art_corr %>%
         select(1:3), 
       col.names = c("Subject One", "Subject Two", "Correlation"), 
       caption = "Highest topic correlations.") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 I think these mostly make sense. The two epistemology topics are very tightly connected. The two topics that are about formal methods in scientific reasoning are correlated. (Remember that [chance](#topic44) included a lot of work on formal models of inference.) The philosophy of religion articles are correlated. Idealism is correlated with the other early topics. Topics about time are correlated. [denoting](#topic43) and [sense and Reference](#topic64) are correlated; Frege and Russell aren't that far apart.
@@ -292,7 +292,7 @@ kable(art_corr %>%
         select(1:3), 
       col.names = c("Subject One", "Subject Two", "Correlation"), 
       caption = "Lowest topic correlations.") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 The early topics and the late topics aren't correlated. The Idealists aren't correlated with anyone who isn't sympathetic to idealism. No one was offering arguments, at least not as such, in the early going. Let's come back to this table and see what we can find that's more interesting.
@@ -306,7 +306,7 @@ kable(art_corr %>%
         select(1:3), 
       col.names = c("Subject One", "Subject Two", "Correlation"), 
       caption = "Most independent topics.") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 I don't know what I expected here, but I don't think it was this. Some of these felt like they should be positively correlated. I guess just on timing grounds I expected [personal Identity](#topic62) to correlate with [wide content](#topic85). But I would have guessed [beauty](#topic08) to be negatively correlated with [meaning and use](#topic22). Maybe there isn't anything to be found here; this mostly looks like noise to me.
@@ -320,7 +320,7 @@ kable(art_corr %>%
         select(1:3), 
         col.names = c("Subject One", "Subject Two", "Correlation"), 
         caption = "Highest topic correlations (topics 46–90).") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 Those all seem to make sense. That isn't totally surprising, but it's reassuring to see that the model seems to have not messed up here. Let's look at the other end of the table.
@@ -333,7 +333,7 @@ kable(art_corr %>%
         select(1:3), 
         col.names = c("Subject One", "Subject Two", "Correlation"), 
         caption = "Lowest topic correlations (topics 46–90).") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 This is a bit surprising. I thought I'd see pairs like Liberal Democracy and [composition and Constitution](#Topic89) turning up a lot here. That is, I thought what we'd find would recreate the famiilar ethics versus M&E divide. But pairs like that are not the bulk of the table. Instead, we get a lot of negatively correlated pairs that are on the same side of this (alleged) divide.
@@ -366,7 +366,7 @@ kable(n %>%
         select(1:3), 
       col.names = c("Subject One", "Subject Two", "Average Probability"), 
       caption = "Highest cross-topic probability.") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 That's not as helpful as I'd hoped. Lots of topics are such that articles in them look a lot like [ordinary language philosophy](#topic24). I'll deal with this by simple brute force; I'll filter out the ordinary language philosophy topic, and rerun the table.
@@ -378,7 +378,7 @@ kable(n %>%
         select(1:3),
       col.names = c("Subject One", "Subject Two", "Average Probability"), 
       caption = "Highest Cross-Topic Probability (excluding ordinary language).") %>%
-  kable_styling(full_width = F)
+kable_styling(full_width = F)
 ```
 
 That is a little more interesting, and a little more sensible, but there are a couple of things that jumped out.
@@ -396,7 +396,7 @@ kable(n %>%
         select(1:3),
       col.names = c("Subject One", "Subject Two", "Average Probability"), 
       caption = "Lowest cross-topic probability.") %>%
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 And this is why I've used this measure as my preferred distance measure. Those all look like topics that have nothing to do with each other. And they don't!
@@ -432,12 +432,12 @@ page_ratio_summary <- page_ratio %>%
   mutate(avg = round(avg, 1))
 
 kable(page_ratio_summary %>% select(Subject, avg) %>% slice(1:5), col.names = c("Topic", "Average Length"), caption = "Topics with longest average page length.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 ```{r topic-length-table-short}
 kable(page_ratio_summary %>% arrange(avg) %>% select(Subject, avg) %>% slice(1:5), col.names = c("Topic", "Average Length"), caption = "Topics with shortest average page length.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 The difference between the longest and the shortest is almost a 2:1 ratio. So if we measured things by pages, it would make some changes. But in most cases, this difference won't show up on the graphs I've displayed so far. That's because most of the differences are screened by the changes in average article lengths over time. That is, most of the changes are due to the fact that the topics appear at different times in the data, and that the norm for article lengths change over time.

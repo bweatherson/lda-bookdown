@@ -495,7 +495,7 @@ capt <- filter(imprint_top_gamma_display, document == x)$citation[1]
 kable(temp_gamma, 
       col.names = c("Subject", "Probability"), 
       caption = capt) %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 }
 ```
 
@@ -705,7 +705,7 @@ Maybe we can get a bit of a better look at this new weird topic by looking at it
 kable(bad_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), 
       col.names = c("Word", "Ratio"),
       caption = "Top words in the norms topic in the bad LDA.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 This I think is the clue to what's happened. The "topic" here is just the distinctive vocabulary of twenty-first-century philosophy. The topic appears in all journals because these words have become more and more prevalent in all journals.
@@ -715,7 +715,7 @@ I'll come back to direct evidence for this hypothesis in a minute, but first I w
 ```{r good-beta-top-ratio}
 kable(good_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
        caption = "Top words in the norms topic in the good LDA.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 It's possible to see some of the twenty-first-century vocabulary, like _challenge_ and _accounts_ turning up at the bottom. But this is what things mostly should look like for a topic about normativity and objectivity. 
@@ -733,7 +733,7 @@ That makes sense; the word _Kant_ is 163 times more likely to appear in a paradi
 ```{r olp-beta-top-ratio}
 kable(olp_beta %>% select(word, y) %>% slice(1:20) %>% mutate(y = round(y, 1)), col.names = c("Word", "Ratio"),
        caption = "Top words in the ordinary language philosophy topic in the good LDA.") %>% 
-  kable_styling(full_width = F)
+ kable_styling(full_width = F)
 ```
 
 Like the new topic 90, this topic in the original model really tracked a style and not a content. It's really striking that the distinctive words in ordinary language philosophy are so much shorter than the distinctive words in contemporary philosophy.^[I wanted to include here some graphs about average word lengths over time, but they don't really show very much. There is a very gentle increase, focussed on the philosophy of science journals, but on the whole the distinctively short keywords don't really track anything about average word length. There was a notable drop in average word length in _Proceedings of the Aristotelian Society_ in the 1950s, but it didn't show up elsewhere. Most notably, there was no similar drop in average word length in _Mind_ or _Philosophical Quarterly_. That suggested it was something about the journal, perhaps connected to the fact that papers are read to the society, rather than about British philosophical culture more broadly.] But it's probably time to start actually proving that words like _commitment_, _challange_ and _approach_ are distinctively twenty-first-century words. So rather than just look at the outputs of complicated models, I'm going to end with some simple graphs of word frequency over time. 

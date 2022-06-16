@@ -33,8 +33,7 @@ epistemology_yearcount <-  epistemology_relabeled_articles  %>%
 epistemology_yeartopics <- epistemology_relabeled_articles  %>%
   group_by(year, topic) %>%
   dplyr::summarise(tn = n_distinct(document)) %>%
-  ungroup() #%>%
-  #complete(year, topic, fill = list(tn = 0))
+  ungroup() 
 
 epistemology_yeargraphs <- merge(epistemology_yearcount, epistemology_yeartopics) %>%
   mutate(frequency = round(tn/n,3))

@@ -2,7 +2,7 @@
 title: "A History of Philosophy Journals"
 subtitle: "Volume 1: Evidence from Topic Modeling, 1876-2013"
 author: "Brian Weatherson"
-date: "Marshall M. Weinberg Professor of Philosophy <br> University of Michigan, Ann Arbor"
+date: "Marshall M. Weinberg Professor of Philosophy, University of Michigan, Ann Arbor"
 documentclass: book
 link-citations: yes
 site: bookdown::bookdown_site
@@ -96,6 +96,7 @@ load("all_journals_word_list.RData")
 # The list of articles
 load("fixed_articles.RData")
 
+
 articles <- articles %>% 
   mutate(across(.cols = title:auth4, sub, pattern = "O\\'([a-z])", perl=TRUE, replacement = "O\\'\\U\\1")) %>% 
   mutate(across(.cols = title:auth4, sub, pattern = "Mc([a-z])", perl=TRUE, replacement = "Mc\\U\\1")) %>% 
@@ -188,6 +189,10 @@ articles <- articles %>%
   )
   )
 
+articles <- articles %>% 
+  mutate(across(.cols=title:title, str_replace_all, "\\rm", "\\Rm")) %>% 
+  mutate(across(.cols=citation:citation, str_replace_all, "\\rm", "\\Rm")) 
+
 
 ```
 
@@ -221,6 +226,10 @@ relabeled_articles <- merge(all_journals_titles_and_topics, year_topic_mean) %>%
     TRUE ~ paste0(authall,", ",year,", “", toTitleCase(title),",” _",journal,"_ ",vol,":",fpage,"–",adjlpage,".")
   )
   )
+
+relabeled_articles <- relabeled_articles %>% 
+  mutate(across(.cols=mcitation:mcitation, str_replace_all, "\\rm", "\\Rm")) 
+
 
 high_cite_gamma <- merge(highly_cited, relabeled_articles, by = "document") %>% arrange(desc(Cites))
 
@@ -1049,6 +1058,10 @@ If you use any other social network, the <i class="fa fa-share-alt"></i> icon pu
 
 You can move forward or back between sections using the left and right arrow keys. This is especially useful in long sections where the arrows on the screen might not be immediately visible.
 
+<!-- ## EBook Instructions -->
+
+<!-- This book is primarily designed to be read in a browser, and some features won't work on an ebook. Most notably, the searchable tables have been replaced with screenshots of what the table looks like by default. In the web version, these are numbered, and searchable, tables. I've taken out the numbers here, but the numbers for the other tables are left consistent with the web version for consistency. -->
+
 ## Acknowledgements {-}
 
 This book relies on resources that a lot of people have made available, usually for free.
@@ -1071,7 +1084,7 @@ The whole book was put together using the **bookdown** package, primarily built 
 
 The design of the book is modeled on that of [_rstudio4edu_](https://rstudio4edu.github.io/rstudio4edu-book/) by Desirée De Leon and Alison Hill[-@DeLeonHall2019], and I've used a lot of their CSS code under the hood here.
 
-And my daughter Nyaya has helped catch a lot of errors, though given the way I write, this is an endless task.
+The copyediting by Michigan Publishing fixed a lot of mistakes, and very dubious stylistic choices that I had originally made. And my daughter Nyaya has also helped catch a lot of errors, though given the way I write, this is an endless task.
 
 ## GitHub {-}
 

@@ -17,7 +17,7 @@ bookdown::gitbook:
       twitter: yes
       facebook: no
     download:
-      - ["lda-bookdown.docx", "Word"]
+      - ["lda-bookdown.epub", "eBook"]
 
 
 
@@ -30,8 +30,8 @@ bookdown::gitbook:
 #   includes:
 #     in_header: "preamble.tex"
 # 
-# bookdown::epub_book:
-#   number_sections: true
+bookdown::epub_book:
+  number_sections: true
 
 bookdown::word_document2:
   toc: TRUE

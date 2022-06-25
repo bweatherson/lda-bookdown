@@ -179,8 +179,6 @@ pr_pol_words <- c(
 )
 ```
 
-I've put the words I'm looking at into three categories.
-
 Philosophy of Mind Words
 :    `r pr_mind_words`
 

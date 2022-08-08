@@ -25,11 +25,11 @@ bookdown::gitbook:
 # bookdown::html_document2:
 #   split_by: section
 # 
-# bookdown::pdf_book:
-#   keep_tex: true
-#   includes:
-#     in_header: "preamble.tex"
-# 
+bookdown::pdf_book:
+  keep_tex: true
+  includes:
+    in_header: "preamble.tex"
+
 bookdown::epub_book:
   number_sections: true
 

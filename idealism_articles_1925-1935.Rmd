@@ -1,0 +1,16 @@
+---
+title: "Idealism Articles, 1925-1935"
+author: "Brian Weatherson"
+date: "2022-09-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+require(rmarkdown)
+```
+
+```{r}
+temp <- ideal_articles %>% select(Article = mcitation)
+kable(temp)
+```

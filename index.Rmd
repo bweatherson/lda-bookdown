@@ -549,7 +549,7 @@ kable(relabeled_articles %>%
 article_year_tibble <- articles %>%
   select(document, year)
 
-word_year_count <- all_journals_tibble %>%
+word_year_count <- saveall_journals_tibble %>%
   inner_join(article_year_tibble, by = "document") %>%
   group_by(year) %>%
   dplyr::summarise(a = sum(wordcount))
@@ -1036,6 +1036,16 @@ The second part looks at what happens if instead of making a ninety-way division
 
 The third part looks at further applications of the model. The first six chapters had used years as the main unit of temporal measurement. In chapter \@ref(eraschapter), I use more coarse-grained measures. First I look at the trends over five "eras" in philosophy, and then over twelve decades. One benefit of doing things this way is that as well as looking at what the model says, I can look at trends in the underlying data directly, and see how well the model is tracking reality. In chapter \@ref(outliers), I look at outliers along various dimensions, both to see where extreme events have been happening and to put some stress on the model. If its most outlandish claims are true, and I think several of them are, then there is more confidence in its more mundane claims. And in chapter \@ref(lookingoutward), I try to look beyond the model. I use the model to compare the early years of the journals with some famous books that were published around the same time. Then I look at how articles in _Philosophers' Imprint_ in 2019 compare to what is seen before 2013. (The big story is the resurgence of interest in historical figures outside the standard canon.) And finally I look at something that almost blew up the project: the very distinctive vocabulary of twenty-first-century philosophy.
 
+## Publication Information {-}
+
+This book is published by [Maize Books](https://www.fulcrum.org/maizebooks), an imprint of [Michigan Publishing](https://www.publishing.umich.edu/). The official published version can be found at
+
+> [https://doi.org/10.3998/mpub.12251719](https://doi.org/10.3998/mpub.12251719)
+
+It's published as an ebook, with continuous scrolling rather than pages. So any citations should be to sections of the book, not pages. The sections (and subsections) are short, so this should still make it reasonably easy to cite.
+
+That said, the version of the book you are reading here has more capacities than the official version. As I'll describe in more detail in the next section, there are a lot of things that the website can do that a book cannot do. Most notably, many of the tables in this version can be searched and sorted. But the Maize Books version is the official, stable, version of the book.
+
 ## Website Instructions {-}
 
 This book isn't meant to be read cover to cover; it's meant to be picked through like the proverbial box of chocolates. To make this easier, there is a full table of contents on the sidebar. If you click on any of the chapter headings, it takes you to that chapter, and expands to list all the sections in that chapter. Then you can go directly to the section.
@@ -1084,7 +1094,9 @@ The whole book was put together using the **bookdown** package, primarily built 
 
 The design of the book is modeled on that of [_rstudio4edu_](https://rstudio4edu.github.io/rstudio4edu-book/) by Desirée De Leon and Alison Hill[-@DeLeonHall2019], and I've used a lot of their CSS code under the hood here.
 
-The copyediting by Michigan Publishing fixed a lot of mistakes, and very dubious stylistic choices that I had originally made. And my daughter Nyaya has also helped catch a lot of errors, though given the way I write, this is an endless task.
+Michigan Publishing was incredibly helpful both with copyediting, which fixed both many mistakes and some dubious stylistic choices that I had originally made, and with the very difficult task of getting a book this unusual into something like print. 
+
+And my daughter Nyaya has also helped catch a lot of errors, though given the way I write, this is an endless task.
 
 ## GitHub {-}
 
@@ -1531,7 +1543,7 @@ The portentous "Volume 1" in the subtitle is because I have a number of ideas fo
 
 The current version of this book has been compiled on:
 
-```{r include-date}
+```{r include-date, cache=FALSE}
 Sys.Date()
 ```
 

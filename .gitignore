@@ -30,3 +30,9 @@ temp.bib.zip
 cache
 chap-4-to-do
 index-Word-old-edited.Rmd
+libs
+newsletter
+big_tibble.RData
+article_year_tibble.RData
+word_year_count.RData
+word_year_journal_count.RData

@@ -36,3 +36,5 @@ big_tibble.RData
 article_year_tibble.RData
 word_year_count.RData
 word_year_journal_count.RData
+.RDataTmp
+lda-weatherson.pdf

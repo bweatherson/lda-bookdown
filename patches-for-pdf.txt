@@ -1,0 +1,4 @@
+Chapter 1, commented line 420
+Index, 941 and 942
+topic_summary_overall_graph.R, commented out spaghettistyle
+topic_summary_overall_graph.R, changed facetstyle to theme_minimal

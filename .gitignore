@@ -38,3 +38,9 @@ word_year_count.RData
 word_year_journal_count.RData
 .RDataTmp
 lda-weatherson.pdf
+metadata-fourjournals-to-1969.RData
+metadata-fourjournals-to-2016.RData
+my_lda_100.RData
+unigrams-fourjournals-to-1969.RData
+unigrams-fourjournals-to-2016.RData
+unigrams_bigthree_prewar.RData

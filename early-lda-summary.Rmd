@@ -1,0 +1,336 @@
+---
+title: "Analysis of the 12 journal LDA"
+author: "Brian Weatherson"
+output: 
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r loader, echo=FALSE, fig.height=8, fig.width=, message=FALSE, results='asis'}
+options(blogdown.knit.serve_site = FALSE)
+require(tidyverse)
+require(tidytext)
+require(topicmodels)
+require(knitr)
+require(kableExtra)
+library(ggplot2); theme_set(theme_light())
+
+journal_short_names <- c(
+  "Analysis" = "Analysis",
+  "British Journal for the Philosophy of Science" = "BJPS",
+  "Ethics" = "Ethics",
+  "Journal of Philosophy" = "Journal of Philosophy",
+  "Mind" = "Mind",
+  "Noûs" = "Noûs",
+  "Philosophical Review" = "Philosophical Review",
+  "Philosophy and Phenomenological Research" = "PPR",
+  "Philosophy and Public Affairs" = "P&PA",
+  "Philosophy of Science" = "Philosophy of Science",
+  "Proceedings of the Aristotelian Society" = "Aristotelian Society",
+  "The Philosophical Quarterly" = "Philosophical Quarterly"
+)
+
+
+load("early_articles.RData")
+load("my_lda_100.RData")
+
+cats <- 100
+```
+
+```{r setup, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
+knitr::opts_chunk$set(warning = FALSE)
+
+    all_journals_gamma <- tidy(my_lda, matrix = "gamma")
+    
+    all_journals_classifications <- all_journals_gamma %>%
+      group_by(document) %>%
+      top_n(1, gamma) %>%
+      ungroup()
+    
+    all_journals_titles_and_topics <- merge(all_journals_classifications, filtered_meta, by.x="document", by.y="id")
+    
+    year_topic_mean <- all_journals_titles_and_topics %>% ungroup() %>% 
+      group_by(topic)  %>% 
+      dplyr::summarize(date = mean(year)) %>% 
+      mutate(rank = rank(date))
+    
+    relabeled_articles <- merge(all_journals_titles_and_topics, year_topic_mean) %>% 
+      select(-topic) %>% 
+      dplyr::rename(topic = rank)
+    
+    termlistname <- paste0("terms_",i)
+    assign(termlistname, terms(my_lda, 10))
+    
+    yearcount <-  relabeled_articles  %>%
+      group_by(year) %>%
+      dplyr::summarise(n = n_distinct(document))
+    
+    yeartopics <- relabeled_articles  %>%
+      group_by(year, topic) %>%
+      dplyr::summarise(tn = n_distinct(document)) %>%
+      ungroup() %>%
+      complete(year, topic, fill = list(tn = 0))
+    
+    yeargraphs <- merge(yearcount, yeartopics) %>%
+      mutate(frequency = round(tn/n,3))
+    
+    yeargraphs$topic <- as.factor(yeargraphs$topic)
+    
+    phil_topics <- tidy(my_lda, matrix = "beta")
+    relabeled_topics <- merge(phil_topics, year_topic_mean) %>%
+      as_tibble() %>%
+      select(-topic) %>%
+      dplyr::rename(topic = rank)
+    
+    word_score <- relabeled_topics %>%
+      group_by(term) %>%
+      dplyr::summarise(sumbeta = sum(beta)) %>%
+      arrange(desc(sumbeta))
+    
+
+    
+    relabeled_gamma <- merge(all_journals_gamma, year_topic_mean) %>%
+      as_tibble() %>%
+      select(-topic) %>%
+      dplyr::rename(topic = rank) |>
+      mutate(document = as.numeric(document))
+    
+    relabeled_gamma <- merge(relabeled_gamma, filtered_meta, by.x = "document", by.y = "id") %>%
+      select(document, gamma, topic, year, journal, sortjournal, words) %>%
+      mutate(words = case_when(
+        is.na(words) ~ 1,
+        TRUE ~ words
+      ))
+    
+    journalgamma <- relabeled_gamma  %>%
+      group_by(year, topic, sortjournal) %>%
+      dplyr::summarise(gamsum = sum(gamma)) %>%
+      ungroup() %>%
+      complete(year, topic, sortjournal, fill = list(gamsum = 0))
+    
+    journalgamma$topic <- as.factor(journalgamma$topic)
+    
+    journalpagegamma <- relabeled_gamma  %>%
+      mutate(value = words * gamma) %>%
+      group_by(year, topic, sortjournal) %>%
+      dplyr::summarise(valsum = sum(value)) %>%
+      ungroup() %>%
+      complete(year, topic, sortjournal, fill = list(gamsum = 0))
+    
+    journalpagegamma$topic <- as.factor(journalpagegamma$topic)
+    
+    yeargamma <- relabeled_gamma  %>%
+      group_by(year, topic) %>%
+      dplyr::summarise(gamsum = sum(gamma)) %>%
+      ungroup() %>%
+      complete(year, topic, fill = list(gamsum = 0))
+    
+    yeargamma$topic <- as.factor(yeargamma$topic)
+    
+    pagegamma <- relabeled_gamma  %>%
+      mutate(value = gamma * words) %>%
+      group_by(year, topic) %>%
+      dplyr::summarise(valsum = sum(value)) %>%
+      ungroup() %>%
+      complete(year, topic, fill = list(gamsum = 0))
+    
+    pagegamma$topic <- as.factor(pagegamma$topic)
+
+
+
+      busy_topics <- merge(relabeled_topics, word_score) %>%
+      filter(sumbeta > 0.00005 * cats) %>%
+      mutate(score = beta/sumbeta) %>%
+      arrange(desc(score))
+    
+    distinctive_topics <- busy_topics %>%
+      group_by(topic) %>%
+      top_n(15, score) %>%
+      ungroup() %>%
+      arrange(desc(-topic))
+    
+    short_keywords <- c()
+    
+    short_keywords <- tribble(
+      ~topic, ~distinctive_words)
+```
+
+```{r keywords, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
+
+    short_keywords <- tribble(
+      ~topic, ~distinctive_words)
+
+ for (j in 1:cats){
+   distinctive <- distinctive_topics[(j-1)*15 + 1, 1]
+   for (jj in 2:5){
+     distinctive <- paste(distinctive, distinctive_topics[(j-1)*15 + jj, 1], sep = ", ")
+   }
+ short_keywords <- add_row(short_keywords, topic = j, distinctive_words = distinctive)
+ }
+
+ cat(" \n")
+ cat("## Keywords for All Topics")
+ cat(" \n")
+
+ print(kable(short_keywords, col.names = NULL, booktabs = T, linesep = "")) 
+
+ # cat(" \n")
+ # cat("\\newpage")
+ # cat(" \n")
+ # 
+ # print(kable(filter(short_keywords, topic > 30), col.names = NULL, booktabs = T, linesep = "") %>%
+ #       column_spec(2, width = "14cm") %>%
+ #       kable_styling(latex_options = c("striped", "hold_position")))
+
+cat("\\newpage \n")
+ 
+```
+
+
+```{r frequency, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
+# 
+#   topicgraphs <- ggplot(yeargraphs, aes(x = year, y = frequency, color=topic, group=topic)) +
+#     geom_point(size = 0.5) +
+#     labs(x = "Year", y = "Proportion", title = "Distribution of Articles Across Topics by Year")
+#   print(topicgraphs)
+# 
+#   cat("\\newpage \n")
+# 
+#   indiv_topic_graphs <- ggplot(yeargraphs, aes(x = year, y = frequency, color = topic, group=topic)) +
+#     geom_point(size = 0.15) +
+#     facet_wrap(~topic, ncol = 5) +
+#     ylim(0, 0.3) +
+#     theme(legend.position="none") +
+#     labs(x = "Year", y = "Proportion", title = "Distribution of Articles Across Years by Individual Topic")
+#   print(indiv_topic_graphs)
+# 
+#   cat("\\newpage \n")
+```
+
+```{r count, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
+  # yeartopics$topic <- as.factor(yeartopics$topic)
+  # 
+  # topic_count_graph <- ggplot(yeartopics, aes(x = year, y = tn, color=topic, group=topic)) +
+  #   geom_point(size = 0.5) +
+  #   labs(x = "Year", y = "Number of Articles", title = "Number of Articles in Each Topic Per Year")
+  # print(topic_count_graph)
+  # 
+  # cat("\\newpage \n")
+
+  # indiv_count_graphs <- ggplot(yeartopics, aes(x = year, y = tn, color = topic, group=topic)) +
+  #   geom_point(size = 0.15) +
+  #   facet_wrap(~topic, ncol = 5) +
+  #   theme(legend.position="none") +
+  #   labs(x = "Year", y = "Number of Articles", title = "Number of Articles in Each Topic Per Year")
+  # print(indiv_count_graphs)
+  # 
+  # cat("\\newpage \n")
+```
+
+
+```{r weight, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
+  topic_weight_graph <- ggplot(yeargamma, aes(x = year, y = gamsum, color=topic, group=topic)) +
+    geom_point(size = 0.5) +
+    labs(x = "Year", y = "Weighted Number of Articles", title = "Weighted Number of Articles in Each Topic Per Year")
+  topic_weight_graph
+
+  cat("\\newpage \n")
+
+  indiv_weight_graphs <- ggplot(yeargamma, aes(x = year, y = gamsum, color = topic, group=topic)) +
+    geom_point(size = 0.15) +
+    facet_wrap(~topic, ncol = 5) +
+    theme(legend.position="none") +
+    labs(x = "Year", y = "Weighted Number of Articles", title = "Weighted Number of Articles in Each Topic Per Year")
+  indiv_weight_graphs
+
+  cat("\\newpage \n")
+```
+
+```{r page, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
+
+#   pagegamma <- relabeled_gamma  %>%
+#     mutate(value = gamma * length) %>%
+#     group_by(year, topic) %>%
+#     dplyr::summarise(valsum = sum(value)) %>%
+#     ungroup() %>%
+#     complete(year, topic, fill = list(gamsum = 0))
+# 
+#   pagegamma$topic <- as.factor(pagegamma$topic)
+# 
+#   topic_page_graph <- ggplot(pagegamma, aes(x = year, y = valsum, color=topic, group=topic)) +
+#     geom_point(size = 0.5) +
+# #    geom_smooth(method = "loess", formula = y ~ x, se=F) +
+#     labs(x = "Year", y = "Weighted Number of Articles", title = "Weighted Number of Pages on Each Topic Per Year")
+#   print(topic_page_graph)
+# 
+#   cat("\\newpage \n")
+# 
+#   indiv_page_graphs <- ggplot(pagegamma, aes(x = year, y = valsum, color = topic, group=topic)) +
+#     geom_point(size = 0.15) +
+#     facet_wrap(~topic, ncol = 5) +
+#     theme(legend.position="none") +
+#     labs(x = "Year", y = "Weighted Number of Articles", title = "Weighted Number of Pages on Each Topic Per Year")
+#   print(indiv_page_graphs)
+# 
+#   cat("\\newpage \n")
+  
+```
+  
+  
+```{r cats, echo=FALSE, message=FALSE, results='asis', fig.height=4, fig.width = 6.25}
+  for (jjj in 1:cats){
+    cat(" \n")
+    cat("## Topic ", jjj, "\n")
+   distinctive <- distinctive_topics[(jjj-1)*15 + 1, 1]
+     for (jj in 2:15){
+       distinctive <- paste(distinctive, distinctive_topics[(jjj-1)*15 + jj, 1], sep = ", ")
+     }
+
+ cat("**Keywords**: ", distinctive, "\n\n")
+
+  indiv_journal_graphs <- ggplot(data = filter(journalgamma, topic == jjj), aes(x = year, y = gamsum))  +
+      geom_point(size = 0.15, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
+      theme(legend.position="none") +
+      coord_cartesian(ylim=c(0, max(filter(journalgamma, topic == jjj)$gamsum, 10)), expand = TRUE) +
+      labs(x = "Year", y = "Weighted Number of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) +
+      facet_wrap(~sortjournal, ncol = 3)
+  print(indiv_journal_graphs)
+  cat("\\newpage \n")
+
+  cat("\n")
+  cat("### Characteristic Articles for Topic ", jjj, "\n")
+  char_art <- relabeled_articles %>%
+    filter(topic == jjj) %>%
+    mutate(score = gamma * log10(words + 1)) %>%
+    arrange(desc(score)) %>%
+    slice(1:15)
+  article_list <- char_art$citation
+# print(kable(article_list, col.names = NULL, booktabs = T, linesep = "") %>%
+#        kable_styling(latex_options = c("striped", "hold_position")))
+
+  for (jj in 1:15){
+    cat(jj,". ", article_list[jj], "\n\n", sep="")
+  }
+
+  cat("\n")
+  # cat("### Highly Cited Articles in Topic ", jjj, "\n")
+  # these_cites <- high_cite_gamma %>% 
+  #   as_tibble() %>%
+  #   filter(topic == jjj) %>%
+  #   arrange(desc(Cites))
+  # 
+  # if (nrow(these_cites) > 0){
+  # for (jj in 1:nrow(these_cites)){
+  #    cat(jj,". ", these_cites$citation.x[[jj]], " (", these_cites$gamma[[jj]], ")\n\n", sep="")   
+  # }
+  # }
+      cat("\\newpage \n")
+}
+
+cat("\\newpage \n")
+
+```
+

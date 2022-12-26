@@ -46,3 +46,9 @@ unigrams-fourjournals-to-2016.RData
 unigrams_bigthree_prewar.RData
 early_lda.RData
 early_articles.RData
+early-mind
+allgrams-mind-1903-to-1939.RData
+allgrams_mind_prewar.RData
+metadata-mind-1903-to-1939.RData
+mind-lda-summary.Rmd
+mind_lda.RData

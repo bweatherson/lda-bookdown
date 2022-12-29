@@ -4,7 +4,7 @@ metadata <-
   map_df(~read_csv(paste0("early-mind/",.), col_types = cols(.default = "c")))
 
 allgrams <-
-  list.files(path="early-mind", pattern = "*grams.csv") |> 
+  list.files(path="early-mind", pattern = "*unigrams.csv") |> 
   map_df(~read_csv(paste0("early-mind/",.), col_types = cols(.default = "c")))
 
 allgrams$ngram <- gsub("[[:punct:]]", "", allgrams$ngram) # Remove punctuation
@@ -82,35 +82,95 @@ short_words <- c(short_words, " ", "", "vol")
 doubles <- expand_grid(w1 = short_words, w2 = short_words) |>
   mutate(pairs = paste0(w1, " ", w2))
 
+bad_pairs <- c("sensecertainty",
+               "a nc",
+               "nc of",
+               "a nc of",
+               "a sc",
+               "a sc of",
+               "f t t",
+               "g l",
+               "ab in",
+               "sc of",
+               "t t f",
+               "f t",
+               "t f t",
+               "m is",
+               "donc",
+               "whence",
+               "whence by",
+               "argument to",
+               "b in",
+               "reality p",
+               "r b",
+               "and reality p",
+               "sec",
+               "r f",
+               "f alfred",
+               "of s",
+               "y is",
+               "w e",
+               "is p",
+               "g p",
+               "sb p",
+               "op cit",
+               "cit p",
+               "i p",
+               "ibid p",
+               "ii p",
+               "p v",
+               "p is",
+               "op cit p",
+               "vol i",
+               "vol ii",
+               "s is",
+               "of b",
+               "s and",
+               "x is",
+               "prima",
+               "facie",
+               "prima facie",
+               "miss",
+               "proposi"
+               )
+
 filtered_allgrams <- allgrams |>
   filter(nchar(ngram) > 2,
          !ngram %in% short_words,
          !ngram %in% doubles$pairs,
+         !ngram %in% bad_pairs,
          id %in% filtered_meta$id) |>
     mutate(count = as.numeric(count))  |>
   filter(!grepl("^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$",ngram)) |>
   filter(!stringr::str_ends(ngram," ")) |>
   filter(!stringr::str_starts(ngram," "))
 
-save(filtered_meta, file="metadata-mind-1903-to-1939.RData")
-save(allgrams, file="allgrams-mind-1903-to-1939.RData")
+#save(filtered_meta, file="metadata-mind-1903-to-1939.RData")
+#save(allgrams, file="allgrams-mind-1903-to-1939.RData")
 
 my_dtm <- cast_dtm(filtered_allgrams, id, ngram, count)
 
-# Build the lda
-# k is the number of topics
-# seed is to allow replication; vary this to see how different model runs behave
-# Note that this can get slow - the real one I run takes 8 hours, though if you're following this script, it should take seconds
-my_lda <- LDA(my_dtm, k = 12, control = list(seed = 14071789, verbose = 1))
+for (seed in c(05061789, 20061789, 14071789, 04081789, 26081789, 05101789, 08101792, 09201792, 09221792,15121793)){
+  for (cats in c(2, 4, 6, 8, 10, 12, 15, 16, 20, 24)){
 
-# The start on analysis - extract topic probabilities
-my_gamma <- tidy(my_lda, matrix = "gamma")
-
-# Now extract probability of each word in each topic
-my_beta <- tidy(my_lda, matrix = "beta")
-
-save(my_lda, file="mind_lda.RData")
-save(filtered_meta, file="mind_articles.RData")
-save(allgrams, file="allgrams_mind_prewar.RData")
-
-rmarkdown::render("mind-lda-summary.Rmd", "pdf_document")
+    my_lda <- LDA(my_dtm, k = cats, control = list(seed = seed, verbose = 1))
+    
+    # The start on analysis - extract topic probabilities
+    #my_gamma <- tidy(my_lda, matrix = "gamma")
+    
+    # Now extract probability of each word in each topic
+    #my_beta <- tidy(my_lda, matrix = "beta")
+    
+    save(my_lda, file="mind_lda.RData")
+    #save(filtered_meta, file="mind_articles.RData")
+    #save(allgrams, file="allgrams_mind_prewar.RData")
+    
+    rmarkdown::render("mind-lda-summary.Rmd", 
+                      "pdf_document", 
+                      params = list(
+                        cats = cats, seed = as.character(seed)
+                      ),
+                      output_file = paste0("mind-lda-summary-",seed,"-",cats,".pdf")
+    )
+  }
+}

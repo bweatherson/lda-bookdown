@@ -6,9 +6,11 @@ require(topicmodels)
 # Initialise which journal is being used
 jcode <- "jphil"
 jname <- "Journal of Philosophy"
-metadataname <- "JPhil1940-1989-meta.RData"
-unigramname <- "JPhil1940-1989-unigram.RData"
-ldaname <- "JPhil1940-1990-lda.RData"
+metadataname <- "JPhil1930-1999-meta.RData"
+unigramname <- "JPhil1930-1999-unigram.RData"
+bigramname <- "JPhil1930-1999-bigram.RData"
+gramname <- "JPhil1930-1999-grams.RData"
+ldaname <- "JPhil1930-1999-lda.RData"
 
 
 # Add every journal that you're using here as an extra line
@@ -90,21 +92,32 @@ filtered_metadata <- all_metadata |>
          id = str_sub(id, start = 29) |> as.numeric()
   )
 
+all_grams <- c()
+
 # Identify path to unigram folder and read csvs
 path1 <- paste0("2022-data/",jcode,"/unigram/")
 files <- list.files(path1)
 
-all_unigrams <- c()
-
 for (x in files) {
   new_unigrams <- read_csv(paste0(path1, "/", x))
-  all_unigrams <- bind_rows(all_unigrams, new_unigrams)
+  all_grams <- bind_rows(all_grams, new_unigrams)
   rm(new_unigrams)
 }
 
+# Identify path to bgram folder and read csvs
+path1 <- paste0("2022-data/",jcode,"/bigram/")
+files <- list.files(path1)
+
+for (x in files) {
+  new_bigrams <- read_csv(paste0(path1, "/", x))
+  all_grams <- bind_rows(all_grams, new_bigrams)
+  rm(new_bigrams)
+}
+
+
 source("short_words.R") # Words we're not using
 
-filtered_unigrams <- all_unigrams |>
+filtered_grams <- all_grams |>
   mutate(id = str_sub(id, start = 29) |> as.numeric()) |>
   filter(nchar(ngram) > 2,
          !ngram %in% short_words,
@@ -114,19 +127,84 @@ filtered_unigrams <- all_unigrams |>
   mutate(count = as.numeric(count))  |>
   filter(!grepl("^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$",ngram))
 
-filtered_unigrams$ngram <- gsub("[[:punct:]]", "", filtered_unigrams$ngram) # Remove punctuation
-filtered_unigrams$ngram <- gsub("[[:digit:]]", "", filtered_unigrams$ngram) # Remove numbers
-filtered_unigrams$ngram <- tolower(filtered_unigrams$ngram)
+filtered_grams$ngram <- gsub("[[:punct:]]", "", filtered_grams$ngram) # Remove punctuation
+filtered_grams$ngram <- gsub("[[:digit:]]", "", filtered_grams$ngram) # Remove numbers
+filtered_grams$ngram <- tolower(filtered_grams$ngram)
 
-filtered_unigrams <- filtered_unigrams |> 
+# Another pass to remove stop words that appear after removing punctuation and spaces
+
+filtered_grams <- filtered_grams |> 
   filter(nchar(ngram) > 2,
          !ngram %in% short_words,
          id %in% filtered_metadata$id,
          ngram != "",
          ngram != "vol") # Do again after punctuation - looks redundant but quicker to do things this way
 
+# Now remove the undesired bigrams
+
+doubles <- expand_grid(w1 = short_words, w2 = short_words) |>
+  mutate(pairs = paste0(w1, " ", w2))
+
+bad_pairs <- c("sensecertainty",
+               "a nc",
+               "nc of",
+               "a nc of",
+               "a sc",
+               "a sc of",
+               "f t t",
+               "g l",
+               "ab in",
+               "sc of",
+               "t t f",
+               "f t",
+               "t f t",
+               "m is",
+               "donc",
+               "whence",
+               "whence by",
+               "argument to",
+               "b in",
+               "reality p",
+               "r b",
+               "and reality p",
+               "sec",
+               "r f",
+               "f alfred",
+               "of s",
+               "y is",
+               "w e",
+               "is p",
+               "g p",
+               "sb p",
+               "op cit",
+               "cit p",
+               "i p",
+               "ibid p",
+               "ii p",
+               "p v",
+               "p is",
+               "op cit p",
+               "vol i",
+               "vol ii",
+               "s is",
+               "of b",
+               "s and",
+               "x is",
+               "prima",
+               "facie",
+               "prima facie",
+               "miss",
+               "proposi"
+)
+
+filtered_allgrams <- allgrams |>
+  filter(!ngram %in% doubles$pairs,
+         !ngram %in% bad_pairs) |>
+  filter(!stringr::str_ends(ngram," ")) |>
+  filter(!stringr::str_starts(ngram," "))
+
 save(filtered_metadata, file = paste0("2022-data/",metadataname))
-save(filtered_unigrams, file = paste0("2022-data/",unigramname))
+save(filtered_grams, file = paste0("2022-data/",gramname))
 
 
 for (seed in c(05061789, 20061789, 14071789, 04081789, 26081789, 05101789, 08101792, 09201792, 09221792,15121793)) {

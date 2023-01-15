@@ -26,7 +26,8 @@ path1 <- paste0("2022-data/",jcode,"/meta/")
 files <- list.files(path1)
 
 for (x in files) {
-  new_metadata <- read_csv(paste0(path1, "/", x))
+  new_metadata <- read_csv(paste0(path1, "/", x)) |>
+    mutate(issueNumber = as.character(issueNumber))
   all_metadata <- bind_rows(all_metadata, new_metadata)
   rm(new_metadata)
 }
@@ -197,7 +198,7 @@ bad_pairs <- c("sensecertainty",
                "proposi"
 )
 
-filtered_allgrams <- allgrams |>
+filtered_grams <- filtered_grams |>
   filter(!ngram %in% doubles$pairs,
          !ngram %in% bad_pairs) |>
   filter(!stringr::str_ends(ngram," ")) |>
@@ -207,9 +208,10 @@ save(filtered_metadata, file = paste0("2022-data/",metadataname))
 save(filtered_grams, file = paste0("2022-data/",gramname))
 
 
-for (seed in c(05061789, 20061789, 14071789, 04081789, 26081789, 05101789, 08101792, 09201792, 09221792,15121793)) {
-  for (cats in c(2, 4, 6, 8, 10, 12, 15, 16, 20, 24)) {
-
+#for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
+#  for (cats in c(2, 4, 6, 8, 10, 12, 15, 16, 20, 24)) {
+for (seed in c(100,200)) {
+  for (cats in c(2, 4)) {
     my_lda <- LDA(my_dtm, k = cats, control = list(seed = seed, verbose = 1))
     
     # The start on analysis - extract topic probabilities

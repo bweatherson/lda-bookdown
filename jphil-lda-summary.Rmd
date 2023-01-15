@@ -1,9 +1,13 @@
 ---
-title: "Analysis of the 12 journal LDA"
-author: "Brian Weatherson"
+params:
+    cats:
+    seed:
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{makecell}
 output: 
   pdf_document:
-    keep_tex: yes
+    keep_tex: no
     latex_engine: xelatex
 editor_options: 
   chunk_output_type: inline
@@ -39,6 +43,46 @@ load("~/Documents/lda-bookdown/jphil_lda.RData")
 
 #cats <- 100
 ```
+
+
+```{r graphstyles, echo=FALSE, message=FALSE}
+facetstyle <-   theme_minimal() +
+  theme(text = element_text(family="Lato"),
+        plot.title = element_text(size = rel(1),
+                                  family = "Lato",
+                                  face = "bold",
+                                  margin = margin(0, 0, 10, 0)),
+        strip.text = element_blank(),
+        panel.spacing.x = unit(-0.05, "lines"),
+        panel.background = element_blank(),
+        panel.spacing.y = unit(1, "lines"),
+        axis.title.x = element_text(size = rel(1),
+                                    margin = margin(t = 6, r = 0, b = 0, l = 0)),
+        axis.title.y = element_text(size = rel(1),
+                                    margin = margin(t = 0, r = 8, b = 0, l = 0)),
+        panel.grid.major.y = element_line(color = "grey85", size = 0.07),
+        panel.grid.minor.y = element_line(color = "grey85", size = 0.03),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        legend.position="none")
+spaghettistyle <- facetstyle +
+  theme(panel.grid.major.y = element_line(color = "grey80", size = 0.08),
+        panel.grid.minor.y = element_line(color = "grey85", size = 0.04),
+        legend.text = element_text(size = rel(0.5)),
+        plot.caption = element_text(size = rel(0.7))
+  )
+freqstyle <-   spaghettistyle +
+  theme(legend.text = element_text(size = rel(0.75)),
+        panel.grid.major.y = element_line(color = "grey85", size = 0.08),
+        legend.position = "right")
+```
+
+---
+title: "`r params$cats` Category LDA for Journal of Philosophy 1930-1999"
+author: "Seed: `r params$seed`"
+---
+
+
 
 ```{r setup, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
 knitr::opts_chunk$set(warning = FALSE)
@@ -138,8 +182,6 @@ knitr::opts_chunk$set(warning = FALSE)
       ungroup() |>
       complete(year, topic, fill = list(gamsum = 0))
     
-    cats <- max(pagegamma$topic)
-    
     pagegamma$topic <- as.factor(pagegamma$topic)
 
 
@@ -165,10 +207,10 @@ knitr::opts_chunk$set(warning = FALSE)
     short_keywords <- tribble(
       ~topic, ~distinctive_words)
 
- for (j in 1:cats) {
-   distinctive <- distinctive_topics[(j - 1) * 15 + 1, 1]
-   for (jj in 2:5) {
-     distinctive <- paste(distinctive, distinctive_topics[(j - 1) * 15 + jj, 1], sep = ", ")
+ for (j in 1:cats){
+   distinctive <- distinctive_topics[(j-1)*15 + 1, 1]
+   for (jj in 2:5){
+     distinctive <- paste(distinctive, distinctive_topics[(j-1)*15 + jj, 1], sep = ", ")
    }
  short_keywords <- add_row(short_keywords, topic = j, distinctive_words = distinctive)
  }
@@ -177,114 +219,53 @@ knitr::opts_chunk$set(warning = FALSE)
  cat("## Keywords for All Topics")
  cat(" \n")
 
- print(kable(short_keywords, col.names = NULL,  linesep = "")) 
+ print(kable(short_keywords, col.names = NULL, booktabs = T, linesep = "")) 
 
  # cat(" \n")
  # cat("\\newpage")
  # cat(" \n")
  # 
- # print(kable(filter(short_keywords, topic > 30), col.names = NULL, booktabs = T, linesep = "") |>
- #       column_spec(2, width = "14cm") |>
+ # print(kable(filter(short_keywords, topic > 30), col.names = NULL, booktabs = T, linesep = "") %>%
+ #       column_spec(2, width = "14cm") %>%
  #       kable_styling(latex_options = c("striped", "hold_position")))
 
 cat("\\newpage \n")
  
 ```
 
-
-```{r frequency, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
-# 
-#   topicgraphs <- ggplot(yeargraphs, aes(x = year, y = frequency, color=topic, group=topic)) +
-#     geom_point(size = 0.5) +
-#     labs(x = "Year", y = "Proportion", title = "Distribution of Articles Across Topics by Year")
-#   print(topicgraphs)
-# 
-#   cat("\\newpage \n")
-# 
-#   indiv_topic_graphs <- ggplot(yeargraphs, aes(x = year, y = frequency, color = topic, group=topic)) +
-#     geom_point(size = 0.15) +
-#     facet_wrap(~topic, ncol = 5) +
-#     ylim(0, 0.3) +
-#     theme(legend.position="none") +
-#     labs(x = "Year", y = "Proportion", title = "Distribution of Articles Across Years by Individual Topic")
-#   print(indiv_topic_graphs)
-# 
-#   cat("\\newpage \n")
-```
-
-```{r count, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
-  # yeartopics$topic <- as.factor(yeartopics$topic)
-  # 
-  # topic_count_graph <- ggplot(yeartopics, aes(x = year, y = tn, color=topic, group=topic)) +
-  #   geom_point(size = 0.5) +
-  #   labs(x = "Year", y = "Number of Articles", title = "Number of Articles in Each Topic Per Year")
-  # print(topic_count_graph)
-  # 
-  # cat("\\newpage \n")
-
-  # indiv_count_graphs <- ggplot(yeartopics, aes(x = year, y = tn, color = topic, group=topic)) +
-  #   geom_point(size = 0.15) +
-  #   facet_wrap(~topic, ncol = 5) +
-  #   theme(legend.position="none") +
-  #   labs(x = "Year", y = "Number of Articles", title = "Number of Articles in Each Topic Per Year")
-  # print(indiv_count_graphs)
-  # 
-  # cat("\\newpage \n")
-```
-
-
 ```{r weight, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
-  topic_weight_graph <- ggplot(yeargamma, aes(x = year, y = gamsum, color=topic, group=topic)) +
+  topic_weight_graph <- ggplot(journalgamma, aes(x = year, y = freq, color=topic, group=topic)) +
     geom_point(size = 0.5) +
-    geom_smooth(se=FALSE, size=0.2) +
-    labs(x = "Year", y = "Weighted Number of Articles", title = "Weighted Number of Articles in Each Topic Per Year")
+    labs(x = "Year", y = "Weighted Frequency of Articles", title = "Weighted Frequency of Articles in Each Topic Per Year") + 
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  geom_point(size = 0.5) +
+  geom_smooth(se=FALSE, size = 0.2) 
+
   topic_weight_graph
 
   cat("\\newpage \n")
 
-  indiv_weight_graphs <- ggplot(yeargamma, aes(x = year, y = gamsum, color = topic, group=topic)) +
+  indiv_weight_graphs <- ggplot(journalgamma, aes(x = year, y = freq, color = topic, group=topic)) +
     geom_point(size = 0.5) +
-    facet_wrap(~topic, ncol = 5) +
-    scale_x_continuous(breaks = c(1950, 1965, 1980)) +
+    facet_wrap(~topic, ncol = 3) +
     theme(legend.position="none") +
-    labs(x = "Year", y = "Weighted Number of Articles", title = "Weighted Number of Articles in Each Topic Per Year")
+    labs(x = "Year", y = "Weighted Frequency of Articles", title = "Weighted Frequency of Articles in Each Topic Per Year") +   
+    theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_blank()) +
+      geom_smooth(se=FALSE, size = 0.2) 
   indiv_weight_graphs
 
   cat("\\newpage \n")
 ```
 
-```{r page, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
-
-#   pagegamma <- relabeled_gamma  |>
-#     mutate(value = gamma * length) |>
-#     group_by(year, topic) |>
-#     dplyr::summarise(valsum = sum(value)) |>
-#     ungroup() |>
-#     complete(year, topic, fill = list(gamsum = 0))
-# 
-#   pagegamma$topic <- as.factor(pagegamma$topic)
-# 
-#   topic_page_graph <- ggplot(pagegamma, aes(x = year, y = valsum, color=topic, group=topic)) +
-#     geom_point(size = 0.5) +
-# #    geom_smooth(method = "loess", formula = y ~ x, se=F) +
-#     labs(x = "Year", y = "Weighted Number of Articles", title = "Weighted Number of Pages on Each Topic Per Year")
-#   print(topic_page_graph)
-# 
-#   cat("\\newpage \n")
-# 
-#   indiv_page_graphs <- ggplot(pagegamma, aes(x = year, y = valsum, color = topic, group=topic)) +
-#     geom_point(size = 0.15) +
-#     facet_wrap(~topic, ncol = 5) +
-#     theme(legend.position="none") +
-#     labs(x = "Year", y = "Weighted Number of Articles", title = "Weighted Number of Pages on Each Topic Per Year")
-#   print(indiv_page_graphs)
-# 
-#   cat("\\newpage \n")
-  
-```
-  
-  
-```{r cats, echo=FALSE, message=FALSE, results='asis', fig.height=4, fig.width = 6.25}
+```{r cats, echo=FALSE, message=FALSE, results='asis', fig.height=3, fig.width = 6.25}
   for (jjj in 1:cats){
     cat(" \n")
     cat("## Topic ", jjj, "\n")
@@ -295,23 +276,32 @@ cat("\\newpage \n")
 
  cat("**Keywords**: ", distinctive, "\n\n")
 
-  indiv_journal_graphs <- ggplot(data = filter(journalgamma, topic == jjj), aes(x = year, y = gamsum))  +
-      geom_point(size = 0.5, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
-      theme(legend.position="none") +
-      coord_cartesian(ylim=c(0, max(filter(journalgamma, topic == jjj)$gamsum, 10)), expand = TRUE) +
-      labs(x = "Year", y = "Weighted Number of Articles", title = paste0("Articles from topic ",jjj," in each Journal")) 
-  print(indiv_journal_graphs)
-  cat("\\newpage \n")
+  indiv_journal_graphs <- ggplot(data = filter(journalgamma, topic == jjj), aes(x = year, y = freq))  +
+    geom_point(size = 0.55, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
+    theme(legend.position="none") +
+    coord_cartesian(ylim=c(0, max(filter(journalgamma, topic == jjj)$freq, 2/cats)), expand = TRUE) +
+    labs(x = "", 
+         y = "", 
+         title = "") +
+    theme_minimal() +
+    theme(panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
+    geom_smooth(se=FALSE, size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) 
 
-  cat("\n")
+  print(indiv_journal_graphs)
+#  cat("\\newpage \n")
+
+  cat("\n\n\n")
   cat("### Characteristic Articles for Topic ", jjj, "\n")
-  char_art <- relabeled_articles |>
-    filter(topic == jjj) |>
-    mutate(score = gamma * log10(words + 1)) |>
-    arrange(desc(score)) |>
+  char_art <- relabeled_articles %>%
+    filter(topic == jjj) %>%
+    mutate(score = gamma * log10(words + 1)) %>%
+    arrange(desc(score)) %>%
     slice(1:15)
   article_list <- char_art$citation
-# print(kable(article_list, col.names = NULL, booktabs = T, linesep = "") |>
+# print(kable(article_list, col.names = NULL, booktabs = T, linesep = "") %>%
 #        kable_styling(latex_options = c("striped", "hold_position")))
 
   for (jj in 1:15){
@@ -320,9 +310,9 @@ cat("\\newpage \n")
 
   cat("\n")
   # cat("### Highly Cited Articles in Topic ", jjj, "\n")
-  # these_cites <- high_cite_gamma |> 
-  #   as_tibble() |>
-  #   filter(topic == jjj) |>
+  # these_cites <- high_cite_gamma %>% 
+  #   as_tibble() %>%
+  #   filter(topic == jjj) %>%
   #   arrange(desc(Cites))
   # 
   # if (nrow(these_cites) > 0){

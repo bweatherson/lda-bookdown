@@ -139,7 +139,8 @@ filtered_grams <- filtered_grams |>
          !ngram %in% short_words,
          id %in% filtered_metadata$id,
          ngram != "",
-         ngram != "vol") # Do again after punctuation - looks redundant but quicker to do things this way
+         ngram != "vol",
+         !grepl("^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$",ngram)) # Do again after punctuation - looks redundant but quicker to do things this way
 
 # Now remove the undesired bigrams
 
@@ -204,14 +205,30 @@ filtered_grams <- filtered_grams |>
   filter(!stringr::str_ends(ngram," ")) |>
   filter(!stringr::str_starts(ngram," "))
 
+# And another run through the filters after removing trailing and leading spaces
+
+filtered_grams <- filtered_grams |> 
+  filter(nchar(ngram) > 2,
+         !ngram %in% short_words,
+         id %in% filtered_metadata$id,
+         ngram != "",
+         ngram != "vol",
+         !grepl("^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$",ngram))
+
+# And remove what look like citations with roman numerals
+
+filtered_grams <- filtered_grams |> 
+  filter(!grepl("(journal|studies|thisjournal|mind|review|volume|society) m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$",ngram))
+
 save(filtered_metadata, file = paste0("2022-data/",metadataname))
 save(filtered_grams, file = paste0("2022-data/",gramname))
 
+my_dtm <- cast_dtm(filter(filtered_grams, count > 1), id, ngram, count)
 
-#for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
-#  for (cats in c(2, 4, 6, 8, 10, 12, 15, 16, 20, 24)) {
-for (seed in c(100,200)) {
-  for (cats in c(2, 4)) {
+for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
+  for (cats in c(25, 30, 40)) {
+#for (seed in c(100,200)) {
+#  for (cats in c(2)) {
     my_lda <- LDA(my_dtm, k = cats, control = list(seed = seed, verbose = 1))
     
     # The start on analysis - extract topic probabilities

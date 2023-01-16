@@ -38,7 +38,7 @@ journal_short_names <- c(
 )
 
 
-load("2022-data/JPhil1940-1989-meta.RData")
+load("2022-data/JPhil1930-1999-meta.RData")
 load("~/Documents/lda-bookdown/jphil_lda.RData")
 
 #cats <- 100
@@ -150,11 +150,13 @@ knitr::opts_chunk$set(warning = FALSE)
         TRUE ~ words
       ))
     
-    journalgamma <- relabeled_gamma  |>
-      group_by(year, topic, sortjournal) |>
-      dplyr::summarise(gamsum = sum(gamma)) |>
-      ungroup() |>
-      complete(year, topic, sortjournal, fill = list(gamsum = 0))
+    journalgamma <- relabeled_gamma  %>%
+      group_by(year, topic, sortjournal) %>%
+      dplyr::summarise(gamsum = sum(gamma)) %>%
+      ungroup() %>%
+      complete(year, topic, sortjournal, fill = list(gamsum = 0)) |>
+      left_join(yearcount, by = "year") |>
+      mutate(freq = gamsum/n)
     
     journalgamma$topic <- as.factor(journalgamma$topic)
     

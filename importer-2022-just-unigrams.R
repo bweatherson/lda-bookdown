@@ -225,10 +225,11 @@ filtered_grams <- filtered_grams |>
 save(filtered_metadata, file = paste0("2022-data/",metadataname))
 save(filtered_grams, file = paste0("2022-data/",gramname))
 
+my_dtm <- cast_dtm(filter(filtered_grams, count > 1), id, ngram, count)
 
 #for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
 #  for (cats in c(24, 30, 36)) {
-for (seed in c(100, 200)) {
+for (seed in c(200, 300)) {
   for (cats in c(2)) {
     my_lda <- LDA(my_dtm, k = cats, control = list(seed = seed, verbose = 1))
     
@@ -240,7 +241,7 @@ for (seed in c(100, 200)) {
     
     save(my_lda, 
          file = paste0(
-           "american-lda-",
+           "2022-data/american-lda-",
            seed,
            "-",
            cats,

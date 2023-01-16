@@ -39,8 +39,15 @@ journal_short_names <- c(
 )
 
 
-load(paste0("2022-data/",lda-file))
-load("~/Documents/lda-bookdown/american_lda.RData")
+load("2022-data/American-1930-1999-meta.RData")
+load(paste0(
+           "2022-data/american-lda-",
+           params$seed,
+           "-",
+           params$cats,
+           ".RData"
+         )
+)
 
 #cats <- 100
 ```
@@ -156,7 +163,11 @@ knitr::opts_chunk$set(warning = FALSE)
       group_by(year, topic, sortjournal) |>
       dplyr::summarise(gamsum = sum(gamma)) |>
       ungroup() |>
-      complete(year, topic, sortjournal, fill = list(gamsum = 0))
+      complete(year, topic, sortjournal, fill = list(gamsum = 0)) |>
+      ungroup() |>
+      group_by(year, sortjournal) |>
+      mutate(freq = gamsum / sum(gamsum)) |>
+      ungroup()
     
     journalgamma$topic <- as.factor(journalgamma$topic)
     
@@ -173,7 +184,11 @@ knitr::opts_chunk$set(warning = FALSE)
       group_by(year, topic) |>
       dplyr::summarise(gamsum = sum(gamma)) |>
       ungroup() |>
-      complete(year, topic, fill = list(gamsum = 0))
+      complete(year, topic, fill = list(gamsum = 0)) |>
+      ungroup() |>
+      group_by(year) |>
+      mutate(freq = gamsum / sum(gamsum)) |>
+      ungroup()
     
     yeargamma$topic <- as.factor(yeargamma$topic)
     
@@ -236,7 +251,7 @@ cat("\\newpage \n")
 ```
 
 ```{r weight, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
-  topic_weight_graph <- ggplot(journalgamma, aes(x = year, y = freq, color=topic, group=topic)) +
+  topic_weight_graph <- ggplot(yeargamma, aes(x = year, y = freq, color=topic, group=topic)) +
     geom_point(size = 0.5) +
     labs(x = "Year", y = "Weighted Frequency of Articles", title = "Weighted Frequency of Articles in Each Topic Per Year") + 
   theme_minimal() +
@@ -251,8 +266,8 @@ cat("\\newpage \n")
 
   cat("\\newpage \n")
 
-  indiv_weight_graphs <- ggplot(filter(journalgamma, topic <= cats/2), aes(x = year, y = freq, color = topic, group=topic)) +
-    geom_point(size = 0.5) +
+  indiv_weight_graphs <- ggplot(filter(yeargamma, as.numeric(topic) <= cats/2), aes(x = year, y = freq, color = topic, group=topic)) +
+    geom_point(size = 0.55) +
     facet_wrap(~topic, ncol = 3) +
     theme(legend.position="none") +
     labs(x = "Year", 
@@ -266,9 +281,12 @@ cat("\\newpage \n")
       geom_smooth(se=FALSE, size = 0.2) 
   indiv_weight_graphs
 
-  indiv_weight_graphs <- ggplot(filter(journalgamma, topic > cats/2), 
-                                aes(x = year, y = freq, color = topic, group=topic)) +
-    geom_point(size = 0.5) +
+  indiv_weight_graphs <- ggplot(filter(journalgamma, as.numeric(topic) > cats/2), 
+                                aes(x = year,
+                                    y = freq, 
+                                    color = topic, 
+                                    group=topic)) +
+    geom_point(size = 0.55) +
     facet_wrap(~topic, ncol = 3) +
     theme(legend.position="none") +
     labs(x = "Year",
@@ -320,7 +338,7 @@ cat("\\newpage \n")
     filter(topic == jjj) %>%
     mutate(score = gamma * log10(words + 1)) %>%
     arrange(desc(score)) %>%
-    slice(1:15)
+    slice(1:20)
   article_list <- char_art$citation
 # print(kable(article_list, col.names = NULL, booktabs = T, linesep = "") %>%
 #        kable_styling(latex_options = c("striped", "hold_position")))

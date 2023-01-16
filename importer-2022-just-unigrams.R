@@ -96,6 +96,12 @@ filtered_metadata <- all_metadata |>
          id = str_sub(id, start = 29) |> as.numeric()
   )
 
+# Focus down to the years we're interested in
+filtered_metadata <- filtered_metadata |>
+  filter(year >= 1930, year <= 1999)
+
+
+
 all_grams <- c()
 
 for (i in jcode) {

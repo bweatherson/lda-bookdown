@@ -136,7 +136,8 @@ for (i in jcode) {
 source("short_words.R") # Words we're not using
 
 # More French that's causing complications
-short_words <- c("cest", 
+short_words <- c(short_words,
+                 "cest", 
                  "dun", 
                  "quon", 
                  "lidee", 
@@ -250,8 +251,9 @@ save(filtered_grams, file = paste0("2022-data/",gramname))
 
 my_dtm <- cast_dtm(filter(filtered_grams, count > 1), id, ngram, count)
 
-for (seed in c(220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
-  for (cats in c(24, 30, 36)) {
+#for (seed in c(220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
+for (seed in c(220061789)) {
+    for (cats in c(24, 30, 36)) {
     my_lda <- LDA(my_dtm, k = cats, control = list(seed = seed, verbose = 1))
     
     # The start on analysis - extract topic probabilities

@@ -39,7 +39,7 @@ journal_short_names <- c(
 )
 
 
-load("2022-data/American-1930-1999-meta.RData")
+load(paste0("2022-data/",lda-file))
 load("~/Documents/lda-bookdown/american_lda.RData")
 
 #cats <- 100

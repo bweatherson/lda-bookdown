@@ -29,7 +29,10 @@ for (i in jcode) {
   
   for (x in files) {
     new_metadata <- read_csv(paste0(path1, "/", x)) |>
-      mutate(issueNumber = as.character(issueNumber))
+      mutate(issueNumber = as.character(issueNumber)) |>
+      filter(!is.na(creator)) |>
+      mutate(pageStart = as.numeric(pageStart)) |>
+      mutate(pageEnd = as.numeric(pageEnd))
     all_metadata <- bind_rows(all_metadata, new_metadata)
     rm(new_metadata)
   }
@@ -103,15 +106,16 @@ filtered_metadata <- filtered_metadata |>
 
 
 all_grams <- c()
+path1 <- c()
 
 for (i in jcode) {
   
   # Identify path to unigram folder and read csvs
-  path1 <- paste0("2022-data/",jcode,"/unigram/")
+  path1 <- paste0("2022-data/",i,"/unigram/")
   files <- list.files(path1)
   
   for (x in files) {
-    new_unigrams <- read_csv(paste0(path1, "/", x))
+    new_unigrams <- read_csv(paste0(path1, x))
     all_grams <- bind_rows(all_grams, new_unigrams)
     rm(new_unigrams)
   }
@@ -222,8 +226,10 @@ save(filtered_metadata, file = paste0("2022-data/",metadataname))
 save(filtered_grams, file = paste0("2022-data/",gramname))
 
 
-for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
-  for (cats in c(24, 30, 36)) {
+#for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
+#  for (cats in c(24, 30, 36)) {
+for (seed in c(100, 200)) {
+  for (cats in c(2)) {
     my_lda <- LDA(my_dtm, k = cats, control = list(seed = seed, verbose = 1))
     
     # The start on analysis - extract topic probabilities

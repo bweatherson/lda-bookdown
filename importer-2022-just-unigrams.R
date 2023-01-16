@@ -4,32 +4,35 @@ require(tidytext)
 require(topicmodels)
 
 # Initialise which journal is being used
-jcode <- "jphil"
-jname <- "Journal of Philosophy"
-metadataname <- "JPhil1930-1999-meta.RData"
-unigramname <- "JPhil1930-1999-unigram.RData"
-bigramname <- "JPhil1930-1999-bigram.RData"
-gramname <- "JPhil1930-1999-grams.RData"
-ldaname <- "JPhil1930-1999-lda.RData"
+jcode <- c("jphil","philrev")
+#jname <- c("Journal of Philosophy", "Philosophical Review")
+metadataname <- "American-1930-1999-meta.RData"
+unigramname <- "American-1930-1999-unigram.RData"
+#bigramname <- "American-1930-1999-bigram.RData"
+gramname <- "American-1930-1999-grams.RData"
+#ldaname <- "American-1930-1999-lda.RData"
 
 
 # Add every journal that you're using here as an extra line
 journals <- tribble(
   ~code, ~fullname,
   "jphil", "Journal of Philosophy",
+  "philrev", "Philosophical Review"
 )
 
 all_metadata <- tibble()
 
-# Identify path to metadata folder and read csv
-path1 <- paste0("2022-data/",jcode,"/meta/")
-files <- list.files(path1)
-
-for (x in files) {
-  new_metadata <- read_csv(paste0(path1, "/", x)) |>
-    mutate(issueNumber = as.character(issueNumber))
-  all_metadata <- bind_rows(all_metadata, new_metadata)
-  rm(new_metadata)
+for (i in jcode) {
+  # Identify path to metadata folder and read csv
+  path1 <- paste0("2022-data/",i,"/meta/")
+  files <- list.files(path1)
+  
+  for (x in files) {
+    new_metadata <- read_csv(paste0(path1, "/", x)) |>
+      mutate(issueNumber = as.character(issueNumber))
+    all_metadata <- bind_rows(all_metadata, new_metadata)
+    rm(new_metadata)
+  }
 }
 
 filtered_metadata <- all_metadata |>
@@ -95,25 +98,29 @@ filtered_metadata <- all_metadata |>
 
 all_grams <- c()
 
-# Identify path to unigram folder and read csvs
-path1 <- paste0("2022-data/",jcode,"/unigram/")
-files <- list.files(path1)
-
-for (x in files) {
-  new_unigrams <- read_csv(paste0(path1, "/", x))
-  all_grams <- bind_rows(all_grams, new_unigrams)
-  rm(new_unigrams)
+for (i in jcode) {
+  
+  # Identify path to unigram folder and read csvs
+  path1 <- paste0("2022-data/",jcode,"/unigram/")
+  files <- list.files(path1)
+  
+  for (x in files) {
+    new_unigrams <- read_csv(paste0(path1, "/", x))
+    all_grams <- bind_rows(all_grams, new_unigrams)
+    rm(new_unigrams)
+  }
 }
 
-# Identify path to bgram folder and read csvs
-path1 <- paste0("2022-data/",jcode,"/bigram/")
-files <- list.files(path1)
-
-for (x in files) {
-  new_bigrams <- read_csv(paste0(path1, "/", x))
-  all_grams <- bind_rows(all_grams, new_bigrams)
-  rm(new_bigrams)
-}
+# Commenting out because not doing bigrams
+# # Identify path to bgram folder and read csvs
+# path1 <- paste0("2022-data/",jcode,"/bigram/")
+# files <- list.files(path1)
+# 
+# for (x in files) {
+#   new_bigrams <- read_csv(paste0(path1, "/", x))
+#   all_grams <- bind_rows(all_grams, new_bigrams)
+#   rm(new_bigrams)
+# }
 
 
 source("short_words.R") # Words we're not using
@@ -141,77 +148,76 @@ filtered_grams <- filtered_grams |>
          ngram != "",
          ngram != "vol") # Do again after punctuation - looks redundant but quicker to do things this way
 
+# The next batch of lines is for cleaning bigrams specifically
 # Now remove the undesired bigrams
 
-doubles <- expand_grid(w1 = short_words, w2 = short_words) |>
-  mutate(pairs = paste0(w1, " ", w2))
-
-bad_pairs <- c("sensecertainty",
-               "a nc",
-               "nc of",
-               "a nc of",
-               "a sc",
-               "a sc of",
-               "f t t",
-               "g l",
-               "ab in",
-               "sc of",
-               "t t f",
-               "f t",
-               "t f t",
-               "m is",
-               "donc",
-               "whence",
-               "whence by",
-               "argument to",
-               "b in",
-               "reality p",
-               "r b",
-               "and reality p",
-               "sec",
-               "r f",
-               "f alfred",
-               "of s",
-               "y is",
-               "w e",
-               "is p",
-               "g p",
-               "sb p",
-               "op cit",
-               "cit p",
-               "i p",
-               "ibid p",
-               "ii p",
-               "p v",
-               "p is",
-               "op cit p",
-               "vol i",
-               "vol ii",
-               "s is",
-               "of b",
-               "s and",
-               "x is",
-               "prima",
-               "facie",
-               "prima facie",
-               "miss",
-               "proposi"
-)
-
-filtered_grams <- filtered_grams |>
-  filter(!ngram %in% doubles$pairs,
-         !ngram %in% bad_pairs) |>
-  filter(!stringr::str_ends(ngram," ")) |>
-  filter(!stringr::str_starts(ngram," "))
+# doubles <- expand_grid(w1 = short_words, w2 = short_words) |>
+#   mutate(pairs = paste0(w1, " ", w2))
+# 
+# bad_pairs <- c("sensecertainty",
+#                "a nc",
+#                "nc of",
+#                "a nc of",
+#                "a sc",
+#                "a sc of",
+#                "f t t",
+#                "g l",
+#                "ab in",
+#                "sc of",
+#                "t t f",
+#                "f t",
+#                "t f t",
+#                "m is",
+#                "donc",
+#                "whence",
+#                "whence by",
+#                "argument to",
+#                "b in",
+#                "reality p",
+#                "r b",
+#                "and reality p",
+#                "sec",
+#                "r f",
+#                "f alfred",
+#                "of s",
+#                "y is",
+#                "w e",
+#                "is p",
+#                "g p",
+#                "sb p",
+#                "op cit",
+#                "cit p",
+#                "i p",
+#                "ibid p",
+#                "ii p",
+#                "p v",
+#                "p is",
+#                "op cit p",
+#                "vol i",
+#                "vol ii",
+#                "s is",
+#                "of b",
+#                "s and",
+#                "x is",
+#                "prima",
+#                "facie",
+#                "prima facie",
+#                "miss",
+#                "proposi"
+# )
+# 
+# filtered_grams <- filtered_grams |>
+#   filter(!ngram %in% doubles$pairs,
+#          !ngram %in% bad_pairs) |>
+#   filter(!stringr::str_ends(ngram," ")) |>
+#   filter(!stringr::str_starts(ngram," "))
 
 save(filtered_metadata, file = paste0("2022-data/",metadataname))
 save(filtered_grams, file = paste0("2022-data/",gramname))
 
 
-#for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
-#  for (cats in c(2, 4, 6, 8, 10, 12, 15, 16, 20, 24)) {
-for (seed in c(100,200)) {
-  for (cats in c(2, 4)) {
+for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
+  for (cats in c(24, 30, 36)) {
     my_lda <- LDA(my_dtm, k = cats, control = list(seed = seed, verbose = 1))
     
     # The start on analysis - extract topic probabilities
@@ -220,10 +226,18 @@ for (seed in c(100,200)) {
     # Now extract probability of each word in each topic
     #my_beta <- tidy(my_lda, matrix = "beta")
     
-    save(my_lda, file = "jphil_lda.RData")
     save(my_lda, 
          file = paste0(
-           "/Users/weath/Dropbox (Personal)/GoodReader Transfers/mind-lda-summaries/jphil-lda-",
+           "american-lda-",
+           seed,
+           "-",
+           cats,
+           ".RData"
+         )
+    )
+    save(my_lda, 
+         file = paste0(
+           "/Users/weath/Dropbox (University of Michigan)/lda-backups/american-lda-",
            seed,
            "-",
            cats,
@@ -233,10 +247,18 @@ for (seed in c(100,200)) {
     #save(filtered_meta, file="mind_articles.RData")
     #save(allgrams, file="allgrams_mind_prewar.RData")
     
-    rmarkdown::render("jphil-lda-summary.Rmd", 
+    rmarkdown::render("american-lda-summary.Rmd", 
                       "pdf_document", 
                       params = list(
-                        cats = cats, seed = as.character(seed)
+                        cats = cats, 
+                        seed = as.character(seed),
+                        lda_file = paste0(
+                          "american-lda-",
+                          seed,
+                          "-",
+                          cats,
+                          ".RData"
+                        )
                       ),
                       output_file = paste0("/Users/weath/Dropbox (Personal)/GoodReader Transfers/mind-lda-summaries/jphil-lda-summary-",seed,"-",cats,".pdf")
     )

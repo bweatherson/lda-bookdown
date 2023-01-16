@@ -253,7 +253,7 @@ for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789,
                         cats = cats, 
                         seed = as.character(seed),
                         lda_file = paste0(
-                          "american-lda-",
+                          "2022-data/american-lda-",
                           seed,
                           "-",
                           cats,

@@ -150,7 +150,13 @@ short_words <- c("cest",
                  "quelle", 
                  "nos", 
                  "tout", 
-                 "nest")
+                 "nest",
+                 "chez",
+                 "dont",
+                 "notre",
+                 "quod",
+                 "son",
+                 "plus")
 
 filtered_grams <- all_grams |>
   mutate(id = str_sub(id, start = 29) |> as.numeric()) |>

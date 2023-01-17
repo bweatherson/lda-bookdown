@@ -306,7 +306,7 @@ cat("\\newpage \n")
   cat("\\newpage \n")
 ```
 
-```{r cats, echo=FALSE, message=FALSE, results='asis', fig.height=6, fig.width = 6.25}
+```{r cats, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
   for (jjj in 1:cats){
     cat(" \n")
     cat("## Topic ", jjj, "\n")
@@ -333,7 +333,7 @@ cat("\\newpage \n")
     geom_smooth(se=FALSE, size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) 
 
   print(indiv_journal_graphs)
-#  cat("\\newpage \n")
+  cat("\\newpage \n")
 
   cat("\n\n\n")
   cat("### Characteristic Articles for Topic ", jjj, "\n")

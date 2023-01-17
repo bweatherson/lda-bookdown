@@ -161,6 +161,7 @@ short_words <- c(short_words,
                  "plus")
 
 filtered_grams <- all_grams |>
+  filter(str_sub(id, end = 1) == "h") |>
   filter(!str_sub(ngram, -1) == "-") |>
   mutate(id = str_sub(id, start = 29) |> as.numeric()) |>
   filter(nchar(ngram) > 2,
@@ -255,6 +256,7 @@ my_dtm <- cast_dtm(filter(filtered_grams, count > 1), id, ngram, count)
 
 for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789, 208101792, 209201792, 209221792,215121793)) {
     for (cats in c(24, 36, 48)) {
+
     my_lda <- LDA(my_dtm, k = cats, control = list(seed = seed, verbose = 1))
     
     # The start on analysis - extract topic probabilities

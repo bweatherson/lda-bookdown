@@ -161,6 +161,7 @@ short_words <- c(short_words,
                  "plus")
 
 filtered_grams <- all_grams |>
+  filter(!str_sub(ngram, -1) == "-") |>
   mutate(id = str_sub(id, start = 29) |> as.numeric()) |>
   filter(nchar(ngram) > 2,
          !ngram %in% short_words,
@@ -264,7 +265,7 @@ for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789,
     
     save(my_lda, 
          file = paste0(
-           "2022-data/american-lda-",
+           "2022-data/big3-lda-",
            seed,
            "-",
            cats,
@@ -273,7 +274,7 @@ for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789,
     )
     save(my_lda, 
          file = paste0(
-           "/Users/weath/Dropbox (University of Michigan)/lda-backups/american-lda-",
+           "/Users/weath/Dropbox (University of Michigan)/lda-backups/big3-lda-",
            seed,
            "-",
            cats,
@@ -289,7 +290,7 @@ for (seed in c(205061789, 220061789, 214071789, 204081789, 226081789, 205101789,
                         cats = cats, 
                         seed = as.character(seed),
                         lda_file = paste0(
-                          "2022-data/american-lda-",
+                          "2022-data/big3-lda-",
                           seed,
                           "-",
                           cats,

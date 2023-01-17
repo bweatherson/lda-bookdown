@@ -39,15 +39,16 @@ journal_short_names <- c(
 )
 
 
-load("2022-data/American-1930-1999-meta.RData")
-load(paste0(
-           "2022-data/american-lda-",
-           params$seed,
-           "-",
-           params$cats,
-           ".RData"
-         )
-)
+load("2022-data/Big3-1920-1979-meta.RData")
+load(params$lda_file)
+#load(paste0(
+#           "2022-data/big3-lda-",
+#           params$seed,
+#           "-",
+#           params$cats,
+#           ".RData"
+#         )
+#)
 
 #cats <- 100
 ```
@@ -72,7 +73,7 @@ facetstyle <-   theme_minimal() +
         panel.grid.minor.y = element_line(color = "grey85", size = 0.03),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
-        legend.position="none")
+        legend.position = "none")
 spaghettistyle <- facetstyle +
   theme(panel.grid.major.y = element_line(color = "grey80", size = 0.08),
         panel.grid.minor.y = element_line(color = "grey85", size = 0.04),
@@ -86,8 +87,8 @@ freqstyle <-   spaghettistyle +
 ```
 
 ---
-title: "`r params$cats` Category LDA for Journal of Philosophy and Philosophical Review"
-date: "1930-1999"
+title: "`r params$cats` Category LDA for Big Three Journals"
+date: "1920-1979"
 author: "Seed: `r params$seed`"
 ---
 
@@ -252,6 +253,7 @@ cat("\\newpage \n")
 
 ```{r weight, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
   topic_weight_graph <- ggplot(yeargamma, aes(x = year, y = freq, color=topic, group=topic)) +
+    scale_x_continuous(breaks = c(1930, 1950, 1970)) +
     geom_point(size = 0.5) +
     labs(x = "Year", y = "Weighted Frequency of Articles", title = "Weighted Frequency of Articles in Each Topic Per Year") + 
   theme_minimal() +
@@ -267,6 +269,7 @@ cat("\\newpage \n")
   cat("\\newpage \n")
 
   indiv_weight_graphs <- ggplot(filter(yeargamma, as.numeric(topic) <= cats/2), aes(x = year, y = freq, color = topic, group=topic)) +
+    scale_x_continuous(breaks = c(1930, 1950, 1970)) +
     geom_point(size = 0.55) +
     facet_wrap(~topic, ncol = 3) +
     theme(legend.position="none") +

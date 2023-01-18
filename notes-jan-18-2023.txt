@@ -1,0 +1,10 @@
+Changes for next round (note of Jan 18, 2023)
+
+- Remove duplicates from filtered_metadata
+- Remove word 'vii' - not sure how still there after Roman
+- Remove articles by André Lalande and by Arthur Liebert and A. Lalande
+- Remove these French words: encore, faut, toujours, sous, cet, lon, maniere, donc, faire, par, maine,
+- Remove these ordinary language words: get, got, sure, try, ask, asked, asking
+
+- Think about doing a model for the book reviews
+

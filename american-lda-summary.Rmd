@@ -15,6 +15,7 @@ editor_options:
 ---
 
 ```{r loader, echo=FALSE, fig.height=8, fig.width=6.25, message=FALSE, results='asis'}
+cats <- params$cats
 options(blogdown.knit.serve_site = FALSE)
 require(tidyverse)
 require(tidytext)
@@ -268,11 +269,25 @@ cat("\\newpage \n")
 
   cat("\\newpage \n")
 
-  indiv_weight_graphs <- ggplot(filter(yeargamma, as.numeric(topic) <= cats/2), aes(x = year, y = freq, color = topic, group=topic)) +
+  cols <- tibble(x = 1:cats) %>%
+    mutate(col = hcl(h = (x - 1) * (360/cats) + 15, l = 65, c = 100)) %>%
+    deframe()
+  
+  max_graphs <- 24
+  graph_pages <- ceiling(cats / max_graphs)
+  
+  for (i in 1:graph_pages) {
+  
+    data_for_graph <- yeargamma |>
+      filter(as.numeric(topic) > (i - 1) * max_graphs,
+             as.numeric(topic) <= i * max_graphs)
+  
+  indiv_weight_graphs <- ggplot(data_for_graph, aes(x = year, y = freq, color = topic, group = topic)) +
     scale_x_continuous(breaks = c(1930, 1950, 1970)) +
+    scale_color_manual(values = cols) +
     geom_point(size = 0.55) +
     facet_wrap(~topic, ncol = 3) +
-    theme(legend.position="none") +
+    theme(legend.position = "none") +
     labs(x = "Year", 
          y = "Weighted Frequency of Articles", 
          title = "Weighted Frequency of Articles in Each Topic Per Year") +   
@@ -281,27 +296,10 @@ cat("\\newpage \n")
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         panel.border = element_blank()) +
-      geom_smooth(se=FALSE, size = 0.2) 
-  indiv_weight_graphs
+      geom_smooth(se = FALSE, size = 0.2) 
+  print(indiv_weight_graphs)
+}
 
-  indiv_weight_graphs <- ggplot(filter(journalgamma, as.numeric(topic) > cats/2), 
-                                aes(x = year,
-                                    y = freq, 
-                                    color = topic, 
-                                    group=topic)) +
-    geom_point(size = 0.55) +
-    facet_wrap(~topic, ncol = 3) +
-    theme(legend.position="none") +
-    labs(x = "Year",
-         y = "Weighted Frequency of Articles", 
-         title = "Weighted Frequency of Articles in Each Topic Per Year") +   
-    theme(panel.grid.major.y = element_blank(),
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.border = element_blank()) +
-      geom_smooth(se=FALSE, size = 0.2) 
-  indiv_weight_graphs
   
   cat("\\newpage \n")
 ```

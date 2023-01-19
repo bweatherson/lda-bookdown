@@ -102,8 +102,12 @@ filtered_metadata <- all_metadata |>
 
 # Focus down to the years we're interested in
 filtered_metadata <- filtered_metadata |>
-  filter(year >= 1920, year <= 1979)
+  filter(year >= 1920, year <= 1979) |>
+  distinct(id, .keep_all = TRUE) # Need this because sometimes I use overlapping input sets
 
+# Remove surveys of foreign philosophy, which end up confusing the model
+filtered_metadata <- filtered_metadata |>
+  filter(!author %in% c("André Lalande", "Arthur Liebert", "A. Lalande"))
 
 
 all_grams <- c()
@@ -134,31 +138,8 @@ for (i in jcode) {
 # }
 
 
-source("short_words.R") # Words we're not using
+source("short_words-2023.R") # Words we're not using
 
-# More French that's causing complications
-short_words <- c(short_words,
-                 "cest", 
-                 "dun", 
-                 "quon", 
-                 "lidee", 
-                 "ete", 
-                 "moins", 
-                 "dune", 
-                 "meme", 
-                 "quil", 
-                 "aux", 
-                 "celle", 
-                 "quelle", 
-                 "nos", 
-                 "tout", 
-                 "nest",
-                 "chez",
-                 "dont",
-                 "notre",
-                 "quod",
-                 "son",
-                 "plus")
 
 filtered_grams <- all_grams |>
   filter(str_sub(id, end = 1) == "h") |>
@@ -169,8 +150,8 @@ filtered_grams <- all_grams |>
          id %in% filtered_metadata$id,
          ngram != "",
          ngram != "vol")  |> # This just looks like bibliographic data
-  mutate(count = as.numeric(count))  |>
-  filter(!grepl("^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$",ngram))
+  mutate(count = as.numeric(count))#  |>
+  #filter(!grepl("^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$",ngram))  # Not using because now in short_words
 
 filtered_grams$ngram <- gsub("[[:punct:]]", "", filtered_grams$ngram) # Remove punctuation
 filtered_grams$ngram <- gsub("[[:digit:]]", "", filtered_grams$ngram) # Remove numbers

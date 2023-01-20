@@ -118,8 +118,8 @@ knitr::opts_chunk$set(warning = FALSE)
       select(-topic) |> 
       dplyr::rename(topic = rank)
     
-    termlistname <- paste0("terms_",i)
-    assign(termlistname, terms(my_lda, 10))
+#    termlistname <- paste0("terms_",i)
+#    assign(termlistname, terms(my_lda, 10))
     
     yearcount <-  relabeled_articles  |>
       group_by(year) |>

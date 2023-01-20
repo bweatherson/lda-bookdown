@@ -263,6 +263,7 @@ cat("\\newpage \n")
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank()) +
   geom_point(size = 0.5) +
+  theme(legend.position = "none") +
   geom_smooth(se=FALSE, size = 0.2) 
 
   topic_weight_graph
@@ -300,6 +301,40 @@ cat("\\newpage \n")
   print(indiv_weight_graphs)
 }
 
+  
+topic_midpoints <- journalgamma |>
+  ungroup() |>
+  group_by(sortjournal, topic) |>
+  summarise(midpoint = weighted.mean(year, freq), 
+            totweight = mean(freq),
+            .groups = "drop") |>
+  ungroup() |>
+  group_by(topic) |>
+  mutate(topicavg = mean(midpoint)) |>
+  mutate(salience = abs((midpoint - topicavg) * totweight * (100 + as.numeric(topic)))) |>
+  arrange(-salience)
+
+salient_points <- topic_midpoints |>
+  ungroup() |>
+  slice(1:10)
+
+topic_midpoint_graph <-   ggplot(topic_midpoints, aes(x = midpoint, 
+                                                      y = as.numeric(topic), 
+                                                      size = totweight, 
+                                                      color = sortjournal,
+                                                      group = sortjournal)) +
+  geom_point() +
+  geom_smooth(se = FALSE, size = 0.5) + 
+  theme_minimal() +
+  labs(x = "Weighted Average Year",
+       y = "Topic",
+       color = "Journal",
+       size = "Topic Frequency",
+       title = "Leading and Lagging Journals") +
+  ggrepel::geom_text_repel(data = salient_points, aes(label = topic, size = .2)) +
+  guides(color = guide_legend("Journal"), size = "none")
+
+topic_midpoint_graph
   
   cat("\\newpage \n")
 ```

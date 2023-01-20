@@ -29,7 +29,14 @@ foreign_words <- c(foreign_words,   "cest", "vii",
                    "plus",
                    "encore", "faut", "toujours", "sous", "cet", "lon", "maniere", "donc", "faire", "par", "maine")
 ref_words <- c("doi", "proceedings", "review", "journal", "press", "compilation", "compilation", "editors", "supplementary", "quarterly", "aristotelian", "kegan", "dordrecht", "minnesota", "reidel", "edu", "stanford", "oxford", "cambridge", "basil", "blackwell", "thanks", "cit", "mit", "eds", "loc", "york", "university", "nous", "chicago", "clarendon", "edited")
-ordinary_words <- c("get", "got", "sure", "try", "ask", "asked", "asking")
+
+# I got a topic with these keywords: usage, word, moores, ordinary, using, uses, austin, verbal, expressions, incorrect, everyday, use, used, phrases, words
+# I'm not cutting them because I think this really was a topic
+# See, for instance, Passmore 1954 on usage
+ordinary_words <- c("get", "got", "sure", "try", "ask", "asked", "asking", "admit", "admitted", "commonly", "difficult", "deal", 
+                    "granted", "discuss", "fairly", "hardly", "probably", "extremely", "certainly", "careful",
+                    "tell", "gets", "trying", "talking", "telling", "going", "getting", "putting", "finding", "inclined")
+
 roman_words <- 1:1000 |>
   as.roman() |>
   as.character() |>

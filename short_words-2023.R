@@ -35,7 +35,18 @@ ref_words <- c("doi", "proceedings", "review", "journal", "press", "compilation"
 # See, for instance, Passmore 1954 on usage
 ordinary_words <- c("get", "got", "sure", "try", "ask", "asked", "asking", "admit", "admitted", "commonly", "difficult", "deal", 
                     "granted", "discuss", "fairly", "hardly", "probably", "extremely", "certainly", "careful",
-                    "tell", "gets", "trying", "talking", "telling", "going", "getting", "putting", "finding", "inclined")
+                    "tell", "gets", "trying", "talking", "telling", "going", "getting", "putting", "finding", "inclined",
+                    "feel"     , "really"  ,  "think"    , "trouble"  ,
+                    "told"     , "anyone"  ,  "wrong"    , "strange"  ,
+                    "hard"     , "absurd"  ,  "want"     , "else"     ,
+                     "surely"  ,  "say"    ,   "put"     ,  "perfectly",
+                     "mistaken",  "answer" ,   "quite"   ,  "people"   ,
+                     "plain"   ,  "tells"  ,   "heard"   ,  "supposing",
+                     "room"    ,  "look"   ,   "somehow" ,  "sometimes",
+                     "tried"   ,  "happens",   "coming"  ,  "perhaps"  ,
+                     "easy"    ,  "miss"   ,   "prepared",  "calling"  ,
+                     "seemed"  ,  "suppose",   "happen"  ,  "give"     ,
+                     "seem" )
 
 roman_words <- 1:1000 |>
   as.roman() |>

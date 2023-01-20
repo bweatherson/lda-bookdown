@@ -107,7 +107,20 @@ filtered_metadata <- filtered_metadata |>
 
 # Remove surveys of foreign philosophy, which end up confusing the model
 filtered_metadata <- filtered_metadata |>
-  filter(!author %in% c("André Lalande", "Arthur Liebert", "A. Lalande"))
+  filter(!author %in% c("André Lalande", 
+                        "Andre Lalande",
+                        "Arthur Liebert", 
+                        "A. Lalande",
+                        "Jean Piaget",
+                        "H. J. de Vleeschauwer",
+                        "Janina Lindenbaum Hosiasson",
+                        "D. Parodi",
+                        "Abel Rey",
+                        "Wendell T. Bush",
+                        "William H. Werkmeister",
+                        "Edgar Wind",
+                        "Nicolai Hartmann"
+                        ))
 
 
 all_grams <- c()

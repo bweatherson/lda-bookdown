@@ -46,7 +46,8 @@ ordinary_words <- c("get", "got", "sure", "try", "ask", "asked", "asking", "admi
                      "tried"   ,  "happens",   "coming"  ,  "perhaps"  ,
                      "easy"    ,  "miss"   ,   "prepared",  "calling"  ,
                      "seemed"  ,  "suppose",   "happen"  ,  "give"     ,
-                     "seem" )
+                     "seem", "seriously", "back", "rate", "exactly",
+                    "obviously")
 
 roman_words <- 1:1000 |>
   as.roman() |>

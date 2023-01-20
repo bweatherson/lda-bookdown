@@ -332,7 +332,8 @@ topic_midpoint_graph <-   ggplot(topic_midpoints, aes(x = midpoint,
        size = "Topic Frequency",
        title = "Leading and Lagging Journals") +
   ggrepel::geom_text_repel(data = salient_points, aes(label = topic, size = .2)) +
-  guides(color = guide_legend("Journal"), size = "none")
+  guides(color = guide_legend("Journal"), size = "none") +
+  theme(legend.position = "bottom")
 
 topic_midpoint_graph
   

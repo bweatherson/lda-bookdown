@@ -342,61 +342,72 @@ topic_midpoint_graph
 
 ```{r cats, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
   for (jjj in 1:cats){
-    cat(" \n")
-    cat("## Topic ", jjj, "\n")
-   distinctive <- distinctive_topics[(jjj-1)*15 + 1, 1]
-     for (jj in 2:15){
-       distinctive <- paste(distinctive, distinctive_topics[(jjj-1)*15 + jj, 1], sep = ", ")
-     }
-
- cat("**Keywords**: ", distinctive, "\n\n")
-
-  indiv_journal_graphs <- ggplot(data = filter(journalgamma, topic == jjj), aes(x = year, y = freq))  +
-    geom_point(size = 0.55, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) +
-    theme(legend.position="none") +
-    coord_cartesian(ylim=c(0, max(filter(journalgamma, topic == jjj)$freq, 2/cats)), expand = TRUE) +
-    labs(x = "", 
-         y = "", 
-         title = "") +
-    theme_minimal() +
-    facet_wrap(~sortjournal, ncol = 1) +
-    theme(panel.grid.major.y = element_blank(),
-          panel.grid.minor.y = element_blank(),
-          panel.grid.major.x = element_blank(),
-          panel.grid.minor.x = element_blank()) +
-    geom_smooth(se=FALSE, size = 0.2, colour = hcl(h = (jjj-1)*(360/cats)+15, l = 65, c = 100)) 
-
-  print(indiv_journal_graphs)
-  cat("\\newpage \n")
-
-  cat("\n\n\n")
-  cat("### Characteristic Articles for Topic ", jjj, "\n")
-  char_art <- relabeled_articles %>%
-    filter(topic == jjj) %>%
-    mutate(score = gamma * log10(words + 1)) %>%
-    arrange(desc(score)) %>%
-    slice(1:20)
-  article_list <- char_art$citation
-# print(kable(article_list, col.names = NULL, booktabs = T, linesep = "") %>%
-#        kable_styling(latex_options = c("striped", "hold_position")))
-
-  for (jj in 1:20){
-    cat(jj,". ", article_list[jj], "\n\n", sep="")
-  }
-
-  cat("\n")
-  # cat("### Highly Cited Articles in Topic ", jjj, "\n")
-  # these_cites <- high_cite_gamma %>% 
-  #   as_tibble() %>%
-  #   filter(topic == jjj) %>%
-  #   arrange(desc(Cites))
-  # 
-  # if (nrow(these_cites) > 0){
-  # for (jj in 1:nrow(these_cites)){
-  #    cat(jj,". ", these_cites$citation.x[[jj]], " (", these_cites$gamma[[jj]], ")\n\n", sep="")   
-  # }
-  # }
-      cat("\\newpage \n")
+    if (nrow(filter(journalgamma, topic == jjj)) > 0) {
+      cat(" \n")
+      cat("## Topic ", jjj, "\n")
+      distinctive <- distinctive_topics[(jjj-1)*15 + 1, 1]
+      for (jj in 2:15){
+         distinctive <- paste(distinctive, 
+                              distinctive_topics[(jjj-1)*15 + jj, 1], 
+                              sep = ", ")
+          }
+  
+      cat("**Keywords**: ", distinctive, "\n\n")
+  
+      indiv_journal_graphs <- ggplot(data = filter(journalgamma, topic == jjj), aes(x = year, y = freq))  +
+        geom_point(size = 0.55, colour = hcl(h = (jjj-1)*(360/cats) + 15, 
+                                             l = 65,
+                                             c = 100)) +
+        theme(legend.position = "none") +
+        coord_cartesian(ylim = c(0, max(filter(journalgamma, topic == jjj)$freq, 4/cats)), 
+                        expand = TRUE) +
+        labs(x = "", 
+             y = "", 
+             title = "") +
+        theme_minimal() +
+        facet_wrap(~sortjournal, ncol = 1) +
+        theme(panel.grid.major.y = element_blank(),
+              panel.grid.minor.y = element_blank(),
+              panel.grid.major.x = element_blank(),
+              panel.grid.minor.x = element_blank()) +
+        geom_smooth(se = FALSE, 
+                    size = 0.2, 
+                    colour = hcl(h = (jjj - 1)*(360/cats) + 15, 
+                                 l = 65, 
+                                 c = 100)) 
+  
+        print(indiv_journal_graphs)
+        cat("\\newpage \n")
+      
+        cat("\n\n\n")
+        cat("### Characteristic Articles for Topic ", jjj, "\n")
+        char_art <- relabeled_articles %>%
+          filter(topic == jjj) %>%
+          mutate(score = gamma * log10(words + 1)) %>%
+          arrange(desc(score)) %>%
+          slice(1:20)
+        article_list <- char_art$citation
+      # print(kable(article_list, col.names = NULL, booktabs = T, linesep = "") %>%
+      #        kable_styling(latex_options = c("striped", "hold_position")))
+  
+    for (jj in 1:20) {
+      cat(jj,". ", article_list[jj], "\n\n", sep = "")
+    }
+  
+    cat("\n")
+    # cat("### Highly Cited Articles in Topic ", jjj, "\n")
+    # these_cites <- high_cite_gamma %>% 
+    #   as_tibble() %>%
+    #   filter(topic == jjj) %>%
+    #   arrange(desc(Cites))
+    # 
+    # if (nrow(these_cites) > 0){
+    # for (jj in 1:nrow(these_cites)){
+    #    cat(jj,". ", these_cites$citation.x[[jj]], " (", these_cites$gamma[[jj]], ")\n\n", sep="")   
+    # }
+    # }
+    }
+    cat("\\newpage \n")
 }
 
 cat("\\newpage \n")

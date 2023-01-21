@@ -264,9 +264,9 @@ knitr::opts_chunk$set(warning = FALSE)
   
   cat("\\newpage \n")
    
-  ```
+```
   
-  ```{r weight, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
+```{r weight, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
     topic_weight_graph <- ggplot(yeargamma, aes(x = year, y = freq, color=topic, group=topic)) +
       scale_x_continuous(breaks = c(1930, 1950, 1970)) +
       geom_point(size = 0.5) +

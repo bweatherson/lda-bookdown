@@ -57,7 +57,7 @@ load(params$lda_file)
 
 ```{r graphstyles, echo=FALSE, message=FALSE}
 facetstyle <-   theme_minimal() +
-  theme(text = element_text(family="Lato"),
+  theme(text = element_text(family = "Lato"),
         plot.title = element_text(size = rel(1),
                                   family = "Lato",
                                   face = "bold",
@@ -112,7 +112,7 @@ knitr::opts_chunk$set(warning = FALSE)
     year_topic_mean <- all_journals_titles_and_topics |> ungroup() |> 
       group_by(topic)  |> 
       dplyr::summarize(date = mean(year)) |> 
-      mutate(rank = rank(date))
+      mutate(rank = rank(date, ties.method = "first"))
     
     relabeled_articles <- left_join(all_journals_titles_and_topics, year_topic_mean, by = "topic") |> 
       select(-topic) |> 
@@ -226,79 +226,93 @@ knitr::opts_chunk$set(warning = FALSE)
     short_keywords <- tribble(
       ~topic, ~distinctive_words)
 
- for (j in 1:cats){
-   distinctive <- distinctive_topics[(j-1)*15 + 1, 1]
-   for (jj in 2:5){
-     distinctive <- paste(distinctive, distinctive_topics[(j-1)*15 + jj, 1], sep = ", ")
-   }
- short_keywords <- add_row(short_keywords, topic = j, distinctive_words = distinctive)
- }
+   require(glue)
 
- cat(" \n")
- cat("## Keywords for All Topics")
- cat(" \n")
+    short_keywords <- tibble(
+      the_topic = 1:96) |>
+      rowwise() |>
+      mutate(distinctive_words = list(glue_collapse(
+        slice(
+          filter(
+            distinctive_topics, topic == the_topic),
+          1:5
+        )$term, sep = ", ")
+    )) |>
+      ungroup()
 
- print(kable(short_keywords, col.names = NULL, booktabs = T, linesep = "")) 
-
- # cat(" \n")
- # cat("\\newpage")
- # cat(" \n")
- # 
- # print(kable(filter(short_keywords, topic > 30), col.names = NULL, booktabs = T, linesep = "") %>%
- #       column_spec(2, width = "14cm") %>%
- #       kable_styling(latex_options = c("striped", "hold_position")))
-
-cat("\\newpage \n")
- 
-```
-
-```{r weight, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
-  topic_weight_graph <- ggplot(yeargamma, aes(x = year, y = freq, color=topic, group=topic)) +
-    scale_x_continuous(breaks = c(1930, 1950, 1970)) +
-    geom_point(size = 0.5) +
-    labs(x = "Year", y = "Weighted Frequency of Articles", title = "Weighted Frequency of Articles in Each Topic Per Year") + 
-  theme_minimal() +
-  theme(panel.grid.major.y = element_blank(),
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank()) +
-  geom_point(size = 0.5) +
-  theme(legend.position = "none") +
-  geom_smooth(se=FALSE, size = 0.2) 
-
-  topic_weight_graph
-
+   #  for (j in 1:cats) {
+   #   distinctive <- distinctive_topics[(j - 1) * 15 + 1, 1]
+   #   for (jj in 2:5) {
+   #     distinctive <- paste(distinctive, distinctive_topics[(j-1)*15 + jj, 1], sep = ", ")
+   #   }
+   # short_keywords <- add_row(short_keywords, topic = j, distinctive_words = distinctive)
+   # }
+   # 
+   cat(" \n")
+   cat("## Keywords for All Topics")
+   cat(" \n")
+  
+   print(kable(short_keywords, col.names = NULL, booktabs = T, linesep = "")) 
+  
+   # cat(" \n")
+   # cat("\\newpage")
+   # cat(" \n")
+   # 
+   # print(kable(filter(short_keywords, topic > 30), col.names = NULL, booktabs = T, linesep = "") %>%
+   #       column_spec(2, width = "14cm") %>%
+   #       kable_styling(latex_options = c("striped", "hold_position")))
+  
   cat("\\newpage \n")
-
-  cols <- tibble(x = 1:cats) %>%
-    mutate(col = hcl(h = (x - 1) * (360/cats) + 15, l = 65, c = 100)) %>%
-    deframe()
+   
+  ```
   
-  max_graphs <- 24
-  graph_pages <- ceiling(cats / max_graphs)
-  
-  for (i in 1:graph_pages) {
-  
-    data_for_graph <- yeargamma |>
-      filter(as.numeric(topic) > (i - 1) * max_graphs,
-             as.numeric(topic) <= i * max_graphs)
-  
-  indiv_weight_graphs <- ggplot(data_for_graph, aes(x = year, y = freq, color = topic, group = topic)) +
-    scale_x_continuous(breaks = c(1930, 1950, 1970)) +
-    scale_color_manual(values = cols) +
-    geom_point(size = 0.55) +
-    facet_wrap(~topic, ncol = 3) +
-    theme(legend.position = "none") +
-    labs(x = "Year", 
-         y = "Weighted Frequency of Articles", 
-         title = "Weighted Frequency of Articles in Each Topic Per Year") +   
+  ```{r weight, echo=FALSE, message=FALSE, results='asis', fig.height=8, fig.width = 6.25}
+    topic_weight_graph <- ggplot(yeargamma, aes(x = year, y = freq, color=topic, group=topic)) +
+      scale_x_continuous(breaks = c(1930, 1950, 1970)) +
+      geom_point(size = 0.5) +
+      labs(x = "Year", y = "Weighted Frequency of Articles", title = "Weighted Frequency of Articles in Each   Topic Per Year") + 
+    theme_minimal() +
     theme(panel.grid.major.y = element_blank(),
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.border = element_blank()) +
-      geom_smooth(se = FALSE, size = 0.2) 
-  print(indiv_weight_graphs)
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
+    geom_point(size = 0.5) +
+    theme(legend.position = "none") +
+    geom_smooth(se=FALSE, size = 0.2) 
+  
+    topic_weight_graph
+  
+    cat("\\newpage \n")
+  
+    cols <- tibble(x = 1:cats) %>%
+      mutate(col = hcl(h = (x - 1) * (360/cats) + 15, l = 65, c = 100)) %>%
+      deframe()
+    
+    max_graphs <- 24
+    graph_pages <- ceiling(cats / max_graphs)
+    
+    for (i in 1:graph_pages) {
+    
+      data_for_graph <- yeargamma |>
+        filter(as.numeric(topic) > (i - 1) * max_graphs,
+               as.numeric(topic) <= i * max_graphs)
+    
+    indiv_weight_graphs <- ggplot(data_for_graph, aes(x = year, y = freq, color = topic, group = topic)) +
+      scale_x_continuous(breaks = c(1930, 1950, 1970)) +
+      scale_color_manual(values = cols) +
+      geom_point(size = 0.55) +
+      facet_wrap(~topic, ncol = 3) +
+      theme(legend.position = "none") +
+      labs(x = "Year", 
+           y = "Weighted Frequency of Articles", 
+           title = "Weighted Frequency of Articles in Each Topic Per Year") +   
+      theme(panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.border = element_blank()) +
+        geom_smooth(se = FALSE, size = 0.2) 
+    print(indiv_weight_graphs)
 }
 
   

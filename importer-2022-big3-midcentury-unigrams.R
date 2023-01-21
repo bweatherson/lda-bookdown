@@ -293,7 +293,11 @@ for (seed in c(05061789, 20061789, 14071789, 04081789, 26081789, 05101789, 08101
                           ".RData"
                         )
                       ),
-                      output_file = paste0("/Users/weath/Dropbox (Personal)/GoodReader Transfers/mind-lda-summaries/jphil-lda-summary-",seed,"-",cats,".pdf")
+                      output_file = paste0("/Users/weath/Dropbox (Personal)/GoodReader Transfers/mind-lda-summaries/jphil-lda-summary-",
+                                           seed,
+                                           "-",
+                                           cats,
+                                           ".pdf")
     )
   }
 }

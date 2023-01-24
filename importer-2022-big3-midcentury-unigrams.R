@@ -248,7 +248,8 @@ save(filtered_grams, file = paste0("2022-data/",gramname))
 
 my_dtm <- cast_dtm(filter(filtered_grams, count > 1), id, ngram, count)
 
-for (seed in c(05061789, 20061789, 14071789, 04081789, 26081789, 05101789, 08101792, 09201792, 09221792, 15121793)) {
+#for (seed in c(05061789, 20061789, 14071789, 04081789, 26081789, 05101789, 08101792, 09201792, 09221792, 15121793)) {
+for (seed in c(04081789, 26081789, 05101789, 08101792, 09201792, 09221792, 15121793)) {
     for (cats in c(72, 96)) {
 
     my_lda <- LDA(my_dtm, k = cats, control = list(seed = seed, verbose = 1))
